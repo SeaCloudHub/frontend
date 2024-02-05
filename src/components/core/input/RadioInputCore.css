@@ -1,0 +1,6 @@
+.customRadio .ant-radio-checked .ant-radio-inner {
+  background-color: #4006b2 !important;
+}
+.customRadio .ant-radio:hover .ant-radio-inner {
+  border-color: #4006b2 !important;
+}

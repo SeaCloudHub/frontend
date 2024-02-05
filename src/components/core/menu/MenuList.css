@@ -1,0 +1,12 @@
+.option-container {
+  display: none;
+  box-shadow: 4px 4px 8px 0px #dfdfed;
+}
+
+.select-container:hover .dropdown-icon {
+  transform: rotate(180deg);
+}
+
+.select-container:hover .option-container {
+  display: block;
+}

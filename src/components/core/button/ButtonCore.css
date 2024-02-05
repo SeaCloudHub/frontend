@@ -1,0 +1,63 @@
+.ant-btn-text.primary-contained {
+  background-color: #4006b2;
+  padding: 7px 40px;
+  border: none;
+  border: 1px solid #4006b2;
+  border-radius: 8px;
+  color: white;
+  font-size: 16px;
+}
+
+.ant-btn-text.primary-contained:hover {
+  background-color: #4006b2 !important;
+  color: white !important;
+}
+
+.ant-btn-text.primary-outlined {
+  background-color: white;
+  padding: 7px 40px;
+  border: none;
+  border: 1px solid #4006b2;
+  border-radius: 8px;
+  color: #4006b2;
+  font-size: 16px;
+}
+
+.ant-btn-text.primary-outlined:hover {
+  background-color: white !important;
+  color: #4006b2 !important;
+}
+
+.ant-btn-text.secondary-contained {
+  background-color: #979797;
+  padding: 7px 40px;
+  border: none;
+  border: 1px solid #979797;
+  border-radius: 8px;
+  color: white;
+  font-size: 16px;
+}
+
+.ant-btn-text.secondary-contained:hover {
+  background-color: #979797 !important;
+  color: white !important;
+}
+
+.ant-btn-text.secondary-outlined {
+  background-color: white;
+  padding: 7px 40px;
+  border: none;
+  border: 1px solid #979797;
+  border-radius: 8px;
+  color: #979797;
+  font-size: 16px;
+}
+
+.ant-btn-text.secondary-outlined:hover {
+  background-color: white !important;
+  color: #979797 !important;
+}
+button span {
+  display: flex !important;
+  gap: 8px;
+}

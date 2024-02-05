@@ -1,0 +1,13 @@
+.customTextInput:hover {
+  border: 1px solid #333333 !important;
+}
+
+.customTextInput:focus-within {
+  border: 1px solid #4006b2 !important;
+  box-shadow: 0 0 3px #4006b2 !important;
+}
+
+.ant-input-disabled {
+  color: black !important;
+  font-weight: 400;
+}
