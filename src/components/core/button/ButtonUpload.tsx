@@ -5,10 +5,7 @@ type ButtonUploadProps = {
 };
 
 const ButtonUpload = ({ onClick }: ButtonUploadProps) => {
-  return (
-    <Button type='text' onClick={onClick} className='upload-btn'>
-    </Button>
-  );
+  return <Button type='text' onClick={onClick} className='upload-btn'></Button>;
 };
 
 export default ButtonUpload;

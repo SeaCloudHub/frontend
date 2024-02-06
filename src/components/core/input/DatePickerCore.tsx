@@ -27,7 +27,7 @@ const DatePickerCore = ({ className, name, disabled, label, date, onChange }: Da
           disabled={disabled}
           onChange={onChange}
           value={date}
-        // format={DATE_FORMAT.DATE_TIME_SECOND.ISO8601}
+          // format={DATE_FORMAT.DATE_TIME_SECOND.ISO8601}
         />
       </div>
     </ConfigProvider>
