@@ -1,4 +1,5 @@
-import { Button } from 'antd';
+import IconifyIcon from '../Icon/IConCore';
+import ButtonCore from './ButtonCore';
 
 type ButtonDeleteProps = {
   onClick?: () => void;
@@ -6,9 +7,13 @@ type ButtonDeleteProps = {
 
 const ButtonDelete = ({ onClick }: ButtonDeleteProps) => {
   return (
-    <Button type='text' onClick={onClick} className='delete-btn'>
-      삭 제
-    </Button>
+    <ButtonCore
+      icon={<IconifyIcon icon={'fluent:delete-48-regular'} />}
+      type='outlined'
+      text='Delete'
+      color='error'
+      onClick={onClick}
+    />
   );
 };
 

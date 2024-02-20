@@ -1,9 +1,0 @@
-.search-btn.ant-btn-text {
-  letter-spacing: 4px;
-}
-
-.search-btn.ant-btn-text:hover {
-  background-color: transparent !important;
-  border-color: #4006b3;
-  color: #4006b3 !important;
-}

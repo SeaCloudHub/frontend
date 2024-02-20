@@ -1,37 +1,23 @@
-import { Button } from 'antd';
-import classNames from 'classnames';
+import { Button } from '@mui/material';
 import React from 'react';
 import { ClipLoader } from 'react-spinners';
-import './ButtonCore.css';
 
 type ButtonCoreProps = {
   text: string;
-  className?: string;
-  type?: 'primary-contained' | 'primary-outlined' | 'secondary-contained' | 'secondary-outlined';
-  icon?: React.ReactNode;
-  loading?: boolean;
+  type: 'contained' | 'outlined' | 'text';
+  color?: 'error' | 'info' | 'inherit' | 'primary' | 'secondary' | 'success' | 'warning';
   onClick?: () => void;
   disabled?: boolean;
+  loading?: boolean;
+  icon?: React.ReactNode;
   [others: string]: any;
 };
 
-const ButtonCore = ({ text, className, type: buttonType, icon, disabled, loading, ...others }: ButtonCoreProps) => {
+const ButtonCore: React.FC<ButtonCoreProps> = ({ text, type, disabled, icon, loading, ...others }) => {
   return (
-    <Button
-      {...others}
-      disabled={disabled || loading}
-      type='text'
-      className={classNames('flex items-center h-full justify-center font-bold hover:shadow-md', className, {
-        [buttonType || '']: !disabled,
-        'secondary-contained': disabled,
-      })}>
+    <Button startIcon={!loading && icon} {...others} variant={type} disabled={disabled}>
+      {!loading && <>{text}</>}
       {loading && <ClipLoader color='#ffffff' size={20} />}
-      {!loading && (
-        <>
-          {icon}
-          {text}
-        </>
-      )}
     </Button>
   );
 };
