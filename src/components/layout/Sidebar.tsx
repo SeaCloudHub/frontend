@@ -77,6 +77,8 @@ const Sidebar = ({ children }: PropsWithChildren) => {
             <>
               <ButtonIcon size={25} icon='mdi:logout' />
               <ButtonIcon icon='tabler:book' size={25} />
+              <ButtonIcon icon='ic:outline-info' size={25} />
+              <ButtonIcon icon='material-symbols:help-outline' size={25} />
             </>
           ) : (
             <>
