@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { PropsWithChildren, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { sidebarItems } from '../../utils/constants/sidebar.constant';
 import IconifyIcon from '../core/Icon/IConCore';
 import ButtonContainer from '../core/button/ButtonContainer';
@@ -7,15 +7,23 @@ import ButtonCore from '../core/button/ButtonCore';
 import ButtonIcon from '../core/button/ButtonIcon';
 import LinearChartBar from '../core/linear-chart-bar/linearChartBar';
 import SidebarItem from '../core/sidebar-item/SidebarItem';
-const Sidebar = ({ children }: PropsWithChildren) => {
-  const onClick = () => {};
+
+type SidebarProps = {
+  onShrinkChange: (mode: boolean) => void;
+};
+const Sidebar = ({ onShrinkChange }: SidebarProps) => {
   const [shrink, setShrink] = useState<boolean>(false);
+  const onShrinkModeChange = (mode: boolean) => {
+    setShrink(mode);
+    onShrinkChange(mode);
+  };
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 1024) {
-        setShrink(true);
+        onShrinkModeChange(true);
       } else {
-        setShrink(false);
+        onShrinkModeChange(false);
       }
     };
     window.addEventListener('resize', handleResize);
@@ -26,7 +34,6 @@ const Sidebar = ({ children }: PropsWithChildren) => {
   }, []);
   return (
     <>
-      <div className={`${shrink ? 'ml-[75px]' : 'nav-bar content'}`}>{children}</div>
       <div className={`sidebar ${shrink ? '' : 'sidebar-lg'}`}>
         <div className='w-full flex justify-center items-center'>
           {shrink ? (
@@ -34,7 +41,7 @@ const Sidebar = ({ children }: PropsWithChildren) => {
               icon='radix-icons:hamburger-menu'
               size={'25px'}
               onClick={() => {
-                setShrink(false);
+                onShrinkModeChange(false);
               }}
             />
           ) : (
@@ -49,19 +56,12 @@ const Sidebar = ({ children }: PropsWithChildren) => {
                 </Box>
                 <ButtonIcon
                   onClick={() => {
-                    setShrink(true);
+                    onShrinkModeChange(true);
                   }}
                   icon='fluent:ios-arrow-left-24-regular'
                   size={'25px'}
                 />
               </div>
-              {/* <div className='px-3'>
-                <p className='text-[25px] mt-4 font-semibold truncate max-w-[250px] '>Phan Nhật Nhât Triều</p>
-                <div className='flex items-center -mt-2  '>
-                  <p className='text-[15px] max-w-[100px]   font-medium truncate'>UI UI Designer</p>
-                  <ButtonIcon size={'10px'} icon='teenyicons:down-solid' onClick={onClick} />
-                </div>
-              </div> */}
             </div>
           )}
         </div>

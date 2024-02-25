@@ -7,6 +7,7 @@
     @apply h-screen fixed left-0 top-0 bg-gray-200
          w-[75px] px-3 flex flex-col items-center  space-y-10 
          shadow-md shadow-black border border-r-2 border-r-slate-200
+         overflow-x-hidden
         overflow-auto;
   }
   .sidebar-lg {
@@ -27,10 +28,16 @@
   .nav-bar {
     @apply bg-gray-200 fixed top-0 w-full h-[80px]  
     left-0  shadow-sm shadow-neutral-500  border-b-2 border-r-slate-200 
-    border border-b-slate-200;
+    border border-b-slate-200 ml-[300px];
   }
-  .nav-bar.content {
-    @apply ml-[300px];
+  .nav-bar-shrink {
+    @apply ml-[75px];
+  }
+  .content-default-mode {
+    @apply ml-[300px] mt-[80px];
+  }
+  .content-shrink-mode {
+    @apply ml-[75px] mt-[80px];
   }
   .statement-upper-medium {
     @apply font-semibold;
