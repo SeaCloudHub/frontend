@@ -8,7 +8,7 @@ type ButtonIconProps = {
 };
 const ButtonIcon = ({ onClick, icon, size, color }: ButtonIconProps) => {
   return (
-    <div className='rounded-full  inline-block   p-3 hover:bg-gray-100'>
+    <div className='rounded-full  justify-center  flex items-center   p-3 hover:bg-gray-100'>
       <IconifyIcon color={color} fontSize={size} height={size} icon={icon} onClick={onClick} />
     </div>
   );

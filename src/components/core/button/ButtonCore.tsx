@@ -3,9 +3,9 @@ import React from 'react';
 import { ClipLoader } from 'react-spinners';
 
 type ButtonCoreProps = {
-  text: string;
+  title: string;
   type: 'contained' | 'outlined' | 'text';
-  color?: 'error' | 'info' | 'inherit' | 'primary' | 'secondary' | 'success' | 'warning';
+  contentColor?: string;
   onClick?: () => void;
   disabled?: boolean;
   loading?: boolean;
@@ -13,10 +13,15 @@ type ButtonCoreProps = {
   [others: string]: any;
 };
 
-const ButtonCore: React.FC<ButtonCoreProps> = ({ text, type, disabled, icon, loading, ...others }) => {
+const ButtonCore: React.FC<ButtonCoreProps> = ({ contentColor, title, type, disabled, icon, loading, ...others }) => {
   return (
-    <Button startIcon={!loading && icon} {...others} variant={type} disabled={disabled}>
-      {!loading && <>{text}</>}
+    <Button
+      sx={{ textTransform: 'none', color: contentColor }}
+      startIcon={!loading && icon}
+      {...others}
+      variant={type}
+      disabled={disabled}>
+      {!loading && <>{title}</>}
       {loading && <ClipLoader color='#ffffff' size={20} />}
     </Button>
   );
