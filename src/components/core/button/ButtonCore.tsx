@@ -3,7 +3,7 @@ import React from 'react';
 import { ClipLoader } from 'react-spinners';
 
 type ButtonCoreProps = {
-  title: string;
+  title?: string;
   type: 'contained' | 'outlined' | 'text';
   contentColor?: string;
   onClick?: () => void;
