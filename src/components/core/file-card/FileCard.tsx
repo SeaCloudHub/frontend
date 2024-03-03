@@ -1,12 +1,25 @@
 import { EllipsisVerticalIcon, PencilIcon, ShareIcon, TrashIcon } from '@heroicons/react/16/solid';
 import { DocumentIcon, MusicalNoteIcon, PhotoIcon } from '@heroicons/react/24/outline';
 import { DocumentTextIcon } from '@heroicons/react/24/outline';
-import { AspectRatio, Box, Card, CardOverflow, Dropdown, IconButton, Menu, MenuButton, MenuItem, Typography } from '@mui/joy';
+import {
+  AspectRatio,
+  Box,
+  Card,
+  CardOverflow,
+  Dropdown,
+  IconButton,
+  Link,
+  Menu,
+  MenuButton,
+  MenuItem,
+  Typography,
+} from '@mui/joy';
 
 interface FileCardProps {
   title: string;
   size: string;
   preview?: string;
+  onClick?: () => void;
 }
 
 const menuItems = [
@@ -28,16 +41,19 @@ const type2Icon = (type: string) => {
   return icon ? icon.icon : <DocumentIcon />;
 };
 
-const FileCard: React.FC<FileCardProps> = ({ title, size, preview }) => {
+const FileCard: React.FC<FileCardProps> = ({ title, size, preview, onClick }) => {
   const type = title.split('.').length > 1 ? title.split('.').pop() : 'unknown';
   return (
-    <div className='shadow-sm'>
+    <div className='shadow-sm cursor-pointer hover:brightness-90' onClick={onClick}>
       <Card variant='outlined' size='sm'>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Box sx={{ flex: 1 }}>
-            <Typography level='title-md'>{title}</Typography>
+        <div className='flex items-center'>
+          <div className='flex flex-col grow'>
+            <div className='flex h-4 items-center gap-x-2'>
+              <div className='h-4 w-4'>{type2Icon(type as string)}</div>
+              <Typography level='title-md'>{title}</Typography>
+            </div>
             <Typography level='body-sm'>{size}</Typography>
-          </Box>
+          </div>
 
           <Dropdown>
             <MenuButton
@@ -65,7 +81,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, size, preview }) => {
               ))}
             </Menu>
           </Dropdown>
-        </Box>
+        </div>
 
         <CardOverflow>
           <AspectRatio color='primary'>
