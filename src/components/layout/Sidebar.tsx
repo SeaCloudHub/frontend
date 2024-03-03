@@ -19,7 +19,7 @@ const Sidebar = ({ onShrinkChange }: SidebarProps) => {
     setShrink(mode);
     onShrinkChange(mode);
   };
-  const pathName: string = 'User';
+  const pathName: string = 'Admin';
   const [tabs, setTabs] = useState<SidebarItemType[]>([]);
   const [role, setRole] = useState<Role>(Role.User);
   useEffect(() => {
@@ -101,10 +101,9 @@ const Sidebar = ({ onShrinkChange }: SidebarProps) => {
         <div className='flex flex-col items-center'>
           {shrink ? (
             <>
-              <ButtonIcon size={25} icon='mdi:logout' />
-              <ButtonIcon icon='tabler:book' size={25} />
-              <ButtonIcon icon='ic:outline-info' size={25} />
-              <ButtonIcon icon='material-symbols:help-outline' size={25} />
+              <ButtonIcon tooltip='Logout' size={25} icon='mdi:logout' />
+              <ButtonIcon tooltip='About' icon='ic:outline-info' size={25} />
+              <ButtonIcon tooltip='Help' icon='material-symbols:help-outline' size={25} />
             </>
           ) : (
             <>
