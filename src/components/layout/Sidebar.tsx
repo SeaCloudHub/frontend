@@ -1,6 +1,8 @@
+import { SidebarItemType } from '@/utils/types/sidebar-item.type';
 import { Box } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { sidebarItems } from '../../utils/constants/sidebar.constant';
+import { adminSidebar, userSidebar } from '../../utils/constants/sidebar.constant';
+import { Role } from '../../utils/enums/role.enum';
 import IconifyIcon from '../core/Icon/IConCore';
 import ButtonContainer from '../core/button/ButtonContainer';
 import ButtonCore from '../core/button/ButtonCore';
@@ -17,7 +19,9 @@ const Sidebar = ({ onShrinkChange }: SidebarProps) => {
     setShrink(mode);
     onShrinkChange(mode);
   };
-
+  const pathName: string = 'Admin';
+  const [tabs, setTabs] = useState<SidebarItemType[]>([]);
+  const [role, setRole] = useState<Role>(Role.User);
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 1024) {
@@ -32,6 +36,17 @@ const Sidebar = ({ onShrinkChange }: SidebarProps) => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+  useEffect(() => {
+    if (pathName.startsWith('Admin')) {
+      setTabs(adminSidebar);
+      setRole(Role.ADMIN);
+    }
+    if (pathName.startsWith('User')) {
+      setTabs(userSidebar);
+      setRole(Role.User);
+    }
+  }, [pathName]);
+
   return (
     <>
       <div className={`sidebar ${shrink ? '' : 'sidebar-lg'}`}>
@@ -66,26 +81,48 @@ const Sidebar = ({ onShrinkChange }: SidebarProps) => {
           )}
         </div>
         <div>
-          {sidebarItems.map((item, index) => (
-            <SidebarItem key={index} icon={item.icon} link={item.link} shrink={shrink} title={item.title} />
+          {tabs.map((item, index) => (
+            <SidebarItem
+              key={index}
+              tooltip={item.tooltip}
+              icon={item.icon}
+              link={item.link}
+              shrink={shrink}
+              title={item.title}
+            />
           ))}
-          <LinearChartBar width='100%' value={70} total={100} />
-          <p className={`text-center  text-gray-900 ${shrink ? 'hidden' : ''} statement-bold`}>Used 90 of 8 GB of memory</p>
+          {role === Role.User && (
+            <>
+              <LinearChartBar width='100%' value={70} total={100} />
+              <p className={`text-center  text-gray-900 ${shrink ? 'hidden' : ''} statement-bold`}>Used 90 of 8 GB of memory</p>
+            </>
+          )}
         </div>
         <div className='flex flex-col items-center'>
           {shrink ? (
             <>
-              <ButtonIcon size={25} icon='mdi:logout' />
-              <ButtonIcon icon='tabler:book' size={25} />
-              <ButtonIcon icon='ic:outline-info' size={25} />
-              <ButtonIcon icon='material-symbols:help-outline' size={25} />
+              <ButtonIcon tooltip='Logout' size={25} icon='mdi:logout' />
+              <ButtonIcon tooltip='About' icon='ic:outline-info' size={25} />
+              <ButtonIcon tooltip='Help' icon='material-symbols:help-outline' size={25} />
             </>
           ) : (
             <>
-              <ButtonContainer title='Logout' background='#063768' icon={<IconifyIcon icon={'mdi:logout'} />} />
+              <ButtonContainer
+                tooltip={'Logout'}
+                title='Logout'
+                background='#063768'
+                icon={<IconifyIcon icon={'mdi:logout'} />}
+              />
               <div className='flex justify-center space-x-4 mt-2 items-center'>
-                <ButtonCore contentColor='black' icon={<IconifyIcon icon={'ic:outline-info'} />} title={'About'} type={'text'} />
                 <ButtonCore
+                  tooltip='About'
+                  contentColor='black'
+                  icon={<IconifyIcon icon={'ic:outline-info'} />}
+                  title={'About'}
+                  type={'text'}
+                />
+                <ButtonCore
+                  tooltip='Help'
                   contentColor='black'
                   icon={<IconifyIcon icon={'material-symbols:help-outline'} />}
                   title={'Help'}
