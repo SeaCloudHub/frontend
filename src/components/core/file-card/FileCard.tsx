@@ -1,25 +1,15 @@
 import { EllipsisVerticalIcon, PencilIcon, ShareIcon, TrashIcon } from '@heroicons/react/16/solid';
 import { DocumentIcon, MusicalNoteIcon, PhotoIcon } from '@heroicons/react/24/outline';
 import { DocumentTextIcon } from '@heroicons/react/24/outline';
-import {
-  AspectRatio,
-  Box,
-  Card,
-  CardOverflow,
-  Dropdown,
-  IconButton,
-  Link,
-  Menu,
-  MenuButton,
-  MenuItem,
-  Typography,
-} from '@mui/joy';
+import { AspectRatio, Card, CardOverflow, Dropdown, IconButton, Menu, MenuButton, MenuItem, Typography } from '@mui/joy';
+import { useState } from 'react';
 
 interface FileCardProps {
   title: string;
   size: string;
   preview?: string;
   onClick?: () => void;
+  onDoubleClick?: () => void;
 }
 
 const menuItems = [
@@ -41,11 +31,22 @@ const type2Icon = (type: string) => {
   return icon ? icon.icon : <DocumentIcon />;
 };
 
-const FileCard: React.FC<FileCardProps> = ({ title, size, preview, onClick }) => {
+const FileCard: React.FC<FileCardProps> = ({ title, size, preview, onClick, onDoubleClick }) => {
   const type = title.split('.').length > 1 ? title.split('.').pop() : 'unknown';
+
+  const [isActive, setIsActive] = useState(false);
+
   return (
-    <div className='shadow-sm cursor-pointer hover:brightness-90' onClick={onClick}>
-      <Card variant='outlined' size='sm'>
+    <div
+      className='shadow-sm cursor-pointer hover:brightness-90'
+      onClick={() => {
+        setIsActive(!isActive);
+        if (onClick) {
+          onClick();
+        }
+      }}
+      onDoubleClick={onDoubleClick}>
+      <Card variant='outlined' size='sm' style={{ backgroundColor: isActive ? '#C2E7FF' : '' }}>
         <div className='flex items-center'>
           <div className='flex flex-col grow'>
             <div className='flex h-4 items-center gap-x-2'>
@@ -84,7 +85,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, size, preview, onClick }) =>
         </div>
 
         <CardOverflow>
-          <AspectRatio color='primary'>
+          <AspectRatio>
             {preview ? (
               <img src={preview} />
             ) : (

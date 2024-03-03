@@ -9,7 +9,13 @@ function App() {
         <CssBaseline />
         <div className='flex flex-wrap gap-2'>
           <div className='w-72'>
-            <FileCard title='flag.doc' size='1KB' />
+            <FileCard
+              title='flag.doc'
+              size='1KB'
+              onClick={() => {
+                console.log('clicked');
+              }}
+            />
           </div>
           <div className='w-72'>
             <FileCard title='flag.mp3' size='1KB' />
