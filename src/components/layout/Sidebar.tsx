@@ -1,7 +1,7 @@
+import { adminSidebar, userSidebar } from '@/utils/constants/sidebar.constant';
 import { SidebarItemType } from '@/utils/types/sidebar-item.type';
 import { Box } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { adminSidebar, userSidebar } from '../../utils/constants/sidebar.constant';
 import { Role } from '../../utils/enums/role.enum';
 import IconifyIcon from '../core/Icon/IConCore';
 import ButtonContainer from '../core/button/ButtonContainer';
@@ -12,16 +12,15 @@ import SidebarItem from '../core/sidebar-item/SidebarItem';
 
 type SidebarProps = {
   onShrinkChange: (mode: boolean) => void;
+  role: Role;
 };
-const Sidebar = ({ onShrinkChange }: SidebarProps) => {
+const Sidebar = ({ onShrinkChange, role }: SidebarProps) => {
   const [shrink, setShrink] = useState<boolean>(false);
   const onShrinkModeChange = (mode: boolean) => {
     setShrink(mode);
     onShrinkChange(mode);
   };
-  const pathName: string = 'Admin';
   const [tabs, setTabs] = useState<SidebarItemType[]>([]);
-  const [role, setRole] = useState<Role>(Role.User);
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 1024) {
@@ -37,15 +36,12 @@ const Sidebar = ({ onShrinkChange }: SidebarProps) => {
     };
   }, []);
   useEffect(() => {
-    if (pathName.startsWith('Admin')) {
+    if (role === Role.ADMIN) {
       setTabs(adminSidebar);
-      setRole(Role.ADMIN);
-    }
-    if (pathName.startsWith('User')) {
+    } else {
       setTabs(userSidebar);
-      setRole(Role.User);
     }
-  }, [pathName]);
+  }, [role]);
 
   return (
     <>

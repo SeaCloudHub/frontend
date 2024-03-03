@@ -1,0 +1,54 @@
+import ButtonOutline from '../../../../components/core/button/ButtonOutline';
+import LinearChartBar from '../../../../components/core/linear-chart-bar/linearChartBar';
+import { userInfoColumns } from '../../../../utils/constants/userInfo-column.constant';
+
+type UserInfoPhoneModeProps = {
+  userId?: string;
+  name?: string;
+  usedMemory: number | 0;
+  lastAccess?: string;
+};
+
+const UserInfoPhoneMode = ({ userId, name, usedMemory, lastAccess }: UserInfoPhoneModeProps) => {
+  return (
+    <>
+      <div className='w-full border-t-2 border-b-2 border-y border-[#063768] p-2'>
+        {/* <UserInfoItem title='UserId' content={userId} />
+        <UserInfoItem title='Name' content={name} />
+        <UserInfoItem title='Last access' content={lastAccess} />
+         */}
+        {userInfoColumns.map((item, index) => (
+          <UserInfoItem
+            key={index}
+            title={item.label}
+            content={item.id === 'userId' ? userId : item.id === 'name' ? name : item.id === 'lastAccess' ? lastAccess : ''}
+          />
+        ))}
+        <div className='flex justify-between text-[12px]'>
+          <p className='statement-upper-medium text-gray-500 w-2/6 truncate'>Used memory</p>
+          <div className='w-3/6 flex justify-end '>
+            <LinearChartBar total={100} value={usedMemory} color='blue' width='70%' />
+          </div>
+        </div>
+        <div className='flex flex-wrap space-x-2'>
+          <ButtonOutline title='Detail' size={20} color='Blue' />
+          <ButtonOutline title='Delete' size={20} color='red' />
+          <ButtonOutline title='Block' size={20} color='black' />
+        </div>
+      </div>
+    </>
+  );
+};
+type UserInfoItemProps = {
+  title?: string;
+  content?: string;
+};
+export const UserInfoItem = ({ title, content }: UserInfoItemProps) => {
+  return (
+    <div className='flex justify-between text-[12px]'>
+      <p className='statement-upper-medium text-gray-500 w-2/6 truncate'>{title}</p>
+      <p className='statement-medium w-3/6 flex justify-end truncate'>{content}</p>
+    </div>
+  );
+};
+export default UserInfoPhoneMode;
