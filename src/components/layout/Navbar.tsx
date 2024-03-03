@@ -29,10 +29,10 @@ const Navbar = ({ isShrink, phoneMode }: NavbarProps) => {
               className='max-h-[50px] object-contain'
             />
           </div>
-          <div className='flex flex-col items-start  justify-center'>
+          <div className='flex flex-col items-start leading-7 justify-center'>
             <h6 className='statement-bold'>Phan Nhật Triều</h6>
             <div className='flex items-center justify-center'>
-              <p className='statement-upper-medium'>phannhattrieu012@gmail.com</p>
+              <p className='statement-upper-medium'>Role: User</p>
               <ButtonIcon icon='teenyicons:down-solid' size={15} />
             </div>
           </div>

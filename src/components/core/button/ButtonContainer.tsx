@@ -1,4 +1,4 @@
-import { Button, styled } from '@mui/material';
+import { Button, Tooltip, styled } from '@mui/material';
 
 type ButtonContainerProps = {
   title?: string;
@@ -8,6 +8,7 @@ type ButtonContainerProps = {
   background?: string;
   backgroundHover?: string;
   icon?: React.ReactNode;
+  [others: string]: any;
 };
 
 const ButtonContainerStyle = styled(Button)(
@@ -38,17 +39,19 @@ const ButtonContainerStyle = styled(Button)(
   }),
 );
 
-const ButtonContainer = ({ title, color, background, backgroundHover, icon, size }: ButtonContainerProps) => {
+const ButtonContainer = ({ title, color, background, backgroundHover, icon, size, tooltip }: ButtonContainerProps) => {
   return (
-    <ButtonContainerStyle
-      startIcon={icon}
-      Size={size}
-      backGroundHover={backgroundHover}
-      variant='contained'
-      Color={color}
-      background={background}>
-      {title}
-    </ButtonContainerStyle>
+    <Tooltip title={tooltip}>
+      <ButtonContainerStyle
+        startIcon={icon}
+        Size={size}
+        backGroundHover={backgroundHover}
+        variant='contained'
+        Color={color}
+        background={background}>
+        {title}
+      </ButtonContainerStyle>
+    </Tooltip>
   );
 };
 

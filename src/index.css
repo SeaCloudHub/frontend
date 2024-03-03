@@ -14,7 +14,7 @@
     @apply w-[300px] !important;
   }
   .sidebar-item {
-    @apply flex w-full items-center justify-center  px-10 cursor-pointer py-2  rounded-2xl;
+    @apply flex w-full items-center justify-center  px-7 cursor-pointer py-2  rounded-2xl;
   }
   .sidebar-item-lg {
     @apply justify-normal !important;
