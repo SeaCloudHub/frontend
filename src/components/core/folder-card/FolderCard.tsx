@@ -1,13 +1,12 @@
-import { EllipsisVerticalIcon, PencilIcon, ShareIcon, TrashIcon } from '@heroicons/react/16/solid';
-import { DocumentIcon, MusicalNoteIcon, PhotoIcon } from '@heroicons/react/24/outline';
+import { EllipsisVerticalIcon, PencilIcon, ShareIcon, StarIcon, TrashIcon } from '@heroicons/react/16/solid';
+import { DocumentIcon, FolderIcon, MusicalNoteIcon, PhotoIcon } from '@heroicons/react/24/outline';
 import { DocumentTextIcon } from '@heroicons/react/24/outline';
 import { AspectRatio, Card, CardOverflow, Dropdown, IconButton, Menu, MenuButton, MenuItem, Typography } from '@mui/joy';
 import { useState } from 'react';
 
-interface FileCardProps {
+interface FolderCardProps {
   title: string;
-  size: string;
-  preview?: string;
+  type?: 'starred' | 'shared';
   onClick?: () => void;
   onDoubleClick?: () => void;
 }
@@ -18,22 +17,17 @@ const menuItems = [
   { icon: <TrashIcon />, label: 'Delete file' },
 ];
 
-const supportedFileTypes = [
-  { type: 'doc', icon: <DocumentTextIcon /> },
-  { type: 'docx', icon: <DocumentTextIcon /> },
-  { type: 'mp3', icon: <MusicalNoteIcon /> },
-  { type: 'png', icon: <PhotoIcon /> },
-  { type: 'jpg', icon: <PhotoIcon /> },
+const supportedFolderTypes = [
+  { type: 'starred', icon: <StarIcon className='text-yellow-400' /> },
+  { type: 'shared', icon: <ShareIcon /> },
 ];
 
 const type2Icon = (type: string) => {
-  const icon = supportedFileTypes.find((fileType) => fileType.type === type);
-  return icon ? icon.icon : <DocumentIcon />;
+  const icon = supportedFolderTypes.find((fileType) => fileType.type === type);
+  return icon ? icon.icon : <FolderIcon />;
 };
 
-const FileCard: React.FC<FileCardProps> = ({ title, size, preview, onClick, onDoubleClick }) => {
-  const type = title.split('.').length > 1 ? title.split('.').pop() : 'unknown';
-
+const FolderCard: React.FC<FolderCardProps> = ({ title, type, onClick, onDoubleClick }) => {
   const [isActive, setIsActive] = useState(false);
 
   return (
@@ -48,11 +42,10 @@ const FileCard: React.FC<FileCardProps> = ({ title, size, preview, onClick, onDo
       onDoubleClick={onDoubleClick}>
       <Card variant='outlined' size='sm' style={{ backgroundColor: isActive ? '#C2E7FF' : '' }}>
         <div className='flex items-center'>
-          <div className='flex h-4 items-center gap-x-2 grow'>
-            <div className='h-6 w-6'>{type2Icon(type as string)}</div>
-            <div className='flex flex-col'>
+          <div className='flex grow'>
+            <div className='flex h-4 items-center gap-x-2'>
+              <div className='h-6 w-6'>{type2Icon(type as string)}</div>
               <Typography level='title-md'>{title}</Typography>
-              <Typography level='body-sm'>{size}</Typography>
             </div>
           </div>
 
@@ -83,21 +76,9 @@ const FileCard: React.FC<FileCardProps> = ({ title, size, preview, onClick, onDo
             </Menu>
           </Dropdown>
         </div>
-
-        <CardOverflow>
-          <AspectRatio>
-            {preview ? (
-              <img src={preview} />
-            ) : (
-              <div>
-                <div className='w-12 h-12'>{type2Icon(type as string)}</div>
-              </div>
-            )}
-          </AspectRatio>
-        </CardOverflow>
       </Card>
     </div>
   );
 };
 
-export default FileCard;
+export default FolderCard;

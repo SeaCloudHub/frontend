@@ -1,13 +1,14 @@
 import { Box, CssBaseline, CssVarsProvider } from '@mui/joy';
 import renderFilters from './components/pages/DashboardPage';
 import FileCard from './components/core/file-card/FileCard';
+import FolderCard from './components/core/folder-card/FolderCard';
 
 function App() {
   return (
     <>
       <CssVarsProvider disableTransitionOnChange>
         <CssBaseline />
-        <div className='flex flex-wrap gap-2'>
+        <div className='flex flex-wrap gap-2 '>
           <div className='w-72'>
             <FileCard
               title='flag.doc'
@@ -34,6 +35,20 @@ function App() {
             />
           </div>
         </div>
+
+        <div className='flex flex-row flex-wrap gap-x-2 mt-2'>
+          <div className='w-72'>
+            <FolderCard title='flag.mp3' />
+          </div>
+
+          <div className='w-72'>
+            <FolderCard title='flag.mp3' type='shared' />
+          </div>
+          <div className='w-72'>
+            <FolderCard title='flag.mp3' type='starred' />
+          </div>
+        </div>
+
         <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>{renderFilters()}</Box>
         <div className='flex flex-row gap-x-2 '>{renderFilters()}</div>
         <div className='w-40'>{renderFilters()}</div>
