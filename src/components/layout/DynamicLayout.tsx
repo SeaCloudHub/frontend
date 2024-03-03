@@ -22,7 +22,7 @@ const DynamicLayout = ({ children }: PropsWithChildren) => {
       <Navbar phoneMode={phoneMode} isShrink={shrink} />
       {!phoneMode && <Sidebar onShrinkChange={onShrinkChange} />}
       <div
-        className={`content-default-mode ${shrink ? 'content-shrink-mode' : ''} 
+        className={`content-default-mode ${shrink ? 'content-shrink-mode' : ''}
       ${phoneMode ? 'ml-0' : ''}
       `}>
         {children}
