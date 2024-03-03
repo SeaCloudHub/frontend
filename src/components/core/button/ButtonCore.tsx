@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { Button, Tooltip } from '@mui/material';
 import React from 'react';
 import { ClipLoader } from 'react-spinners';
 
@@ -10,20 +10,23 @@ type ButtonCoreProps = {
   disabled?: boolean;
   loading?: boolean;
   icon?: React.ReactNode;
+  tooltip?: string;
   [others: string]: any;
 };
 
-const ButtonCore: React.FC<ButtonCoreProps> = ({ contentColor, title, type, disabled, icon, loading, ...others }) => {
+const ButtonCore: React.FC<ButtonCoreProps> = ({ contentColor, title, type, disabled, icon, loading, tooltip, ...others }) => {
   return (
-    <Button
-      sx={{ textTransform: 'none', color: contentColor }}
-      startIcon={!loading && icon}
-      {...others}
-      variant={type}
-      disabled={disabled}>
-      {!loading && <>{title}</>}
-      {loading && <ClipLoader color='#ffffff' size={20} />}
-    </Button>
+    <Tooltip title={tooltip}>
+      <Button
+        sx={{ textTransform: 'none', color: contentColor }}
+        startIcon={!loading && icon}
+        {...others}
+        variant={type}
+        disabled={disabled}>
+        {!loading && <>{title}</>}
+        {loading && <ClipLoader color='#ffffff' size={20} />}
+      </Button>
+    </Tooltip>
   );
 };
 
