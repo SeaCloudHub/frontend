@@ -1,8 +1,9 @@
 import { EllipsisVerticalIcon, PencilIcon, ShareIcon, TrashIcon } from '@heroicons/react/16/solid';
 import { DocumentIcon, MusicalNoteIcon, PhotoIcon } from '@heroicons/react/24/outline';
 import { DocumentTextIcon } from '@heroicons/react/24/outline';
-import { AspectRatio, Card, CardOverflow, Dropdown, IconButton, Menu, MenuButton, MenuItem, Typography } from '@mui/joy';
+import { AspectRatio, Card, CardOverflow, IconButton, MenuButton, Typography } from '@mui/joy';
 import { useState } from 'react';
+import { DropDownMenu } from '../drop-down/DropDownMenu';
 
 interface FileCardProps {
   title: string;
@@ -12,7 +13,7 @@ interface FileCardProps {
   onDoubleClick?: () => void;
 }
 
-const menuItems = [
+export const menuItems = [
   { icon: <PencilIcon />, label: 'Rename file' },
   { icon: <ShareIcon />, label: 'Share file' },
   { icon: <TrashIcon />, label: 'Delete file' },
@@ -38,7 +39,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, size, preview, onClick, onDo
 
   return (
     <div
-      className='shadow-sm cursor-pointer hover:brightness-90'
+      className='cursor-pointer shadow-sm hover:brightness-90'
       onClick={() => {
         setIsActive(!isActive);
         if (onClick) {
@@ -48,7 +49,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, size, preview, onClick, onDo
       onDoubleClick={onDoubleClick}>
       <Card variant='outlined' size='sm' style={{ backgroundColor: isActive ? '#C2E7FF' : '' }}>
         <div className='flex items-center'>
-          <div className='flex h-4 items-center gap-x-2 grow'>
+          <div className='flex h-4 grow items-center gap-x-2'>
             <div className='h-6 w-6'>{type2Icon(type as string)}</div>
             <div className='flex flex-col'>
               <Typography level='title-md'>{title}</Typography>
@@ -56,32 +57,21 @@ const FileCard: React.FC<FileCardProps> = ({ title, size, preview, onClick, onDo
             </div>
           </div>
 
-          <Dropdown>
-            <MenuButton
-              variant='plain'
-              size='sm'
-              sx={{
-                padding: 0,
-              }}>
-              <IconButton component='span' variant='plain' color='neutral' size='sm'>
-                <EllipsisVerticalIcon className='w-6 h-6' />
-              </IconButton>
-            </MenuButton>
-
-            <Menu placement='bottom-start' size='sm'>
-              {menuItems.map((item, index) => (
-                <MenuItem key={index}>
-                  <div
-                    className={`flex 
-                  ${item.label.includes('Delete') ? 'text-red-500' : ''}
-                  `}>
-                    <div className='w-6 h-6 mr-2'>{item.icon}</div>
-                    <div className='text-nowrap mr-2'>{item.label}</div>
-                  </div>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Dropdown>
+          <DropDownMenu
+            button={
+              <MenuButton
+                variant='plain'
+                size='sm'
+                sx={{
+                  padding: 0,
+                }}>
+                <IconButton component='span' variant='plain' color='neutral' size='sm'>
+                  <EllipsisVerticalIcon className='h-6 w-6' />
+                </IconButton>
+              </MenuButton>
+            }
+            menuItems={menuItems}
+          />
         </div>
 
         <CardOverflow>
@@ -90,7 +80,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, size, preview, onClick, onDo
               <img src={preview} />
             ) : (
               <div>
-                <div className='w-12 h-12'>{type2Icon(type as string)}</div>
+                <div className='h-12 w-12'>{type2Icon(type as string)}</div>
               </div>
             )}
           </AspectRatio>
