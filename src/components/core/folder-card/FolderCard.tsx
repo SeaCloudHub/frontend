@@ -1,6 +1,7 @@
 import { EllipsisVerticalIcon, PencilIcon, ShareIcon, StarIcon, TrashIcon } from '@heroicons/react/16/solid';
 import { DocumentIcon, FolderIcon, MusicalNoteIcon, PhotoIcon } from '@heroicons/react/24/outline';
 import { DocumentTextIcon } from '@heroicons/react/24/outline';
+import { Info } from '@mui/icons-material';
 import { AspectRatio, Card, CardOverflow, Dropdown, IconButton, Menu, MenuButton, MenuItem, Typography } from '@mui/joy';
 import { useState } from 'react';
 
@@ -11,7 +12,8 @@ interface FolderCardProps {
   onDoubleClick?: () => void;
 }
 
-const menuItems = [
+const folderOperations = [
+  { icon: <Info />, label: 'Folder infomation' },
   { icon: <PencilIcon />, label: 'Rename file' },
   { icon: <ShareIcon />, label: 'Share file' },
   { icon: <TrashIcon />, label: 'Delete file' },
@@ -62,7 +64,7 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, type, onClick, onDoubleC
             </MenuButton>
 
             <Menu placement='bottom-start' size='sm'>
-              {menuItems.map((item, index) => (
+              {folderOperations.map((item, index) => (
                 <MenuItem key={index}>
                   <div
                     className={`flex 

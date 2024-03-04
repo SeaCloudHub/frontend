@@ -72,6 +72,7 @@ const SideNav: React.FC<WrapperProps> = ({ children }) => {
           borderRight: '1px solid',
           borderColor: 'divider',
           height: 1,
+          zIndex: 1400,
         },
       ]}>
       {children}
@@ -79,11 +80,11 @@ const SideNav: React.FC<WrapperProps> = ({ children }) => {
   );
 };
 
-function SidePane(props: BoxProps) {
+const SidePane: React.FC<WrapperProps> = ({ children }) => {
   return (
     <Box
-      className='Inbox'
-      {...props}
+      component='aside'
+      className='SidePane'
       sx={[
         {
           bgcolor: 'background.surface',
@@ -94,37 +95,38 @@ function SidePane(props: BoxProps) {
             md: 'initial',
           },
         },
-        ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
-      ]}
-    />
+      ]}>
+      {children}
+    </Box>
   );
-}
+};
 
-function Main(props: BoxProps) {
-  return (
-    <Box component='main' className='Main' {...props} sx={[{ p: 2 }, ...(Array.isArray(props.sx) ? props.sx : [props.sx])]} />
-  );
-}
-
-function SideDrawer(props: BoxProps & { onClose: React.MouseEventHandler<HTMLDivElement> }) {
-  const { onClose, ...other } = props;
+const Main: React.FC<WrapperProps> = ({ children }) => {
   return (
     <Box
-      {...other}
+      component='main'
+      className='Main'
       sx={[
-        { position: 'fixed', zIndex: 1200, width: '100%', height: '100%' },
-        ...(Array.isArray(other.sx) ? other.sx : [other.sx]),
+        {
+          p: 2,
+        },
       ]}>
-      <Box
-        role='button'
-        onClick={onClose}
-        sx={{
-          position: 'absolute',
-          inset: 0,
-          bgcolor: (theme) => `rgba(${theme.vars.palette.neutral.darkChannel} / 0.8)`,
-        }}
-      />
-      <Sheet
+      {children}
+    </Box>
+  );
+};
+
+interface SideDrawerProps extends WrapperProps {
+  onClose: React.MouseEventHandler<HTMLButtonElement>;
+}
+
+const SideDrawer: React.FC<SideDrawerProps> = ({ children, onClose }) => {
+  return (
+    <div className='relative'>
+      <button className='absolute right-0 top-0' onClick={onClose}>
+        close
+      </button>
+      {/* <Sheet
         sx={{
           minWidth: 256,
           width: 'max-content',
@@ -132,12 +134,12 @@ function SideDrawer(props: BoxProps & { onClose: React.MouseEventHandler<HTMLDiv
           p: 2,
           boxShadow: 'lg',
           bgcolor: 'background.surface',
-        }}>
-        {props.children}
-      </Sheet>
-    </Box>
+        }}> */}
+      {children}
+      {/* </Sheet> */}
+    </div>
   );
-}
+};
 
 export default {
   Root,
