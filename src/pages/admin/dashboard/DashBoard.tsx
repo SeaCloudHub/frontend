@@ -40,7 +40,7 @@ const DashBoard = () => {
               </Box>
             </Paper>
           </div>
-          <Paper elevation={3} sx={{ p: 3 }} className='mb-3'>
+          <Paper elevation={3} sx={{ p: 0 }} className='mb-3'>
             <PieChartCore
               data={[
                 { value: 10, label: 'Used', color: '#e33f42' },

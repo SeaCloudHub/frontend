@@ -8,7 +8,7 @@ type NavbarProps = {
 };
 const Navbar = ({ isShrink, phoneMode }: NavbarProps) => {
   return (
-    <div className={`${phoneMode ? 'pl-0 !important' : ''} nav-bar ${isShrink ? 'nav-bar-shrink' : ''}`}>
+    <div className={`z-navbar ${phoneMode ? 'pl-0 !important' : ''} nav-bar ${isShrink ? 'nav-bar-shrink' : ''}`}>
       <div className='px-3 flex items-center justify-between w-full h-full'>
         <div className={`${phoneMode ? 'w-full' : 'w-6/12'} flex h-[50px] items-center justify-center`}>
           <div className={`${phoneMode ? 'block mr-2' : 'hidden'}`}>

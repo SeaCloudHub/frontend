@@ -30,7 +30,6 @@ const PieChartCore: React.FC<PieChartProps> = ({ data, sizing }) => {
           fontSize: 14,
           fontWeight: 'bold',
           right: 5,
-          zIndex: -1,
         },
       }}
       {...sizing}
@@ -39,9 +38,10 @@ const PieChartCore: React.FC<PieChartProps> = ({ data, sizing }) => {
           data,
           arcLabel: getArcLabel,
           outerRadius: 80,
+          highlightScope: { faded: 'global', highlighted: 'item' },
+          faded: { color: 'gray' },
         },
       ]}
-      className='relative z-10'
     />
   );
 };
