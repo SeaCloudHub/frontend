@@ -30,7 +30,7 @@ import SideDrawer from './components/layout/SideDrawer';
 import { useEffect, useState } from 'react';
 import Layout from './components/layout/Layout';
 import { EnvelopeIcon, FolderIcon, PencilIcon, ShareIcon, UserGroupIcon, XCircleIcon } from '@heroicons/react/16/solid';
-import Header from './components/test/Header';
+import Header from './components/layout/Header';
 import TableFiles from './components/test/TableFiles';
 import SuperLayout from './components/layout/SuperLayout';
 
@@ -40,15 +40,19 @@ function App() {
   return (
     <CssVarsProvider disableTransitionOnChange>
       <CssBaseline />
-      <div className='grid-cols-1 h-screen'>
+      <div className='h-screen grid-cols-1'>
         <Layout.Header>
-          <Header />
+          <Header
+            userAvatar='https://i.pinimg.com/280x280_RS/01/6a/45/016a45c595efdc6d97c7fbc5a562f78b.jpg'
+            userName='Nguyen Quang Tuyen'
+            userEmail='abcd@efgh.com'
+          />
         </Layout.Header>
         <div className='flex flex-row'>
           <div className='w-64'>{<Navigation />}</div>
-          <div className='w-full'>{<div>concac</div>}</div>
-          <div className='w-80'> {<div>concac</div>}</div>
-        L</div>
+          <div className='w-full'>{<div>adu</div>}</div>
+          <div className='w-80'> {<div>adu</div>}</div>L
+        </div>
       </div>
     </CssVarsProvider>
   );
