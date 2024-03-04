@@ -1,8 +1,8 @@
-import { adminSidebar, userSidebar } from '@/utils/constants/sidebar.constant';
-import { SidebarItemType } from '@/utils/types/sidebar-item.type';
 import { Box } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { adminSidebar, userSidebar } from '../../utils/constants/sidebar.constant';
 import { Role } from '../../utils/enums/role.enum';
+import { SidebarItemType } from '../../utils/types/sidebar-item.type';
 import IconifyIcon from '../core/Icon/IConCore';
 import ButtonContainer from '../core/button/ButtonContainer';
 import ButtonCore from '../core/button/ButtonCore';
@@ -46,7 +46,7 @@ const Sidebar = ({ onShrinkChange, role }: SidebarProps) => {
   return (
     <>
       <div className={`sidebar ${shrink ? '' : 'sidebar-lg'}`}>
-        <div className='w-full flex justify-center items-center'>
+        <div className='flex w-full items-center justify-center'>
           {shrink ? (
             <ButtonIcon
               icon='radix-icons:hamburger-menu'
@@ -56,13 +56,13 @@ const Sidebar = ({ onShrinkChange, role }: SidebarProps) => {
               }}
             />
           ) : (
-            <div className='flex flex-col  justify-between w-full'>
-              <div className='flex mt-8 items-center justify-around '>
+            <div className='flex w-full  flex-col justify-between'>
+              <div className='mt-8 flex items-center justify-around '>
                 <Box sx={{ maxWidth: 150 }} className='mx-auto'>
                   <img
                     src='https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75'
                     alt='placeholder'
-                    className='w-full rounded-full h-auto'
+                    className='h-auto w-full rounded-full'
                   />
                 </Box>
                 <ButtonIcon
@@ -109,7 +109,7 @@ const Sidebar = ({ onShrinkChange, role }: SidebarProps) => {
                 background='#063768'
                 icon={<IconifyIcon icon={'mdi:logout'} />}
               />
-              <div className='flex justify-center space-x-4 mt-2 items-center'>
+              <div className='mt-2 flex items-center justify-center space-x-4'>
                 <ButtonCore
                   tooltip='About'
                   contentColor='black'
