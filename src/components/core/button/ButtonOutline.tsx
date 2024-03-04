@@ -8,6 +8,8 @@ type ButtonOutlineProps = {
   color?: string;
   background?: string;
   backGroundHover?: string;
+  fontSize?: number;
+  size?: number;
 };
 const ButtonOutlineStyle = styled(Button)(
   ({
@@ -15,16 +17,24 @@ const ButtonOutlineStyle = styled(Button)(
     borderRadius,
     Color,
     backGroundHover,
+    fontSize,
+    Size,
   }: {
     backGroundHover?: string;
     background?: string;
     borderRadius?: string;
     Color?: string;
+    fontSize?: number;
+    Size?: number;
   }) => ({
     fontWeight: 'bold',
     color: Color || 'black',
+    textTransform: 'none',
     backgroundColor: background,
     borderRadius: borderRadius,
+    height: Size,
+    width: Size,
+    fontSize: fontSize,
     borderColor: Color || 'black',
     '&:hover': {
       borderColor: Color || 'black',
@@ -32,9 +42,15 @@ const ButtonOutlineStyle = styled(Button)(
     },
   }),
 );
-const ButtonOutline = ({ title, borderRadius, color, background }: ButtonOutlineProps) => {
+const ButtonOutline = ({ title, borderRadius, color, background, fontSize, size }: ButtonOutlineProps) => {
   return (
-    <ButtonOutlineStyle variant='outlined' background={background} borderRadius={borderRadius} Color={color}>
+    <ButtonOutlineStyle
+      fontSize={fontSize}
+      Size={size}
+      variant='outlined'
+      background={background}
+      borderRadius={borderRadius}
+      Color={color}>
       {title}
     </ButtonOutlineStyle>
   );
