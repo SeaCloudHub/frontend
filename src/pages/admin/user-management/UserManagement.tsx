@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import IconifyIcon from '../../..//components/core/Icon/IConCore';
 import ButtonContainer from '../../../components/core/button/ButtonContainer';
+import LinearChartBar from '../../../components/core/linear-chart-bar/linearChartBar';
 import MenuCore from '../../../components/core/menu/MenuCore';
 import PaginationCore from '../../../components/core/pagination/PaginationCore';
 import TablePagination from '../../../components/core/table/TablePagination';
 import { userInfoColumns } from '../../../utils/constants/userInfo-column.constant';
 import { userInfo } from '../../../utils/dumps/userInfo.dump';
 import { PagingState, initialPagingState } from '../../../utils/types/paging-stage.type';
+import { UserInfo } from '../../../utils/types/user-Info.type';
 import UserInfoPhoneMode from './user-management-phone/UserInfoPhoneMode';
 
 const UserManagement = () => {
@@ -22,13 +24,17 @@ const UserManagement = () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+  const renderCell: Record<string, (rowData: UserInfo) => React.ReactNode> = {
+    usedMemory: (rowData: UserInfo) => <LinearChartBar value={rowData['usedMemory'] as number} total={100} width='100%' />,
+  };
+
   return (
-    <div className='w-full flex flex-col items-end space-y-5'>
-      <div className={`${phoneMode ? 'fixed left-2 bottom-2 w-full z-10' : ''}`}>
+    <div className='flex w-full flex-col items-end space-y-5'>
+      <div className={`${phoneMode ? 'fixed bottom-2 left-2 z-10 w-full' : ''}`}>
         <ButtonContainer tooltip={'Add user'} title='Add user' background='#063768' icon={<IconifyIcon icon={'gg:add'} />} />
       </div>
       {phoneMode && (
-        <div className='flex flex-col items-center w-full space-y-3'>
+        <div className='flex w-full flex-col items-center space-y-3'>
           {userInfo.map((item, index) => (
             <UserInfoPhoneMode
               key={index}
@@ -45,6 +51,7 @@ const UserManagement = () => {
         <div className='w-full'>
           <TablePagination
             paging={paging}
+            renderCell={renderCell}
             action
             Element={
               <MenuCore
