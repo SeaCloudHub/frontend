@@ -2,6 +2,9 @@ import { Folder } from '@mui/icons-material';
 import { FormControl, FormLabel, Option, Select } from '@mui/joy';
 import FolderCard from '../core/folder-card/FolderCard';
 import FileCard from '../core/file-card/FileCard';
+import { useState } from 'react';
+import Muiii from './Muiii';
+import FileInfo from './FIleInfo';
 
 const renderFilters = () => {
   return (
@@ -39,44 +42,85 @@ const renderFilters = () => {
 };
 
 const FileBrowser = () => {
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const handleFileInfo = (id: string) => {
+    console.log('File info', id);
+    setDrawerOpen(true);
+    console.log('Drawer open', drawerOpen);
+  };
+
   return (
-    <div className='flex flex-col'>
-      {renderFilters()}
-      <div>
-        <div className='mt-4 text-lg font-bold'> Folders</div>
-        <div className='flex flex-wrap gap-2'>
-          {Array.from({ length: 10 }).map((_, index) => (
-            <div className='w-64'>
-              <FolderCard key={index} title={'Folder ' + index.toString()} />
-            </div>
-          ))}
+    <div className='flex flex-row'>
+      <div className='flex flex-col'>
+        {renderFilters()}
+        <div>
+          <div className='mt-4 text-lg font-bold'> Folders</div>
+          <div className='flex flex-wrap gap-2'>
+            {Array.from({ length: 10 }).map((_, index) => (
+              <div className='w-64'>
+                <FolderCard key={index} title={'Folder ' + index.toString()} />
+              </div>
+            ))}
+          </div>
+        </div>
+        <div>
+          <div className='mt-4 text-lg font-bold'> Files</div>
+          <div className='flex flex-wrap gap-2'>
+            {Array.from({ length: 2 }).map((_, index) => (
+              <div className='w-64'>
+                <FileCard
+                  onFileInfo={(id) => {
+                    handleFileInfo(id);
+                  }}
+                  id={index.toString()}
+                  key={index}
+                  title={'File ' + index.toString()}
+                  size='1MB'
+                />
+              </div>
+            ))}
+            {Array.from({ length: 2 }).map((_, index) => (
+              <div className='w-64'>
+                <FileCard
+                  onFileInfo={(id) => {
+                    handleFileInfo(id);
+                  }}
+                  id={index.toString()}
+                  key={index}
+                  title={'File ' + (index + 2).toString() + '.doc'}
+                  size='1MB'
+                />
+              </div>
+            ))}
+            {Array.from({ length: 2 }).map((_, index) => (
+              <div className='w-64'>
+                <FileCard
+                  onFileInfo={handleFileInfo}
+                  id={index.toString()}
+                  key={index}
+                  title={'File ' + (index + 4).toString() + '.png'}
+                  size='1MB'
+                  preview='https://i.pinimg.com/280x280_RS/01/6a/45/016a45c595efdc6d97c7fbc5a562f78b.jpg'
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-      <div>
-        <div className='mt-4 text-lg font-bold'> Files</div>
-        <div className='flex flex-wrap gap-2'>
-          {Array.from({ length: 2 }).map((_, index) => (
-            <div className='w-64'>
-              <FileCard key={index} title={'File ' + index.toString()} size='1MB' />
-            </div>
-          ))}
-          {Array.from({ length: 2 }).map((_, index) => (
-            <div className='w-64'>
-              <FileCard key={index} title={'File ' + (index + 2).toString() + '.doc'} size='1MB' />
-            </div>
-          ))}
-          {Array.from({ length: 2 }).map((_, index) => (
-            <div className='w-64'>
-              <FileCard
-                key={index}
-                title={'File ' + (index + 4).toString() + '.png'}
-                size='1MB'
-                preview='https://i.pinimg.com/280x280_RS/01/6a/45/016a45c595efdc6d97c7fbc5a562f78b.jpg'
-              />
-            </div>
-          ))}
+
+      {drawerOpen && (
+        <div className=''>
+          <div className='z-40 shadow-sm'>
+            <Muiii.SideDrawer
+              onClose={() => {
+                setDrawerOpen(false);
+              }}>
+              <FileInfo />
+            </Muiii.SideDrawer>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

@@ -41,7 +41,7 @@ const menuItems = {
 const Header: React.FC<HeaderProps> = ({ userName, userAvatar, userEmail }) => {
   const [open, setOpen] = useState(false);
   return (
-    <div className='flex h-16 w-full flex-row py-2 shadow-md'>
+    <div className='flex h-16 w-full flex-row py-2'>
       <div className='flex w-64 flex-row items-center space-x-4 px-4'>
         <LanguageRoundedIcon />
         <Typography level='title-sm' textColor='text.primary'>

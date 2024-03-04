@@ -1,39 +1,10 @@
-import {
-  AspectRatio,
-  Avatar,
-  AvatarGroup,
-  Box,
-  Button,
-  Chip,
-  CssBaseline,
-  CssVarsProvider,
-  Divider,
-  IconButton,
-  List,
-  ListDivider,
-  ListItem,
-  ListItemButton,
-  ListItemContent,
-  Sheet,
-  Stack,
-  Tab,
-  TabList,
-  TabPanel,
-  Tabs,
-  Typography,
-} from '@mui/joy';
-import renderFilters from './components/pages/UserDashboardPage';
-import FileCard from './components/core/file-card/FileCard';
-import FolderCard from './components/core/folder-card/FolderCard';
+import { AspectRatio, Avatar, AvatarGroup, Box, Button, Chip, CssBaseline, CssVarsProvider } from '@mui/joy';
 import Navigation from './components/layout/Navigation';
-import SideDrawer from './components/layout/SideDrawer';
 import { useEffect, useState } from 'react';
-import Layout from './components/layout/Layout';
-import { EnvelopeIcon, FolderIcon, PencilIcon, ShareIcon, UserGroupIcon, XCircleIcon } from '@heroicons/react/16/solid';
+import Muiii from './components/layout/Muiii';
 import Header from './components/layout/Header';
-import TableFiles from './components/test/TableFiles';
-import SuperLayout from './components/layout/SuperLayout';
 import FileBrowser from './components/layout/FileBrowser';
+import FileInfo from './components/layout/FIleInfo';
 
 function App() {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -41,27 +12,26 @@ function App() {
   return (
     <CssVarsProvider disableTransitionOnChange>
       <CssBaseline />
-      <div className='h-screen grid-cols-1'>
-        <Layout.Header>
-          <Header
-            userAvatar='https://i.pinimg.com/280x280_RS/01/6a/45/016a45c595efdc6d97c7fbc5a562f78b.jpg'
-            userName='Nguyen Quang Tuyen'
-            userEmail='abcd@efgh.com'
-          />
-        </Layout.Header>
+      <div className='max-h-screen grid-cols-1'>
+        <div className='shadow-sm'>
+          <Muiii.Header>
+            <Header
+              userAvatar='https://i.pinimg.com/280x280_RS/01/6a/45/016a45c595efdc6d97c7fbc5a562f78b.jpg'
+              userName='Nguyen Quang Tuyen'
+              userEmail='abcd@efgh.com'
+            />
+          </Muiii.Header>
+        </div>
         <div className='flex h-full flex-row'>
-          <div className='w-64'>
-            <Layout.SideNav>
+          <div className='w-64 shadow-sm'>
+            <Muiii.SideNav>
               <Navigation />
-            </Layout.SideNav>
+            </Muiii.SideNav>
           </div>
-          <div className='w-[1200px]'>
-            <Layout.Main>
+          <div className='w-auto'>
+            <Muiii.Main>
               <FileBrowser />
-            </Layout.Main>
-          </div>
-          <div>
-            <div>file info</div>
+            </Muiii.Main>
           </div>
         </div>
       </div>
