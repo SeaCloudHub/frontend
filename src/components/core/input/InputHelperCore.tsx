@@ -7,7 +7,7 @@ type InputHelperCore = {
 export default function InputHelperCore({ variant, message, className }: InputHelperCore) {
   return (
     <div
-      className={`w-full px-auto py-auto text-[13px] font-[500] leading-[160%] ml-20 ${className}`}
+      className={`px-auto py-auto ml-20 w-full text-[13px] font-[500] leading-[160%] ${className}`}
       style={{ color: variant === 'error' ? '#EA0B0B' : '#C1C1CF' }}>
       {message}
     </div>

@@ -19,9 +19,9 @@ const Register = () => {
 
   return (
     <div>
-      <div className='sm:w-1/2 sm:mx-auto  md:w-2/4 mdLg:w-1/2 lg:w-2/5 mx-5 min-w-max'>
+      <div className='mdLg:w-1/2 mx-5  min-w-max sm:mx-auto sm:w-1/2 md:w-2/4 lg:w-2/5'>
         <form className='flex flex-col gap-1'>
-          <LabelCore title='Sign up' className='text-center pr-10 bg-white text-4xl font-bold' width='w-full' />
+          <LabelCore title='Sign up' className='bg-white pr-10 text-center text-4xl font-bold' width='w-full' />
           {/* map field from formik */}
           {Object.keys(formik.values).map((key, index) => (
             <TextFieldCore

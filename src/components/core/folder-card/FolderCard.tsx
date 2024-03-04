@@ -1,6 +1,7 @@
 import { EllipsisVerticalIcon, PencilIcon, ShareIcon, StarIcon, TrashIcon } from '@heroicons/react/16/solid';
 import { DocumentIcon, FolderIcon, MusicalNoteIcon, PhotoIcon } from '@heroicons/react/24/outline';
 import { DocumentTextIcon } from '@heroicons/react/24/outline';
+import { Info } from '@mui/icons-material';
 import { AspectRatio, Card, CardOverflow, Dropdown, IconButton, Menu, MenuButton, MenuItem, Typography } from '@mui/joy';
 import { useState } from 'react';
 
@@ -11,7 +12,8 @@ interface FolderCardProps {
   onDoubleClick?: () => void;
 }
 
-const menuItems = [
+const folderOperations = [
+  { icon: <Info />, label: 'Folder infomation' },
   { icon: <PencilIcon />, label: 'Rename file' },
   { icon: <ShareIcon />, label: 'Share file' },
   { icon: <TrashIcon />, label: 'Delete file' },
@@ -32,7 +34,7 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, type, onClick, onDoubleC
 
   return (
     <div
-      className='shadow-sm cursor-pointer hover:brightness-90'
+      className='cursor-pointer shadow-sm hover:brightness-90'
       onClick={() => {
         setIsActive(!isActive);
         if (onClick) {
@@ -57,19 +59,19 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, type, onClick, onDoubleC
                 padding: 0,
               }}>
               <IconButton component='span' variant='plain' color='neutral' size='sm'>
-                <EllipsisVerticalIcon className='w-6 h-6' />
+                <EllipsisVerticalIcon className='h-6 w-6' />
               </IconButton>
             </MenuButton>
 
             <Menu placement='bottom-start' size='sm'>
-              {menuItems.map((item, index) => (
+              {folderOperations.map((item, index) => (
                 <MenuItem key={index}>
                   <div
                     className={`flex 
                   ${item.label.includes('Delete') ? 'text-red-500' : ''}
                   `}>
-                    <div className='w-6 h-6 mr-2'>{item.icon}</div>
-                    <div className='text-nowrap mr-2'>{item.label}</div>
+                    <div className='mr-2 h-6 w-6'>{item.icon}</div>
+                    <div className='mr-2 text-nowrap'>{item.label}</div>
                   </div>
                 </MenuItem>
               ))}

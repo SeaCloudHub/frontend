@@ -41,7 +41,7 @@ const ButtonContainerStyle = styled(Button)(
 
 const ButtonContainer = ({ title, color, background, backgroundHover, icon, size, tooltip }: ButtonContainerProps) => {
   return (
-    <Tooltip title={tooltip}>
+    <Tooltip title={tooltip} style={{ zIndex: 3001 }}>
       <ButtonContainerStyle
         startIcon={icon}
         Size={size}

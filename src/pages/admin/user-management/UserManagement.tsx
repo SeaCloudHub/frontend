@@ -23,12 +23,12 @@ const UserManagement = () => {
     };
   }, []);
   return (
-    <div className='w-full flex flex-col items-end space-y-5'>
-      <div className={`${phoneMode ? 'fixed left-2 bottom-2 w-full z-10' : ''}`}>
+    <div className='flex w-full flex-col items-end space-y-5'>
+      <div className={`${phoneMode ? 'fixed bottom-2 left-2 z-10 w-full' : ''}`}>
         <ButtonContainer tooltip={'Add user'} title='Add user' background='#063768' icon={<IconifyIcon icon={'gg:add'} />} />
       </div>
       {phoneMode && (
-        <div className='flex flex-col items-center w-full space-y-3'>
+        <div className='flex w-full flex-col items-center space-y-3'>
           {userInfo.map((item, index) => (
             <UserInfoPhoneMode
               key={index}

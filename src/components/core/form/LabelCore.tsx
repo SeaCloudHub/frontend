@@ -9,8 +9,8 @@ type LabelCoreProps = {
 
 const LabelCore = ({ title, className, isRequired, width }: LabelCoreProps) => {
   return (
-    <p className={`pl-10 py-[19px] ${width ? width : 'w-[20%]'} bg-[#f0f0f7] ${className}`}>
-      {title} {isRequired ? <span className='text-[#ff003e] ml-1'>*</span> : <></>}
+    <p className={`py-[19px] pl-10 ${width ? width : 'w-[20%]'} bg-[#f0f0f7] ${className}`}>
+      {title} {isRequired ? <span className='ml-1 text-[#ff003e]'>*</span> : <></>}
     </p>
   );
 };

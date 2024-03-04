@@ -13,15 +13,15 @@ type MenuOptionProps = {
 const MenuOption = ({ options, path }: MenuOptionProps) => {
   return (
     <div
-      className={`option-container absolute w-full bg-white left-0 top-full
-        border-t border-[#4006B2]`}>
+      className={`option-container absolute left-0 top-full w-full border-t
+        border-[#4006B2] bg-white`}>
       {options &&
         options.map((item) => (
           <Link key={item.id} href={`${item.id}`}>
             <div
-              className={`h-full pl-3 xl:pl-[24px] py-[12px] text-base 
-              hover:bg-[#F0F0F7] transition-all duration-200 ease-in-out
-              ${path === item.id ? 'text-[#4006B2] font-medium' : 'text-black font-normal'}`}>
+              className={`h-full py-[12px] pl-3 text-base transition-all 
+              duration-200 ease-in-out hover:bg-[#F0F0F7] xl:pl-[24px]
+              ${path === item.id ? 'font-medium text-[#4006B2]' : 'font-normal text-black'}`}>
               {item.value}
             </div>
           </Link>

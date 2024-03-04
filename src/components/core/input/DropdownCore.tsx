@@ -30,7 +30,7 @@ const DropdownCore = ({
   return (
     <div
       className={`w-auto ${
-        label && `gap-3 flex items-center font-normal text-base leading-[25.6px] !text-[#535353] whitespace-nowrap`
+        label && `flex items-center gap-3 whitespace-nowrap text-base font-normal leading-[25.6px] !text-[#535353]`
       }`}>
       {label}
       <Select

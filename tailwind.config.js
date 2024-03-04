@@ -4,8 +4,8 @@ export default {
   theme: {
     extend: {
       zIndex: {
-        navbar: '2000',
-        sidebar: '3000',
+        navbar: '1498',
+        sidebar: '1499',
       },
     },
   },
