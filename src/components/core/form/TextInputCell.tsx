@@ -14,7 +14,7 @@ const TextInputCell = ({ type = 'text', className, style, errorMessage, value, .
   return (
     <InputCell className={`${className} ${errorMessage ? 'py-4' : ''}`}>
       <TextInputCore {...others} value={value} className={`h-[40px] text-base ${style}`} type={type} />
-      {errorMessage && <p className='text-red-500 mt-1 text-sm font-semibold'>{errorMessage}</p>}
+      {errorMessage && <p className='mt-1 text-sm font-semibold text-red-500'>{errorMessage}</p>}
     </InputCell>
   );
 };

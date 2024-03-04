@@ -19,10 +19,10 @@ const Login = () => {
     },
   });
   return (
-    <div className='flex flex-col items-center justify-center h-screen'>
-      <div className='sm:w-1/2 sm:mx-auto  md:w-2/4 mdLg:w-1/2 lg:w-2/5 mx-5 min-w-max'>
+    <div className='flex h-screen flex-col items-center justify-center'>
+      <div className='mdLg:w-1/2 mx-5  min-w-max sm:mx-auto sm:w-1/2 md:w-2/4 lg:w-2/5'>
         <form className='flex flex-col gap-3'>
-          <LabelCore title='Login' className='text-center pr-10 bg-white text-4xl font-bold' width='w-full' />
+          <LabelCore title='Login' className='bg-white pr-10 text-center text-4xl font-bold' width='w-full' />
           {/* map field from formik */}
           {Object.keys(formik.values).map((key, index) => (
             <TextFieldCore
@@ -51,7 +51,7 @@ const Login = () => {
             loading={isLogin}
             disabled={isLogin}
           />
-          <div className='w-full flex items-center justify-between '>
+          <div className='flex w-full items-center justify-between '>
             <Link to={'/t'} className='text-sm text-blue-500 '>
               Forgot password?
             </Link>
@@ -59,22 +59,22 @@ const Login = () => {
               Don't have an account?
             </Link>
           </div>
-          <div className='flex items-center my-6'>
-            <hr className='flex-grow bg-gray-500 h-1 rounded-sm' />
+          <div className='my-6 flex items-center'>
+            <hr className='h-1 flex-grow rounded-sm bg-gray-500' />
             <div className='mx-4 text-gray-500'>Or sign in with</div>
-            <hr className='flex-grow bg-gray-500 h-1 rounded-sm' />
+            <hr className='h-1 flex-grow rounded-sm bg-gray-500' />
           </div>
           <div className='flex items-center justify-center'>
             <div
-              className='flex rounded-md justify-stretch border bg-red-200 p-2 min-w-fit cursor-pointer mr-2 hover:bg-red-300'
+              className='mr-2 flex min-w-fit cursor-pointer justify-stretch rounded-md border bg-red-200 p-2 hover:bg-red-300'
               onClick={() => {}}>
-              <FcGoogle className='w-8 h-8' />
+              <FcGoogle className='h-8 w-8' />
             </div>
             {/* sign in with facebook */}
             <div
-              className='flex rounded-md justify-stretch border bg-blue-200 p-2 min-w-fit cursor-pointer ml-2 hover:bg-blue-300'
+              className='ml-2 flex min-w-fit cursor-pointer justify-stretch rounded-md border bg-blue-200 p-2 hover:bg-blue-300'
               onClick={() => {}}>
-              <FaSquareFacebook className='w-8 h-8' />
+              <FaSquareFacebook className='h-8 w-8' />
             </div>
           </div>
         </form>

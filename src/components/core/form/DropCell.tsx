@@ -18,7 +18,7 @@ const DropCell = ({ className, options, name, onChange, placeholder, isError, er
   return (
     <InputCell className={classNames(className, { 'py-2': errorMessage })}>
       <DropdownCore style='w-full' onChange={onChange} options={options} placeholder={placeholder} value={value} />
-      {errorMessage && <p className='text-red-500 mt-1 text-sm font-semibold'>{errorMessage}</p>}
+      {errorMessage && <p className='mt-1 text-sm font-semibold text-red-500'>{errorMessage}</p>}
     </InputCell>
   );
 };

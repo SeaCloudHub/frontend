@@ -7,8 +7,8 @@ type InputCellProps = {
 
 const InputCell = ({ children, className }: InputCellProps) => {
   return (
-    <div className={`flex justify-center items-center ${className}`}>
-      <div className='px-[40px] w-full flex flex-col'>{children}</div>
+    <div className={`flex items-center justify-center ${className}`}>
+      <div className='flex w-full flex-col px-[40px]'>{children}</div>
     </div>
   );
 };

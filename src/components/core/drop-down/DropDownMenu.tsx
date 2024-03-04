@@ -5,16 +5,23 @@ import { ButtonBase } from '@mui/material';
 interface DropDownMenuProps {
   button: React.ReactNode;
   menuItems: { icon: React.ReactNode; label: string }[];
+  onSelected?: (index: number) => void;
 }
 
-export const DropDownMenu: React.FC<DropDownMenuProps> = ({ button, menuItems }) => {
+export const DropDownMenu: React.FC<DropDownMenuProps> = ({ button, menuItems, onSelected }) => {
   return (
     <Dropdown>
       {button}
 
       <Menu placement='bottom-start' size='sm'>
         {menuItems.map((item, index) => (
-          <MenuItem key={index}>
+          <MenuItem
+            key={index}
+            onClick={() => {
+              if (onSelected) {
+                onSelected(index);
+              }
+            }}>
             <div
               className={`flex 
                   ${item.label.includes('Delete') ? 'text-red-500' : ''}

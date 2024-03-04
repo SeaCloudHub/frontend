@@ -4,16 +4,27 @@ import { DocumentTextIcon } from '@heroicons/react/24/outline';
 import { AspectRatio, Card, CardOverflow, IconButton, MenuButton, Typography } from '@mui/joy';
 import { useState } from 'react';
 import { DropDownMenu } from '../drop-down/DropDownMenu';
+import { Info } from '@mui/icons-material';
 
-interface FileCardProps {
+interface FileDetails {
+  id: string;
   title: string;
   size: string;
+  type?: string;
+  owner?: string;
+  modified?: string;
+  created?: string;
   preview?: string;
-  onClick?: () => void;
-  onDoubleClick?: () => void;
 }
 
-export const menuItems = [
+interface FileCardProps extends FileDetails {
+  onClick?: () => void;
+  onDoubleClick?: () => void;
+  onFileInfo?: (id: string) => void;
+}
+
+export const fileOperation = [
+  { icon: <Info />, label: 'FIle infomation' },
   { icon: <PencilIcon />, label: 'Rename file' },
   { icon: <ShareIcon />, label: 'Share file' },
   { icon: <TrashIcon />, label: 'Delete file' },
@@ -32,7 +43,7 @@ const type2Icon = (type: string) => {
   return icon ? icon.icon : <DocumentIcon />;
 };
 
-const FileCard: React.FC<FileCardProps> = ({ title, size, preview, onClick, onDoubleClick }) => {
+const FileCard: React.FC<FileCardProps> = ({ id, title, size, preview, onClick, onDoubleClick, onFileInfo }) => {
   const type = title.split('.').length > 1 ? title.split('.').pop() : 'unknown';
 
   const [isActive, setIsActive] = useState(false);
@@ -70,7 +81,16 @@ const FileCard: React.FC<FileCardProps> = ({ title, size, preview, onClick, onDo
                 </IconButton>
               </MenuButton>
             }
-            menuItems={menuItems}
+            menuItems={fileOperation}
+            onSelected={(index) => {
+              console.log('Selected', index);
+              // File info
+              if (index === 0) {
+                if (onFileInfo) {
+                  onFileInfo(id);
+                }
+              }
+            }}
           />
         </div>
 
