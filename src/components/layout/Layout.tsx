@@ -67,14 +67,11 @@ const SideNav: React.FC<WrapperProps> = ({ children }) => {
     <Box
       sx={[
         {
-          p: 2,
+          p: 1,
           bgcolor: 'background.surface',
           borderRight: '1px solid',
           borderColor: 'divider',
-          display: {
-            xs: 'none',
-            sm: 'initial',
-          },
+          height: 1,
         },
       ]}>
       {children}
@@ -150,4 +147,3 @@ export default {
   SideDrawer,
   Main,
 };
-

@@ -33,6 +33,7 @@ import { EnvelopeIcon, FolderIcon, PencilIcon, ShareIcon, UserGroupIcon, XCircle
 import Header from './components/layout/Header';
 import TableFiles from './components/test/TableFiles';
 import SuperLayout from './components/layout/SuperLayout';
+import FileBrowser from './components/layout/FileBrowser';
 
 function App() {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -48,10 +49,20 @@ function App() {
             userEmail='abcd@efgh.com'
           />
         </Layout.Header>
-        <div className='flex flex-row'>
-          <div className='w-64'>{<Navigation />}</div>
-          <div className='w-full'>{<div>adu</div>}</div>
-          <div className='w-80'> {<div>adu</div>}</div>L
+        <div className='flex h-full flex-row'>
+          <div className='w-64'>
+            <Layout.SideNav>
+              <Navigation />
+            </Layout.SideNav>
+          </div>
+          <div className='w-[1200px]'>
+            <Layout.Main>
+              <FileBrowser />
+            </Layout.Main>
+          </div>
+          <div>
+            <div>file info</div>
+          </div>
         </div>
       </div>
     </CssVarsProvider>
