@@ -8,8 +8,8 @@ type NavbarProps = {
 };
 const Navbar = ({ isShrink, phoneMode }: NavbarProps) => {
   return (
-    <div className={`${phoneMode ? '!important pl-0' : ''} nav-bar ${isShrink ? 'nav-bar-shrink' : ''}`}>
-      <div className='flex h-full w-full items-center justify-between px-3'>
+    <div className={`z-navbar ${phoneMode ? 'pl-0 !important' : ''} nav-bar ${isShrink ? 'nav-bar-shrink' : ''}`}>
+      <div className='px-3 flex items-center justify-between w-full h-full'>
         <div className={`${phoneMode ? 'w-full' : 'w-6/12'} flex h-[50px] items-center justify-center`}>
           <div className={`${phoneMode ? 'mr-2 block' : 'hidden'}`}>
             <ButtonIcon icon='ic:outline-menu' size={25} />
