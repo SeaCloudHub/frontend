@@ -1,12 +1,14 @@
-import { Box, CssBaseline, CssVarsProvider } from '@mui/joy';
-import renderFilters from './components/pages/DashboardPage';
-import FileCard from './components/core/file-card/FileCard';
-import FolderCard from './components/core/folder-card/FolderCard';
+// import { Box, CssBaseline, CssVarsProvider } from '@mui/joy';
+// import renderFilters from './components/pages/DashboardPage';
+// import FileCard from './components/core/file-card/FileCard';
+// import FolderCard from './components/core/folder-card/FolderCard';
+
+import TestPage from './pages/TestPage';
 
 function App() {
   return (
     <>
-      <CssVarsProvider disableTransitionOnChange>
+      {/* <CssVarsProvider disableTransitionOnChange>
         <CssBaseline />
         <div className='flex flex-wrap gap-2 '>
           <div className='w-72'>
@@ -52,7 +54,9 @@ function App() {
         <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>{renderFilters()}</Box>
         <div className='flex flex-row gap-x-2 '>{renderFilters()}</div>
         <div className='w-40'>{renderFilters()}</div>
-      </CssVarsProvider>
+      </CssVarsProvider> */}
+      <TestPage />
+      {/* <DynamicLayout /> */}
     </>
   );
 }

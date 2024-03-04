@@ -1,5 +1,5 @@
-import { adminSidebar, userSidebar } from '@/utils/constants/sidebar.constant';
-import { SidebarItemType } from '@/utils/types/sidebar-item.type';
+import { adminSidebar, userSidebar } from '../../utils/constants/sidebar.constant';
+import { SidebarItemType } from '../../utils/types/sidebar-item.type';
 import { Box } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Role } from '../../utils/enums/role.enum';
