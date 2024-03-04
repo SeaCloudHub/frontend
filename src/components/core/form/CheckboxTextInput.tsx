@@ -39,7 +39,7 @@ const CheckboxTextInput = ({
   };
 
   return (
-    <div className={`flex items-center gap-4 mr-[30px]`}>
+    <div className={`mr-[30px] flex items-center gap-4`}>
       <Checkbox
         checked={checked ? checked : isChecked}
         defaultChecked={defaultChecked}
@@ -51,7 +51,7 @@ const CheckboxTextInput = ({
       </Checkbox>
       <TextInputCore
         {...props}
-        className='xl:w-[300px] 2xl:w-[368px] font-bold h-[40px]'
+        className='h-[40px] font-bold xl:w-[300px] 2xl:w-[368px]'
         disabled={checked ? !checked : !isChecked}
         onChange={handleInputChange}
         type={type}

@@ -34,7 +34,7 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, type, onClick, onDoubleC
 
   return (
     <div
-      className='shadow-sm cursor-pointer hover:brightness-90'
+      className='cursor-pointer shadow-sm hover:brightness-90'
       onClick={() => {
         setIsActive(!isActive);
         if (onClick) {
@@ -59,7 +59,7 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, type, onClick, onDoubleC
                 padding: 0,
               }}>
               <IconButton component='span' variant='plain' color='neutral' size='sm'>
-                <EllipsisVerticalIcon className='w-6 h-6' />
+                <EllipsisVerticalIcon className='h-6 w-6' />
               </IconButton>
             </MenuButton>
 
@@ -70,8 +70,8 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, type, onClick, onDoubleC
                     className={`flex 
                   ${item.label.includes('Delete') ? 'text-red-500' : ''}
                   `}>
-                    <div className='w-6 h-6 mr-2'>{item.icon}</div>
-                    <div className='text-nowrap mr-2'>{item.label}</div>
+                    <div className='mr-2 h-6 w-6'>{item.icon}</div>
+                    <div className='mr-2 text-nowrap'>{item.label}</div>
                   </div>
                 </MenuItem>
               ))}
