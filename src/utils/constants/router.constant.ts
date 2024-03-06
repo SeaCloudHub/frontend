@@ -1,7 +1,8 @@
-import Login from '../../pages/auth/Login';
 import DashBoard from '../../pages/admin/dashboard/DashBoard';
 import StorageManagement from '../../pages/admin/storage-management/StorageManagement';
 import UserManagement from '../../pages/admin/user-management/UserManagement';
+import Login from '../../pages/auth/Login';
+import Register from '../../pages/auth/Signup';
 import Memory from '../../pages/user/memory/Memory';
 import MyDrive from '../../pages/user/my-drive/MyDrive';
 import Priority from '../../pages/user/priority/Priority';
@@ -16,6 +17,7 @@ export const CUSTOMER_HOME = '/customer';
 
 /* Auth Routes */
 export const AUTH_LOGIN = `${AUTH_HOME}/login`;
+export const SIGN_UP = `${AUTH_HOME}/signup`;
 export const AUTH_TOS = `${AUTH_HOME}/tos`;
 //Admin routes
 export const ADMIN_USER_MANAGEMENT = `${ADMIN_HOME}/user-management`;
@@ -30,7 +32,10 @@ export const CUSTOMER_TRASH = `${CUSTOMER_HOME}/trash`;
 export const CUSTOMER_MEMORY = `${CUSTOMER_HOME}/memory`;
 
 export const routes = {
-  auth: [{ path: AUTH_LOGIN, component: Login }],
+  auth: [
+    { path: AUTH_LOGIN, component: Login },
+    { path: SIGN_UP, component: Register },
+  ],
   admin: [
     { path: ADMIN_HOME, component: DashBoard },
     { path: ADMIN_USER_MANAGEMENT, component: UserManagement },

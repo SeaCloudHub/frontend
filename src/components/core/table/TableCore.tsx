@@ -40,7 +40,9 @@ const TableCore = <T extends object>({ columns, data, action, Element, renderCel
               <TableRow key={rowIndex}>
                 {columns.map((column, colIndex) => (
                   <TableCell key={colIndex} align={column.align}>
-                    {renderCell && renderCell[column.id as keyof T] ? renderCell[column.id as keyof T](row) : row[column.id]}
+                    {renderCell && renderCell[column.id as string]
+                      ? (renderCell[column.id as string](row) as React.ReactNode)
+                      : (row[column.id] as React.ReactNode)}
                   </TableCell>
                 ))}
                 {action && <TableCell style={{ maxWidth: 10 }}>{Element}</TableCell>}
