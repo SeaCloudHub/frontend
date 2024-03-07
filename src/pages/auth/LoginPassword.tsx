@@ -5,13 +5,14 @@ import { Avatar, Button, Checkbox, LinearProgress, Typography } from '@mui/mater
 import { useFormik } from 'formik';
 import React from 'react';
 import AuthLink from './auth-link/AuthLink';
-import SelectCore from '../../components/core/drop-down/SelectCore';
-import { loginFooter } from '../../utils/constants/login-footer.constant';
+import AuthFooter from './AuthFooter';
 
 const LoginPassword = () => {
   const [currentValue, setCurrentValue] = React.useState('');
   const [isLogin, setIsLogin] = React.useState(false);
   const [isShowPassword, setIsShowPassword] = React.useState(false);
+
+  const handleChange = (e: { target: { value: React.SetStateAction<string> } }) => setCurrentValue(e.target.value);
 
   const formik = useFormik({
     initialValues: loginPasswordInitialValues,
@@ -85,20 +86,7 @@ const LoginPassword = () => {
             </div>
           </div>
         </form>
-        <div className='mx-3 mt-2 flex justify-between'>
-          <SelectCore
-            currentValue={currentValue}
-            items={['One', 'Two', 'Three']}
-            handleChange={(e) => setCurrentValue(e.target.value)}
-          />
-          <div className='flex gap-4'>
-            {loginFooter.map((item, index) => (
-              <AuthLink key={index} link={item.path} className='text-black'>
-                {item.label}
-              </AuthLink>
-            ))}
-          </div>
-        </div>
+        <AuthFooter currentValue={currentValue} handleChange={handleChange} items={['One', 'Two', 'Three']} />
       </div>
     </div>
   );

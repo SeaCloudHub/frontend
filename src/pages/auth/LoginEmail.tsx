@@ -4,15 +4,16 @@ import { loginEmailInitialValues, loginEmailSchema } from '../../helpers/form-sc
 import { Button, LinearProgress, Typography } from '@mui/material';
 import TextFieldCore from '../../components/core/form/TextFieldCore';
 import AuthLink from './auth-link/AuthLink';
-import SelectCore from '../../components/core/drop-down/SelectCore';
 import IconifyIcon from '../../components/core/Icon/IConCore';
-import { loginFooter } from '../../utils/constants/login-footer.constant';
 import { useNavigate } from 'react-router-dom';
+import AuthFooter from './AuthFooter';
 
 const LoginEmail = () => {
   const [isLogin, setIsLogin] = React.useState(false);
   const [currentValue, setCurrentValue] = React.useState('');
   const navigate = useNavigate();
+
+  const handleChange = (e: { target: { value: React.SetStateAction<string> } }) => setCurrentValue(e.target.value);
 
   const formik = useFormik({
     initialValues: loginEmailInitialValues,
@@ -81,20 +82,7 @@ const LoginEmail = () => {
             </div>
           </div>
         </form>
-        <div className='mx-10 mt-2 flex justify-between'>
-          <SelectCore
-            currentValue={currentValue}
-            items={['One', 'Two', 'Three']}
-            handleChange={(e) => setCurrentValue(e.target.value)}
-          />
-          <div className='flex gap-4'>
-            {loginFooter.map((item, index) => (
-              <AuthLink key={index} link={item.path} className='text-black'>
-                {item.label}
-              </AuthLink>
-            ))}
-          </div>
-        </div>
+        <AuthFooter currentValue={currentValue} handleChange={handleChange} items={['One', 'Two', 'Three']} />
       </div>
     </div>
   );
