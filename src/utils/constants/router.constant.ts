@@ -1,4 +1,4 @@
-import Login from '../../pages/auth/Login';
+import LoginEmail from '../../pages/auth/LoginEmail';
 import DashBoard from '../../pages/admin/dashboard/DashBoard';
 import StorageManagement from '../../pages/admin/storage-management/StorageManagement';
 import UserManagement from '../../pages/admin/user-management/UserManagement';
@@ -8,6 +8,7 @@ import Priority from '../../pages/user/priority/Priority';
 import Shared from '../../pages/user/shared/Shared';
 import Starred from '../../pages/user/starred/Starred';
 import Trash from '../../pages/user/trash/Trash';
+import LoginPassword from '../../pages/auth/LoginPassword';
 
 export const HOME = '/';
 export const AUTH_HOME = '/auth';
@@ -15,7 +16,11 @@ export const ADMIN_HOME = '/admin';
 export const CUSTOMER_HOME = '/customer';
 
 /* Auth Routes */
-export const AUTH_LOGIN = `${AUTH_HOME}/login`;
+export const AUTH_LOGIN_EMAIL = `${AUTH_HOME}/login/identifier`;
+export const AUTH_LOGIN_PASSWORD = `${AUTH_HOME}/login/challenge`;
+export const AUTH_FORGOT_PASSWORD = `${AUTH_HOME}/forgot-password`;
+export const AUTH_RESET_PASSWORD = `${AUTH_HOME}/reset-password`;
+
 export const AUTH_TOS = `${AUTH_HOME}/tos`;
 //Admin routes
 export const ADMIN_USER_MANAGEMENT = `${ADMIN_HOME}/user-management`;
@@ -30,7 +35,10 @@ export const CUSTOMER_TRASH = `${CUSTOMER_HOME}/trash`;
 export const CUSTOMER_MEMORY = `${CUSTOMER_HOME}/memory`;
 
 export const routes = {
-  auth: [{ path: AUTH_LOGIN, component: Login }],
+  auth: [
+    { path: AUTH_LOGIN_EMAIL, component: LoginEmail },
+    { path: AUTH_LOGIN_PASSWORD, component: LoginPassword },
+  ],
   admin: [
     { path: ADMIN_HOME, component: DashBoard },
     { path: ADMIN_USER_MANAGEMENT, component: UserManagement },
