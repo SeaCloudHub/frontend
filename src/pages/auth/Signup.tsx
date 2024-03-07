@@ -28,8 +28,7 @@ const Register = () => {
               key={index}
               label={key.charAt(0).toUpperCase() + key.slice(1)}
               name={key}
-              type={key}
-              placeholder={key}
+              // type={key}
               className='w-full'
               disabled={isSignup}
               value={Object.values(formik.values)[index] as string}
