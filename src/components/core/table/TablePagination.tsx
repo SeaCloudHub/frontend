@@ -7,10 +7,18 @@ type TablePaginationProps<T> = TableCoreProps<T> & {
   onPageChange: (page: number) => void;
 };
 
-const TablePagination = <T extends object>({ columns, paging, data, Element, action, onPageChange }: TablePaginationProps<T>) => {
+const TablePagination = <T extends object>({
+  columns,
+  paging,
+  data,
+  Element,
+  action,
+  onPageChange,
+  renderCell,
+}: TablePaginationProps<T>) => {
   return (
     <div className='flex flex-col items-center space-y-2'>
-      <TableCore columns={columns} data={data} action={action} Element={Element} />
+      <TableCore renderCell={renderCell} columns={columns} data={data} action={action} Element={Element} />
       <PaginationCore
         size='large'
         currentPage={paging.page}

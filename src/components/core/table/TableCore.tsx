@@ -7,9 +7,10 @@ export type TableCoreProps<T> = {
   data: T[];
   action?: boolean;
   Element?: React.ReactNode | JSX.Element;
+  renderCell?: Record<string, (rowData: T) => React.ReactNode>;
 };
 
-const TableCore = <T extends object>({ columns, data, action, Element }: TableCoreProps<T>) => {
+const TableCore = <T extends object>({ columns, data, action, Element, renderCell }: TableCoreProps<T>) => {
   return (
     <div className='w-full'>
       <TableContainer component={Paper}>
@@ -39,7 +40,9 @@ const TableCore = <T extends object>({ columns, data, action, Element }: TableCo
               <TableRow key={rowIndex}>
                 {columns.map((column, colIndex) => (
                   <TableCell key={colIndex} align={column.align}>
-                    {row[column.id] as React.ReactNode}
+                    {renderCell && renderCell[column.id as string]
+                      ? (renderCell[column.id as string](row) as React.ReactNode)
+                      : (row[column.id] as React.ReactNode)}
                   </TableCell>
                 ))}
                 {action && <TableCell style={{ maxWidth: 10 }}>{Element}</TableCell>}

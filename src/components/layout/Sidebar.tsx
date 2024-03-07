@@ -45,8 +45,8 @@ const Sidebar = ({ onShrinkChange, role }: SidebarProps) => {
 
   return (
     <>
-      <div className={`sidebar ${shrink ? '' : 'sidebar-lg'} z-sidebar`}>
-        <div className='w-full flex justify-center items-center'>
+      <div className={`sidebar z-20 ${shrink ? '' : 'sidebar-lg'}`}>
+        <div className='flex w-full items-center justify-center'>
           {shrink ? (
             <ButtonIcon
               icon='radix-icons:hamburger-menu'

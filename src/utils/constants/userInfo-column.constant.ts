@@ -8,7 +8,7 @@ export const userInfoColumns: Column<UserInfo>[] = [
     align: 'center',
     minWidth: 100,
   },
-  { id: 'name', label: 'Name', minWidth: 100 },
-  { id: 'usedMemory', label: 'Memory Detail', minWidth: 50 },
-  { id: 'lastAccess', label: 'Last Access', minWidth: 150 },
+  { id: 'name', label: 'Name', align: 'center', minWidth: 100 },
+  { id: 'usedMemory', label: 'Memory Detail', align: 'center', minWidth: 50 },
+  { id: 'lastAccess', label: 'Last Access', align: 'center', minWidth: 150 },
 ];

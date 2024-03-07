@@ -2,6 +2,7 @@ import LoginEmail from '../../pages/auth/LoginEmail';
 import DashBoard from '../../pages/admin/dashboard/DashBoard';
 import StorageManagement from '../../pages/admin/storage-management/StorageManagement';
 import UserManagement from '../../pages/admin/user-management/UserManagement';
+import Register from '../../pages/auth/Signup';
 import Memory from '../../pages/user/memory/Memory';
 import MyDrive from '../../pages/user/my-drive/MyDrive';
 import Priority from '../../pages/user/priority/Priority';
@@ -21,6 +22,8 @@ export const AUTH_LOGIN_PASSWORD = `${AUTH_HOME}/login/challenge`;
 export const AUTH_FORGOT_PASSWORD = `${AUTH_HOME}/forgot-password`;
 export const AUTH_RESET_PASSWORD = `${AUTH_HOME}/reset-password`;
 
+export const AUTH_LOGIN = `${AUTH_HOME}/login`;
+export const SIGN_UP = `${AUTH_HOME}/signup`;
 export const AUTH_TOS = `${AUTH_HOME}/tos`;
 //Admin routes
 export const ADMIN_USER_MANAGEMENT = `${ADMIN_HOME}/user-management`;
@@ -38,6 +41,7 @@ export const routes = {
   auth: [
     { path: AUTH_LOGIN_EMAIL, component: LoginEmail },
     { path: AUTH_LOGIN_PASSWORD, component: LoginPassword },
+    { path: SIGN_UP, component: Register },
   ],
   admin: [
     { path: ADMIN_HOME, component: DashBoard },
