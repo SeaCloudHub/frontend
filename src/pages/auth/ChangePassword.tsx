@@ -1,18 +1,36 @@
+import { useFormik } from 'formik';
 import IconifyIcon from '../../components/core/Icon/IConCore';
 import TextFieldCore from '../../components/core/form/TextFieldCore';
-import { Button, Paper, Typography } from '@mui/material';
+import { Button, LinearProgress, Paper, Typography } from '@mui/material';
+import { changePasswordInitialValues, changePasswordSchema } from '../../helpers/form-schema/change-password.schema';
+import { useState } from 'react';
 // import React from 'react';
 
 const ChangePassword = () => {
+  const [isChange, setIsChange] = useState(false);
+
+  const formik = useFormik({
+    initialValues: changePasswordInitialValues,
+    validationSchema: changePasswordSchema,
+    onSubmit: (values) => {
+      console.log(values);
+      setIsChange(true);
+      setTimeout(() => {
+        setIsChange(false);
+      }, 2000);
+    },
+  });
+
   return (
     <div className='mx-10 text-gray-600 sm:mx-20 md:mx-40 lg:mx-[300px] xl:mx-[550px]'>
       <IconifyIcon icon='logos:google' className='mx-auto h-20 w-40' />
       <div className='title text-center text-2xl '>Change password for</div>
       <div className='email text-center text-2xl'>kimhieu@gmail.com</div>
       <div className='help'></div>
+      {isChange && <LinearProgress className='mx-5 translate-y-6' />}
       <Paper
         component={'form'}
-        onSubmit={() => {}}
+        onSubmit={formik.handleSubmit}
         className='paper mt-5 border'
         elevation={3}
         sx={{ backgroundColor: '#f7f7f7', py: 5, px: 6 }}>
@@ -29,7 +47,15 @@ const ChangePassword = () => {
               }}>
               Create password
             </Typography>
-            <TextFieldCore name={'password'} />
+            <TextFieldCore
+              name={'password'}
+              disabled={isChange}
+              type='password'
+              value={formik.values.password}
+              onChange={formik.handleChange}
+              error={formik.touched.password && Boolean(formik.errors.password)}
+              helperText={formik.touched.password && formik.errors.password}
+            />
           </div>
           <div className='confirm-password'>
             <Typography
@@ -39,9 +65,17 @@ const ChangePassword = () => {
               }}>
               Confirm password
             </Typography>
-            <TextFieldCore name={'confirmPassword'} />
+            <TextFieldCore
+              name={'confirmPassword'}
+              disabled={isChange}
+              value={formik.values.confirmPassword}
+              onChange={formik.handleChange}
+              error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
+              onBlur={formik.handleBlur}
+              helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
+            />
           </div>
-          <Button type='submit' className='btn' fullWidth variant='contained' size='large'>
+          <Button type='submit' className='btn' fullWidth variant='contained' size='large' disabled={isChange}>
             Change password
           </Button>
         </div>
