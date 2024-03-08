@@ -10,6 +10,7 @@ import Shared from '../../pages/user/shared/Shared';
 import Starred from '../../pages/user/starred/Starred';
 import Trash from '../../pages/user/trash/Trash';
 import LoginPassword from '../../pages/auth/LoginPassword';
+import ChangePassword from '../../pages/auth/ChangePassword';
 
 export const HOME = '/';
 export const AUTH_HOME = '/auth';
@@ -21,6 +22,7 @@ export const AUTH_LOGIN_EMAIL = `${AUTH_HOME}/login/identifier`;
 export const AUTH_LOGIN_PASSWORD = `${AUTH_HOME}/login/challenge`;
 export const AUTH_FORGOT_PASSWORD = `${AUTH_HOME}/forgot-password`;
 export const AUTH_RESET_PASSWORD = `${AUTH_HOME}/reset-password`;
+export const AUTH_CHANGE_PASSWORD = `${AUTH_HOME}/change-password`;
 
 export const AUTH_LOGIN = `${AUTH_HOME}/login`;
 export const SIGN_UP = `${AUTH_HOME}/signup`;
@@ -42,6 +44,9 @@ export const routes = {
     { path: AUTH_LOGIN_EMAIL, component: LoginEmail },
     { path: AUTH_LOGIN_PASSWORD, component: LoginPassword },
     { path: SIGN_UP, component: Register },
+    // { path: AUTH_FORGOT_PASSWORD, component: Register },
+    // { path: AUTH_RESET_PASSWORD, component: Register },
+    { path: AUTH_CHANGE_PASSWORD, component: ChangePassword },
   ],
   admin: [
     { path: ADMIN_HOME, component: DashBoard },

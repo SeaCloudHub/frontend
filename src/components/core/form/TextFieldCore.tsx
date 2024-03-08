@@ -3,7 +3,7 @@ import React from 'react';
 import { Error } from '@mui/icons-material';
 
 type TextFieldCoreProps = {
-  label: string;
+  label?: string;
   name: string;
   type?: string;
   className?: string;
@@ -35,7 +35,7 @@ const TextFieldCore = ({
       type={type}
       variant='outlined'
       label={label}
-      className={className}
+      className={`bg-white ${className}`}
       fullWidth
       value={value}
       onChange={onChange}
