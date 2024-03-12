@@ -2,6 +2,7 @@
 import DynamicLayout from './components/layout/DynamicLayout';
 import { Outlet, Route, Routes } from 'react-router-dom';
 import { routes } from './utils/constants/router.constant';
+import TuyenLayout from './components/layout/test/TuyenLayout';
 
 function App() {
   // const [drawerOpen, setDrawerOpen] = useState(false);
@@ -17,9 +18,10 @@ function App() {
         {/* layout routes */}
         <Route
           element={
-            <DynamicLayout>
-              <Outlet />
-            </DynamicLayout>
+            <TuyenLayout children={<Outlet />} />
+            // <DynamicLayout>
+            //   <Outlet />
+            // </DynamicLayout>
           }>
           {/* route của admin và custom */}
           {routes.admin.map((item, index) => (
