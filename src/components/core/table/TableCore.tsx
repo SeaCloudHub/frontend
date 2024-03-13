@@ -25,12 +25,22 @@ const TableCore = <T extends object>({ columns, data, action, Element, renderCel
                   style={{
                     minWidth: column.minWidth,
                     fontWeight: 'bold',
-                    borderRight: '1px solid #ddd',
+                    background: '#063768',
+                    color: 'white',
+                    border: '2px solid #000',
                   }}>
                   {column.label}
                 </TableCell>
               ))}
-              {action && <TableCell style={{ minWidth: 10, maxWidth: 10, borderRight: '1px solid #ddd' }}></TableCell>}
+              {action && (
+                <TableCell
+                  style={{
+                    background: '#063768',
+                    minWidth: 10,
+                    maxWidth: 10,
+                    border: '2px solid #063768',
+                  }}></TableCell>
+              )}
             </TableRow>
           </TableHead>
 
@@ -39,13 +49,15 @@ const TableCore = <T extends object>({ columns, data, action, Element, renderCel
             {data.map((row, rowIndex) => (
               <TableRow key={rowIndex}>
                 {columns.map((column, colIndex) => (
-                  <TableCell key={colIndex} align={column.align}>
+                  <TableCell key={colIndex} align={column.align} style={{ background: rowIndex % 2 == 0 ? '#e5e7eb' : '' }}>
                     {renderCell && renderCell[column.id as string]
                       ? (renderCell[column.id as string](row) as React.ReactNode)
                       : (row[column.id] as React.ReactNode)}
                   </TableCell>
                 ))}
-                {action && <TableCell style={{ maxWidth: 10 }}>{Element}</TableCell>}
+                {action && (
+                  <TableCell style={{ maxWidth: 10, background: rowIndex % 2 == 0 ? '#e5e7eb' : '' }}>{Element}</TableCell>
+                )}
               </TableRow>
             ))}
           </TableBody>
