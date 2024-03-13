@@ -1,44 +1,41 @@
-import { Nil } from '@/utils/types/utility.type';
-import './TextInputCore.css';
-
-import { stringOrUndefined } from '@/utils/parser/io.parser';
-import { Input } from 'antd';
-import React, { HTMLInputTypeAttribute } from 'react';
+import { FilledInputProps, InputLabel, InputProps, OutlinedInputProps, SxProps, TextField, Theme } from '@mui/material';
+import React from 'react';
 
 export type TextInputCoreProps = {
+  labelDirection?: 'horizontal' | 'vertical';
   label?: React.ReactNode;
-  type?: HTMLInputTypeAttribute;
-  name?: any;
+  name?: string;
+  sx?: SxProps<Theme>;
+  inputProps?: Partial<FilledInputProps> | Partial<OutlinedInputProps> | Partial<InputProps>;
   placeholder?: string;
   defaultValue?: string;
-  className?: string;
   disabled?: boolean;
   onChange?: (data?: any) => void;
-  value?: Nil<string>;
 };
 
 const TextInputCore = ({
   label,
-  type,
   name,
   placeholder,
   defaultValue,
-  className,
   disabled,
-  onChange,
-  value,
+  sx,
+  inputProps,
+  labelDirection,
 }: TextInputCoreProps) => {
+  const onChange = (event: any) => {
+    console.log(event?.target.value);
+  };
   return (
-    <div className='flex items-center'>
-      {label}
-      <Input
-        type={type}
+    <div className={`${labelDirection === 'vertical' ? 'flex flex-col justify-start' : 'flex items-center space-x-1'}`}>
+      {label && <InputLabel sx={{ fontWeight: 'bold' }}>{label}</InputLabel>}
+      <TextField
+        InputProps={inputProps}
+        sx={sx}
         name={name}
-        value={stringOrUndefined(value)}
         disabled={disabled}
         defaultValue={defaultValue}
         onChange={onChange}
-        className={`customTextInput rounded-lg border border-[#E2E2E2] leading-[25.6px] text-[#1E1E1E] ${className}`}
         placeholder={placeholder}
       />
     </div>
