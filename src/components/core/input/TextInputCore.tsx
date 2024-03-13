@@ -10,7 +10,7 @@ export type TextInputCoreProps = {
   placeholder?: string;
   defaultValue?: string;
   disabled?: boolean;
-  onChange?: (data?: any) => void;
+  onChange: (data?: string) => void;
 };
 
 const TextInputCore = ({
@@ -22,9 +22,10 @@ const TextInputCore = ({
   sx,
   inputProps,
   labelDirection,
+  onChange,
 }: TextInputCoreProps) => {
-  const onChange = (event: any) => {
-    console.log(event?.target.value);
+  const onConvertvalue = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    onChange(event?.target.value);
   };
   return (
     <div className={`${labelDirection === 'vertical' ? 'flex flex-col justify-start' : 'flex items-center space-x-1'}`}>
@@ -35,7 +36,7 @@ const TextInputCore = ({
         name={name}
         disabled={disabled}
         defaultValue={defaultValue}
-        onChange={onChange}
+        onChange={onConvertvalue}
         placeholder={placeholder}
       />
     </div>

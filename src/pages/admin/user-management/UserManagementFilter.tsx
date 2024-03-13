@@ -1,48 +1,55 @@
-import { InputAdornment, InputLabel, TextField } from '@mui/material';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import dayjs from 'dayjs';
 import IconifyIcon from '../../../components/core/Icon/IConCore';
 import ButtonContainer from '../../../components/core/button/ButtonContainer';
 import ButtonOutline from '../../../components/core/button/ButtonOutline';
+import DatePickerCore from '../../../components/core/input/DatePickerCore';
+import TextInputAdornment from '../../../components/core/input/TextInputAdornment';
+import TextInputCore from '../../../components/core/input/TextInputCore';
 import SectionBorder from '../../../components/core/section-boder/SectionBoder';
 const UserManagementFilter = () => {
-  const handle = (newDate: dayjs.Dayjs) => {
-    console.log(newDate);
-  };
   return (
     <SectionBorder title='Filter'>
       <div className='flex flex-wrap items-center '>
         <div className='mx-2 '>
-          <InputLabel sx={{ fontWeight: 'bold' }} htmlFor='name'>
-            User ID
-          </InputLabel>
-          <TextField id='name' placeholder='User ID'></TextField>
+          <TextInputCore
+            onChange={(data?: string) => {
+              console.log(data);
+            }}
+            label='User ID'
+            labelDirection='vertical'
+            placeholder='User ID'
+          />
         </div>
         <div className='mx-2 '>
-          <InputLabel sx={{ fontWeight: 'bold' }} htmlFor='name'>
-            Name
-          </InputLabel>
-          <TextField id='name' placeholder='Name'></TextField>
+          <TextInputCore
+            onChange={(data?: string) => {
+              console.log(data);
+            }}
+            label='Name'
+            labelDirection='vertical'
+            placeholder='Name'
+          />
         </div>
         <div className='mx-2 mt-4 '>
           <SectionBorder title='Last Access'>
             <div className='flex items-center space-x-2'>
               <div className='flex items-center '>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
-                    <DatePicker onChange={handle} label='From' format='YYYY/MM/DD' defaultValue={dayjs('2022-04-17')} />
-                  </DemoContainer>
-                </LocalizationProvider>
+                <DatePickerCore
+                  label='From'
+                  onChange={(newDate) => {
+                    console.log(newDate);
+                  }}
+                  defaultValue={dayjs()}
+                />
               </div>
               <div className='flex items-center '>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
-                    <DatePicker label='To' format='YYYY/MM/DD' defaultValue={dayjs('2022-04-17')} />
-                  </DemoContainer>
-                </LocalizationProvider>
+                <DatePickerCore
+                  label='To'
+                  onChange={(newDate) => {
+                    console.log(newDate);
+                  }}
+                  defaultValue={dayjs()}
+                />
               </div>
             </div>
           </SectionBorder>
@@ -51,29 +58,29 @@ const UserManagementFilter = () => {
           <SectionBorder title='Memory used'>
             <div className='flex items-center space-x-2'>
               <div className='flex items-center space-x-1'>
-                <InputLabel sx={{ fontWeight: 'bold' }} htmlFor='name'>
-                  From
-                </InputLabel>
-                <TextField
-                  InputProps={{
-                    endAdornment: <InputAdornment position='end'>%</InputAdornment>,
+                <TextInputAdornment
+                  onChange={(data?: string) => {
+                    console.log(data);
                   }}
+                  labelDirection='horizontal'
                   sx={{ maxWidth: 100 }}
-                  id='name'
-                  placeholder='0'></TextField>
+                  placeholder='0'
+                  label='From'
+                  adornmentValue='%'
+                  position={'end'}
+                />
               </div>
-              <div className='flex items-center space-x-1'>
-                <InputLabel sx={{ fontWeight: 'bold' }} htmlFor='name'>
-                  To
-                </InputLabel>
-                <TextField
-                  InputProps={{
-                    endAdornment: <InputAdornment position='end'>%</InputAdornment>,
-                  }}
-                  sx={{ maxWidth: 100 }}
-                  id='name'
-                  placeholder='100'></TextField>
-              </div>
+              <TextInputAdornment
+                onChange={(data?: string) => {
+                  console.log(data);
+                }}
+                labelDirection='horizontal'
+                sx={{ maxWidth: 100 }}
+                placeholder='100'
+                label='To'
+                adornmentValue='%'
+                position={'end'}
+              />
             </div>
           </SectionBorder>
         </div>

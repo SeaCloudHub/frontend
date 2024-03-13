@@ -1,36 +1,29 @@
 'use client';
-import { ConfigProvider, DatePicker } from 'antd';
-import locale from 'antd/locale/ko_KR';
-import dayjs from 'dayjs';
-import './DatePickerCore.css';
+import { SxProps, Theme } from '@mui/material';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import dayjs, { Dayjs } from 'dayjs';
+import 'dayjs/locale/en';
 
 type DatePickerCoreProps = {
   label?: string;
   name?: string;
-  className?: string;
+  sx?: SxProps<Theme>;
   disabled?: boolean;
-  date?: dayjs.Dayjs;
-  onChange?: (data: any, dateString: any) => void;
+  defaultValue?: dayjs.Dayjs;
+  onChange?: (date?: string) => void;
+  locate?: string;
 };
 
-const DatePickerCore = ({ className, name, disabled, label, date, onChange }: DatePickerCoreProps) => {
+const DatePickerCore = ({ name, disabled, label, defaultValue, sx, onChange, locate = 'en' }: DatePickerCoreProps) => {
+  const onConvertvalue = (newDate: Dayjs | null) => onChange?.(newDate?.toDate()?.toLocaleDateString(locate));
   return (
-    <ConfigProvider locale={locale}>
-      <div className={`${label && `flex items-center gap-3`}`}>
-        {label}
-        <DatePicker
-          defaultValue={date}
-          name={name}
-          showToday={false}
-          className={`customDate h-[40px] ${className}`}
-          popupClassName='customDate'
-          disabled={disabled}
-          onChange={onChange}
-          value={date}
-          // format={DATE_FORMAT.DATE_TIME_SECOND.ISO8601}
-        />
-      </div>
-    </ConfigProvider>
+    <LocalizationProvider adapterLocale={locate} dateAdapter={AdapterDayjs}>
+      <DemoContainer components={['DatePicker']}>
+        <DatePicker disabled={disabled} sx={sx} onChange={onConvertvalue} label={label} defaultValue={defaultValue} />
+      </DemoContainer>
+    </LocalizationProvider>
   );
 };
 
