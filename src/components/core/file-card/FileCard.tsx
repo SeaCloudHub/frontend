@@ -1,26 +1,68 @@
-import { EllipsisVerticalIcon, PencilIcon, ShareIcon, TrashIcon } from '@heroicons/react/16/solid';
-import { DocumentIcon, MusicalNoteIcon, PhotoIcon } from '@heroicons/react/24/outline';
+import {
+  EllipsisVerticalIcon,
+  PencilIcon,
+  ShareIcon,
+  TrashIcon,
+} from '@heroicons/react/16/solid';
+import {
+  DocumentIcon,
+  MusicalNoteIcon,
+  PhotoIcon,
+} from '@heroicons/react/24/outline';
 import { DocumentTextIcon } from '@heroicons/react/24/outline';
-import { AspectRatio, Card, CardOverflow, IconButton, MenuButton, Typography } from '@mui/joy';
-import { useState } from 'react';
+import {
+  AspectRatio,
+  Card,
+  CardOverflow,
+  IconButton,
+  MenuButton,
+  Typography,
+} from '@mui/joy';
+import React, { useState } from 'react';
 import { DropDownMenu } from '../drop-down/DropDownMenu';
 import { Article, Info, InsertDriveFile } from '@mui/icons-material';
+import { BsThreeDotsVertical } from 'react-icons/bs';
+import {
+  MdContentCopy,
+  MdDriveFileRenameOutline,
+  MdLink,
+  MdLockOutline,
+  MdOpenWith,
+  MdOutlineFileDownload,
+  MdOutlineStarBorder,
+  MdVisibility,
+} from 'react-icons/md';
+import { AiOutlineFolderOpen } from 'react-icons/ai';
+import { IoMdInformationCircleOutline } from 'react-icons/io';
+import { FaRegTrashCan } from 'react-icons/fa6';
+import { FiUserPlus } from 'react-icons/fi';
+import { LuFolderInput } from 'react-icons/lu';
+import { VscGraphLine } from 'react-icons/vsc';
+import FileMenu from '../drop-down/FileMenu';
+import { userDrawer as useDrawer } from '@/components/layout/test/TuyenLayout';
 
-interface FileDetails {
-  id: string;
+// interface FileDetails {
+//   id: string;
+//   title: string;
+//   size: string;
+//   type?: string;
+//   owner?: string;
+//   modified?: string;
+//   created?: string;
+//   preview?: string;
+// }
+
+// interface FileCardProps extends FileDetails {
+//   onClick?: () => void;
+//   onDoubleClick?: () => void;
+//   onFileInfo?: (id: string) => void;
+// }
+
+interface FileCardProps {
   title: string;
-  size: string;
-  type?: string;
-  owner?: string;
-  modified?: string;
-  created?: string;
-  preview?: string;
-}
-
-interface FileCardProps extends FileDetails {
-  onClick?: () => void;
-  onDoubleClick?: () => void;
-  onFileInfo?: (id: string) => void;
+  icon: React.ReactNode;
+  preview: React.ReactNode;
+  id: string;
 }
 
 export const fileOperation = [
@@ -38,70 +80,50 @@ const supportedFileTypes = [
   { type: 'jpg', icon: <PhotoIcon /> },
 ];
 
-const type2Icon = (type: string) => {
-  const icon = supportedFileTypes.find((fileType) => fileType.type === type);
-  return icon ? icon.icon : <InsertDriveFile style={{ width: '100%', height: '100%' }} />;
-};
+
 
 const FileCard: React.FC<FileCardProps> = (props) => {
-  const { title, size, id, preview, onClick, onDoubleClick, onFileInfo } = props;
-  const type = title.split('.').length > 1 ? title.split('.').pop() : 'unknown';
-
-  const [isActive, setIsActive] = useState(false);
+  const { title, icon, preview, id } = props;
+  const setDrawerOpen = useDrawer((state) => state.setDrawerOpen);
+  const menuItems = [
+    [{ label: 'Preview', icon: <MdVisibility /> }],
+    [
+      { label: 'Download', icon: <MdOutlineFileDownload /> },
+      { label: 'Rename', icon: <MdDriveFileRenameOutline /> },
+      { label: 'Make a copy', icon: <MdContentCopy /> },
+    ],
+    [
+      { label: 'Copy link', icon: <MdLink /> },
+      { label: 'Share', icon: <FiUserPlus /> },
+  ],
+    [
+      { label: 'Move', icon: <LuFolderInput /> },
+      { label: 'Add to starred', icon: <MdOutlineStarBorder /> },
+    ],
+    [
+      { label: 'Detail', icon: <IoMdInformationCircleOutline />, action: setDrawerOpen },
+      { label: 'Activity', icon: <VscGraphLine /> },
+      { label: 'Lock', icon: <MdLockOutline /> },
+    ],
+    [{ label: 'Move to trash', icon: <FaRegTrashCan /> }],
+  ];
 
   return (
-    // <div
-    //   className={`h-full w-full cursor-pointer rounded-xl border-none bg-surfaceContainerLow  active:bg-primaryContainer ${isActive ? 'bg-primaryContainer' : 'hover:bg-surfaceDim'}`}
-    //   onClick={() => {
-    //     console.log('click');
-    //     setIsActive(!isActive);
-    //   }}>
-    //   <div className='flex flex-row items-center'>
-    //     <div className='flex grow flex-row items-center space-x-4 p-4'>
-    //       <div className='h-6 w-6'>{type2Icon(type as string)}</div>
-    //       <div className='text-sm'> {title}</div>
-    //     </div>
-    //     <div className='mr-2 h-6 w-6'>
-    //       <EllipsisVerticalIcon />
-    //     </div>
-    //   </div>
-    //   <div className='h-full w-full justify-center overflow-auto'>
-    //     {preview ? <img src={preview} alt={title} /> : <div className='h-36'>{type2Icon(type as string)}</div>}
-    //   </div>
-    // </div>
-
-    <div
-      className={`flex h-full w-full cursor-pointer flex-col rounded-xl border-none bg-surfaceContainerLow active:bg-primaryContainer ${isActive ? 'bg-primaryContainer' : 'hover:bg-surfaceDim'}`}
-      onClick={() => {
-        console.log('click');
-        setIsActive(!isActive);
-      }}
-    >
-      <div className="flex flex-row items-center">
-        <div className="flex grow items-center space-x-4 p-4">
-          <div className="h-6 w-6">{type2Icon(type as string)}</div>
-          <div className="text-sm">{title}</div>
+    <div className="flex h-full w-full flex-col items-center justify-center rounded-xl bg-surfaceContainerLow px-2 shadow-sm hover:bg-surfaceDim">
+      <div className="flex w-full items-center justify-between px-1 py-3">
+        <div className="flex items-center space-x-4">
+          <div className="h-6 w-6">{icon}</div>
+          <div className="... w-32 truncate text-sm font-medium">{title}</div>
         </div>
-
-        <div className="mr-2 h-6 w-6 self-center hover:bg-slate-200">
-          <EllipsisVerticalIcon />
-        </div>
+        <FileMenu
+          button={
+            <BsThreeDotsVertical className="h-6 w-6 rounded-full p-1 hover:bg-slate-300" />
+          }
+          items={menuItems}
+        />
       </div>
-
-      <div className="flex h-full w-full justify-center overflow-auto">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth="{1.5}"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
-          />
-        </svg>
+      <div className="mb-2 flex w-full flex-1 items-center justify-center rounded-md bg-white">
+        {preview}
       </div>
     </div>
 
@@ -148,7 +170,7 @@ const FileCard: React.FC<FileCardProps> = (props) => {
     //           }
     //         }}
     //       />
-    //     </div>
+    //     </>
 
     //     <CardOverflow>
     //       <AspectRatio>
