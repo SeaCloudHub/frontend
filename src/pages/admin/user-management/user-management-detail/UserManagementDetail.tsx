@@ -19,7 +19,7 @@ const UserManagementDetail = () => {
         <IconifyIcon icon={'material-symbols:arrow-forward-ios-rounded'} />
         <p className='statement-upper-medium'>Hung Phi Vo</p>
       </div>
-      <div className={`pt-[35px]`}>
+      <div className={`flex items-start space-x-2 pt-[35px]`}>
         {/* <!--section --> */}
         <div className='border-2'>
           <div className='flex  flex-col space-y-2 border-b-2 p-3'>
@@ -53,8 +53,16 @@ const UserManagementDetail = () => {
             <UserDetailAction title='CHANGE ORGANIZATIONAL UNIT' />
           </div>
         </div>
-        
+
         {/* <!--section --> */}
+        <div className='flexc-col flex space-y-1'>
+          <div className='w-full p-3 shadow-md'>
+            <p className='statement-upper-medium '>Personal Dropbox space of Hung Vo Phi</p>
+            <div className='flex border-b-2    border-black'>
+              <div></div>
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );
