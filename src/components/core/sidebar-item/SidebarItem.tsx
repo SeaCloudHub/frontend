@@ -1,4 +1,5 @@
 import { Tooltip } from '@mui/material';
+import { useLocation, useNavigate } from 'react-router-dom';
 import IconifyIcon from '../Icon/IConCore';
 type SidebarItemProps = {
   icon: string;
@@ -8,9 +9,10 @@ type SidebarItemProps = {
   tooltip?: string;
 };
 const SidebarItem = ({ icon, title, link, shrink, tooltip }: SidebarItemProps) => {
-  // const pathname = useLocation();
+  const pathName = useLocation();
+  const navigate = useNavigate();
   const onClick = () => {
-    // console.log(pathname);
+    navigate(link);
   };
 
   return (
@@ -18,7 +20,7 @@ const SidebarItem = ({ icon, title, link, shrink, tooltip }: SidebarItemProps) =
       <Tooltip arrow title={tooltip}>
         <div
           onClick={onClick}
-          className={` sidebar-item ${shrink ? '' : 'sidebar-item-lg'} ${link === '1' ? 'sidebar-item-active' : ''}`}>
+          className={` sidebar-item ${shrink ? '' : 'sidebar-item-lg'} ${link === pathName.pathname ? 'sidebar-item-active' : ''}`}>
           <IconifyIcon height={'30px'} icon={icon} />
           <p className={` ml-4 ${shrink ? 'hidden' : 'block'} statement-upper-medium `}>{title}</p>
         </div>

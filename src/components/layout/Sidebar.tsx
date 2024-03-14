@@ -69,7 +69,7 @@ const Sidebar = ({ onShrinkChange, role }: SidebarProps) => {
                   onClick={() => {
                     onShrinkModeChange(true);
                   }}
-                  icon='fluent:ios-arrow-left-24-regular'
+                  icon='ion:caret-back'
                   size={'25px'}
                 />
               </div>
@@ -88,10 +88,10 @@ const Sidebar = ({ onShrinkChange, role }: SidebarProps) => {
             />
           ))}
           {role === Role.User && (
-            <>
+            <div className='mt-2'>
               <LinearChartBar width='100%' value={70} total={100} />
               <p className={`text-center  text-gray-900 ${shrink ? 'hidden' : ''} statement-bold`}>Used 90 of 8 GB of memory</p>
-            </>
+            </div>
           )}
         </div>
         <div className='flex flex-col items-center'>

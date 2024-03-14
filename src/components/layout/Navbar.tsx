@@ -1,3 +1,4 @@
+import { TextField } from '@mui/material';
 import IconifyIcon from '../core/Icon/IConCore';
 import ButtonContainer from '../core/button/ButtonContainer';
 import ButtonIcon from '../core/button/ButtonIcon';
@@ -8,13 +9,13 @@ type NavbarProps = {
 };
 const Navbar = ({ isShrink, phoneMode }: NavbarProps) => {
   return (
-    <div className={`z-10 ${phoneMode ? '!important pl-0' : ''} nav-bar ${isShrink ? 'nav-bar-shrink' : ''}`}>
+    <div className={`z-20 ${phoneMode ? '!important pl-0' : ''} nav-bar ${isShrink ? 'nav-bar-shrink' : ''}`}>
       <div className='flex h-full w-full items-center justify-between px-3'>
-        <div className={`${phoneMode ? 'w-full' : 'w-6/12'} flex h-[50px] items-center justify-center`}>
+        <div className={`${phoneMode ? 'w-full' : 'w-6/12'} flex  items-center justify-center space-x-1`}>
           <div className={`${phoneMode ? 'mr-2 block' : 'hidden'}`}>
             <ButtonIcon icon='ic:outline-menu' size={25} />
           </div>
-          <input className={`${phoneMode ? 'h-3/4' : ' h-full'} w-full `} placeholder='Search file' />
+          <TextField className={`bg-white  ${phoneMode ? 'h-3/4' : ' h-full'} w-full `} placeholder='Search file' />
           <ButtonContainer
             size={phoneMode ? 35 : 50}
             background='#063768'
