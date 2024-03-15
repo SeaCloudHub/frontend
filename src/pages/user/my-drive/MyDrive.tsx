@@ -1,5 +1,8 @@
 import FileCard from '@/components/core/file-card/FileCard';
 import fileIcons from '@/components/core/file-card/fileicon.constant';
+import FileHeader from '@/components/core/file-header/FileHeader';
+import FolderCard from '@/components/core/folder-card/FolderCard';
+import { Icon } from '@iconify/react/dist/iconify.js';
 import { useState } from 'react';
 import { render } from 'react-dom';
 import { GiEntryDoor } from 'react-icons/gi';
@@ -24,9 +27,17 @@ const renderFiles = (files: Entry[]) => {
   return files.map((entry) => {
     const ext = entry.name.split('.').pop() || 'any';
     const icon = fileIcons[ext] || fileIcons.any;
-    const preview = ['jpg', 'ico', 'webp', 'png', 'jpeg', 'gif', 'jfif'].includes(ext) ? (
+    const preview = [
+      'jpg',
+      'ico',
+      'webp',
+      'png',
+      'jpeg',
+      'gif',
+      'jfif',
+    ].includes(ext) ? (
       <img
-        className="object-cover object-center h-full"
+        className="h-full object-cover object-center"
         src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrHRymTob1kd-ywHzIs0ty7UhrFUcJay839nNd6tcSig&s"
       />
     ) : (
@@ -38,7 +49,28 @@ const renderFiles = (files: Entry[]) => {
     return (
       condition && (
         <div className="h-64 w-72">
-          <FileCard title={entry.name} icon={icon} preview={preview} id={entry.md5} />
+          <FileCard
+            title={entry.name}
+            icon={icon}
+            preview={preview}
+            id={entry.md5}
+          />
+        </div>
+      )
+    );
+  });
+};
+
+const renderFolders = (folders: Entry[]) => {
+  return folders.map((entry) => {
+    const icon = <Icon icon="ic:baseline-folder" className="h-full w-full" />;
+
+    // some condition
+    let condition = true;
+    return (
+      condition && (
+        <div className="w-72">
+          <FolderCard title={entry.name} icon={icon} id={entry.md5} />
         </div>
       )
     );
@@ -48,7 +80,7 @@ const renderFiles = (files: Entry[]) => {
 const MyDrive = () => {
   const [drawerOpen, setDrawerOpen] = useState(true);
 
-  // const entries: Entry[] = getEntries();
+  //TODO: const entries: Entry[] = getEntries();
   const entries: Entry[] = [
     {
       name: 'file1.mp3',
@@ -230,27 +262,16 @@ const MyDrive = () => {
   const files = entries.filter(filesFilter);
   const folders = entries.filter(foldersFilter);
 
-  // const fileList = files.map((entry) => {
-  //   const ext = entry.name.split('.').pop() || 'any';
-  //   const icon = fileIcons[ext] || fileIcons.any;
-
-  //   const img = ["jpg", "ico", "webp", "png", "jpeg", "gif", "jfif"].includes(ext)
-  //   ? <img className='w-full h-full object-cover object-center' src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrHRymTob1kd-ywHzIs0ty7UhrFUcJay839nNd6tcSig&s' />
-  //   : null;
-
-  //   return (
-
-  //   )
-
-  // }
-
   return (
-    <div className="h-full w-full overflow-y-auto p-5">
-      <div className="flex flex-col space-y-4">
-        <div> Folders</div>
-        <div> Files</div>
-        <div className="flex flex-wrap gap-4 overflow-y-auto">
-          {renderFiles(files)}
+    <div>
+      <FileHeader headerName="My Drive" />
+      <div className="h-full w-full overflow-y-auto p-5">
+        <div className="flex flex-col space-y-4">
+          <div className="text-sm font-medium"> Folders</div>
+          <div className="flex flex-wrap gap-4">{renderFolders(folders)}</div>
+          <div className="text-sm font-medium"> Files</div>
+          <div className="flex flex-wrap gap-4">{renderFiles(files)}</div>
+          Fi
         </div>
       </div>
     </div>

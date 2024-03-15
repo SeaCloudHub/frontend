@@ -1,84 +1,65 @@
-import { EllipsisVerticalIcon, PencilIcon, ShareIcon, StarIcon, TrashIcon } from '@heroicons/react/16/solid';
-import { DocumentIcon, FolderIcon, MusicalNoteIcon, PhotoIcon } from '@heroicons/react/24/outline';
-import { DocumentTextIcon } from '@heroicons/react/24/outline';
-import { Info } from '@mui/icons-material';
-import { AspectRatio, Card, CardOverflow, Dropdown, IconButton, Menu, MenuButton, MenuItem, Typography } from '@mui/joy';
-import { useState } from 'react';
+import Dropdown from '../drop-down/FileMenu';
+import { BsThreeDotsVertical } from 'react-icons/bs';
+import { Icon } from '@iconify/react/dist/iconify.js';
+import { userDrawer as useDrawer } from '@/components/layout/test/TuyenLayout';
 
 interface FolderCardProps {
   title: string;
-  type?: 'starred' | 'shared';
-  onClick?: () => void;
-  onDoubleClick?: () => void;
+  icon: React.ReactNode;
+  id: string;
 }
 
-const folderOperations = [
-  { icon: <Info />, label: 'Folder infomation' },
-  { icon: <PencilIcon />, label: 'Rename file' },
-  { icon: <ShareIcon />, label: 'Share file' },
-  { icon: <TrashIcon />, label: 'Delete file' },
-];
-
-const supportedFolderTypes = [
-  { type: 'starred', icon: <StarIcon className='text-yellow-400' /> },
-  { type: 'shared', icon: <ShareIcon /> },
-];
-
-const type2Icon = (type: string) => {
-  const icon = supportedFolderTypes.find((fileType) => fileType.type === type);
-  return icon ? icon.icon : <FolderIcon />;
-};
-
-const FolderCard: React.FC<FolderCardProps> = ({ title, type, onClick, onDoubleClick }) => {
-  const [isActive, setIsActive] = useState(false);
+const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id }) => {
+  const setDrawerOpen = useDrawer((state) => state.setDrawerOpen);
+  const menuItems = [
+    [
+      { label: 'Download', icon: <Icon icon="ic:outline-file-download" /> },
+      {
+        label: 'Rename',
+        icon: <Icon icon="ic:round-drive-file-rename-outline" />,
+      },
+    ],
+    [
+      { label: 'Copy link', icon: <Icon icon="material-symbols:link" /> },
+      { label: 'Share', icon: <Icon icon="lucide:user-plus" /> },
+    ],
+    [
+      { label: 'Move', icon: <Icon icon="mdi:folder-move-outline" /> },
+      {
+        label: 'Add shortcut',
+        icon: <Icon icon="material-symbols:add-to-drive" />,
+      },
+      {
+        label: 'Add to starred',
+        icon: <Icon icon="material-symbols:star-outline" />,
+      },
+    ],
+    [
+      {
+        label: 'Detail',
+        icon: <Icon icon="mdi:information-outline" />,
+        action: setDrawerOpen,
+      },
+      { label: 'Activity', icon: <Icon icon="mdi:graph-line-variant" /> },
+    ],
+    [{ label: 'Move to trash', icon: <Icon icon="fa:trash-o" /> }],
+  ];
 
   return (
-    <div
-      className='cursor-pointer shadow-sm hover:brightness-90'
-      onClick={() => {
-        setIsActive(!isActive);
-        if (onClick) {
-          onClick();
-        }
-      }}
-      onDoubleClick={onDoubleClick}>
-      <Card variant='outlined' size='sm' style={{ backgroundColor: isActive ? '#C2E7FF' : '' }}>
-        <div className='flex items-center'>
-          <div className='flex grow'>
-            <div className='flex h-4 items-center gap-x-2'>
-              <div className='h-6 w-6'>{type2Icon(type as string)}</div>
-              <Typography level='title-md'>{title}</Typography>
-            </div>
-          </div>
-
-          <Dropdown>
-            <MenuButton
-              variant='plain'
-              size='sm'
-              sx={{
-                padding: 0,
-              }}>
-              <IconButton component='span' variant='plain' color='neutral' size='sm'>
-                <EllipsisVerticalIcon className='h-6 w-6' />
-              </IconButton>
-            </MenuButton>
-
-            <Menu placement='bottom-start' size='sm'>
-              {folderOperations.map((item, index) => (
-                <MenuItem key={index}>
-                  <div
-                    className={`flex 
-                  ${item.label.includes('Delete') ? 'text-red-500' : ''}
-                  `}>
-                    <div className='mr-2 h-6 w-6'>{item.icon}</div>
-                    <div className='mr-2 text-nowrap'>{item.label}</div>
-                  </div>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Dropdown>
+    <div className="flex h-full w-full flex-col items-center justify-center rounded-xl bg-surfaceContainerLow px-2 shadow-sm hover:bg-surfaceDim">
+      <div className="flex w-full items-center justify-between px-1 py-3">
+        <div className="flex items-center space-x-4">
+          <div className="h-6 w-6">{icon}</div>
+          <div className="... w-32 truncate text-sm font-medium">{title}</div>
         </div>
-      </Card>
+        <Dropdown
+          button={
+            <BsThreeDotsVertical className="h-6 w-6 rounded-full p-1 hover:bg-slate-300" />
+          }
+          items={menuItems}
+          left={true}
+        />
+      </div>
     </div>
   );
 };

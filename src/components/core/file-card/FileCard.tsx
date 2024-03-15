@@ -1,25 +1,11 @@
-import {
-  EllipsisVerticalIcon,
-  PencilIcon,
-  ShareIcon,
-  TrashIcon,
-} from '@heroicons/react/16/solid';
+import { PencilIcon, ShareIcon, TrashIcon } from '@heroicons/react/16/solid';
 import {
   DocumentIcon,
   MusicalNoteIcon,
   PhotoIcon,
 } from '@heroicons/react/24/outline';
 import { DocumentTextIcon } from '@heroicons/react/24/outline';
-import {
-  AspectRatio,
-  Card,
-  CardOverflow,
-  IconButton,
-  MenuButton,
-  Typography,
-} from '@mui/joy';
 import React, { useState } from 'react';
-import { DropDownMenu } from '../drop-down/DropDownMenu';
 import { Article, Info, InsertDriveFile } from '@mui/icons-material';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import {
@@ -32,38 +18,21 @@ import {
   MdOutlineStarBorder,
   MdVisibility,
 } from 'react-icons/md';
-import { AiOutlineFolderOpen } from 'react-icons/ai';
 import { IoMdInformationCircleOutline } from 'react-icons/io';
-import { FaRegTrashCan } from 'react-icons/fa6';
 import { FiUserPlus } from 'react-icons/fi';
 import { LuFolderInput } from 'react-icons/lu';
 import { VscGraphLine } from 'react-icons/vsc';
-import FileMenu from '../drop-down/FileMenu';
+import Dropdown from '../drop-down/FileMenu';
 import { userDrawer as useDrawer } from '@/components/layout/test/TuyenLayout';
+import { Icon } from '@iconify/react/dist/iconify.js';
+import { FaRegTrashCan } from 'react-icons/fa6';
 
-// interface FileDetails {
-//   id: string;
-//   title: string;
-//   size: string;
-//   type?: string;
-//   owner?: string;
-//   modified?: string;
-//   created?: string;
-//   preview?: string;
-// }
-
-// interface FileCardProps extends FileDetails {
-//   onClick?: () => void;
-//   onDoubleClick?: () => void;
-//   onFileInfo?: (id: string) => void;
-// }
-
-interface FileCardProps {
+type FileCardProps = {
   title: string;
   icon: React.ReactNode;
   preview: React.ReactNode;
   id: string;
-}
+};
 
 export const fileOperation = [
   { icon: <Info />, label: 'FIle infomation' },
@@ -80,32 +49,47 @@ const supportedFileTypes = [
   { type: 'jpg', icon: <PhotoIcon /> },
 ];
 
-
-
 const FileCard: React.FC<FileCardProps> = (props) => {
   const { title, icon, preview, id } = props;
   const setDrawerOpen = useDrawer((state) => state.setDrawerOpen);
   const menuItems = [
-    [{ label: 'Preview', icon: <MdVisibility /> }],
+    [{ label: 'Preview', icon: <Icon icon="material-symbols:visibility" /> }],
     [
-      { label: 'Download', icon: <MdOutlineFileDownload /> },
-      { label: 'Rename', icon: <MdDriveFileRenameOutline /> },
-      { label: 'Make a copy', icon: <MdContentCopy /> },
+      { label: 'Download', icon: <Icon icon="ic:outline-file-download" /> },
+      {
+        label: 'Rename',
+        icon: <Icon icon="ic:round-drive-file-rename-outline" />,
+      },
+      {
+        label: 'Make a copy',
+        icon: <Icon icon="material-symbols:content-copy-outline" />,
+      },
     ],
     [
-      { label: 'Copy link', icon: <MdLink /> },
-      { label: 'Share', icon: <FiUserPlus /> },
-  ],
-    [
-      { label: 'Move', icon: <LuFolderInput /> },
-      { label: 'Add to starred', icon: <MdOutlineStarBorder /> },
+      { label: 'Copy link', icon: <Icon icon="material-symbols:link" /> },
+      { label: 'Share', icon: <Icon icon="lucide:user-plus" /> },
     ],
     [
-      { label: 'Detail', icon: <IoMdInformationCircleOutline />, action: setDrawerOpen },
-      { label: 'Activity', icon: <VscGraphLine /> },
-      { label: 'Lock', icon: <MdLockOutline /> },
+      { label: 'Move', icon: <Icon icon="mdi:folder-move-outline" /> },
+      {
+        label: 'Add shortcut',
+        icon: <Icon icon="material-symbols:add-to-drive" />,
+      },
+      {
+        label: 'Add to starred',
+        icon: <Icon icon="material-symbols:star-outline" />,
+      },
     ],
-    [{ label: 'Move to trash', icon: <FaRegTrashCan /> }],
+    [
+      {
+        label: 'Detail',
+        icon: <Icon icon="mdi:information-outline" />,
+        action: setDrawerOpen,
+      },
+      { label: 'Activity', icon: <Icon icon="mdi:graph-line-variant" /> },
+      { label: 'Lock', icon: <Icon icon="mdi:lock-outline" /> },
+    ],
+    [{ label: 'Move to trash', icon: <Icon icon="fa:trash-o" /> }],
   ];
 
   return (
@@ -115,76 +99,18 @@ const FileCard: React.FC<FileCardProps> = (props) => {
           <div className="h-6 w-6">{icon}</div>
           <div className="... w-32 truncate text-sm font-medium">{title}</div>
         </div>
-        <FileMenu
+        <Dropdown
           button={
             <BsThreeDotsVertical className="h-6 w-6 rounded-full p-1 hover:bg-slate-300" />
           }
           items={menuItems}
+          left={true}
         />
       </div>
       <div className="mb-2 flex w-full flex-1 items-center justify-center rounded-md bg-white">
         {preview}
       </div>
     </div>
-
-    // <div
-    //   className='cursor-pointer shadow-sm hover:brightness-90'
-    //   onClick={() => {
-    //     setIsActive(!isActive);
-    //     if (onClick) {
-    //       onClick();
-    //     }
-    //   }}
-    //   onDoubleClick={onDoubleClick}>
-    //   <Card variant='outlined' size='sm' style={{ backgroundColor: isActive ? '#C2E7FF' : '' }}>
-    //     <div className='flex items-center'>
-    //       <div className='flex h-4 grow items-center gap-x-2'>
-    //         <div className='h-6 w-6'>{type2Icon(type as string)}</div>
-    //         <div className='flex flex-col'>
-    //           <Typography level='title-md'>{title}</Typography>
-    //           <Typography level='body-sm'>{size}</Typography>
-    //         </div>
-    //       </div>
-
-    //       <DropDownMenu
-    //         button={
-    //           <MenuButton
-    //             variant='plain'
-    //             size='sm'
-    //             sx={{
-    //               padding: 0,
-    //             }}>
-    //             <IconButton component='span' variant='plain' color='neutral' size='sm'>
-    //               <EllipsisVerticalIcon className='h-6 w-6' />
-    //             </IconButton>
-    //           </MenuButton>
-    //         }
-    //         menuItems={fileOperation}
-    //         onSelected={(index) => {
-    //           console.log('Selected', index);
-    //           // File info
-    //           if (index === 0) {
-    //             if (onFileInfo) {
-    //               onFileInfo(id);
-    //             }
-    //           }
-    //         }}
-    //       />
-    //     </>
-
-    //     <CardOverflow>
-    //       <AspectRatio>
-    //         {preview ? (
-    //           <img src={preview} />
-    //         ) : (
-    //           <div>
-    //             <div className='h-12 w-12'>{type2Icon(type as string)}</div>
-    //           </div>
-    //         )}
-    //       </AspectRatio>
-    //     </CardOverflow>
-    //   </Card>
-    // </div>
   );
 };
 
