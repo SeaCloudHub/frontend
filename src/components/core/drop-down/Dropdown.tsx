@@ -2,10 +2,13 @@ import React, { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import { BsThreeDotsVertical } from 'react-icons/bs';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
+
+export { classNames };
 
 type MenuItem = {
   label: string;

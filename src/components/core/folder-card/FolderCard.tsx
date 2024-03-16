@@ -1,7 +1,7 @@
-import Dropdown from '../drop-down/FileMenu';
+import Dropdown from '../drop-down/Dropdown';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { userDrawer as useDrawer } from '@/components/layout/test/TuyenLayout';
+import { useDrawer } from '@/components/layout/test/TuyenLayout';
 
 interface FolderCardProps {
   title: string;
@@ -11,7 +11,7 @@ interface FolderCardProps {
 
 const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id }) => {
   const setDrawerOpen = useDrawer((state) => state.setDrawerOpen);
-  const menuItems = [
+  const folderOps = [
     [
       { label: 'Download', icon: <Icon icon="ic:outline-file-download" /> },
       {
@@ -50,13 +50,13 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id }) => {
       <div className="flex w-full items-center justify-between px-1 py-3">
         <div className="flex items-center space-x-4">
           <div className="h-6 w-6">{icon}</div>
-          <div className="... w-32 truncate text-sm font-medium">{title}</div>
+          <div className="... truncate text-sm font-medium">{title}</div>
         </div>
         <Dropdown
           button={
             <BsThreeDotsVertical className="h-6 w-6 rounded-full p-1 hover:bg-slate-300" />
           }
-          items={menuItems}
+          items={folderOps}
           left={true}
         />
       </div>

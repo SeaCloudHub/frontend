@@ -8,24 +8,9 @@ import { DocumentTextIcon } from '@heroicons/react/24/outline';
 import React, { useState } from 'react';
 import { Article, Info, InsertDriveFile } from '@mui/icons-material';
 import { BsThreeDotsVertical } from 'react-icons/bs';
-import {
-  MdContentCopy,
-  MdDriveFileRenameOutline,
-  MdLink,
-  MdLockOutline,
-  MdOpenWith,
-  MdOutlineFileDownload,
-  MdOutlineStarBorder,
-  MdVisibility,
-} from 'react-icons/md';
-import { IoMdInformationCircleOutline } from 'react-icons/io';
-import { FiUserPlus } from 'react-icons/fi';
-import { LuFolderInput } from 'react-icons/lu';
-import { VscGraphLine } from 'react-icons/vsc';
-import Dropdown from '../drop-down/FileMenu';
-import { userDrawer as useDrawer } from '@/components/layout/test/TuyenLayout';
+import Dropdown from '../drop-down/Dropdown';
+import { useDrawer } from '@/components/layout/test/TuyenLayout';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { FaRegTrashCan } from 'react-icons/fa6';
 
 type FileCardProps = {
   title: string;

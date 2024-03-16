@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react/dist/iconify.js';
-import Dropdown, { MenuItem } from '../drop-down/FileMenu';
+import Dropdown, { MenuItem } from '../drop-down/Dropdown';
 import React from 'react';
 
 type FilterChipProps = {

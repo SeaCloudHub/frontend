@@ -6,13 +6,13 @@ type TuyenLayoutProps = {
   openDrawer?: boolean;
 };
 
-const userDrawer = create((set) => ({
+const useDrawer = create((set) => ({
   drawerOpen: false,
   setDrawerOpen: () => set((state) => ({ drawerOpen: !state.drawerOpen })),
 }));
 
 const TuyenLayout: React.FC<TuyenLayoutProps> = ({ children }) => {
-  const drawerOpen = userDrawer((state) => state.drawerOpen);
+  const drawerOpen = useDrawer((state) => state.drawerOpen);
   return (
     <div className="flex h-[100vh] w-full flex-col">
       <div className="flex h-[10vh] w-full bg-red-400">this is header</div>
@@ -31,4 +31,4 @@ const TuyenLayout: React.FC<TuyenLayoutProps> = ({ children }) => {
 };
 
 export default TuyenLayout;
-export { userDrawer };
+export {useDrawer};

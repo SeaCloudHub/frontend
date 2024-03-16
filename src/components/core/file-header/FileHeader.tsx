@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react/dist/iconify.js';
-import Dropdown from '../drop-down/FileMenu';
+import Dropdown from '../drop-down/Dropdown';
 import FilterChip from '../filter-chip/FilterChip';
 import { useState } from 'react';
 import { useViewMode } from '@/pages/user/my-drive/MyDrive';
@@ -70,11 +70,11 @@ const FileHeader: React.FC<FileHeaderProps> = ({ headerName }) => {
     ],
   ];
 
-  const {viewMode, setViewMode} = useViewMode();
+  const { viewMode, setViewMode } = useViewMode();
 
   return (
     <div className="flex flex-col space-y-4 px-1 pb-2">
-      <div className="flex justify-between pr-4">
+      <div className="flex justify-between pr-8">
         <div className="flex items-center space-x-2 text-2xl">
           {/* // TODO: display path here */}
           {/* {isNestedFolder && (
