@@ -2,12 +2,12 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import Dropdown, { MenuItem } from '../drop-down/FileMenu';
 import React from 'react';
 
-type ChipProps = {
+type FilterChipProps = {
   name: string;
   options: { label: string; icon: React.ReactNode }[][];
 };
 
-const Chip: React.FC<ChipProps> = ({ name, options }) => {
+const FilterChip: React.FC<FilterChipProps> = ({ name, options }) => {
   const [selected, setSelected] = React.useState<null | string>(null);
   const items = options.map((option) => {
     return option.map((item) => {
@@ -53,4 +53,4 @@ const Chip: React.FC<ChipProps> = ({ name, options }) => {
   );
 };
 
-export default Chip;
+export default FilterChip;

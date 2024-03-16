@@ -14,9 +14,9 @@ const userDrawer = create((set) => ({
 const TuyenLayout: React.FC<TuyenLayoutProps> = ({ children }) => {
   const drawerOpen = userDrawer((state) => state.drawerOpen);
   return (
-    <div className="flex h-screen flex-col">
-      <div className="flex h-[10vh] w-screen bg-red-400">this is header</div>
-      <div className="flex h-[90vh] w-screen flex-1">
+    <div className="flex h-[100vh] w-full flex-col">
+      <div className="flex h-[10vh] w-full bg-red-400">this is header</div>
+      <div className="flex h-[90vh] w-full flex-1">
         <div className="h-full w-32 flex-none bg-blue-500">
           {' '}
           this is side menu{' '}

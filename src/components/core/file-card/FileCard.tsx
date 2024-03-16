@@ -97,7 +97,7 @@ const FileCard: React.FC<FileCardProps> = (props) => {
       <div className="flex w-full items-center justify-between px-1 py-3">
         <div className="flex items-center space-x-4">
           <div className="h-6 w-6">{icon}</div>
-          <div className="... w-32 truncate text-sm font-medium">{title}</div>
+          <div className="... truncate text-sm font-medium">{title}</div>
         </div>
         <Dropdown
           button={

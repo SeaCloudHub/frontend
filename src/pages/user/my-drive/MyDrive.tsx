@@ -6,6 +6,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import { useState } from 'react';
 import { render } from 'react-dom';
 import { GiEntryDoor } from 'react-icons/gi';
+import { create } from 'zustand';
 
 const filesFilter = (entry: Entry) => {
   if (entry.is_dir) {
@@ -37,7 +38,7 @@ const renderFiles = (files: Entry[]) => {
       'jfif',
     ].includes(ext) ? (
       <img
-        className="h-full object-cover object-center"
+        className="rounded-md object-cover object-center"
         src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrHRymTob1kd-ywHzIs0ty7UhrFUcJay839nNd6tcSig&s"
       />
     ) : (
@@ -48,7 +49,7 @@ const renderFiles = (files: Entry[]) => {
     let condition = true;
     return (
       condition && (
-        <div className="h-64 w-72">
+        <div className="aspect-square w-auto">
           <FileCard
             title={entry.name}
             icon={icon}
@@ -69,13 +70,19 @@ const renderFolders = (folders: Entry[]) => {
     let condition = true;
     return (
       condition && (
-        <div className="w-72">
+        <div className="w-auto">
           <FolderCard title={entry.name} icon={icon} id={entry.md5} />
         </div>
       )
     );
   });
 };
+
+const useViewMode = create((set) => ({
+  viewMode: 'grid',
+  setViewMode: (mode: string) => set({ viewMode: mode }),
+}));
+export { useViewMode };
 
 const MyDrive = () => {
   const [drawerOpen, setDrawerOpen] = useState(true);
@@ -262,17 +269,27 @@ const MyDrive = () => {
   const files = entries.filter(filesFilter);
   const folders = entries.filter(foldersFilter);
 
+  const viewMode = useViewMode((state) => state.viewMode);
+
   return (
-    <div>
+    <div className="h-full w-full">
       <FileHeader headerName="My Drive" />
       <div className="h-full w-full overflow-y-auto p-5">
-        <div className="flex flex-col space-y-4">
-          <div className="text-sm font-medium"> Folders</div>
-          <div className="flex flex-wrap gap-4">{renderFolders(folders)}</div>
-          <div className="text-sm font-medium"> Files</div>
-          <div className="flex flex-wrap gap-4">{renderFiles(files)}</div>
-          Fi
-        </div>
+        {viewMode === 'grid' ? (
+          <div className="flex flex-col space-y-4">
+            <div className="text-sm font-medium"> Folders</div>
+            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+              {renderFolders(folders)}
+            </div>
+            <div className="text-sm font-medium"> Files</div>
+            {/* <div className="flex flex-wrap gap-4">{renderFiles(files)}</div> */}
+            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+              {renderFiles(files)}
+            </div>
+          </div>
+        ) : (
+          <div></div>
+        )}
       </div>
     </div>
   );
