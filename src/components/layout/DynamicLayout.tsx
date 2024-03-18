@@ -1,17 +1,23 @@
 import { PropsWithChildren, useEffect, useState } from 'react';
+import { useScreenMode } from '../../store/responsive/screenMode';
 import { Role } from '../../utils/enums/role.enum';
+import { ScreenMode } from '../../utils/enums/screen-mode.enum';
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
 
 const DynamicLayout = ({ children }: PropsWithChildren) => {
-  const onShrinkChange = (mode: boolean) => setShrink(mode);
-  const [shrink, setShrink] = useState<boolean>(false);
-  const [phoneMode, setPhoneMode] = useState<boolean>(false);
+  const { shrinkMode, screenMode, updateScreenMode, updateShrinkMode } = useScreenMode();
   const [role, setRole] = useState<Role>(Role.ADMIN);
-  const pathName: string = 'Admin';
+  const pathName: string = 'User';
   useEffect(() => {
     const handleResize = () => {
-      setPhoneMode(window.innerWidth <= 500);
+      if (window.innerWidth > 1024) {
+        updateShrinkMode(false);
+      } else if (window.innerWidth <= 1024 && window.innerWidth > 500) {
+        updateShrinkMode(true);
+      } else {
+        updateScreenMode(window.innerWidth <= 500 ? ScreenMode.MOBILE : ScreenMode.DESKTOP);
+      }
     };
     handleResize();
     window.addEventListener('resize', handleResize);
@@ -29,11 +35,11 @@ const DynamicLayout = ({ children }: PropsWithChildren) => {
   }, [pathName]);
   return (
     <>
-      <Navbar phoneMode={phoneMode} isShrink={shrink} />
-      {!phoneMode && <Sidebar role={role} onShrinkChange={onShrinkChange} />}
+      <Navbar phoneMode={screenMode == ScreenMode.MOBILE} isShrink={shrinkMode} />
+      {!(screenMode == ScreenMode.MOBILE) && <Sidebar shrinkMode={shrinkMode} role={role} />}
       <div
-        className={`content-default-mode p-3 ${shrink ? 'content-shrink-mode' : ''}
-        ${phoneMode ? 'ml-0' : ''}`}>
+        className={`content-default-mode p-3 ${shrinkMode ? 'content-shrink-mode' : ''}
+        ${screenMode == ScreenMode.MOBILE ? 'ml-0' : ''}`}>
         {children}
       </div>
     </>
