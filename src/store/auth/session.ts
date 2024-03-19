@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { devtools, persist } from 'zustand/middleware';
+import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 
 type SessionState = {
   token: string | null;
@@ -13,7 +13,7 @@ export const useSession = create<SessionState>()(
         token: null,
         updateToken: (token: string | null) => set({ token: token }),
       }),
-      { name: 'sessionStore', version: 1, getStorage: () => localStorage },
+      { name: 'sessionStore', version: 1, storage: createJSONStorage(() => localStorage) },
     ),
     { name: 'session-store', enabled: true },
   ),

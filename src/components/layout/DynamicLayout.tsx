@@ -9,22 +9,7 @@ const DynamicLayout = ({ children }: PropsWithChildren) => {
   const { shrinkMode, screenMode, updateScreenMode, updateShrinkMode } = useScreenMode();
   const [role, setRole] = useState<Role>(Role.ADMIN);
   const pathName: string = 'User';
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth > 1024) {
-        updateShrinkMode(false);
-      } else if (window.innerWidth <= 1024 && window.innerWidth > 500) {
-        updateShrinkMode(true);
-      } else {
-        updateScreenMode(window.innerWidth <= 500 ? ScreenMode.MOBILE : ScreenMode.DESKTOP);
-      }
-    };
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+ 
   useEffect(() => {
     if (pathName.startsWith('Admin')) {
       setRole(Role.ADMIN);

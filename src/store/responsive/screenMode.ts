@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { devtools, persist } from 'zustand/middleware';
+import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 import { ScreenMode } from '../../utils/enums/screen-mode.enum';
 
 type ScreenModeState = {
@@ -19,7 +19,7 @@ export const useScreenMode = create<ScreenModeState>()(
         updateShrinkMode: (shrinkMode: boolean) =>
           set((state) => ({ ...state, screenMode: ScreenMode.DESKTOP, shrinkMode: shrinkMode })),
       }),
-      { name: 'screenModeStore', version: 1, getStorage: () => localStorage },
+      { name: 'screenModeStore', version: 1, storage: createJSONStorage(() => localStorage) },
     ),
     { name: 'screen-mode-store', enabled: true },
   ),
