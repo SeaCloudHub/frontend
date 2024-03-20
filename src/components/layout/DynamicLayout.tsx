@@ -15,7 +15,7 @@ const DynamicLayout = ({ children }: PropsWithChildren) => {
       setRole(Role.ADMIN);
     }
     if (pathName.startsWith('User')) {
-      setRole(Role.User);
+      setRole(Role.USER);
     }
   }, [pathName]);
   return (

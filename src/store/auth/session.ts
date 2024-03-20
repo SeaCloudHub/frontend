@@ -1,9 +1,11 @@
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
+import { Role } from '../../utils/enums/role.enum';
+import { getSessionToken } from '../../utils/function/auth.function';
 
 type SessionState = {
   token: string | null;
-  role: string | null;
+  role: Role | null;
   updateToken: (token: string | null) => void;
 };
 
@@ -11,8 +13,8 @@ export const useSession = create<SessionState>()(
   devtools(
     persist(
       (set) => ({
-        token: null,
-        role: 'admin',
+        token: getSessionToken('sessionStore') ? JSON.parse(getSessionToken('sessionStore') as string)?.state?.token : null,
+        role: getSessionToken('sessionStore') ? JSON.parse(getSessionToken('sessionStore') as string)?.state?.role : null,
         updateToken: (token: string | null) => set({ token: token }),
       }),
       { name: 'sessionStore', version: 1, storage: createJSONStorage(() => localStorage) },

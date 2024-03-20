@@ -1,28 +1,43 @@
-import TextFieldCore from '../../components/core/form/TextFieldCore';
-import IconifyIcon from '../../components/core/Icon/IConCore';
-import { loginPasswordInitialValues, loginPasswordSchema } from '../../helpers/form-schema/login-password.schema';
 import { Avatar, Button, Checkbox, LinearProgress, Typography } from '@mui/material';
 import { useFormik } from 'formik';
-import React from 'react';
-import AuthLink from './auth-link/AuthLink';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import IconifyIcon from '../../components/core/Icon/IConCore';
+import TextFieldCore from '../../components/core/form/TextFieldCore';
+import { loginPasswordInitialValues, loginPasswordSchema } from '../../helpers/form-schema/login-password.schema';
+import { useSession } from '../../store/auth/session';
+import { accountAuthorityCallback } from '../../utils/constants/account-login-callback.constant';
 import AuthFooter from './AuthFooter';
+import AuthLink from './auth-link/AuthLink';
 
 const LoginPassword = () => {
   const [currentValue, setCurrentValue] = React.useState('');
-  const [isLogin, setIsLogin] = React.useState(false);
   const [isShowPassword, setIsShowPassword] = React.useState(false);
-
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname;
+  const [isLogin, setIsLogin] = useState(false);
+  const authenticated = useSession((state) => state.token) != null;
+  const role = useSession((state) => state.role);
   const handleChange = (e: { target: { value: React.SetStateAction<string> } }) => setCurrentValue(e.target.value);
 
   const formik = useFormik({
     initialValues: loginPasswordInitialValues,
     validationSchema: loginPasswordSchema,
     onSubmit: (values) => {
-      console.log(values);
       setIsLogin(true);
     },
   });
 
+  useEffect(() => {
+    console.log(authenticated, role);
+    if (!authenticated) return;
+    else if (from) {
+      navigate(from);
+    } else {
+      navigate(accountAuthorityCallback[role!]);
+    }
+  }, [authenticated, role]);
   return (
     <div className='flex h-screen items-center justify-center overflow-hidden bg-[#f0f4f9] px-10'>
       <div className='sm:my-auto sm:h-fit  md:flex md:h-full md:w-full md:flex-col md:justify-between md:bg-white lg:mx-48 lg:my-auto lg:h-fit lg:bg-[#f0f4f9]'>

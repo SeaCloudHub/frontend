@@ -72,7 +72,7 @@ const Sidebar = ({ role, shrinkMode }: SidebarProps) => {
               title={item.title}
             />
           ))}
-          {role === Role.User && (
+          {role === Role.USER && (
             <div className='mt-2'>
               <LinearChartBar width='100%' value={70} total={100} />
               <p className={`text-center  text-gray-900 ${shrinkMode ? 'hidden' : ''} statement-bold`}>Used 90 of 8 GB of memory</p>

@@ -1,10 +1,10 @@
+import LoginPassword from '../../pages/auth/LoginPassword';
 import DashBoard from '../../pages/admin/dashboard/DashBoard';
 import StorageManagement from '../../pages/admin/storage-management/StorageManagement';
 import UserManagement from '../../pages/admin/user-management/UserManagement';
 import UserManagementDetail from '../../pages/admin/user-management/user-management-detail/UserManagementDetail';
 import ChangePassword from '../../pages/auth/ChangePassword';
 import LoginEmail from '../../pages/auth/LoginEmail';
-import LoginPassword from '../../pages/auth/LoginPassword';
 import Register from '../../pages/auth/Signup';
 import ErrorPage from '../../pages/error/ErrorPage';
 import Memory from '../../pages/user/memory/Memory';
@@ -55,13 +55,12 @@ export const routes = {
     // { path: ADMIN_HOME, component: DashBoard },
     { path: ADMIN_USER_MANAGEMENT, component: UserManagement },
     { path: ADMIN_USER_MANAGEMENT_USER_DETAIL, component: UserManagementDetail },
-    { path: ADMIN_DASHBOARD, component: DashBoard },
+    { path: ADMIN_HOME, component: DashBoard },
     { path: ADMIN_STORAGE_MANAGEMENT, component: StorageManagement },
   ],
   customer: [
     { path: CUSTOMER_HOME, component: Priority },
     { path: CUSTOMER_SHARED, component: Shared },
-    { path: CUSTOMER_PRIORITY, component: Priority },
     { path: CUSTOMER_MY_DRIVE, component: MyDrive },
     { path: CUSTOMER_STARRED, component: Starred },
     { path: CUSTOMER_TRASH, component: Trash },
