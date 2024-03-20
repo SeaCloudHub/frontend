@@ -1,11 +1,12 @@
-import UserManagementDetail from '../../pages/admin/user-management/user-management-detail/UserManagementDetail';
 import DashBoard from '../../pages/admin/dashboard/DashBoard';
 import StorageManagement from '../../pages/admin/storage-management/StorageManagement';
 import UserManagement from '../../pages/admin/user-management/UserManagement';
+import UserManagementDetail from '../../pages/admin/user-management/user-management-detail/UserManagementDetail';
 import ChangePassword from '../../pages/auth/ChangePassword';
 import LoginEmail from '../../pages/auth/LoginEmail';
 import LoginPassword from '../../pages/auth/LoginPassword';
 import Register from '../../pages/auth/Signup';
+import ErrorPage from '../../pages/error/ErrorPage';
 import Memory from '../../pages/user/memory/Memory';
 import MyDrive from '../../pages/user/my-drive/MyDrive';
 import Priority from '../../pages/user/priority/Priority';
@@ -17,7 +18,7 @@ export const HOME = '/';
 export const AUTH_HOME = '/auth';
 export const ADMIN_HOME = '/admin';
 export const CUSTOMER_HOME = '/customer';
-
+export const PAGE_NOT_FOUND = '/404';
 /* Auth Routes */
 export const AUTH_LOGIN_EMAIL = `${AUTH_HOME}/login/identifier`;
 export const AUTH_LOGIN_PASSWORD = `${AUTH_HOME}/login/challenge`;
@@ -66,4 +67,5 @@ export const routes = {
     { path: CUSTOMER_TRASH, component: Trash },
     { path: CUSTOMER_MEMORY, component: Memory },
   ],
+  notFound: { path: PAGE_NOT_FOUND, component: ErrorPage },
 };

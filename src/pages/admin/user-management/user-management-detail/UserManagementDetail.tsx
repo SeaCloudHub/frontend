@@ -1,15 +1,14 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import IconifyIcon from '../../../../components/core/Icon/IConCore';
 import ButtonContainer from '../../../../components/core/button/ButtonContainer';
 import SectionBorder from '../../../../components/core/section-boder/SectionBoder';
+import { useScreenHook } from '../../../../hooks/useScreenHook';
 import { ADMIN_USER_MANAGEMENT } from '../../../../utils/constants/router.constant';
 import UserDetailAction from './components/action/UserDetailAction';
 
 const UserManagementDetail = () => {
   const navigate = useNavigate();
-  const [phoneMode, setPhoneMode] = useState(true);
-  const [sidebar, setSidebar] = useState<number>(75);
+  const flex = !useScreenHook(1024);
   return (
     <>
       <div className='fixed left-[310px] top-[80px] z-10  flex w-full items-center space-x-1 border-b-2 bg-white p-2'>
@@ -23,9 +22,9 @@ const UserManagementDetail = () => {
         <IconifyIcon icon={'material-symbols:arrow-forward-ios-rounded'} />
         <p className='statement-upper-medium'>Hung Phi Vo</p>
       </div>
-      <div className={`${phoneMode ? '' : 'flex w-full items-start space-x-2'} pt-[35px]`}>
+      <div className={`${flex ? 'flex w-full items-start space-x-2' : ''} pt-[35px]`}>
         {/* <!--section --> */}
-        <div className={`${phoneMode ? '' : 'w-1/4'} border-2`}>
+        <div className={`${flex ? 'w-1/4' : ''} border-2`}>
           <div className='flex  flex-col space-y-2 border-b-2 p-4'>
             <p className='flex bg-[#eee] p-1'>ADMIN</p>
             <div className='flex items-start  space-x-3'>
@@ -59,7 +58,7 @@ const UserManagementDetail = () => {
         </div>
         {/* <!--section --> */}
         <div
-          className={`${phoneMode ? '' : 'max-h-[calc(100vh-115px)] w-3/4 overflow-y-auto'}
+          className={`${flex ? 'max-h-[calc(100vh-115px)] w-3/4 overflow-y-auto' : ''}
         flex flex-col  space-y-4`}>
           <div className='w-full space-y-2 p-3  shadow-md'>
             <p className='statement-medium h4 '>Personal Dropbox space of Hung Vo Phi</p>

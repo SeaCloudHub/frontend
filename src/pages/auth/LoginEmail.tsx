@@ -28,7 +28,7 @@ const LoginEmail = () => {
     },
   });
   return (
-    <div className='flex h-screen items-center justify-center bg-[#f0f4f9]'>
+    <div className='flex h-screen items-center justify-center overflow-hidden bg-[#f0f4f9]'>
       <div className='sm:my-auto sm:h-fit md:flex md:h-full md:w-full md:flex-col md:justify-between md:bg-white lg:mx-60 lg:my-auto lg:h-fit lg:bg-[#f0f4f9]'>
         {isLogin && <LinearProgress className='mx-5 translate-y-1' />}
         <form onSubmit={formik.handleSubmit} className='rounded-xl border bg-white p-10 md:border-none'>

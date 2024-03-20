@@ -3,6 +3,7 @@ import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 
 type SessionState = {
   token: string | null;
+  role: string | null;
   updateToken: (token: string | null) => void;
 };
 
@@ -11,6 +12,7 @@ export const useSession = create<SessionState>()(
     persist(
       (set) => ({
         token: null,
+        role: 'admin',
         updateToken: (token: string | null) => set({ token: token }),
       }),
       { name: 'sessionStore', version: 1, storage: createJSONStorage(() => localStorage) },
