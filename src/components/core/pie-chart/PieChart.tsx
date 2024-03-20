@@ -25,6 +25,7 @@ const PieChartCore: React.FC<PieChartProps> = ({ data, sizing, outerRadius }) =>
 
   return (
     <PieChart
+      margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
       sx={{
         [`& .${pieArcLabelClasses.root}`]: {
           fill: 'white',
@@ -49,8 +50,7 @@ const PieChartCore: React.FC<PieChartProps> = ({ data, sizing, outerRadius }) =>
           outerRadius: outerRadius ?? 80,
           highlightScope: { faded: 'global', highlighted: 'item' },
           faded: { color: 'gray', outerRadius: (outerRadius ?? 80) - 5 },
-          cx: '55%',
-          cy: '40%',
+          cy: '45%',
         },
       ]}
     />

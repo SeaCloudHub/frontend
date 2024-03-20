@@ -1,6 +1,7 @@
-import { Avatar, Box, Divider, List, ListItem, ListItemAvatar, ListItemText, Paper, Typography } from '@mui/material';
+import { Avatar, Box, Divider, List, ListItem, ListItemAvatar, ListItemText } from '@mui/material';
+import DashboardPager from '../dashboard-page/DashboardPager';
 
-const users = [
+const fakeData = [
   {
     _id: '1',
     name: 'John Doe',
@@ -64,42 +65,43 @@ const users = [
   },
 ];
 
-const RecentlyAddedUsers = () => {
+type user = {
+  _id: string;
+  name: string;
+  photoURL: string;
+  timeCreated: string;
+};
+
+type RecentlyAddedUsersProps = {
+  users?: user[];
+};
+
+const RecentlyAddedUsers: React.FC<RecentlyAddedUsersProps> = ({ users }) => {
+  users = fakeData;
   return (
-    <Paper elevation={3}>
-      <Box>
-        <Typography
-          sx={{
-            fontSize: 20,
-            fontWeight: 'bold',
-            textAlign: 'center',
-            padding: '10px 0',
-          }}>
-          Recently added Users
-        </Typography>
-        <List>
-          {users.slice(0, 10).map((user, i) => (
-            <Box key={user._id}>
-              <ListItem className='cursor-pointer hover:bg-gray-300 active:bg-gray-400 transition-all duration-300 ease-in-out'>
-                <ListItemAvatar>
-                  <Avatar alt={user?.name} src={user?.photoURL} />
-                </ListItemAvatar>
-                <ListItemText
-                  primary={user?.name}
-                  secondary={`Time Created: ${
-                    user?.timeCreated ? new Date(user?.timeCreated).toLocaleString() : user?.timeCreated
-                  }`}
-                  secondaryTypographyProps={{
-                    className: ' overflow-hidden whitespace-nowrap overflow-ellipsis',
-                  }}
-                />
-              </ListItem>
-              {i !== 9 && <Divider variant='inset' />}
-            </Box>
-          ))}
-        </List>
-      </Box>
-    </Paper>
+    <DashboardPager title='Recently Added Users' className='mb-3'>
+      <List>
+        {users.slice(0, 10).map((user, i) => (
+          <Box key={user._id}>
+            <ListItem className='cursor-pointer transition-all duration-300 ease-in-out hover:bg-gray-300 active:bg-gray-400'>
+              <ListItemAvatar>
+                <Avatar alt={user?.name} src={user?.photoURL} />
+              </ListItemAvatar>
+              <ListItemText
+                primary={user?.name}
+                secondary={`Time Created: ${
+                  user?.timeCreated ? new Date(user?.timeCreated).toLocaleString() : user?.timeCreated
+                }`}
+                secondaryTypographyProps={{
+                  className: ' overflow-hidden whitespace-nowrap overflow-ellipsis',
+                }}
+              />
+            </ListItem>
+            {i !== 9 && <Divider variant='inset' />}
+          </Box>
+        ))}
+      </List>
+    </DashboardPager>
   );
 };
 

@@ -11,6 +11,7 @@ import Starred from '../../pages/user/starred/Starred';
 import Trash from '../../pages/user/trash/Trash';
 import LoginPassword from '../../pages/auth/LoginPassword';
 import ChangePassword from '../../pages/auth/ChangePassword';
+import ResetPassword from '../../pages/auth/ResetPassword';
 
 export const HOME = '/';
 export const AUTH_HOME = '/auth';
@@ -47,6 +48,7 @@ export const routes = {
     // { path: AUTH_FORGOT_PASSWORD, component: Register },
     // { path: AUTH_RESET_PASSWORD, component: Register },
     { path: AUTH_CHANGE_PASSWORD, component: ChangePassword },
+    { path: AUTH_RESET_PASSWORD, component: ResetPassword },
   ],
   admin: [
     { path: ADMIN_HOME, component: DashBoard },

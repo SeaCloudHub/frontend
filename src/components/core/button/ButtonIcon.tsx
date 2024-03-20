@@ -11,7 +11,7 @@ type ButtonIconProps = {
 const ButtonIcon = ({ onClick, icon, size, color, tooltip }: ButtonIconProps) => {
   return (
     <Tooltip title={tooltip}>
-      <div className='flex  items-center  justify-center rounded-full   p-3 hover:bg-gray-100'>
+      <div className='flex  cursor-pointer  items-center justify-center rounded-full p-3 hover:bg-gray-100'>
         <IconifyIcon color={color} fontSize={size} height={size} icon={icon} onClick={onClick} />
       </div>
     </Tooltip>
