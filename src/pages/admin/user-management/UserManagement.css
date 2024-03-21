@@ -1,0 +1,7 @@
+.shrink-mode {
+  @apply left-[85px];
+}
+
+.none-shrink-mode {
+  @apply left-[310px];
+}

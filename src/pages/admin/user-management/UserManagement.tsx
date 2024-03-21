@@ -1,37 +1,32 @@
 import { useEffect, useRef, useState } from 'react';
-import IconifyIcon from '../../..//components/core/Icon/IConCore';
+import IconifyIcon from '../../../components/core/Icon/IConCore';
 import ButtonContainer from '../../../components/core/button/ButtonContainer';
 import LinearChartBar from '../../../components/core/linear-chart-bar/linearChartBar';
 import MenuCore from '../../../components/core/menu/MenuCore';
 import PaginationCore from '../../../components/core/pagination/PaginationCore';
 import TablePagination from '../../../components/core/table/TablePagination';
+import { useScreenMode } from '../../../store/responsive/screenMode';
 import { userInfoColumns } from '../../../utils/constants/userInfo-column.constant';
 import { userInfo } from '../../../utils/dumps/userInfo.dump';
+import { ScreenMode } from '../../../utils/enums/screen-mode.enum';
 import { PagingState, initialPagingState } from '../../../utils/types/paging-stage.type';
 import { UserInfo } from '../../../utils/types/user-Info.type';
+import './UserManagement.css';
 import UserManagementFilter from './UserManagementFilter';
 import UserInfoPhoneMode from './user-management-phone/UserInfoPhoneMode';
 
 const UserManagement = () => {
   const [paging, setPaging] = useState<PagingState>(initialPagingState);
-  const [phoneMode, setPhoneMode] = useState<boolean>(false);
+  const screenMode = useScreenMode((state) => state.screenMode);
+  const shrinkMode = useScreenMode((state) => state.shrinkMode);
   const [scrollable, setScrollable] = useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    const handleResize = () => {
-      setPhoneMode(window.innerWidth <= 500);
-    };
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-  useEffect(() => {
-    if (phoneMode) {
+    if (screenMode == ScreenMode.MOBILE) {
       setScrollable(true);
     }
-  }, [phoneMode]);
+  }, [screenMode]);
+
   const renderCell: Record<string, (rowData: UserInfo) => React.ReactNode> = {
     usedMemory: (rowData: UserInfo) => <LinearChartBar value={rowData['usedMemory'] as number} total={100} width='100%' />,
     name: (rowData: UserInfo) => (
@@ -41,16 +36,16 @@ const UserManagement = () => {
       </div>
     ),
   };
+
   useEffect(() => {
     const handleScroll = () => {
       if (filterRef.current && window.scrollY > filterRef.current.offsetHeight && filterRef.current.offsetHeight != 0) {
         setScrollable(true);
-      } else if (!phoneMode && filterRef.current && window.scrollY == filterRef.current.offsetHeight) {
-        console.log('vo r ni');
+      } else if (!(screenMode == ScreenMode.MOBILE) && filterRef.current && window.scrollY == filterRef.current.offsetHeight) {
         setScrollable(false);
       }
     };
-    if (!phoneMode) {
+    if (!(screenMode == ScreenMode.MOBILE)) {
       window.addEventListener('scroll', handleScroll);
     }
     return () => {
@@ -59,7 +54,7 @@ const UserManagement = () => {
   }, []);
 
   const onFilterClick = () => {
-    if (phoneMode) {
+    if (screenMode == ScreenMode.MOBILE) {
       //pop-up dialog for choose filter
     } else {
       setScrollable(false);
@@ -68,9 +63,13 @@ const UserManagement = () => {
   };
   return (
     <div className='flex w-full flex-col items-end space-y-5'>
-      <div ref={filterRef} className={`z-10 w-full space-y-2 ${phoneMode ? 'fixed bottom-2 left-1/4  ' : ''}`}>
+      <div
+        ref={filterRef}
+        className={`z-10 w-full space-y-2 ${screenMode == ScreenMode.MOBILE ? 'fixed bottom-2 left-1/4  ' : ''}`}>
         {!scrollable && <UserManagementFilter />}
-        <div className={`${scrollable ? ' fixed left-[310px] top-[80px] mx-auto w-full space-x-2 bg-white py-1' : ''}`}>
+
+        <div
+          className={`${shrinkMode ? 'shrink-mode' : 'none-shrink-mode'} ${scrollable ? ' fixed  top-[80px] mx-auto w-full space-x-2 bg-white py-1' : ''}`}>
           {scrollable && (
             <ButtonContainer
               color='063768'
@@ -90,7 +89,7 @@ const UserManagement = () => {
           />
         </div>
       </div>
-      {phoneMode && (
+      {screenMode == ScreenMode.MOBILE && (
         <div className='flex w-full flex-col items-center space-y-3'>
           {userInfo.map((item, index) => (
             <UserInfoPhoneMode
@@ -105,7 +104,7 @@ const UserManagement = () => {
           <PaginationCore currentPage={paging.page} onPageChange={() => {}} totalPage={paging.totalPage} size='small' />
         </div>
       )}
-      {!phoneMode && (
+      {!(screenMode == ScreenMode.MOBILE) && (
         <>
           <div className='w-full'>
             <TablePagination

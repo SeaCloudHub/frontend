@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import StorageTree, { StorageItem } from './storage-management-tree/StorageTree';
+import FileTableManagement from './file-table-management/FileTableManagement';
 
 const fakeData: StorageItem[] = [
   {
@@ -36,7 +37,7 @@ const fakeData: StorageItem[] = [
       },
       {
         id: '8',
-        name: 'Child 3.2',
+        name: 'Child 3.2 asdfsdfasfdasf sdfasdfasdf dfsdfd',
         child: [
           {
             id: '9',
@@ -81,22 +82,26 @@ const isFolder = (id: string, data: StorageItem[]): string | null => {
 
 const StorageManagement = () => {
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
-  const [selectedItem, setSelectedItems] = useState<string | null>(null);
   return (
-    <div className='flex'>
-      <StorageTree
-        selectedItems={fakeData}
-        handleSelectedItemsChange={(_, id) => {
-          setSelectedItems(id);
-          const result = isFolder(id!, fakeData);
-          result && setSelectedFolder(result);
-        }}
-      />
-      <div>
-        <div>{selectedFolder || (fakeData.length > 0 && fakeData[0].name) || 'Document Empty'}</div>
-        <div></div>
+    <>
+      <div className='mb-5 text-2xl font-semibold'>Storage Management</div>
+      <div className='flex'>
+        <StorageTree
+          selectedItems={fakeData}
+          handleSelectedItemsChange={(_, id) => {
+            const result = isFolder(id!, fakeData);
+            result && setSelectedFolder(result);
+          }}
+        />
+        <div className='w-full min-w-fit max-w-[calc(100%-200px)] px-3'>
+          <div className='h4 mb-3 text-center font-semibold'>
+            {selectedFolder || (fakeData.length > 0 && fakeData[0].name) || 'Document Empty'}
+          </div>
+
+          <FileTableManagement />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

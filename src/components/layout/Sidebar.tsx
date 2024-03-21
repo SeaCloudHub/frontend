@@ -1,3 +1,4 @@
+import { useScreenMode } from '../../store/responsive/screenMode';
 import { Box } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { adminSidebar, userSidebar } from '../../utils/constants/sidebar.constant';
@@ -11,30 +12,14 @@ import LinearChartBar from '../core/linear-chart-bar/linearChartBar';
 import SidebarItem from '../core/sidebar-item/SidebarItem';
 
 type SidebarProps = {
-  onShrinkChange: (mode: boolean) => void;
+  shrinkMode: boolean;
   role: Role;
 };
-const Sidebar = ({ onShrinkChange, role }: SidebarProps) => {
-  const [shrink, setShrink] = useState<boolean>(false);
-  const onShrinkModeChange = (mode: boolean) => {
-    setShrink(mode);
-    onShrinkChange(mode);
-  };
+const Sidebar = ({ role, shrinkMode }: SidebarProps) => {
+  const updateShrinkMode = useScreenMode((state) => state.updateShrinkMode);
+
   const [tabs, setTabs] = useState<SidebarItemType[]>([]);
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 1024) {
-        onShrinkModeChange(true);
-      } else {
-        onShrinkModeChange(false);
-      }
-    };
-    window.addEventListener('resize', handleResize);
-    handleResize();
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+
   useEffect(() => {
     if (role === Role.ADMIN) {
       setTabs(adminSidebar);
@@ -45,14 +30,14 @@ const Sidebar = ({ onShrinkChange, role }: SidebarProps) => {
 
   return (
     <>
-      <div className={`sidebar z-20 ${shrink ? '' : 'sidebar-lg'}`}>
+      <div className={`sidebar z-20 ${shrinkMode ? '' : 'sidebar-lg'}`}>
         <div className='flex w-full items-center justify-center'>
-          {shrink ? (
+          {shrinkMode ? (
             <ButtonIcon
               icon='radix-icons:hamburger-menu'
               size={'25px'}
               onClick={() => {
-                onShrinkModeChange(false);
+                updateShrinkMode(false);
               }}
             />
           ) : (
@@ -67,9 +52,9 @@ const Sidebar = ({ onShrinkChange, role }: SidebarProps) => {
                 </Box>
                 <ButtonIcon
                   onClick={() => {
-                    onShrinkModeChange(true);
+                    updateShrinkMode(true);
                   }}
-                  icon='fluent:ios-arrow-left-24-regular'
+                  icon='ion:caret-back'
                   size={'25px'}
                 />
               </div>
@@ -83,19 +68,19 @@ const Sidebar = ({ onShrinkChange, role }: SidebarProps) => {
               tooltip={item.tooltip}
               icon={item.icon}
               link={item.link}
-              shrink={shrink}
+              shrink={shrinkMode}
               title={item.title}
             />
           ))}
           {role === Role.User && (
-            <>
+            <div className='mt-2'>
               <LinearChartBar width='100%' value={70} total={100} />
-              <p className={`text-center  text-gray-900 ${shrink ? 'hidden' : ''} statement-bold`}>Used 90 of 8 GB of memory</p>
-            </>
+              <p className={`text-center  text-gray-900 ${shrinkMode ? 'hidden' : ''} statement-bold`}>Used 90 of 8 GB of memory</p>
+            </div>
           )}
         </div>
         <div className='flex flex-col items-center'>
-          {shrink ? (
+          {shrinkMode ? (
             <>
               <ButtonIcon tooltip='Logout' size={25} icon='mdi:logout' />
               <ButtonIcon tooltip='About' icon='ic:outline-info' size={25} />
