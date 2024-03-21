@@ -18,10 +18,10 @@ function App() {
         {/* layout routes */}
         <Route
           element={
-            <TuyenLayout children={<Outlet />} />
-            // <DynamicLayout>
-            //   <Outlet />
-            // </DynamicLayout>
+            // <TuyenLayout children={<Outlet />} />
+            <DynamicLayout>
+              <Outlet />
+            </DynamicLayout>
           }>
           {/* route của admin và custom */}
           {routes.admin.map((item, index) => (
