@@ -1,15 +1,10 @@
+import { useDrawer } from '@/pages/user/my-drive/MyDrive';
 import React, { useState } from 'react';
-import { create } from 'zustand';
 
 type TuyenLayoutProps = {
   children: React.ReactNode;
   openDrawer?: boolean;
 };
-
-const useDrawer = create((set) => ({
-  drawerOpen: false,
-  setDrawerOpen: () => set((state) => ({ drawerOpen: !state.drawerOpen })),
-}));
 
 const TuyenLayout: React.FC<TuyenLayoutProps> = ({ children }) => {
   const drawerOpen = useDrawer((state) => state.drawerOpen);
@@ -31,4 +26,3 @@ const TuyenLayout: React.FC<TuyenLayoutProps> = ({ children }) => {
 };
 
 export default TuyenLayout;
-export {useDrawer};

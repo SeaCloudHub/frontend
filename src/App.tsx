@@ -19,10 +19,12 @@ function App() {
         <Route
           element={
             // <TuyenLayout children={<Outlet />} />
+            // <Outlet />
             <DynamicLayout>
               <Outlet />
             </DynamicLayout>
-          }>
+          }
+        >
           {/* route của admin và custom */}
           {routes.admin.map((item, index) => (
             <Route path={item.path} Component={item.component} key={index} />

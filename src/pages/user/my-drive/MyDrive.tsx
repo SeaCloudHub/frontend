@@ -3,12 +3,13 @@ import FileCard from '@/components/core/file-card/FileCard';
 import fileIcons from '@/components/core/file-card/fileicon.constant';
 import FileHeader from '@/components/core/file-header/FileHeader';
 import FolderCard from '@/components/core/folder-card/FolderCard';
-import { useDrawer } from '@/components/layout/test/TuyenLayout';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import React, { useState } from 'react';
 import { render } from 'react-dom';
 import { GiEntryDoor } from 'react-icons/gi';
 import { create } from 'zustand';
+import { DataRow } from './DataRow';
+import SidePanel from '@/components/core/side-panel/SidePanel';
 
 type MyEntry = {
   isDir: boolean;
@@ -22,96 +23,18 @@ type MyEntry = {
   size: string;
 };
 
-/**
- * Map Entry to MyEntry.
- */
-const entryToMyEntry = (entries: Entry[]): MyEntry[] => {
-  return entries.map((entry) => {
-    if (entry.is_dir) {
-      return {
-        isDir: true,
-        title: entry.name,
-        icon: <Icon icon="ic:baseline-folder" className="h-full w-full" />,
-        preview: <Icon icon="ic:baseline-folder" className="h-full w-full" />,
-        id: entry.md5,
-        extra: 'extra',
-        owner: 'owner',
-        lastModified: 'lastModified',
-        size: 'size',
-      };
-    }
-    const ext = entry.name.split('.').pop() || 'any';
-    const icon = fileIcons[ext] || fileIcons.any;
-    /* Suport mp4, mp3, pdf, jpg, jpeg, png, jfif, gif, webp, ico, svg, 
-    docx, txt, zip, any */
-    const preview = [
-      'jpg',
-      'ico',
-      'webp',
-      'png',
-      'jpeg',
-      'gif',
-      'jfif',
-    ].includes(ext) ? (
-      <img
-        className="rounded-md object-cover object-center"
-        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrHRymTob1kd-ywHzIs0ty7UhrFUcJay839nNd6tcSig&s"
-      />
-    ) : (
-      <div className="h-16 w-16">{icon}</div>
-    );
-    return {
-      isDir: false,
-      title: entry.name,
-      icon: icon,
-      preview: preview,
-      id: entry.md5,
-      extra: 'extra',
-      owner: 'owner',
-      lastModified: 'lastModified',
-      size: 'size',
-    };
-  });
-};
-
-/**
- * Map MyEntry to FileCard
- */
-const myEntryToFile = (files: MyEntry[]) => {
-  return files.map((file) => {
-    return (
-      <div className="aspect-square w-auto">
-        <FileCard
-          title={file.title}
-          icon={file.icon}
-          preview={file.preview}
-          id={file.id}
-        />
-      </div>
-    );
-  });
-};
-
-/**
- * Map MyEntry to FolderCard
- */
-const myEntryToFolders = (folders: MyEntry[]) => {
-  return folders.map((folder) => {
-    return (
-      <div className="w-auto">
-        <FolderCard title={folder.title} icon={folder.icon} id={folder.id} />
-      </div>
-    );
-  });
-};
-
-const useViewMode = create((set) => ({
-  viewMode: 'list',
-  setViewMode: (mode: string) => set({ viewMode: mode }),
-}));
-export { useViewMode };
-
 const entries: Entry[] = [
+  {
+    name: 'file0',
+    full_path: '/file1',
+    size: 1024,
+    mode: 0o777,
+    mime_type: 'text/plain',
+    md5: '1',
+    is_dir: false,
+    created_at: '2021-09-21T14:00:00Z',
+    updated_at: '2021-09-21T14:00:00Z',
+  },
   {
     name: 'file1.mp3',
     full_path: '/file1.mp3',
@@ -293,39 +216,126 @@ const entries: Entry[] = [
 const MyDrive = () => {
   //TODO: const entries: Entry[] = getEntries();
 
-  const processedEntries = entryToMyEntry(entries);
+  const processedEntries = _entryToMyEntry(entries);
   const files = processedEntries.filter((entry) => !entry.isDir);
   const folders = processedEntries.filter((entry) => entry.isDir);
 
   const viewMode = useViewMode((state) => state.viewMode);
+  const drawerOpen = useDrawer((state) => state.drawerOpen);
 
   return (
-    <div className="h-full w-full">
-      <FileHeader headerName="My Drive" />
-      <div className="h-full w-full overflow-y-auto p-5">
-        {viewMode === 'grid' ? (
-          <div className="flex flex-col space-y-4">
-            <div className="text-sm font-medium"> Folders</div>
-            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
-              {myEntryToFolders(folders)}
+    // temmporary solution
+    <div className="flex h-[85vh] bg-surfaceContainerLow">
+      <div className="flex h-full grow flex-col rounded-2xl bg-white">
+        <FileHeader headerName="My Drive" />
+        <div className="overflow-y-auto p-5">
+          {viewMode === 'grid' ? (
+            <div className="flex flex-col space-y-4">
+              <div className="text-sm font-medium"> Folders</div>
+              <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+                {_myEntryToFolders(folders)}
+              </div>
+              <div className="text-sm font-medium"> Files</div>
+              <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+                {_myEntryToFile(files)}
+              </div>
             </div>
-            <div className="text-sm font-medium"> Files</div>
-            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
-              {myEntryToFile(files)}
-            </div>
-          </div>
-        ) : (
-          // <div></div>
-          renderListView(folders.concat(files))
-        )}
+          ) : (
+            // <div></div>
+            _renderListView(folders.concat(files))
+          )}
+        </div>
       </div>
+      {drawerOpen && <SidePanel icon={fileIcons['any']} title="filename" />}
+      {/* <SidePanel icon={fileIcons['any']} title='filename' /> */}
     </div>
   );
 };
 
-export default MyDrive;
+/**
+ * Map Entry to MyEntry.
+ */
+const _entryToMyEntry = (entries: Entry[]): MyEntry[] => {
+  return entries.map((entry) => {
+    if (entry.is_dir) {
+      return {
+        isDir: true,
+        title: entry.name,
+        icon: <Icon icon="ic:baseline-folder" className="h-full w-full" />,
+        preview: <Icon icon="ic:baseline-folder" className="h-full w-full" />,
+        id: entry.md5,
+        extra: 'extra',
+        owner: 'owner',
+        lastModified: 'lastModified',
+        size: 'size',
+      };
+    }
+    const ext = entry.name.split('.').pop() || 'any';
+    const icon = fileIcons[ext] || fileIcons.any;
+    /* Suport mp4, mp3, pdf, jpg, jpeg, png, jfif, gif, webp, ico, svg, 
+    docx, txt, zip, any */
+    const preview = [
+      'jpg',
+      'ico',
+      'webp',
+      'png',
+      'jpeg',
+      'gif',
+      'jfif',
+    ].includes(ext) ? (
+      <img
+        className="rounded-md object-cover object-center"
+        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrHRymTob1kd-ywHzIs0ty7UhrFUcJay839nNd6tcSig&s"
+      />
+    ) : (
+      <div className="h-16 w-16">{icon}</div>
+    );
+    return {
+      isDir: false,
+      title: entry.name,
+      icon: icon,
+      preview: preview,
+      id: entry.md5,
+      extra: 'extra',
+      owner: 'owner',
+      lastModified: 'lastModified',
+      size: 'size',
+    };
+  });
+};
 
-const header = (name, owner, lastModified, size) => {
+/**
+ * Map MyEntry to FileCard
+ */
+const _myEntryToFile = (files: MyEntry[]) => {
+  return files.map((file) => {
+    return (
+      <div className="aspect-square w-auto">
+        <FileCard
+          title={file.title}
+          icon={file.icon}
+          preview={file.preview}
+          id={file.id}
+        />
+      </div>
+    );
+  });
+};
+
+/**
+ * Map MyEntry to FolderCard
+ */
+const _myEntryToFolders = (folders: MyEntry[]) => {
+  return folders.map((folder) => {
+    return (
+      <div className="w-auto">
+        <FolderCard title={folder.title} icon={folder.icon} id={folder.id} />
+      </div>
+    );
+  });
+};
+
+const _header = (name, owner, lastModified, size) => {
   return (
     <div className="flex items-center pb-2">
       <div className="flex-1 basis-72 text-sm font-medium">{name}</div>
@@ -346,159 +356,31 @@ const header = (name, owner, lastModified, size) => {
   );
 };
 
-/**
- * Map processed Entry to row
- */
-const DataRow: React.FC<MyEntry> = ({
-  isDir,
-  title,
-  icon,
-  lastModified,
-  owner,
-  size,
-}) => {
-  const setDrawerOpen = useDrawer((state) => state.setDrawerOpen);
-  const fileOps = [
-    [{ label: 'Preview', icon: <Icon icon="material-symbols:visibility" /> }],
-    [
-      { label: 'Download', icon: <Icon icon="ic:outline-file-download" /> },
-      {
-        label: 'Rename',
-        icon: <Icon icon="ic:round-drive-file-rename-outline" />,
-      },
-      {
-        label: 'Make a copy',
-        icon: <Icon icon="material-symbols:content-copy-outline" />,
-      },
-    ],
-    [
-      { label: 'Copy link', icon: <Icon icon="material-symbols:link" /> },
-      { label: 'Share', icon: <Icon icon="lucide:user-plus" /> },
-    ],
-    [
-      { label: 'Move', icon: <Icon icon="mdi:folder-move-outline" /> },
-      {
-        label: 'Add shortcut',
-        icon: <Icon icon="material-symbols:add-to-drive" />,
-      },
-      {
-        label: 'Add to starred',
-        icon: <Icon icon="material-symbols:star-outline" />,
-      },
-    ],
-    [
-      {
-        label: 'Detail',
-        icon: <Icon icon="mdi:information-outline" />,
-        action: setDrawerOpen,
-      },
-      { label: 'Activity', icon: <Icon icon="mdi:graph-line-variant" /> },
-      { label: 'Lock', icon: <Icon icon="mdi:lock-outline" /> },
-    ],
-    [{ label: 'Move to trash', icon: <Icon icon="fa:trash-o" /> }],
-  ];
-  const folderOps = [
-    [
-      { label: 'Download', icon: <Icon icon="ic:outline-file-download" /> },
-      {
-        label: 'Rename',
-        icon: <Icon icon="ic:round-drive-file-rename-outline" />,
-      },
-    ],
-    [
-      { label: 'Copy link', icon: <Icon icon="material-symbols:link" /> },
-      { label: 'Share', icon: <Icon icon="lucide:user-plus" /> },
-    ],
-    [
-      { label: 'Move', icon: <Icon icon="mdi:folder-move-outline" /> },
-      {
-        label: 'Add shortcut',
-        icon: <Icon icon="material-symbols:add-to-drive" />,
-      },
-      {
-        label: 'Add to starred',
-        icon: <Icon icon="material-symbols:star-outline" />,
-      },
-    ],
-    [
-      {
-        label: 'Detail',
-        icon: <Icon icon="mdi:information-outline" />,
-        action: setDrawerOpen,
-      },
-      { label: 'Activity', icon: <Icon icon="mdi:graph-line-variant" /> },
-    ],
-    [{ label: 'Move to trash', icon: <Icon icon="fa:trash-o" /> }],
-  ];
-
-  // const [showTools, setShowTools] = useState(false);
-  return (
-    <div
-      className="py= flex items-center border-b hover:bg-surfaceContainer"
-      // onMouseOver={() => {
-      //   setShowTools(true);
-      // }}
-      // onMouseOut={() => {
-      //   setShowTools(false);
-      // }}
-    >
-      <div className="flex flex-1 basis-72 text-sm font-medium">
-        <div className="px-4">
-          <div className="h-6 w-6">{icon}</div>
-        </div>
-        <div>{title}</div>
-      </div>
-      <div className="basis-64 text-sm font-normal max-2xl:basis-36 max-lg:hidden">
-        {owner}
-      </div>
-      <div className="basis-48 text-sm font-normal max-2xl:shrink max-md:hidden">
-        {lastModified}
-      </div>
-      <div className="basis-20 text-sm font-normal max-xl:hidden">{size}</div>
-      <div className="flex basis-48 justify-end max-2xl:basis-12">
-        {/* removed because of lagging */}
-        {/* <div
-          className={classNames('flex', showTools ? 'visible' : 'invisible')}
-        >
-          <Icon
-            className="h-7 w-7 rounded-full p-1 hover:bg-surfaceContainerLow"
-            icon="lucide:user-plus"
-          />
-          <Icon
-            className="h-7 w-7 rounded-full p-1 hover:bg-surfaceContainerLow"
-            icon="ic:outline-file-download"
-          />
-          <Icon
-            className="h-7 w-7 rounded-full p-1 hover:bg-surfaceContainerLow"
-            icon="ic:round-drive-file-rename-outline"
-          />
-          <Icon
-            className="h-7 w-7 rounded-full p-1 hover:bg-surfaceContainerLow"
-            icon="material-symbols:star-outline"
-          />
-        </div> */}
-        <Dropdown
-          button={
-            <Icon
-              icon="ic:baseline-more-vert"
-              className="h-7 w-7 rounded-full p-1 hover:bg-surfaceContainerLow"
-            />
-          }
-          items={isDir ? folderOps : fileOps}
-          left={true}
-        />
-      </div>
-    </div>
-  );
-};
-
-const renderListView = (entries: MyEntry[]) => {
+const _renderListView = (entries: MyEntry[]) => {
   return (
     <div className="flex flex-col">
-      {header('Name', 'Owner', 'Last Modified', 'Size')}
+      {_header('Name', 'Owner', 'Last Modified', 'Size')}
       {entries.map((entry) => {
         return <DataRow {...entry} />;
       })}
     </div>
   );
 };
+
+/**
+ * Global state
+ */
+const useDrawer = create((set) => ({
+  drawerOpen: false,
+  setDrawerOpen: () => set((state) => ({ drawerOpen: !state.drawerOpen })),
+}));
+
+// read local storage here
+const useViewMode = create((set) => ({
+  viewMode: 'grid',
+  setViewMode: (mode: string) => set({ viewMode: mode }),
+}));
+
+export { useDrawer, useViewMode };
+export type { MyEntry };
+export default MyDrive;
