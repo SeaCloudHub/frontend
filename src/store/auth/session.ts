@@ -13,8 +13,8 @@ export const useSession = create<SessionState>()(
   devtools(
     persist(
       (set) => ({
-        token: getSessionToken('sessionStore') ? JSON.parse(getSessionToken('sessionStore') as string)?.state?.token : null,
-        role: getSessionToken('sessionStore') ? JSON.parse(getSessionToken('sessionStore') as string)?.state?.role : null,
+        token: getSessionToken('sessionStore') ?? JSON.parse(getSessionToken('sessionStore') as string)?.state?.token ,
+        role: getSessionToken('sessionStore') ?? JSON.parse(getSessionToken('sessionStore') as string)?.state?.role ,
         updateToken: (token: string | null) => set({ token: token }),
       }),
       { name: 'sessionStore', version: 1, storage: createJSONStorage(() => localStorage) },
