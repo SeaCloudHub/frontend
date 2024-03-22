@@ -3,8 +3,9 @@ import fileIcons from '@/components/core/file-card/fileicon.constant';
 import FolderCard from '@/components/core/folder-card/FolderCard';
 import { entries } from '@/utils/dumps/entries';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import React from 'react';
-import { create } from 'zustand';
+import React, { useState } from 'react';
+import { render } from 'react-dom';
+import { GiEntryDoor } from 'react-icons/gi';
 import { DataRow } from './DataRow';
 import { Entry } from '@/utils/types/entry.type';
 import FileHeader from '@/components/core/file-header/FileHeader';
@@ -28,6 +29,27 @@ const MyDrive = () => {
   const processedEntries = _entryToMyEntry(entries);
   const files = processedEntries.filter((entry) => !entry.isDir);
   const folders = processedEntries.filter((entry) => entry.isDir);
+
+  // const [entryDetails, setEntryDetails] = useState<EntryDetails>({
+  //   id: '1',
+  //   isDir: false,
+  //   title: 'file1',
+  //   icon: <Icon icon="ic:baseline-folder" className="h-full w-full" />,
+  //   preview: <Icon icon="ic:baseline-folder" className="h-full w-full" />,
+  //   accessUsers: [
+  //     { username: 'user1', url: 'https://slaydarkkkk.github.io/img/slaydark_avt.jpg' },
+  //     { username: 'user2', url: 'https://slaydarkkkk.github.io/img/slaydark_avt.jpg' },
+  //   ],
+  //   owner: { username: 'owner', url: 'https://slaydarkkkk.github.io/img/slaydark_avt.jpg' },
+  //   type: 'type',
+  //   size: 'size',
+  //   storageUsed: 'storageUsed',
+  //   location: <div>location</div>,
+  //   modified: new Date(),
+  //   opened: new Date(),
+  //   created: new Date(),
+  //   downloadPermissions: 0,
+  // });
 
   const viewMode = useViewMode((state) => state.viewMode);
 
@@ -109,7 +131,7 @@ const MyDrive = () => {
 };
 
 /**
- * Map Entry to MyEntry.
+ * Map remote Entry to MyEntry.
  */
 export const _entryToMyEntry = (entries: Entry[]): MyEntry[] => {
   return entries.map((entry) => {
@@ -122,6 +144,7 @@ export const _entryToMyEntry = (entries: Entry[]): MyEntry[] => {
         id: entry.md5,
         extra: 'extra',
         owner: 'owner',
+        ownerAvt: 'https://slaydarkkkk.github.io/img/slaydark_avt.jpg',
         lastModified: 'lastModified',
         size: 'size',
       };
@@ -146,6 +169,7 @@ export const _entryToMyEntry = (entries: Entry[]): MyEntry[] => {
       id: entry.md5,
       extra: 'extra',
       owner: 'owner',
+      ownerAvt: 'https://slaydarkkkk.github.io/img/slaydark_avt.jpg',
       lastModified: 'lastModified',
       size: 'size',
     };

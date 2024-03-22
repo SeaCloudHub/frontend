@@ -7,8 +7,8 @@ import { Tooltip } from '@mui/material';
 /**
  * Map processed Entry to row
  */
-export const DataRow: React.FC<MyEntry> = ({ isDir, title, icon, lastModified, owner, size }) => {
-  const setDrawerOpen = useDrawer((state) => state.setDrawerOpen);
+export const DataRow: React.FC<MyEntry> = ({ id, isDir, title, icon, lastModified, owner, size }) => {
+  const setDrawerOpen = useDrawer((state) => state.openDrawer);
   const fileOps = [
     [{ label: 'Preview', icon: <Icon icon='material-symbols:visibility' /> }],
     [
@@ -41,7 +41,7 @@ export const DataRow: React.FC<MyEntry> = ({ isDir, title, icon, lastModified, o
       {
         label: 'Detail',
         icon: <Icon icon='mdi:information-outline' />,
-        action: setDrawerOpen,
+        action: setDrawerOpen(id),
       },
       { label: 'Activity', icon: <Icon icon='mdi:graph-line-variant' /> },
       { label: 'Lock', icon: <Icon icon='mdi:lock-outline' /> },
@@ -75,7 +75,7 @@ export const DataRow: React.FC<MyEntry> = ({ isDir, title, icon, lastModified, o
       {
         label: 'Detail',
         icon: <Icon icon='mdi:information-outline' />,
-        action: setDrawerOpen,
+        action: setDrawerOpen(id),
       },
       { label: 'Activity', icon: <Icon icon='mdi:graph-line-variant' /> },
     ],
