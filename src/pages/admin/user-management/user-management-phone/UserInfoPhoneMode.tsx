@@ -5,18 +5,16 @@ import { userInfoColumns } from '../../../../utils/constants/userInfo-column.con
 type UserInfoPhoneModeProps = {
   userId?: string;
   name?: string;
+  avatar?: string;
   usedMemory: number | 0;
   lastAccess?: string;
 };
 
-const UserInfoPhoneMode = ({ userId, name, usedMemory, lastAccess }: UserInfoPhoneModeProps) => {
+const UserInfoPhoneMode = ({ userId, name, usedMemory, lastAccess, avatar }: UserInfoPhoneModeProps) => {
   return (
     <>
       <div className='w-full border-y border-b-2 border-t-2 border-[#063768] p-2'>
-        {/* <UserInfoItem title='UserId' content={userId} />
-        <UserInfoItem title='Name' content={name} />
-        <UserInfoItem title='Last access' content={lastAccess} />
-         */}
+        <img src={avatar} className='h-[50px] rounded-full object-contain' />
         {userInfoColumns.map((item, index) => (
           <UserInfoItem
             key={index}

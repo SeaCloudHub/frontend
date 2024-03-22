@@ -2,7 +2,7 @@ import { Button, Tooltip, styled } from '@mui/material';
 
 type ButtonContainerProps = {
   title?: string;
-  onClick?: () => void;
+  onClick?: (data?: any) => void;
   color?: string;
   size?: number | string;
   background?: string;
@@ -39,10 +39,11 @@ const ButtonContainerStyle = styled(Button)(
   }),
 );
 
-const ButtonContainer = ({ title, color, background, backgroundHover, icon, size, tooltip }: ButtonContainerProps) => {
+const ButtonContainer = ({ title, color, background, backgroundHover, icon, size, tooltip, ...others }: ButtonContainerProps) => {
   return (
     <Tooltip title={tooltip} style={{ zIndex: 3001 }}>
       <ButtonContainerStyle
+        {...others}
         startIcon={icon}
         Size={size}
         backGroundHover={backgroundHover}

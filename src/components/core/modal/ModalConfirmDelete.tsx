@@ -1,50 +1,39 @@
-import { Modal } from 'antd';
-import { useEffect, useState } from 'react';
-import { ClipLoader } from 'react-spinners';
-import ButtonCore from '../button/ButtonCore';
-import ButtonDelete from '../button/ButtonDelete';
+import ButtonContainer from '../button/ButtonContainer';
+import ModalCore from './ModalCore';
 
 type ModalConfirmDeleteProps = {
   message: string;
-  loadingMessage?: string;
+  title: string;
   isOpen: boolean;
-  setIsOpen: (data?: any) => void;
-  handleConfirm: () => void;
+  handleConfirm: (data?: any) => void;
 };
 
-const ModalConfirmDelete = ({ message, loadingMessage, isOpen, setIsOpen, handleConfirm }: ModalConfirmDeleteProps) => {
-  const [isClick, setIsClick] = useState(false);
-
-  useEffect(() => {
-    setIsClick(false);
-  }, [isOpen]);
-
-  const clickConfirm = () => {
-    setIsClick(true);
-    handleConfirm();
-  };
-
+const ModalConfirmDelete = ({ message, title, isOpen, handleConfirm }: ModalConfirmDeleteProps) => {
   return (
-    <Modal
-      open={isOpen}
-      okButtonProps={{ style: { display: 'none' } }}
-      cancelButtonProps={{ style: { display: 'none' } }}
-      closable={false}
-      width={460}>
-      <p className='text-center text-lg font-semibold'>
-        {isClick ? <>{loadingMessage ? loadingMessage : 'Deleting...'}</> : <>{message}</>}
-      </p>
-      {isClick ? (
-        <div className='mt-6 flex justify-center'>
-          <ClipLoader color='gray' />
+    <ModalCore open={isOpen} width={'40%'} closeOutside={handleConfirm}>
+      <div className='mb-3 flex w-full flex-col space-y-3'>
+        <h3 className='statement-bold text-[24px]'>{title}</h3>
+        <p>{message}</p>
+        <div className='mt-6 flex items-center justify-end gap-5'>
+          <p
+            onClick={() => {
+              handleConfirm(false);
+            }}
+            className='statement-upper-medium pointer cursor-pointer text-blue-600'>
+            Cancle
+          </p>
+          <ButtonContainer
+            borderRadius={15}
+            tooltip={'Delete'}
+            title='Delete'
+            background='#0b57d0'
+            onClick={() => {
+              handleConfirm(true);
+            }}
+          />
         </div>
-      ) : (
-        <div className='mt-6 flex justify-center gap-4'>
-          <ButtonCore type='secondary-outlined' text='취 소' onClick={() => setIsOpen(false)} />
-          <ButtonDelete onClick={clickConfirm} />
-        </div>
-      )}
-    </Modal>
+      </div>
+    </ModalCore>
   );
 };
 

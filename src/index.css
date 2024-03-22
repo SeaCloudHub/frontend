@@ -1,7 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+html {
+  scroll-behavior: smooth;
+}
 @layer components {
   .sidebar {
     @apply fixed left-0 top-0 flex h-screen
@@ -47,5 +49,23 @@
   }
   .statement-bold {
     @apply font-bold;
+  }
+  .h1 {
+    @apply text-4em font-bold;
+  }
+  .h2 {
+    @apply text-3em font-bold;
+  }
+  .h3 {
+    @apply text-1.5em font-bold;
+  }
+  .h4 {
+    @apply text-1.17em font-bold;
+  }
+  .h5 {
+    @apply text-0.83em font-bold;
+  }
+  .h6 {
+    @apply text-0.67em font-bold;
   }
 }

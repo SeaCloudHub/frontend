@@ -1,39 +1,30 @@
 import { PropsWithChildren, useEffect, useState } from 'react';
+import { useScreenMode } from '../../store/responsive/screenMode';
 import { Role } from '../../utils/enums/role.enum';
+import { ScreenMode } from '../../utils/enums/screen-mode.enum';
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
 
 const DynamicLayout = ({ children }: PropsWithChildren) => {
-  const onShrinkChange = (mode: boolean) => setShrink(mode);
-  const [shrink, setShrink] = useState<boolean>(false);
-  const [phoneMode, setPhoneMode] = useState<boolean>(false);
+  const { shrinkMode, screenMode, updateScreenMode, updateShrinkMode } = useScreenMode();
   const [role, setRole] = useState<Role>(Role.ADMIN);
-  const pathName: string = 'Admin';
-  useEffect(() => {
-    const handleResize = () => {
-      setPhoneMode(window.innerWidth <= 500);
-    };
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+  const pathName: string = 'User';
+ 
   useEffect(() => {
     if (pathName.startsWith('Admin')) {
       setRole(Role.ADMIN);
     }
     if (pathName.startsWith('User')) {
-      setRole(Role.User);
+      setRole(Role.USER);
     }
   }, [pathName]);
   return (
     <>
-      <Navbar phoneMode={phoneMode} isShrink={shrink} />
-      {!phoneMode && <Sidebar role={role} onShrinkChange={onShrinkChange} />}
+      <Navbar phoneMode={screenMode == ScreenMode.MOBILE} isShrink={shrinkMode} />
+      {!(screenMode == ScreenMode.MOBILE) && <Sidebar shrinkMode={shrinkMode} role={role} />}
       <div
-        className={`content-default-mode p-3 ${shrink ? 'content-shrink-mode' : ''}
-        ${phoneMode ? 'ml-0' : ''}`}>
+        className={`content-default-mode p-3 ${shrinkMode ? 'content-shrink-mode' : ''}
+        ${screenMode == ScreenMode.MOBILE ? 'ml-0' : ''}`}>
         {children}
       </div>
     </>

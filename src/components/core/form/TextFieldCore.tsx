@@ -1,18 +1,18 @@
-import { FormLabel, TextField } from '@mui/material';
+import { TextField } from '@mui/material';
 import React from 'react';
+import { Error } from '@mui/icons-material';
 
 type TextFieldCoreProps = {
-  label: string;
+  label?: string;
   name: string;
-  type: string;
-  placeholder: string;
+  type?: string;
   className?: string;
   value?: string | unknown;
   disabled?: boolean | undefined;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   error?: boolean | undefined;
-  helperText?: string | undefined | false;
+  helperText?: React.ReactNode;
 };
 
 const TextFieldCore = ({
@@ -23,40 +23,35 @@ const TextFieldCore = ({
   helperText,
   onBlur,
   onChange,
-  placeholder,
   disabled,
   type,
   value,
 }: TextFieldCoreProps) => {
   return (
-    <div className='w-full px-1'>
-      <FormLabel
-        style={{
-          fontSize: '14px',
-          fontWeight: 'bold',
-          color: '#000',
-        }}>
-        {label}
-      </FormLabel>
-      <TextField
-        name={name}
-        disabled={disabled}
-        type={type}
-        placeholder={placeholder}
-        margin='dense'
-        InputProps={{
-          className: 'border rounded-md hover:border-blue-300 focus:transition-all',
-        }}
-        className={className}
-        fullWidth
-        value={value}
-        onChange={onChange}
-        onBlur={onBlur}
-        error={error}
-        helperText={helperText}
-        autoComplete='off'
-      />
-    </div>
+    // <div className='w-full px-1'>
+    <TextField
+      name={name}
+      disabled={disabled}
+      type={type}
+      variant='outlined'
+      label={label}
+      className={`bg-white ${className}`}
+      fullWidth
+      value={value}
+      onChange={onChange}
+      onBlur={onBlur || undefined}
+      error={error}
+      helperText={
+        helperText && (
+          <span className='flex -translate-x-3 items-center gap-1'>
+            {error && <Error color='error' sx={{ width: '15px', height: '15px' }} />}
+            <span>{helperText}</span>
+          </span>
+        )
+      }
+      autoComplete='off'
+    />
+    // </div>
   );
 };
 

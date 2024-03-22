@@ -1,40 +1,51 @@
 import { SidebarItemType } from '@/utils/types/sidebar-item.type';
+import {
+  ADMIN_HOME,
+  ADMIN_STORAGE_MANAGEMENT,
+  ADMIN_USER_MANAGEMENT,
+  CUSTOMER_HOME,
+  CUSTOMER_MEMORY,
+  CUSTOMER_MY_DRIVE,
+  CUSTOMER_SHARED,
+  CUSTOMER_STARRED,
+  CUSTOMER_TRASH,
+} from './router.constant';
 
 export const userSidebar: SidebarItemType[] = [
   {
     icon: 'material-symbols:priority-outline',
     title: 'Priority',
-    link: '1',
+    link: CUSTOMER_HOME,
     tooltip: 'Priority',
   },
   {
     icon: 'ri:drive-line',
     title: 'My Drive',
-    link: '2',
+    link: CUSTOMER_MY_DRIVE,
     tooltip: 'My Drive',
   },
   {
     icon: 'ri:user-shared-line',
     title: 'Shared with me',
-    link: '3',
+    link: CUSTOMER_SHARED,
     tooltip: 'Shared with me',
   },
   {
     icon: 'material-symbols:star-outline',
     title: 'Starred',
-    link: '4',
+    link: CUSTOMER_STARRED,
     tooltip: 'Starred',
   },
   {
     icon: 'mdi:trash',
     title: 'Trash',
-    link: '4',
+    link: CUSTOMER_TRASH,
     tooltip: 'Trash',
   },
   {
     icon: 'ic:outline-cloud',
     title: 'Memory',
-    link: '5',
+    link: CUSTOMER_MEMORY,
     tooltip: 'Memory',
   },
 ];
@@ -43,19 +54,19 @@ export const adminSidebar: SidebarItemType[] = [
   {
     icon: 'mage:dashboard-3-fill',
     title: 'Dashboard',
-    link: '1',
+    link: ADMIN_HOME,
     tooltip: 'Dashboard',
   },
   {
     icon: 'ph:user-fill',
     title: 'User management',
-    link: '2',
+    link: ADMIN_USER_MANAGEMENT,
     tooltip: 'User management',
   },
   {
     icon: 'material-symbols:folder',
     title: 'Storage management',
-    link: '2',
+    link: ADMIN_STORAGE_MANAGEMENT,
     tooltip: 'Storage management',
   },
 ];

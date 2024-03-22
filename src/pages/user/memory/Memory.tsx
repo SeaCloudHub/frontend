@@ -1,6 +1,5 @@
-import FileBrowser from "../../../components/layout/FileBrowser";
-import { CssBaseline, CssVarsProvider } from "@mui/joy";
-
+import FileBrowser from '../../../components/layout/FileBrowser';
+import { CssBaseline, CssVarsProvider } from '@mui/joy';
 
 const Memory = () => {
   return (
