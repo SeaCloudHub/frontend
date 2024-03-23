@@ -57,6 +57,7 @@ const LoginPassword = () => {
                     width: 25,
                     height: 25,
                   }}
+                  // className='w-6 h-6'
                 />
                 <span className='line-clamp-1 overflow-hidden'>John Doe</span>
               </div>

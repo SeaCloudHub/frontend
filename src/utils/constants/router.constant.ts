@@ -8,7 +8,7 @@ import LoginEmail from '../../pages/auth/LoginEmail';
 import Register from '../../pages/auth/Signup';
 import ErrorPage from '../../pages/error/ErrorPage';
 import Memory from '../../pages/user/memory/Memory';
-import MyDrive from '../../pages/user/my-drive/MyDrive';
+import MyDrive from '@/pages/user/my-drive/MyDrive';
 import Priority from '../../pages/user/priority/Priority';
 import Shared from '../../pages/user/shared/Shared';
 import Starred from '../../pages/user/starred/Starred';

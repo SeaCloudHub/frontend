@@ -21,7 +21,7 @@ const StorageTree: React.FC<StorageTreeProps> = ({ selectedItems, handleSelected
         item.child && (
           <TreeItem
             key={item.id}
-            nodeId={item.id}
+            itemId={item.id}
             label={
               <div className='flex items-center'>
                 <div>

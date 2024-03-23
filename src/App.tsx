@@ -14,11 +14,13 @@ function App() {
         {routes.auth.map((item, index) => (
           <Route path={item.path} Component={item.component} key={index} />
         ))}
-        {<Route path={routes.notFound.path} Component={routes.notFound.component} />}
+        <Route path={routes.notFound.path} Component={routes.notFound.component} />
 
         {/* layout routes */}
         <Route
           element={
+            // <TuyenLayout children={<Outlet />} />
+            // <Outlet />
             <DynamicLayout>
               <Outlet />
             </DynamicLayout>
