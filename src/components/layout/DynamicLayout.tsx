@@ -8,14 +8,14 @@ import Sidebar from './Sidebar';
 const DynamicLayout = ({ children }: PropsWithChildren) => {
   const { shrinkMode, screenMode, updateScreenMode, updateShrinkMode } = useScreenMode();
   const [role, setRole] = useState<Role>(Role.ADMIN);
-  const pathName: string = 'User';
- 
+  const pathName: string = 'Admin';
+
   useEffect(() => {
     if (pathName.startsWith('Admin')) {
       setRole(Role.ADMIN);
     }
     if (pathName.startsWith('User')) {
-      setRole(Role.User);
+      setRole(Role.USER);
     }
   }, [pathName]);
   return (

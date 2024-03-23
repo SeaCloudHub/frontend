@@ -1,11 +1,11 @@
 import { SidebarItemType } from '@/utils/types/sidebar-item.type';
 import {
-  ADMIN_DASHBOARD,
+  ADMIN_HOME,
   ADMIN_STORAGE_MANAGEMENT,
   ADMIN_USER_MANAGEMENT,
+  CUSTOMER_HOME,
   CUSTOMER_MEMORY,
   CUSTOMER_MY_DRIVE,
-  CUSTOMER_PRIORITY,
   CUSTOMER_SHARED,
   CUSTOMER_STARRED,
   CUSTOMER_TRASH,
@@ -15,7 +15,7 @@ export const userSidebar: SidebarItemType[] = [
   {
     icon: 'material-symbols:priority-outline',
     title: 'Priority',
-    link: CUSTOMER_PRIORITY,
+    link: CUSTOMER_HOME,
     tooltip: 'Priority',
   },
   {
@@ -54,7 +54,7 @@ export const adminSidebar: SidebarItemType[] = [
   {
     icon: 'mage:dashboard-3-fill',
     title: 'Dashboard',
-    link: ADMIN_DASHBOARD,
+    link: ADMIN_HOME,
     tooltip: 'Dashboard',
   },
   {
