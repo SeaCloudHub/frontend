@@ -6,7 +6,7 @@ type ButtonContainerProps = {
   color?: string;
   size?: number | string;
   background?: string;
-  backgroundHover?: string;
+  backgroundhover?: string;
   icon?: React.ReactNode;
   [others: string]: any;
 };
@@ -15,26 +15,26 @@ const ButtonContainerStyle = styled(Button)(
   ({
     background,
     borderRadius,
-    Color,
-    Size,
-    backGroundHover,
+    customecolor,
+    customesize,
+    backgroundhover,
   }: {
     background?: string;
     borderRadius?: string;
-    Color?: string;
-    Size?: number | string;
-    backGroundHover?: string;
+    customecolor?: string;
+    customesize?: number | string;
+    backgroundhover?: string;
   }) => ({
     fontWeight: 'bold',
-    color: Color,
-    width: Size,
-    height: Size,
+    color: customecolor,
+    width: customesize,
+    height: customesize,
     justifyContent: 'flex-end',
     backgroundColor: background,
     borderRadius: borderRadius,
     textTransform: 'none',
     '&:hover': {
-      background: backGroundHover,
+      background: backgroundhover,
     },
   }),
 );
@@ -45,10 +45,10 @@ const ButtonContainer = ({ title, color, background, backgroundHover, icon, size
       <ButtonContainerStyle
         {...others}
         startIcon={icon}
-        Size={size}
-        backGroundHover={backgroundHover}
+        customesize={size}
+        backgroundhover={backgroundHover}
         variant='contained'
-        Color={color}
+        customecolor={color}
         background={background}>
         {title}
       </ButtonContainerStyle>

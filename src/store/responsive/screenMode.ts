@@ -17,9 +17,17 @@ export const useScreenMode = create<ScreenModeState>()(
         shrinkMode: false,
         updateScreenMode: (screenMode: ScreenMode) => set((state) => ({ ...state, screenMode: screenMode })),
         updateShrinkMode: (shrinkMode: boolean) =>
-          set((state) => ({ ...state, screenMode: ScreenMode.DESKTOP, shrinkMode: shrinkMode })),
+          set((state) => ({
+            ...state,
+            screenMode: ScreenMode.DESKTOP,
+            shrinkMode: shrinkMode,
+          })),
       }),
-      { name: 'screenModeStore', version: 1, storage: createJSONStorage(() => localStorage) },
+      {
+        name: 'screenModeStore',
+        version: 1,
+        storage: createJSONStorage(() => localStorage),
+      },
     ),
     { name: 'screen-mode-store', enabled: true },
   ),

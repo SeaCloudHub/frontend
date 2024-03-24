@@ -44,7 +44,11 @@ const Register = () => {
             type='contained'
             title='Sign up'
             contentColor='white'
-            rs={{ className: 'w-full', backgroundColor: 'green', borderRadius: '5px' }}
+            rs={{
+              className: 'w-full',
+              backgroundColor: 'green',
+              borderRadius: '5px',
+            }}
             onClick={formik.handleSubmit}
             loading={isSignup}
             disabled={isSignup}

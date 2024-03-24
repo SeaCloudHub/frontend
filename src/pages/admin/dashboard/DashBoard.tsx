@@ -6,9 +6,9 @@ import RecentlyAddedUsers from './dashboard-user/RecentlyAddedUsers';
 
 const DashBoard = () => {
   return (
-    <div className='w-full sm:flex px-3 py-3 gap-3 z-10'>
-      <div className='w-full mb-3'>
-        <div className='grid md:grid-cols-2 sm:grid-cols-1 gap-3 mb-3'>
+    <div className='z-10 w-full gap-3 px-3 py-3 sm:flex'>
+      <div className='mb-3 w-full'>
+        <div className='mb-3 grid gap-3 sm:grid-cols-1 md:grid-cols-2'>
           <Paper elevation={3} sx={{ p: 2 }}>
             <Typography variant='h5' className='text-center' fontWeight={550}>
               Total Users
@@ -64,7 +64,7 @@ const DashBoard = () => {
           />
         </Paper>
       </div>
-      <div className='sm:w-[30%] h-12 bg-green-300'>
+      <div className='h-12 bg-green-300 sm:w-[30%]'>
         <RecentlyAddedUsers />
       </div>
     </div>

@@ -116,8 +116,16 @@ const UserManagement = () => {
                   menuItems={[
                     { onClick: () => {}, title: 'Detail', icon: 'ep:view' },
                     { onClick: () => {}, title: 'Edit', icon: 'tabler:edit' },
-                    { onClick: () => {}, title: 'Delete', icon: 'ion:trash-sharp' },
-                    { onClick: () => {}, title: 'Block', icon: 'ic:round-block' },
+                    {
+                      onClick: () => {},
+                      title: 'Delete',
+                      icon: 'ion:trash-sharp',
+                    },
+                    {
+                      onClick: () => {},
+                      title: 'Block',
+                      icon: 'ic:round-block',
+                    },
                   ]}
                 />
               }

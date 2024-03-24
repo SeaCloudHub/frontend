@@ -1,12 +1,9 @@
-import Dropdown, { classNames } from '@/components/core/drop-down/Dropdown';
 import FileCard from '@/components/core/file-card/FileCard';
 import fileIcons from '@/components/core/file-card/fileicon.constant';
 import FileHeader from '@/components/core/file-header/FileHeader';
 import FolderCard from '@/components/core/folder-card/FolderCard';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import React, { useState } from 'react';
-import { render } from 'react-dom';
-import { GiEntryDoor } from 'react-icons/gi';
+import React from 'react';
 import { create } from 'zustand';
 import { DataRow } from './DataRow';
 import SidePanel from '@/components/core/side-panel/SidePanel';
@@ -225,18 +222,18 @@ const MyDrive = () => {
 
   return (
     // temmporary solution
-    <div className="flex h-[85vh] bg-surfaceContainerLow">
-      <div className="flex h-full grow flex-col rounded-2xl bg-white">
-        <FileHeader headerName="My Drive" />
-        <div className="overflow-y-auto p-5">
+    <div className='flex h-[85vh] bg-surfaceContainerLow'>
+      <div className='flex h-full grow flex-col rounded-2xl bg-white'>
+        <FileHeader headerName='My Drive' />
+        <div className='overflow-y-auto p-5'>
           {viewMode === 'grid' ? (
-            <div className="flex flex-col space-y-4">
-              <div className="text-sm font-medium"> Folders</div>
-              <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+            <div className='flex flex-col space-y-4'>
+              <div className='text-sm font-medium'> Folders</div>
+              <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'>
                 {_myEntryToFolders(folders)}
               </div>
-              <div className="text-sm font-medium"> Files</div>
-              <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+              <div className='text-sm font-medium'> Files</div>
+              <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'>
                 {_myEntryToFile(files)}
               </div>
             </div>
@@ -246,7 +243,7 @@ const MyDrive = () => {
           )}
         </div>
       </div>
-      {drawerOpen && <SidePanel icon={fileIcons['any']} title="filename" />}
+      {drawerOpen && <SidePanel icon={fileIcons['any']} title='filename' />}
       {/* <SidePanel icon={fileIcons['any']} title='filename' /> */}
     </div>
   );
@@ -261,8 +258,8 @@ const _entryToMyEntry = (entries: Entry[]): MyEntry[] => {
       return {
         isDir: true,
         title: entry.name,
-        icon: <Icon icon="ic:baseline-folder" className="h-full w-full" />,
-        preview: <Icon icon="ic:baseline-folder" className="h-full w-full" />,
+        icon: <Icon icon='ic:baseline-folder' className='h-full w-full' />,
+        preview: <Icon icon='ic:baseline-folder' className='h-full w-full' />,
         id: entry.md5,
         extra: 'extra',
         owner: 'owner',
@@ -274,21 +271,13 @@ const _entryToMyEntry = (entries: Entry[]): MyEntry[] => {
     const icon = fileIcons[ext] || fileIcons.any;
     /* Suport mp4, mp3, pdf, jpg, jpeg, png, jfif, gif, webp, ico, svg, 
     docx, txt, zip, any */
-    const preview = [
-      'jpg',
-      'ico',
-      'webp',
-      'png',
-      'jpeg',
-      'gif',
-      'jfif',
-    ].includes(ext) ? (
+    const preview = ['jpg', 'ico', 'webp', 'png', 'jpeg', 'gif', 'jfif'].includes(ext) ? (
       <img
-        className="rounded-md object-cover object-center"
-        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrHRymTob1kd-ywHzIs0ty7UhrFUcJay839nNd6tcSig&s"
+        className='rounded-md object-cover object-center'
+        src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrHRymTob1kd-ywHzIs0ty7UhrFUcJay839nNd6tcSig&s'
       />
     ) : (
-      <div className="h-16 w-16">{icon}</div>
+      <div className='h-16 w-16'>{icon}</div>
     );
     return {
       isDir: false,
@@ -310,13 +299,8 @@ const _entryToMyEntry = (entries: Entry[]): MyEntry[] => {
 const _myEntryToFile = (files: MyEntry[]) => {
   return files.map((file) => {
     return (
-      <div className="aspect-square w-auto">
-        <FileCard
-          title={file.title}
-          icon={file.icon}
-          preview={file.preview}
-          id={file.id}
-        />
+      <div className='aspect-square w-auto'>
+        <FileCard title={file.title} icon={file.icon} preview={file.preview} id={file.id} />
       </div>
     );
   });
@@ -328,7 +312,7 @@ const _myEntryToFile = (files: MyEntry[]) => {
 const _myEntryToFolders = (folders: MyEntry[]) => {
   return folders.map((folder) => {
     return (
-      <div className="w-auto">
+      <div className='w-auto'>
         <FolderCard title={folder.title} icon={folder.icon} id={folder.id} />
       </div>
     );
@@ -337,16 +321,12 @@ const _myEntryToFolders = (folders: MyEntry[]) => {
 
 const _header = (name, owner, lastModified, size) => {
   return (
-    <div className="flex items-center pb-2">
-      <div className="flex-1 basis-72 text-sm font-medium">{name}</div>
-      <div className="basis-64 text-sm font-medium max-2xl:basis-36 max-lg:hidden">
-        {owner}
-      </div>
-      <div className="basis-48 text-sm font-medium max-2xl:shrink max-md:hidden">
-        {lastModified}
-      </div>
-      <div className="basis-20 text-sm font-medium max-xl:hidden">{size}</div>
-      <div className="flex basis-48 justify-end max-2xl:basis-12">
+    <div className='flex items-center pb-2'>
+      <div className='flex-1 basis-72 text-sm font-medium'>{name}</div>
+      <div className='basis-64 text-sm font-medium max-2xl:basis-36 max-lg:hidden'>{owner}</div>
+      <div className='basis-48 text-sm font-medium max-2xl:shrink max-md:hidden'>{lastModified}</div>
+      <div className='basis-20 text-sm font-medium max-xl:hidden'>{size}</div>
+      <div className='flex basis-48 justify-end max-2xl:basis-12'>
         {/* <Icon
           icon="ic:baseline-more-vert"
           className="h-7 w-7 rounded-full p-1 hover:bg-surfaceContainerLow"
@@ -358,7 +338,7 @@ const _header = (name, owner, lastModified, size) => {
 
 const _renderListView = (entries: MyEntry[]) => {
   return (
-    <div className="flex flex-col">
+    <div className='flex flex-col'>
       {_header('Name', 'Owner', 'Last Modified', 'Size')}
       {entries.map((entry) => {
         return <DataRow {...entry} />;

@@ -1,6 +1,5 @@
 import * as React from 'react';
-import Box, { BoxProps } from '@mui/joy/Box';
-import Sheet from '@mui/joy/Sheet';
+import Box from '@mui/joy/Box';
 
 interface WrapperProps {
   children: React.ReactNode;

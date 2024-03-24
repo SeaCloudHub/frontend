@@ -80,7 +80,7 @@ const RecentlyAddedUsers = () => {
         <List>
           {users.slice(0, 10).map((user, i) => (
             <Box key={user._id}>
-              <ListItem className='cursor-pointer hover:bg-gray-300 active:bg-gray-400 transition-all duration-300 ease-in-out'>
+              <ListItem className='cursor-pointer transition-all duration-300 ease-in-out hover:bg-gray-300 active:bg-gray-400'>
                 <ListItemAvatar>
                   <Avatar alt={user?.name} src={user?.photoURL} />
                 </ListItemAvatar>

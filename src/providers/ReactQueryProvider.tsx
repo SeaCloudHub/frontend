@@ -13,7 +13,7 @@ const queryClient = new QueryClient({
       staleTime: 1000 * 60 * 3,
     },
   },
-})
+});
 
 export function QueryClientProvider(props: QueryClientProviderProps) {
   const { children } = props;

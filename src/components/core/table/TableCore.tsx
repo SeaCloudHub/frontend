@@ -56,7 +56,13 @@ const TableCore = <T extends object>({ columns, data, action, Element, renderCel
                   </TableCell>
                 ))}
                 {action && (
-                  <TableCell style={{ maxWidth: 10, background: rowIndex % 2 == 0 ? '#e5e7eb' : '' }}>{Element}</TableCell>
+                  <TableCell
+                    style={{
+                      maxWidth: 10,
+                      background: rowIndex % 2 == 0 ? '#e5e7eb' : '',
+                    }}>
+                    {Element}
+                  </TableCell>
                 )}
               </TableRow>
             ))}

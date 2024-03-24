@@ -1,8 +1,11 @@
 export type AuthSignInRESP = {
-  authority: string;
-  accessToken: string;
-  accessTokenExpireTime: string;
-  refreshToken: string;
-  refreshTokenExpireTime: string;
-  firstLoginCheck: boolean;
+  message: string;
+  data: { identity: IdentityRESP; session_id: string; session_token: string; session_expires_at: string };
+};
+
+export type IdentityRESP = {
+  id: string;
+  email: string;
+  password_changed_at: string;
+  is_admin: boolean;
 };

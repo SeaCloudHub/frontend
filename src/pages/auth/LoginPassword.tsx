@@ -1,12 +1,16 @@
 import { Avatar, Button, Checkbox, LinearProgress, Typography } from '@mui/material';
+import { useMutation } from '@tanstack/react-query';
 import { useFormik } from 'formik';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { signinApi } from '../../apis/auth/auth.api';
+import { AuthSignInREQ, loginPasswordInitialValues } from '../../apis/auth/request/auth-sign-in.request';
 import IconifyIcon from '../../components/core/Icon/IConCore';
 import TextFieldCore from '../../components/core/form/TextFieldCore';
-import { loginPasswordInitialValues, loginPasswordSchema } from '../../helpers/form-schema/login-password.schema';
+import { loginPasswordSchema } from '../../helpers/form-schema/login-password.schema';
 import { useSession } from '../../store/auth/session';
 import { accountAuthorityCallback } from '../../utils/constants/account-login-callback.constant';
+import { Role } from '../../utils/enums/role.enum';
 import AuthFooter from './AuthFooter';
 import AuthLink from './auth-link/AuthLink';
 
@@ -16,21 +20,33 @@ const LoginPassword = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname;
-  const [isLogin, setIsLogin] = useState(false);
-  const authenticated = useSession((state) => state.token) != null;
-  const role = useSession((state) => state.role);
+  const { token: authenticated, role, updateSession } = useSession();
   const handleChange = (e: { target: { value: React.SetStateAction<string> } }) => setCurrentValue(e.target.value);
 
   const formik = useFormik({
     initialValues: loginPasswordInitialValues,
     validationSchema: loginPasswordSchema,
-    onSubmit: (values) => {
-      setIsLogin(true);
+    onSubmit: async (values) => {
+      const res = await loginMutation.mutateAsync(values);
+      if (res.status == 200) {
+        const { data } = res.data;
+        updateSession(data.session_token, data.identity.is_admin ? Role.ADMIN : Role.USER);
+      }
     },
   });
 
+  const loginMutation = useMutation({
+    mutationFn: (body: AuthSignInREQ) => {
+      return signinApi(body);
+    },
+  });
   useEffect(() => {
-    console.log(authenticated, role);
+    if (loginMutation.error) {
+      console.log(loginMutation.error);
+    }
+  }, [loginMutation.error]);
+
+  useEffect(() => {
     if (!authenticated) return;
     else if (from) {
       navigate(from);
@@ -38,10 +54,11 @@ const LoginPassword = () => {
       navigate(accountAuthorityCallback[role!]);
     }
   }, [authenticated, role]);
+
   return (
     <div className='flex h-screen items-center justify-center overflow-hidden bg-[#f0f4f9] px-10'>
       <div className='sm:my-auto sm:h-fit  md:flex md:h-full md:w-full md:flex-col md:justify-between md:bg-white lg:mx-48 lg:my-auto lg:h-fit lg:bg-[#f0f4f9]'>
-        {isLogin && <LinearProgress className='mx-5 translate-y-1' />}
+        {loginMutation.isPending && <LinearProgress className='mx-5 translate-y-1' />}
         <form onSubmit={formik.handleSubmit} className='rounded-3xl border bg-white p-10 md:border-none'>
           <div className='logo mb-4'>
             <IconifyIcon icon='flat-color-icons:google' className='text-5xl' />
@@ -94,7 +111,7 @@ const LoginPassword = () => {
                   type='submit'
                   variant='contained'
                   color='primary'
-                  {...(isLogin && { disabled: true })}
+                  {...(loginMutation.isPending && { disabled: true })}
                   className='w-24'>
                   Next
                 </Button>
