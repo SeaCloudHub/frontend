@@ -1,8 +1,10 @@
 import { Avatar, Button, Checkbox, LinearProgress, Typography } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import { useFormik } from 'formik';
 import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { signinApi } from '../../apis/auth/auth.api';
 import { AuthSignInREQ, loginPasswordInitialValues } from '../../apis/auth/request/auth-sign-in.request';
 import IconifyIcon from '../../components/core/Icon/IConCore';
@@ -11,6 +13,8 @@ import { loginPasswordSchema } from '../../helpers/form-schema/login-password.sc
 import { useSession } from '../../store/auth/session';
 import { accountAuthorityCallback } from '../../utils/constants/account-login-callback.constant';
 import { Role } from '../../utils/enums/role.enum';
+import { toastError } from '../../utils/toast-options/toast-options';
+import { ApiGenericError } from '../../utils/types/api-generic-error.type';
 import AuthFooter from './AuthFooter';
 import AuthLink from './auth-link/AuthLink';
 
@@ -20,7 +24,7 @@ const LoginPassword = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname;
-  const { token: authenticated, role, updateSession } = useSession();
+  const { token: authenticated, role, signIn } = useSession();
   const handleChange = (e: { target: { value: React.SetStateAction<string> } }) => setCurrentValue(e.target.value);
 
   const formik = useFormik({
@@ -30,7 +34,7 @@ const LoginPassword = () => {
       const res = await loginMutation.mutateAsync(values);
       if (res.status == 200) {
         const { data } = res.data;
-        updateSession(data.session_token, data.identity.is_admin ? Role.ADMIN : Role.USER);
+        signIn(data.session_token, data.identity.is_admin ? Role.ADMIN : Role.USER);
       }
     },
   });
@@ -39,12 +43,12 @@ const LoginPassword = () => {
     mutationFn: (body: AuthSignInREQ) => {
       return signinApi(body);
     },
+    onError: (error) => {
+      if (isAxiosError<ApiGenericError>(error)) {
+        toast.error(error.response?.data.message, toastError());
+      }
+    },
   });
-  useEffect(() => {
-    if (loginMutation.error) {
-      console.log(loginMutation.error);
-    }
-  }, [loginMutation.error]);
 
   useEffect(() => {
     if (!authenticated) return;

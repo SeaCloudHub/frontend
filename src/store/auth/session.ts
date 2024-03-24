@@ -6,7 +6,7 @@ import { getLocalStorage } from '../../utils/function/auth.function';
 type SessionState = {
   token: string | null;
   role: Role | null;
-  updateSession: (token: string | null, role: Role | null) => void;
+  signIn: (token: string | null, role: Role | null) => void;
 };
 const value = {
   role: JSON.parse(getLocalStorage('sessionStore') as string)?.state?.role,
@@ -19,7 +19,7 @@ export const useSession = create<SessionState>()(
       (set) => ({
         token: value.token || null,
         role: value.role || null,
-        updateSession: (token: string | null, role: Role | null) => set({ token: token, role: role }),
+        signIn: (token: string | null, role: Role | null) => set({ token: token, role: role }),
       }),
       {
         name: 'sessionStore',
