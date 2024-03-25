@@ -1,7 +1,6 @@
 import { Icon } from '@iconify/react/dist/iconify.js';
 import Dropdown from '../drop-down/Dropdown';
 import FilterChip from '../filter-chip/FilterChip';
-import { useState } from 'react';
 import { useViewMode } from '@/pages/user/my-drive/MyDrive';
 
 type FileHeaderProps = {
@@ -13,14 +12,14 @@ const FileHeader: React.FC<FileHeaderProps> = ({ headerName }) => {
     [
       {
         label: 'New folder',
-        icon: <Icon icon="ic:outline-create-new-folder" />,
+        icon: <Icon icon='ic:outline-create-new-folder' />,
       },
     ],
     [
-      { label: 'File upload', icon: <Icon icon="ic:baseline-upload-file" /> },
+      { label: 'File upload', icon: <Icon icon='ic:baseline-upload-file' /> },
       {
         label: 'Folder upload',
-        icon: <Icon icon="mdi:folder-upload-outline" />,
+        icon: <Icon icon='mdi:folder-upload-outline' />,
       },
     ],
   ];
@@ -28,15 +27,15 @@ const FileHeader: React.FC<FileHeaderProps> = ({ headerName }) => {
     [
       {
         label: 'Documents',
-        icon: <Icon icon="simple-icons:googledocs" />,
+        icon: <Icon icon='simple-icons:googledocs' />,
       },
       {
         label: 'Spreadsheets',
-        icon: <Icon icon="mdi:google-spreadsheet" />,
+        icon: <Icon icon='mdi:google-spreadsheet' />,
       },
       {
         label: 'Presentations',
-        icon: <Icon icon="mdi:file-presentation-box" />,
+        icon: <Icon icon='mdi:file-presentation-box' />,
       },
     ],
   ];
@@ -44,11 +43,11 @@ const FileHeader: React.FC<FileHeaderProps> = ({ headerName }) => {
     [
       {
         label: 'Documents',
-        icon: <Icon icon="simple-icons:googledocs" />,
+        icon: <Icon icon='simple-icons:googledocs' />,
       },
       {
         label: 'Spreadsheets',
-        icon: <Icon icon="mdi:google-spreadsheet" />,
+        icon: <Icon icon='mdi:google-spreadsheet' />,
       },
     ],
   ];
@@ -73,9 +72,9 @@ const FileHeader: React.FC<FileHeaderProps> = ({ headerName }) => {
   const { viewMode, setViewMode } = useViewMode();
 
   return (
-    <div className="flex flex-col space-y-4 px-1 pb-2">
-      <div className="flex justify-between pr-8">
-        <div className="flex items-center space-x-2 text-2xl">
+    <div className='flex flex-col space-y-4 px-1 pb-2'>
+      <div className='flex justify-between pr-8'>
+        <div className='flex items-center space-x-2 text-2xl'>
           {/* // TODO: display path here */}
           {/* {isNestedFolder && (
           <BsArrowLeftCircle
@@ -85,9 +84,9 @@ const FileHeader: React.FC<FileHeaderProps> = ({ headerName }) => {
         )} */}
           <Dropdown
             button={
-              <div className="flex cursor-pointer items-center justify-between rounded-full py-1 pb-2 pl-4 pr-3 hover:bg-surfaceDim">
+              <div className='flex cursor-pointer items-center justify-between rounded-full py-1 pb-2 pl-4 pr-3 hover:bg-surfaceDim'>
                 <h2>{headerName}</h2>
-                <Icon icon="mdi:caret-down" />
+                <Icon icon='mdi:caret-down' />
               </div>
             }
             items={driveMenuItems}
@@ -95,52 +94,50 @@ const FileHeader: React.FC<FileHeaderProps> = ({ headerName }) => {
           />
         </div>
         {viewMode === 'grid' ? (
-          <div className="flex cursor-pointer items-center">
+          <div className='flex cursor-pointer items-center'>
             <div
               onClick={() => {
                 setViewMode('list');
               }}
-              className="flex w-16 items-center justify-center rounded-l-full border border-outline py-1 pl-1 hover:bg-surfaceContainer"
-            >
-              <Icon icon="ic:baseline-view-headline" className="h-6 w-6" />
+              className='flex w-16 items-center justify-center rounded-l-full border border-outline py-1 pl-1 hover:bg-surfaceContainer'>
+              <Icon icon='ic:baseline-view-headline' className='h-6 w-6' />
             </div>
-            <div className="flex w-16 items-center justify-center rounded-r-full border border-outline bg-primaryContainer py-1 pr-1 hover:brightness-90">
-              <Icon icon="ic:baseline-check" className="h-4 w-4" />
-              <Icon icon="mdi:view-grid-outline" className="h-6 w-6" />
+            <div className='flex w-16 items-center justify-center rounded-r-full border border-outline bg-primaryContainer py-1 pr-1 hover:brightness-90'>
+              <Icon icon='ic:baseline-check' className='h-4 w-4' />
+              <Icon icon='mdi:view-grid-outline' className='h-6 w-6' />
             </div>
           </div>
         ) : (
-          <div className="flex cursor-pointer items-center">
-            <div className="flex w-16 items-center justify-center rounded-l-full border border-outline bg-primaryContainer py-1 pl-1 hover:brightness-90">
-              <Icon icon="ic:baseline-check" className="h-4 w-4" />
-              <Icon icon="ic:baseline-view-headline" className="h-6 w-6" />
+          <div className='flex cursor-pointer items-center'>
+            <div className='flex w-16 items-center justify-center rounded-l-full border border-outline bg-primaryContainer py-1 pl-1 hover:brightness-90'>
+              <Icon icon='ic:baseline-check' className='h-4 w-4' />
+              <Icon icon='ic:baseline-view-headline' className='h-6 w-6' />
             </div>
             <div
               onClick={() => {
                 setViewMode('grid');
               }}
-              className="flex w-16 items-center justify-center rounded-r-full border border-outline py-1 pr-1 hover:bg-surfaceContainer"
-            >
-              <Icon icon="mdi:view-grid-outline" className="h-6 w-6" />
+              className='flex w-16 items-center justify-center rounded-r-full border border-outline py-1 pr-1 hover:bg-surfaceContainer'>
+              <Icon icon='mdi:view-grid-outline' className='h-6 w-6' />
             </div>
           </div>
         )}
       </div>
-      <div className="flex justify-between pl-4 pr-8">
-        <div className="flex flex-wrap items-center gap-2">
-          <FilterChip name="Type" options={typeFilterItems} />
-          <FilterChip name="People" options={peopleFilterItems} />
-          <FilterChip name="Modified" options={modifiedFilterItems} />
+      <div className='flex justify-between pl-4 pr-8'>
+        <div className='flex flex-wrap items-center gap-2'>
+          <FilterChip name='Type' options={typeFilterItems} />
+          <FilterChip name='People' options={peopleFilterItems} />
+          <FilterChip name='Modified' options={modifiedFilterItems} />
         </div>
-        <div className="flex flex-row items-center">
-          <div className="mr-2 rounded-full p-2 hover:bg-surfaceContainer active:bg-surfaceDim">
-            <Icon icon="mdi:arrow-down" className="text-lg" />
+        <div className='flex flex-row items-center'>
+          <div className='mr-2 rounded-full p-2 hover:bg-surfaceContainer active:bg-surfaceDim'>
+            <Icon icon='mdi:arrow-down' className='text-lg' />
           </div>
           <Dropdown
             button={
-              <button className="border-1 flex cursor-pointer items-center space-x-2 rounded-lg border border-outline px-4 py-1 text-sm font-medium hover:bg-surfaceContainer active:bg-surfaceDim">
+              <button className='border-1 flex cursor-pointer items-center space-x-2 rounded-lg border border-outline px-4 py-1 text-sm font-medium hover:bg-surfaceContainer active:bg-surfaceDim'>
                 <span>Name</span>
-                <Icon icon="mdi:caret-down" />
+                <Icon icon='mdi:caret-down' />
               </button>
             }
             items={sortItems}

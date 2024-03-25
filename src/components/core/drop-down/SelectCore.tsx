@@ -15,7 +15,10 @@ const SelectCore: React.FC<SelectCoreProps> = ({ items, currentValue, handleChan
       displayEmpty
       size='small'
       variant='outlined'
-      sx={{ boxShadow: 'none', '.MuiOutlinedInput-notchedOutline': { border: 0 } }}>
+      sx={{
+        boxShadow: 'none',
+        '.MuiOutlinedInput-notchedOutline': { border: 0 },
+      }}>
       <MenuItem value=''>
         <em>None</em>
       </MenuItem>

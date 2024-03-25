@@ -1,16 +1,17 @@
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 import { Role } from '../../utils/enums/role.enum';
-import { getlocalStrorage } from '../../utils/function/auth.function';
+import { getLocalStorage } from '../../utils/function/auth.function';
 
 type SessionState = {
   token: string | null;
   role: Role | null;
-  updateToken: (token: string | null) => void;
+  signIn: (token: string | null, role: Role | null) => void;
 };
+
 const value = {
-  role: JSON.parse(getlocalStrorage('sessionStore') as string)?.state?.role,
-  token: JSON.parse(getlocalStrorage('sessionStore') as string)?.state?.token,
+  role: JSON.parse(getLocalStorage('sessionStore') as string)?.state?.role,
+  token: JSON.parse(getLocalStorage('sessionStore') as string)?.state?.token,
 };
 
 export const useSession = create<SessionState>()(
@@ -19,7 +20,7 @@ export const useSession = create<SessionState>()(
       (set) => ({
         token: value.token || null,
         role: value.role || null,
-        updateToken: (token: string | null) => set({ token: token }),
+        signIn: (token: string | null, role: Role | null) => set({ token: token, role: role }),
       }),
       {
         name: 'sessionStore',

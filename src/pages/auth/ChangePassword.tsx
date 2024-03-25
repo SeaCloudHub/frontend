@@ -35,7 +35,11 @@ const ChangePassword = () => {
         onSubmit={formik.handleSubmit}
         className='paper mt-5 border'
         elevation={3}
-        sx={{ backgroundColor: '#f7f7f7', py: 5, px: screenMode == ScreenMode.DESKTOP ? 5 : 2 }}>
+        sx={{
+          backgroundColor: '#f7f7f7',
+          py: 5,
+          px: screenMode == ScreenMode.DESKTOP ? 5 : 2,
+        }}>
         <IconifyIcon icon='ic:baseline-lock-reset' className='mx-auto my-4 h-24 w-56 text-blue-600' />
         <div className='text line-clamp-2 overflow-hidden'>
           Create a new, strong password that you don't use for other websites

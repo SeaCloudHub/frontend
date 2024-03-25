@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 import IconifyIcon from '../../../components/core/Icon/IConCore';
 import ButtonContainer from '../../../components/core/button/ButtonContainer';
 import LinearChartBar from '../../../components/core/linear-chart-bar/linearChartBar';
@@ -63,6 +64,7 @@ const UserManagement = () => {
   };
   return (
     <div className='flex w-full flex-col items-end space-y-5'>
+      <ToastContainer />
       <div
         ref={filterRef}
         className={`z-10 w-full space-y-2 ${screenMode == ScreenMode.MOBILE ? 'fixed bottom-2 left-1/4  ' : ''}`}>
@@ -116,8 +118,16 @@ const UserManagement = () => {
                   menuItems={[
                     { onClick: () => {}, title: 'Detail', icon: 'ep:view' },
                     { onClick: () => {}, title: 'Edit', icon: 'tabler:edit' },
-                    { onClick: () => {}, title: 'Delete', icon: 'ion:trash-sharp' },
-                    { onClick: () => {}, title: 'Block', icon: 'ic:round-block' },
+                    {
+                      onClick: () => {},
+                      title: 'Delete',
+                      icon: 'ion:trash-sharp',
+                    },
+                    {
+                      onClick: () => {},
+                      title: 'Block',
+                      icon: 'ic:round-block',
+                    },
                   ]}
                 />
               }

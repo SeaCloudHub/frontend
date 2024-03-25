@@ -54,7 +54,10 @@ export const routes = {
   admin: [
     // { path: ADMIN_HOME, component: DashBoard },
     { path: ADMIN_USER_MANAGEMENT, component: UserManagement },
-    { path: ADMIN_USER_MANAGEMENT_USER_DETAIL, component: UserManagementDetail },
+    {
+      path: ADMIN_USER_MANAGEMENT_USER_DETAIL,
+      component: UserManagementDetail,
+    },
     { path: ADMIN_HOME, component: DashBoard },
     { path: ADMIN_STORAGE_MANAGEMENT, component: StorageManagement },
   ],

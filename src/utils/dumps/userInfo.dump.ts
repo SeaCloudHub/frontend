@@ -4,104 +4,91 @@ export const userInfo: UserInfo[] = [
   {
     userId: '00121-20121',
     name: 'Minnas',
-    avatar:
-      'https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75',
+    avatar: 'https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75',
     usedMemory: 90,
     lastAccess: '2023-21-2',
   },
   {
     userId: '00121-20121',
     name: 'Minnas',
-    avatar:
-      'https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75',
+    avatar: 'https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75',
     usedMemory: 40,
     lastAccess: '2023-21-2',
   },
   {
     userId: '00121-20121',
     name: 'Minnas',
-    avatar:
-      'https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75',
+    avatar: 'https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75',
     usedMemory: 40,
     lastAccess: '2023-21-2',
   },
   {
     userId: '00121-20121',
     name: 'Minnas',
-    avatar:
-      'https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75',
+    avatar: 'https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75',
     usedMemory: 40,
     lastAccess: '2023-21-2',
   },
   {
     userId: '00121-20121',
     name: 'Minnas',
-    avatar:
-      'https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75',
+    avatar: 'https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75',
     usedMemory: 40,
     lastAccess: '2023-21-2',
   },
   {
     userId: '00121-20121',
     name: 'Minnas',
-    avatar:
-      'https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75',
+    avatar: 'https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75',
     usedMemory: 30,
     lastAccess: '2023-21-2',
   },
   {
     userId: '00121-20121',
     name: 'Minnas',
-    avatar:
-      'https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75',
+    avatar: 'https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75',
     usedMemory: 40,
     lastAccess: '2023-21-2',
   },
   {
     userId: '00121-20121',
     name: 'Minnas',
-    avatar:
-      'https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75',
+    avatar: 'https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75',
     usedMemory: 40,
     lastAccess: '2023-21-2',
   },
   {
     userId: '00121-20121',
     name: 'Minnas',
-    avatar:
-      'https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75',
+    avatar: 'https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75',
     usedMemory: 40,
     lastAccess: '2023-21-2',
   },
   {
     userId: '00121-20121',
     name: 'Minnas',
-    avatar:
-      'https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75',
+    avatar: 'https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75',
     usedMemory: 30,
     lastAccess: '2023-21-2',
   },
   {
     userId: '00121-20121',
     name: 'Minnas',
-    avatar:
-      'https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75',
+    avatar: 'https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75',
     usedMemory: 30,
     lastAccess: '2023-21-2',
   },
   {
     userId: '00121-20121',
     name: 'Minnas',
-    avatar:
-      'https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75',
+    avatar: 'https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75',
     usedMemory: 30,
     lastAccess: '2023-21-2',
   },
   {
     userId: '00121-20121',
     name: 'Minnas',
-    avatar:
-      'https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75',
+    avatar: 'https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75',
     usedMemory: 30,
     lastAccess: '2023-21-2',
   },
@@ -109,16 +96,14 @@ export const userInfo: UserInfo[] = [
     userId: '00121-20121',
     name: 'Minnas',
     usedMemory: 30,
-    avatar:
-      'https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75',
+    avatar: 'https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75',
     lastAccess: '2023-21-2',
   },
   {
     userId: '00121-20121',
     name: 'Minnas',
     usedMemory: 30,
-    avatar:
-      'https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75',
+    avatar: 'https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75',
     lastAccess: '2023-21-2',
   },
 ];

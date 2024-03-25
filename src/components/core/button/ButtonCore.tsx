@@ -11,13 +11,25 @@ type ButtonCoreProps = {
   loading?: boolean;
   icon?: React.ReactNode;
   tooltip?: string;
+  clickType?: 'submit' | 'button' | 'reset';
   [others: string]: any;
 };
 
-const ButtonCore: React.FC<ButtonCoreProps> = ({ contentColor, title, type, disabled, icon, loading, tooltip, ...others }) => {
+const ButtonCore: React.FC<ButtonCoreProps> = ({
+  contentColor,
+  clickType,
+  title,
+  type,
+  disabled,
+  icon,
+  loading,
+  tooltip,
+  ...others
+}) => {
   return (
     <Tooltip title={tooltip}>
       <Button
+        type={clickType}
         sx={{ textTransform: 'none', color: contentColor }}
         startIcon={!loading && icon}
         {...others}

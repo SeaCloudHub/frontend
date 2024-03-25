@@ -1,4 +1,3 @@
-import { Folder } from '@mui/icons-material';
 import { FormControl, FormLabel, Option, Select } from '@mui/joy';
 import FolderCard from '../core/folder-card/FolderCard';
 import FileCard from '../core/file-card/FileCard';

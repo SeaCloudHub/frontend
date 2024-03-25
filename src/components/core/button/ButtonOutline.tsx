@@ -14,30 +14,30 @@ type ButtonOutlineProps = {
 const ButtonOutlineStyle = styled(Button)(
   ({
     background,
-    borderRadius,
-    Color,
+    borderradius,
+    customecolor,
     backGroundHover,
     fontSize,
-    Size,
+    customsize,
   }: {
     backGroundHover?: string;
     background?: string;
-    borderRadius?: string;
-    Color?: string;
+    borderradius?: string;
+    customecolor?: string;
     fontSize?: number;
-    Size?: number;
+    customsize?: number;
   }) => ({
     fontWeight: 'bold',
-    color: Color || 'black',
+    color: customecolor || 'black',
     textTransform: 'none',
     backgroundColor: background,
-    borderRadius: borderRadius,
-    height: Size,
-    width: Size,
+    borderRadius: borderradius,
+    height: customsize,
+    width: customsize,
     fontSize: fontSize,
-    borderColor: Color || 'black',
+    borderColor: customecolor || 'black',
     '&:hover': {
-      borderColor: Color || 'black',
+      borderColor: customecolor || 'black',
       background: backGroundHover || '#f2f2f2',
     },
   }),
@@ -46,11 +46,11 @@ const ButtonOutline = ({ title, borderRadius, color, background, fontSize, size 
   return (
     <ButtonOutlineStyle
       fontSize={fontSize}
-      Size={size}
+      customsize={size}
       variant='outlined'
       background={background}
-      borderRadius={borderRadius}
-      Color={color}>
+      borderradius={borderRadius}
+      customecolor={color}>
       {title}
     </ButtonOutlineStyle>
   );

@@ -5,7 +5,3 @@ export const loginPasswordSchema = Yup.object({
   password: Yup.string().min(8).required('Password is required'),
 });
 
-export const loginPasswordInitialValues = {
-  // email: '',
-  password: '',
-};
