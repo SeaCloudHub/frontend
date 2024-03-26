@@ -1,37 +1,60 @@
+import { Button, LinearProgress, Typography } from '@mui/material';
+import { useMutation } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import { useFormik } from 'formik';
 import React from 'react';
-import { loginEmailInitialValues, loginEmailSchema } from '../../helpers/form-schema/login-email.schema';
-import { Button, LinearProgress, Typography } from '@mui/material';
-import TextFieldCore from '../../components/core/form/TextFieldCore';
-import AuthLink from './auth-link/AuthLink';
-import IconifyIcon from '../../components/core/Icon/IConCore';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { checkEmailApi } from '../../apis/auth/auth.api';
+import { loginInitialValue } from '../../apis/auth/request/auth-sign-in.request';
+import { default as IconifyIcon } from '../../components/core/Icon/IConCore';
+import { default as TextFieldCore } from '../../components/core/form/TextFieldCore';
+import { emailSchema } from '../../helpers/form-schema/auth/login.schema';
+import { useSession } from '../../store/auth/session';
+import { AUTH_LOGIN_PASSWORD } from '../../utils/constants/router.constant';
+import { toastError } from '../../utils/toast-options/toast-options';
+import { ApiGenericError } from '../../utils/types/api-generic-error.type';
 import AuthFooter from './AuthFooter';
+import { default as AuthLink } from './auth-link/AuthLink';
 
 const LoginEmail = () => {
-  const [isLogin, setIsLogin] = React.useState(false);
   const [currentValue, setCurrentValue] = React.useState('');
+  const onEmailValid = useSession((state) => state.onEmailValid);
   const navigate = useNavigate();
-
   const handleChange = (e: { target: { value: React.SetStateAction<string> } }) => setCurrentValue(e.target.value);
-
   const formik = useFormik({
-    initialValues: loginEmailInitialValues,
-    validationSchema: loginEmailSchema,
-    onSubmit: (values) => {
-      console.log(values);
-      setIsLogin(true);
-      setTimeout(() => {
-        setIsLogin(false);
-        navigate('/auth/login/challenge');
-      }, 2000);
+    initialValues: loginInitialValue,
+    validationSchema: emailSchema,
+    onSubmit: async (values) => {
+      const res = await checkEmailMutation.mutateAsync(values.email);
+      console.log(res);
+    },
+  });
+  const checkEmailMutation = useMutation({
+    mutationFn: (email: string) => {
+      return checkEmailApi({ email: email });
+    },
+    onError: (error) => {
+      if (isAxiosError<ApiGenericError>(error)) {
+        toast.error(error.response?.data.message, toastError());
+      }
+    },
+    onSuccess: (res) => {
+      if (res.data.exists) {
+        onEmailValid(formik.values.email);
+        navigate(AUTH_LOGIN_PASSWORD);
+      } else {
+        toast.error('Email is not found', toastError());
+      }
     },
   });
   return (
     <div className='flex h-screen items-center justify-center overflow-hidden bg-[#f0f4f9]'>
       <div className='sm:my-auto sm:h-fit md:flex md:h-full md:w-full md:flex-col md:justify-between md:bg-white lg:mx-60 lg:my-auto lg:h-fit lg:bg-[#f0f4f9]'>
-        {isLogin && <LinearProgress className='mx-5 translate-y-1' />}
-        <form onSubmit={formik.handleSubmit} className='rounded-xl border bg-white p-10 md:border-none'>
+        <form onSubmit={formik.handleSubmit} className='relative rounded-xl border bg-white p-10 md:border-none'>
+          <div className='absolute left-0 top-0 w-full px-1'>
+            {checkEmailMutation.isPending && <LinearProgress className=' translate-y-1' />}
+          </div>
           <div className='logo mb-8'>
             <IconifyIcon icon='flat-color-icons:google' className='text-5xl' />
           </div>
@@ -74,7 +97,7 @@ const LoginEmail = () => {
                   type='submit'
                   variant='contained'
                   color='primary'
-                  {...(isLogin && { disabled: true })}
+                  {...(checkEmailMutation.isPending && { disabled: true })}
                   className='w-24'>
                   Next
                 </Button>

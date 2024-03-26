@@ -6,10 +6,10 @@ import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { signinApi } from '../../apis/auth/auth.api';
-import { AuthSignInREQ, loginPasswordInitialValues } from '../../apis/auth/request/auth-sign-in.request';
+import { AuthSignInREQ, loginInitialValue } from '../../apis/auth/request/auth-sign-in.request';
 import IconifyIcon from '../../components/core/Icon/IConCore';
 import TextFieldCore from '../../components/core/form/TextFieldCore';
-import { loginPasswordSchema } from '../../helpers/form-schema/login-password.schema';
+import { passwordSchema } from '../../helpers/form-schema/auth/login.schema';
 import { useSession } from '../../store/auth/session';
 import { accountAuthorityCallback } from '../../utils/constants/account-login-callback.constant';
 import { Role } from '../../utils/enums/role.enum';
@@ -23,15 +23,16 @@ const LoginPassword = () => {
   const [isShowPassword, setIsShowPassword] = React.useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+
   const from = location.state?.from?.pathname;
-  const { token: authenticated, role, signIn } = useSession();
+  const { token: authenticated, role, signIn, email } = useSession();
   const handleChange = (e: { target: { value: React.SetStateAction<string> } }) => setCurrentValue(e.target.value);
 
   const formik = useFormik({
-    initialValues: loginPasswordInitialValues,
-    validationSchema: loginPasswordSchema,
+    initialValues: { ...loginInitialValue, email },
+    validationSchema: passwordSchema,
     onSubmit: async (values) => {
-      const res = await loginMutation.mutateAsync(values);
+      const res = await loginMutation.mutateAsync(values as AuthSignInREQ);
       if (res.status == 200) {
         const { data } = res.data;
         signIn(data.session_token, data.identity.is_admin ? Role.ADMIN : Role.USER);
@@ -44,6 +45,7 @@ const LoginPassword = () => {
       return signinApi(body);
     },
     onError: (error) => {
+      console.log(error);
       if (isAxiosError<ApiGenericError>(error)) {
         toast.error(error.response?.data.message, toastError());
       }

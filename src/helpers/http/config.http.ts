@@ -1,6 +1,18 @@
-import axios from 'axios';
+import axios, { AxiosError, AxiosRequestConfig } from 'axios';
+import { getLocalStorage } from '../../utils/function/auth.function';
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_API_ENDPOINT,
   headers: {},
 });
+
+api.interceptors.request.use(
+  async (config: AxiosRequestConfig): Promise<any> => {
+    const token = JSON.parse(getLocalStorage('sessionStore') as string)?.state?.token || null;
+    if (!token) return config;
+    return { ...config, headers: { Authorization: `Bearer ${token}` } };
+  },
+  (error: AxiosError): Promise<AxiosError> => {
+    return Promise.reject(error);
+  },
+);
