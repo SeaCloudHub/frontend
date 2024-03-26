@@ -5,6 +5,7 @@ import IconifyIcon from '../../../components/core/Icon/IConCore';
 import DashBoardRate from './dashboard-rate/DashBoardRate';
 import DashboardPager from './dashboard-page/DashboardPager';
 import LineChartCore from '../../../components/core/line-chart/LineChartCore';
+import AccordionCore from '../../../components/core/accordion/AccordionCore';
 
 const DashBoard = () => {
   return (
@@ -48,7 +49,7 @@ const DashBoard = () => {
             </div>
           </Paper>
         </div>
-        <DashboardPager title='Disk Space' className='mb-3'>
+        <AccordionCore title='Disk Space' className='mb-3'>
           <PieChartCore
             data={[
               { value: 10, label: 'Used', color: '#e33f42' },
@@ -57,8 +58,8 @@ const DashBoard = () => {
             sizing={{ height: 350 }}
             outerRadius={120}
           />
-        </DashboardPager>
-        <DashboardPager title='Visited users'>
+        </AccordionCore>
+        <AccordionCore title='Visited users'>
           <LineChartCore
             data={[
               { name: 0, value: 80 },
@@ -69,7 +70,7 @@ const DashBoard = () => {
             color='blue'
             sizing={{ height: 350 }}
           />
-        </DashboardPager>
+        </AccordionCore>
       </div>
       <div className='h-12 bg-green-300 sm:w-[30%]'>
         <RecentlyAddedUsers />

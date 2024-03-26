@@ -1,5 +1,5 @@
 import { Avatar, Box, Divider, List, ListItem, ListItemAvatar, ListItemText } from '@mui/material';
-import DashboardPager from '../dashboard-page/DashboardPager';
+import AccordionCore from '../../../../components/core/accordion/AccordionCore';
 
 const fakeData = [
   {
@@ -79,7 +79,7 @@ type RecentlyAddedUsersProps = {
 const RecentlyAddedUsers: React.FC<RecentlyAddedUsersProps> = ({ users }) => {
   users = fakeData;
   return (
-    <DashboardPager title='Recently Added Users' className='mb-3'>
+    <AccordionCore title='Recently Added Users' className='mb-3'>
       <List>
         {users.slice(0, 10).map((user, i) => (
           <Box key={user._id}>
@@ -101,7 +101,7 @@ const RecentlyAddedUsers: React.FC<RecentlyAddedUsersProps> = ({ users }) => {
           </Box>
         ))}
       </List>
-    </DashboardPager>
+    </AccordionCore>
   );
 };
 

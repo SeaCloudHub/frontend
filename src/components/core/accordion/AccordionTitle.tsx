@@ -1,14 +1,14 @@
-import IconifyIcon from '../../../../components/core/Icon/IConCore';
 import { IconButton } from '@mui/material';
 import React from 'react';
+import IconifyIcon from '../Icon/IConCore';
 
-type DashboardTitlePageProps = {
+type AccordionTitleProps = {
   title: string;
   open?: boolean;
   handleOpen?: () => void;
 };
 
-const DashboardTitlePage: React.FC<DashboardTitlePageProps> = ({ title, open, handleOpen }) => {
+const AccordionTitle: React.FC<AccordionTitleProps> = ({ title, open, handleOpen }) => {
   return (
     <>
       <div className='text-md flex items-center justify-between px-3 py-2 font-semibold'>
@@ -22,4 +22,4 @@ const DashboardTitlePage: React.FC<DashboardTitlePageProps> = ({ title, open, ha
   );
 };
 
-export default DashboardTitlePage;
+export default AccordionTitle;

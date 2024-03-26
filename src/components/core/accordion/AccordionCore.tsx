@@ -1,5 +1,5 @@
 import { Paper } from '@mui/material';
-import DashboardTitlePage from './DashboardTitlePage';
+import DashboardTitlePage from './AccordionTitle';
 import React from 'react';
 
 type DashboardPageProps = {
@@ -8,7 +8,7 @@ type DashboardPageProps = {
   className?: string;
 };
 
-const DashboardPager: React.FC<DashboardPageProps> = ({ title, children, className }) => {
+const AccordionCore: React.FC<DashboardPageProps> = ({ title, children, className }) => {
   const [open, setOpen] = React.useState(true);
   const handleOpen = () => setOpen(!open);
   return (
@@ -21,4 +21,4 @@ const DashboardPager: React.FC<DashboardPageProps> = ({ title, children, classNa
   );
 };
 
-export default DashboardPager;
+export default AccordionCore;

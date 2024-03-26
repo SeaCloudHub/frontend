@@ -1,20 +1,21 @@
 'use client';
-import { ICONS } from '@/utils/theme';
-import { DropdownItems } from '@/utils/types/dropdown.type';
-import { Select } from 'antd';
-import './DropdownCore.css';
+import { ICONS } from '../../../utils/theme';
+import { DropdownItems } from '../../../utils/types/drop-down.type';
+import { MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { useState } from 'react';
 
 type DropdownCoreProps = {
-  label?: any;
+  label?: string;
   style?: string;
   disabled?: boolean;
   options: DropdownItems;
   isDefault?: boolean;
-  onChange?: (e: any) => void;
+  onChange?: (value: string) => void;
   placeholder?: string;
   height?: string;
   value?: string;
 };
+
 
 const DropdownCore = ({
   label,
@@ -25,8 +26,12 @@ const DropdownCore = ({
   placeholder,
   isDefault,
   height,
-  value,
 }: DropdownCoreProps) => {
+      const [inputValue, setInputValue] = useState(isDefault ? options[0] .value:undefined);
+      const onChangeConverter = (event: SelectChangeEvent) => {
+        onChange&&onChange(event.target.value);
+        setInputValue(event.target.value);
+      };
   return (
     <div
       className={`w-auto ${
@@ -34,16 +39,18 @@ const DropdownCore = ({
       }`}>
       {label}
       <Select
-        suffixIcon={<ICONS.DOWN />}
-        onChange={onChange}
+        onChange={onChangeConverter}
         className={`customDropdown ${height ? height : 'h-[40px]'} ${style}`}
-        options={options}
+        // options={options}
         disabled={disabled}
-        value={value}
-        dropdownStyle={{ borderRadius: 8, margin: 0, padding: 0 }}
-        defaultValue={isDefault && options.length > 0 && options[0].value}
+        value={inputValue}
+        // dropdownStyle={{ borderRadius: 8, margin: 0, padding: 0 }}
         placeholder={placeholder}
-      />
+      >
+        {options.map((option)=>(<MenuItem key={option.value} value={option.value} >
+          {option.label}
+        </MenuItem>))}
+      </Select>
     </div>
   );
 };
