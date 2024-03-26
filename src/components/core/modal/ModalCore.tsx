@@ -1,4 +1,6 @@
-import { Box, Modal, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Modal } from '@mui/material';
+import { useScreenMode } from '../../../store/responsive/screenMode';
+import { ScreenMode } from '../../../utils/enums/screen-mode.enum';
 
 type ModalCoreProps = {
   width?: string | number;
@@ -8,9 +10,8 @@ type ModalCoreProps = {
   open: boolean;
 };
 const ModalCore = ({ width, children, open, isCloseOutside = true, closeOutside }: ModalCoreProps) => {
-  const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  const modalWidth = isSmallScreen ? '90vw' : width;
+  const screenMode = useScreenMode((state) => state.screenMode);
+
   return (
     <>
       <Modal
@@ -20,6 +21,8 @@ const ModalCore = ({ width, children, open, isCloseOutside = true, closeOutside 
         aria-describedby='modal-modal-description'>
         <Box
           sx={{
+            maxWidth: 1000,
+            outline: 'none',
             bgcolor: 'background.paper',
             borderRadius: '12px',
             boxShadow: 24,
@@ -28,7 +31,7 @@ const ModalCore = ({ width, children, open, isCloseOutside = true, closeOutside 
             position: 'absolute',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            width: { modalWidth },
+            width: screenMode == ScreenMode.MOBILE ? '90vw' : width,
           }}>
           {children}
         </Box>

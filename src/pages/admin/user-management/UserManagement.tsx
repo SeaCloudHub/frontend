@@ -1,5 +1,6 @@
+import ModalAddUser from '@/components/core/modal/ModalAddUser';
 import { useEffect, useRef, useState } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import IconifyIcon from '../../../components/core/Icon/IConCore';
 import ButtonContainer from '../../../components/core/button/ButtonContainer';
 import LinearChartBar from '../../../components/core/linear-chart-bar/linearChartBar';
@@ -17,6 +18,7 @@ import UserManagementFilter from './UserManagementFilter';
 import UserInfoPhoneMode from './user-management-phone/UserInfoPhoneMode';
 
 const UserManagement = () => {
+  const [openModal, setOpenModal] = useState(false);
   const [paging, setPaging] = useState<PagingState>(initialPagingState);
   const screenMode = useScreenMode((state) => state.screenMode);
   const shrinkMode = useScreenMode((state) => state.shrinkMode);
@@ -62,6 +64,12 @@ const UserManagement = () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
+  const onCloseModalClick = (data: boolean) => {
+    if (data) {
+      console.log(data);
+    }
+    setOpenModal(false);
+  };
   return (
     <div className='flex w-full flex-col items-end space-y-5'>
       <ToastContainer />
@@ -87,8 +95,12 @@ const UserManagement = () => {
             tooltip={'Add user'}
             title='Add user'
             background='#063768'
+            onClick={() => {
+              setOpenModal(true);
+            }}
             icon={<IconifyIcon icon={'gg:add'} />}
           />
+          <ModalAddUser title='Add User' isOpen={openModal} handleConfirm={onCloseModalClick} />
         </div>
       </div>
       {screenMode == ScreenMode.MOBILE && (
