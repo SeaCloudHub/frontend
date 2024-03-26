@@ -1,47 +1,55 @@
+import { Paper } from '@mui/material';
 import PieChartCore from '../../../components/core/pie-chart/PieChart';
-import LineChartCore from '../../../components/core/line-chart/LineChartCore';
-import { Box, Paper, Typography } from '@mui/material';
-import { Group, HowToReg } from '@mui/icons-material';
 import RecentlyAddedUsers from './dashboard-user/RecentlyAddedUsers';
+import IconifyIcon from '../../../components/core/Icon/IConCore';
+import DashBoardRate from './dashboard-rate/DashBoardRate';
+import DashboardPager from './dashboard-page/DashboardPager';
+import LineChartCore from '../../../components/core/line-chart/LineChartCore';
+import AccordionCore from '../../../components/core/accordion/AccordionCore';
 
 const DashBoard = () => {
   return (
     <div className='z-10 w-full gap-3 px-3 py-3 sm:flex'>
       <div className='mb-3 w-full'>
-        <div className='mb-3 grid gap-3 sm:grid-cols-1 md:grid-cols-2'>
-          <Paper elevation={3} sx={{ p: 2 }}>
-            <Typography variant='h5' className='text-center' fontWeight={550}>
-              Total Users
-            </Typography>
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <Group sx={{ height: 80, width: 80, color: '#aa7958', mr: 1 }} />
-              <Typography variant='h5'>{10}</Typography>
-            </Box>
+        <div className='mb-3 grid gap-3 sm:grid-cols-1 md:grid-cols-3'>
+          <Paper elevation={3} className='flex h-24 items-center px-3'>
+            <IconifyIcon icon='mi:users' className='h-10 w-11 min-w-max rounded-full bg-[#fdd7be] p-2 text-[#aa7958]' />
+            <div className='w-full pl-5'>
+              <div className='flex min-w-max items-center justify-between text-xl font-bold text-gray-700'>
+                <div>{300}</div>
+                <DashBoardRate type='Increase' pecentage={1.05} />
+              </div>
+              <div className='test-sm text-gray-400'>Total users</div>
+            </div>
           </Paper>
-          <Paper elevation={3} sx={{ p: 2 }}>
-            <Typography variant='h5' className='text-center' fontWeight={550}>
-              Active Users
-            </Typography>
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <HowToReg sx={{ height: 80, width: 80, mr: 1, color: '#63a537' }} />
-              <Typography variant='h5'>{10}</Typography>
-            </Box>
+          <Paper elevation={3} className='flex h-24 items-center px-3'>
+            <IconifyIcon
+              icon='tdesign:user-checked-1'
+              className='h-10 w-11 min-w-max rounded-full bg-[#c2fc9c] p-2 text-[#63a537]'
+            />
+            <div className='w-full pl-5'>
+              <div className='flex min-w-max items-center justify-between text-xl font-bold text-gray-700'>
+                <div>{300}</div>
+                <DashBoardRate type='Decrease' pecentage={1.05} />
+              </div>
+              <div className='test-sm text-gray-400'>Active users</div>
+            </div>
+          </Paper>
+          <Paper elevation={3} className='flex h-24 items-center px-3'>
+            <IconifyIcon
+              icon='tdesign:user-blocked'
+              className='h-10 w-11 min-w-max rounded-full bg-[#c2fc9c] p-2 text-[#63a537]'
+            />
+            <div className='w-full pl-5'>
+              <div className='flex min-w-max items-center justify-between text-xl font-bold text-gray-700'>
+                <div>{300}</div>
+                <DashBoardRate type='Neutral' pecentage={1.05} />
+              </div>
+              <div className='test-sm text-gray-400'>Blocked users</div>
+            </div>
           </Paper>
         </div>
-        <Paper elevation={3} sx={{ p: 0 }} className='mb-3'>
-          <Typography variant='h5' className='text-center' paddingTop={1} fontWeight={550}>
-            Disk Space
-          </Typography>
+        <AccordionCore title='Disk Space' className='mb-3'>
           <PieChartCore
             data={[
               { value: 10, label: 'Used', color: '#e33f42' },
@@ -50,8 +58,8 @@ const DashBoard = () => {
             sizing={{ height: 350 }}
             outerRadius={120}
           />
-        </Paper>
-        <Paper elevation={3} sx={{ p: 3 }}>
+        </AccordionCore>
+        <AccordionCore title='Visited users'>
           <LineChartCore
             data={[
               { name: 0, value: 80 },
@@ -62,7 +70,7 @@ const DashBoard = () => {
             color='blue'
             sizing={{ height: 350 }}
           />
-        </Paper>
+        </AccordionCore>
       </div>
       <div className='h-12 bg-green-300 sm:w-[30%]'>
         <RecentlyAddedUsers />

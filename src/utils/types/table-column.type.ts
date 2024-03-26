@@ -1,7 +1,8 @@
 export type Column<T> = {
   id: Exclude<keyof T, 'action'>; // Exclude 'action' from the keyof T
-  label: string;
+  label: React.ReactNode;
   minWidth?: number;
   align?: 'right' | 'left' | 'center';
-  width?: number;
+  width?: number | string;
+  noneSort?: boolean;
 };

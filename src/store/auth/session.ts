@@ -10,6 +10,7 @@ type SessionState = {
   onEmailValid: (email: string | null) => void;
   signIn: (token: string | null, role: Role | null) => void;
 };
+
 const value = {
   role: JSON.parse(getLocalStorage('sessionStore') as string)?.state?.role,
   token: JSON.parse(getLocalStorage('sessionStore') as string)?.state?.token,

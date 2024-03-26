@@ -10,7 +10,6 @@ const DynamicLayout = ({ children }: PropsWithChildren) => {
   const { shrinkMode, screenMode } = useScreenMode();
   const role = useSession((state) => state.role);
 
-
   return (
     <>
       <Navbar phoneMode={screenMode == ScreenMode.MOBILE} isShrink={shrinkMode} />

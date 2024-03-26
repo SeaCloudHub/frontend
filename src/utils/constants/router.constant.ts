@@ -13,6 +13,7 @@ import Priority from '../../pages/user/priority/Priority';
 import Shared from '../../pages/user/shared/Shared';
 import Starred from '../../pages/user/starred/Starred';
 import Trash from '../../pages/user/trash/Trash';
+import ResetPassword from '../../pages/auth/ResetPassword';
 
 export const HOME = '/';
 export const AUTH_HOME = '/auth';
@@ -47,9 +48,8 @@ export const routes = {
     { path: AUTH_LOGIN_EMAIL, component: LoginEmail },
     { path: AUTH_LOGIN_PASSWORD, component: LoginPassword },
     { path: SIGN_UP, component: Register },
-    // { path: AUTH_FORGOT_PASSWORD, component: Register },
-    // { path: AUTH_RESET_PASSWORD, component: Register },
     { path: AUTH_CHANGE_PASSWORD, component: ChangePassword },
+    { path: AUTH_RESET_PASSWORD, component: ResetPassword },
   ],
   admin: [
     // { path: ADMIN_HOME, component: DashBoard },

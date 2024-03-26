@@ -17,6 +17,7 @@ function App() {
         <Route path={routes.notFound.path} Component={routes.notFound.component} />
         {/* layout routes */}
 
+        {/* layout routes */}
         <Route
           element={
             // <TuyenLayout children={<Outlet />} />
