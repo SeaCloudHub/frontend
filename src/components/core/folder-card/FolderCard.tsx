@@ -1,4 +1,4 @@
-import Dropdown from '../drop-down/Dropdown';
+import Dropdown, { MenuItem } from '../drop-down/Dropdown';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useDrawer } from '@/pages/user/my-drive/MyDrive';
@@ -11,27 +11,30 @@ interface FolderCardProps {
 
 const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id }) => {
   const setDrawerOpen = useDrawer((state) => state.setDrawerOpen);
-  const folderOps = [
+  const folderOps: MenuItem[][] = [
     [
-      { label: 'Download', icon: <Icon icon='ic:outline-file-download' /> },
+      { label: 'Download', icon: <Icon icon='ic:outline-file-download' />, action: () => {} },
       {
         label: 'Rename',
         icon: <Icon icon='ic:round-drive-file-rename-outline' />,
+        action: () => {},
       },
     ],
     [
-      { label: 'Copy link', icon: <Icon icon='material-symbols:link' /> },
-      { label: 'Share', icon: <Icon icon='lucide:user-plus' /> },
+      { label: 'Copy link', icon: <Icon icon='material-symbols:link' />, action: () => {} },
+      { label: 'Share', icon: <Icon icon='lucide:user-plus' />, action: () => {} },
     ],
     [
-      { label: 'Move', icon: <Icon icon='mdi:folder-move-outline' /> },
+      { label: 'Move', icon: <Icon icon='mdi:folder-move-outline' />, action: () => {} },
       {
         label: 'Add shortcut',
         icon: <Icon icon='material-symbols:add-to-drive' />,
+        action: () => {},
       },
       {
         label: 'Add to starred',
         icon: <Icon icon='material-symbols:star-outline' />,
+        action: () => {},
       },
     ],
     [
@@ -40,9 +43,9 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id }) => {
         icon: <Icon icon='mdi:information-outline' />,
         action: setDrawerOpen,
       },
-      { label: 'Activity', icon: <Icon icon='mdi:graph-line-variant' /> },
+      { label: 'Activity', icon: <Icon icon='mdi:graph-line-variant' />, action: () => {} },
     ],
-    [{ label: 'Move to trash', icon: <Icon icon='fa:trash-o' /> }],
+    [{ label: 'Move to trash', icon: <Icon icon='fa:trash-o' />, action: () => {} }],
   ];
 
   return (

@@ -2,17 +2,18 @@ import { useFormik } from 'formik';
 import IconifyIcon from '../../components/core/Icon/IConCore';
 import TextFieldCore from '../../components/core/form/TextFieldCore';
 import { Button, LinearProgress, Paper, Typography } from '@mui/material';
-import { changePasswordInitialValues, changePasswordSchema } from '../../helpers/form-schema/change-password.schema';
+import { changePasswordSchema } from '../../helpers/form-schema/change-password.schema';
 import { useState } from 'react';
 import { useScreenMode } from '../../store/responsive/screenMode';
 import { ScreenMode } from '../../utils/enums/screen-mode.enum';
+import { changePasswordInitialValue } from '../../apis/auth/request/change-password.request';
 // import React from 'react';
 
 const ChangePassword = () => {
   const [isChange, setIsChange] = useState(false);
   const screenMode = useScreenMode((state) => state.screenMode);
   const formik = useFormik({
-    initialValues: changePasswordInitialValues,
+    initialValues: changePasswordInitialValue,
     validationSchema: changePasswordSchema,
     onSubmit: (values) => {
       console.log(values);
@@ -60,6 +61,7 @@ const ChangePassword = () => {
               value={formik.values.password}
               onChange={formik.handleChange}
               error={formik.touched.password && Boolean(formik.errors.password)}
+              onBlur={formik.handleBlur}
               helperText={formik.touched.password && formik.errors.password}
             />
           </div>

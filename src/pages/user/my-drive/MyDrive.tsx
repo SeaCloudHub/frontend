@@ -269,7 +269,7 @@ const _entryToMyEntry = (entries: Entry[]): MyEntry[] => {
     }
     const ext = entry.name.split('.').pop() || 'any';
     const icon = fileIcons[ext] || fileIcons.any;
-    /* Suport mp4, mp3, pdf, jpg, jpeg, png, jfif, gif, webp, ico, svg, 
+    /* Suport mp4, mp3, pdf, jpg, jpeg, png, jfif, gif, webp, ico, svg,
     docx, txt, zip, any */
     const preview = ['jpg', 'ico', 'webp', 'png', 'jpeg', 'gif', 'jfif'].includes(ext) ? (
       <img
@@ -352,7 +352,7 @@ const _renderListView = (entries: MyEntry[]) => {
  */
 const useDrawer = create((set) => ({
   drawerOpen: false,
-  setDrawerOpen: () => set((state) => ({ drawerOpen: !state.drawerOpen })),
+  setDrawerOpen: () => set((state: { drawerOpen: boolean }) => ({ drawerOpen: !state.drawerOpen })),
 }));
 
 // read local storage here

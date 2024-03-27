@@ -1,10 +1,11 @@
 import TextFieldCore from '../../components/core/form/TextFieldCore';
 import IconifyIcon from '../../components/core/Icon/IConCore';
-import { loginPasswordInitialValues, loginPasswordSchema } from '../../helpers/form-schema/login-password.schema';
 import { Avatar, Button, Checkbox, LinearProgress, Typography } from '@mui/material';
 import { useFormik } from 'formik';
 import React from 'react';
 import AuthFooter from './AuthFooter';
+import { passwordSchema } from '../../helpers/form-schema/auth/login.schema';
+import { resetPasswordInitialValue } from '../../apis/auth/request/reset-password.request';
 
 const ResetPassword = () => {
   const [currentValue, setCurrentValue] = React.useState('');
@@ -14,8 +15,8 @@ const ResetPassword = () => {
   const handleChange = (e: { target: { value: React.SetStateAction<string> } }) => setCurrentValue(e.target.value);
 
   const formik = useFormik({
-    initialValues: loginPasswordInitialValues,
-    validationSchema: loginPasswordSchema,
+    initialValues: resetPasswordInitialValue,
+    validationSchema: passwordSchema,
     onSubmit: (values) => {
       console.log(values);
       setIsLogin(true);
