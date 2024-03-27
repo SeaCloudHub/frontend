@@ -43,11 +43,11 @@ const renderFilters = () => {
 const FileBrowser = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const handleFileInfo = (id: string) => {
-    console.log('File info', id);
-    setDrawerOpen(true);
-    console.log('Drawer open', drawerOpen);
-  };
+  // const handleFileInfo = (id: string) => {
+  //   console.log('File info', id);
+  //   setDrawerOpen(true);
+  //   console.log('Drawer open', drawerOpen);
+  // };
 
   return (
     <div className='flex flex-row'>
@@ -58,7 +58,7 @@ const FileBrowser = () => {
           <div className='flex flex-wrap gap-2'>
             {Array.from({ length: 10 }).map((_, index) => (
               <div className='w-64'>
-                <FolderCard key={index} title={'Folder ' + index.toString()} />
+                <FolderCard key={index} title={'Folder ' + index.toString()} icon={undefined} id={''} />
               </div>
             ))}
           </div>
@@ -69,37 +69,37 @@ const FileBrowser = () => {
             {Array.from({ length: 2 }).map((_, index) => (
               <div className='w-64'>
                 <FileCard
-                  onFileInfo={(id) => {
-                    handleFileInfo(id);
-                  }}
+                  // onFileInfo={(id) => {
+                  //   handleFileInfo(id);
+                  // }}
                   id={index.toString()}
                   key={index}
                   title={'File ' + index.toString()}
-                  size='1MB'
+                  // size='1MB'
                 />
               </div>
             ))}
             {Array.from({ length: 2 }).map((_, index) => (
               <div className='w-64'>
                 <FileCard
-                  onFileInfo={(id) => {
-                    handleFileInfo(id);
-                  }}
+                  // onFileInfo={(id) => {
+                  //   handleFileInfo(id);
+                  // }}
                   id={index.toString()}
                   key={index}
                   title={'File ' + (index + 2).toString() + '.doc'}
-                  size='1MB'
+                  // size='1MB'
                 />
               </div>
             ))}
             {Array.from({ length: 2 }).map((_, index) => (
               <div className='w-64'>
                 <FileCard
-                  onFileInfo={handleFileInfo}
+                  // onFileInfo={handleFileInfo}
                   id={index.toString()}
                   key={index}
                   title={'File ' + (index + 4).toString() + '.png'}
-                  size='1MB'
+                  // size='1MB'
                   preview='https://i.pinimg.com/280x280_RS/01/6a/45/016a45c595efdc6d97c7fbc5a562f78b.jpg'
                 />
               </div>

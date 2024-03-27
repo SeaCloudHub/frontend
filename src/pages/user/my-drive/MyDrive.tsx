@@ -22,7 +22,7 @@ type MyEntry = {
 
 const entries: Entry[] = [
   {
-    name: 'file0',
+    name: 'file0ádfasdfasdsadsadfasdf ádfasđfádf',
     full_path: '/file1',
     size: 1024,
     mode: 0o777,
@@ -258,7 +258,7 @@ const _entryToMyEntry = (entries: Entry[]): MyEntry[] => {
       return {
         isDir: true,
         title: entry.name,
-        icon: <Icon icon='ic:baseline-folder' className='h-full w-full' />,
+        icon: <Icon icon='ic:baseline-folder' className='object-cover-full h-full w-full' />,
         preview: <Icon icon='ic:baseline-folder' className='h-full w-full' />,
         id: entry.md5,
         extra: 'extra',
@@ -273,7 +273,7 @@ const _entryToMyEntry = (entries: Entry[]): MyEntry[] => {
     docx, txt, zip, any */
     const preview = ['jpg', 'ico', 'webp', 'png', 'jpeg', 'gif', 'jfif'].includes(ext) ? (
       <img
-        className='rounded-md object-cover object-center'
+        className='h-full w-full rounded-md object-cover'
         src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrHRymTob1kd-ywHzIs0ty7UhrFUcJay839nNd6tcSig&s'
       />
     ) : (
@@ -297,13 +297,11 @@ const _entryToMyEntry = (entries: Entry[]): MyEntry[] => {
  * Map MyEntry to FileCard
  */
 const _myEntryToFile = (files: MyEntry[]) => {
-  return files.map((file) => {
-    return (
-      <div className='aspect-square w-auto'>
-        <FileCard title={file.title} icon={file.icon} preview={file.preview} id={file.id} />
-      </div>
-    );
-  });
+  return files.map((file) => (
+    <div className='aspect-square w-auto'>
+      <FileCard title={file.title} icon={file.icon} preview={file.preview} id={file.id} />
+    </div>
+  ));
 };
 
 /**
@@ -319,7 +317,14 @@ const _myEntryToFolders = (folders: MyEntry[]) => {
   });
 };
 
-const _header = (name, owner, lastModified, size) => {
+type HeaderMyDriveProps = {
+  name: string;
+  owner: string;
+  lastModified: string;
+  size: string;
+};
+
+const _header: React.FC<HeaderMyDriveProps> = ({ name, owner, lastModified, size }) => {
   return (
     <div className='flex items-center pb-2'>
       <div className='flex-1 basis-72 text-sm font-medium'>{name}</div>
@@ -339,7 +344,7 @@ const _header = (name, owner, lastModified, size) => {
 const _renderListView = (entries: MyEntry[]) => {
   return (
     <div className='flex flex-col'>
-      {_header('Name', 'Owner', 'Last Modified', 'Size')}
+      {_header({ name: 'Name', owner: 'Owner', lastModified: 'Last Modified', size: 'Size' })}
       {entries.map((entry) => {
         return <DataRow {...entry} />;
       })}
@@ -350,13 +355,23 @@ const _renderListView = (entries: MyEntry[]) => {
 /**
  * Global state
  */
-const useDrawer = create((set) => ({
+type DrawerType = {
+  drawerOpen: boolean;
+  setDrawerOpen: () => void;
+};
+
+const useDrawer = create<DrawerType>((set) => ({
   drawerOpen: false,
-  setDrawerOpen: () => set((state: { drawerOpen: boolean }) => ({ drawerOpen: !state.drawerOpen })),
+  setDrawerOpen: () => set({ drawerOpen: true }),
 }));
 
+type ViewModeType = {
+  viewMode: string;
+  setViewMode: (mode: string) => void;
+};
+
 // read local storage here
-const useViewMode = create((set) => ({
+const useViewMode = create<ViewModeType>((set) => ({
   viewMode: 'grid',
   setViewMode: (mode: string) => set({ viewMode: mode }),
 }));
