@@ -1,17 +1,24 @@
+import { ScreenMode } from '@/utils/enums/screen-mode.enum';
 import { useNavigate } from 'react-router-dom';
 import IconifyIcon from '../../../../components/core/Icon/IConCore';
 import ButtonContainer from '../../../../components/core/button/ButtonContainer';
 import SectionBorder from '../../../../components/core/section-boder/SectionBoder';
 import { useScreenHook } from '../../../../hooks/useScreenHook';
+import { useScreenMode } from '../../../../store/responsive/screenMode';
 import { ADMIN_USER_MANAGEMENT } from '../../../../utils/constants/router.constant';
 import UserDetailAction from './components/action/UserDetailAction';
+import FileFolderFilter from './components/file-folder-detail/FileFolderFilter';
+import FileSection from './components/file-folder-detail/FileSection';
+import FolderSection from './components/file-folder-detail/FolderSection';
 
 const UserManagementDetail = () => {
   const navigate = useNavigate();
+  const { screenMode, shrinkMode } = useScreenMode();
   const flex = !useScreenHook(1024);
   return (
     <>
-      <div className='fixed left-[310px] top-[80px] z-10  flex w-full items-center space-x-1 border-b-2 bg-white p-2'>
+      <div
+        className={`fixed ${screenMode != ScreenMode.DESKTOP ? 'left-1' : shrinkMode ? 'left-[76px]' : 'left-[310px]'}  top-[80px] z-10  flex w-full items-center space-x-1 border-b-2 bg-white p-2`}>
         <p
           onClick={() => {
             navigate(ADMIN_USER_MANAGEMENT);
@@ -96,11 +103,9 @@ const UserManagementDetail = () => {
             <ButtonContainer title='Modify memory' icon={<IconifyIcon icon={'tabler:edit'} />} />
           </div>
           <SectionBorder title='Memory details'>
-            <div>File file</div>
-            <div>File file</div>
-            <div>File file</div>
-            <div>File file</div>
-            <div>File file</div>
+            <FileFolderFilter />
+            <FileSection />
+            <FolderSection />
           </SectionBorder>
         </div>
       </div>

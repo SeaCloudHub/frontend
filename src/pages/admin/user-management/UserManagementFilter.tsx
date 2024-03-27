@@ -54,22 +54,21 @@ const UserManagementFilter = () => {
             </div>
           </SectionBorder>
         </div>
-        <div className='mx-2 mt-3'>
+        <div className='mx-2 mt-3 flex-grow'>
           <SectionBorder title='Memory used'>
-            <div className='flex items-center space-x-2'>
-              <div className='flex items-center space-x-1'>
-                <TextInputAdornment
-                  onChange={(data?: string) => {
-                    console.log(data);
-                  }}
-                  labelDirection='horizontal'
-                  sx={{ maxWidth: 100 }}
-                  placeholder='0'
-                  label='From'
-                  adornmentValue='%'
-                  position={'end'}
-                />
-              </div>
+            <div className='flex items-center'>
+              <TextInputAdornment
+                onChange={(data?: string) => {
+                  console.log(data);
+                }}
+                labelDirection='horizontal'
+                sx={{ maxWidth: 100 }}
+                placeholder='0'
+                label='From'
+                type='number'
+                adornmentValue='%'
+                position={'end'}
+              />
               <TextInputAdornment
                 onChange={(data?: string) => {
                   console.log(data);
@@ -78,6 +77,7 @@ const UserManagementFilter = () => {
                 sx={{ maxWidth: 100 }}
                 placeholder='100'
                 label='To'
+                type='number'
                 adornmentValue='%'
                 position={'end'}
               />
