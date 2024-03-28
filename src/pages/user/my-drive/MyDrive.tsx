@@ -7,6 +7,7 @@ import React from 'react';
 import { create } from 'zustand';
 import { DataRow } from './DataRow';
 import SidePanel from '@/components/core/side-panel/SidePanel';
+import { Entry } from '@/utils/types/Entry';
 
 type MyEntry = {
   isDir: boolean;
@@ -252,7 +253,7 @@ const MyDrive = () => {
 /**
  * Map Entry to MyEntry.
  */
-const _entryToMyEntry = (entries: Entry[]): MyEntry[] => {
+export const _entryToMyEntry = (entries: Entry[]): MyEntry[] => {
   return entries.map((entry) => {
     if (entry.is_dir) {
       return {
@@ -296,7 +297,7 @@ const _entryToMyEntry = (entries: Entry[]): MyEntry[] => {
 /**
  * Map MyEntry to FileCard
  */
-const _myEntryToFile = (files: MyEntry[]) => {
+export const _myEntryToFile = (files: MyEntry[]) => {
   return files.map((file) => (
     <div className='aspect-square w-auto'>
       <FileCard title={file.title} icon={file.icon} preview={file.preview} id={file.id} />
@@ -307,7 +308,7 @@ const _myEntryToFile = (files: MyEntry[]) => {
 /**
  * Map MyEntry to FolderCard
  */
-const _myEntryToFolders = (folders: MyEntry[]) => {
+export const _myEntryToFolders = (folders: MyEntry[]) => {
   return folders.map((folder) => {
     return (
       <div className='w-auto'>
@@ -341,7 +342,7 @@ const _header: React.FC<HeaderMyDriveProps> = ({ name, owner, lastModified, size
   );
 };
 
-const _renderListView = (entries: MyEntry[]) => {
+export const _renderListView = (entries: MyEntry[]) => {
   return (
     <div className='flex flex-col'>
       {_header({ name: 'Name', owner: 'Owner', lastModified: 'Last Modified', size: 'Size' })}

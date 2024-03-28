@@ -1,4 +1,4 @@
-interface Entry {
+export type Entry = {
   name: string;
   full_path: string;
   size: number;
@@ -8,4 +8,4 @@ interface Entry {
   is_dir: boolean;
   created_at: string;
   updated_at: string;
-}
+};

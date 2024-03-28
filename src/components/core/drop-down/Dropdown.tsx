@@ -10,7 +10,7 @@ export { classNames };
 type MenuItem = {
   label: string;
   icon: React.ReactNode;
-  action: Function;
+  action?: Function;
 };
 
 export type { MenuItem };
@@ -50,7 +50,7 @@ const Dropdown: React.FC<DropdownProps> = ({ button, items, left }) => {
                       className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm')}
                       onClick={() => {
                         console.log('[Dropdown] action clicked');
-                        action();
+                        action && action();
                       }}>
                       <div className='flex items-center space-x-2'>
                         {icon}

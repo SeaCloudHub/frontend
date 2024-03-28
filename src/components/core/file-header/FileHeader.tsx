@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react/dist/iconify.js';
-import Dropdown from '../drop-down/Dropdown';
+import Dropdown, { MenuItem } from '../drop-down/Dropdown';
 import FilterChip from '../filter-chip/FilterChip';
 import { useViewMode } from '@/pages/user/my-drive/MyDrive';
 
@@ -8,64 +8,60 @@ type FileHeaderProps = {
 };
 
 const FileHeader: React.FC<FileHeaderProps> = ({ headerName }) => {
-  const driveMenuItems = [
+  const driveMenuItems: MenuItem[][] = [
     [
       {
         label: 'New folder',
         icon: <Icon icon='ic:outline-create-new-folder' />,
+        action: () => {},
       },
     ],
     [
-      { label: 'File upload', icon: <Icon icon='ic:baseline-upload-file' /> },
+      { label: 'File upload', icon: <Icon icon='ic:baseline-upload-file' />, action: () => {} },
       {
         label: 'Folder upload',
         icon: <Icon icon='mdi:folder-upload-outline' />,
+        action: () => {},
       },
     ],
   ];
   const typeFilterItems = [
-    [
-      {
-        label: 'Documents',
-        icon: <Icon icon='simple-icons:googledocs' />,
-      },
-      {
-        label: 'Spreadsheets',
-        icon: <Icon icon='mdi:google-spreadsheet' />,
-      },
-      {
-        label: 'Presentations',
-        icon: <Icon icon='mdi:file-presentation-box' />,
-      },
-    ],
+    {
+      label: 'Documents',
+      icon: <Icon icon='simple-icons:googledocs' />,
+    },
+    {
+      label: 'Spreadsheets',
+      icon: <Icon icon='mdi:google-spreadsheet' />,
+    },
+    {
+      label: 'Presentations',
+      icon: <Icon icon='mdi:file-presentation-box' />,
+    },
   ];
   const peopleFilterItems = [
-    [
-      {
-        label: 'Documents',
-        icon: <Icon icon='simple-icons:googledocs' />,
-      },
-      {
-        label: 'Spreadsheets',
-        icon: <Icon icon='mdi:google-spreadsheet' />,
-      },
-    ],
+    {
+      label: 'Documents',
+      icon: <Icon icon='simple-icons:googledocs' />,
+    },
+    {
+      label: 'Spreadsheets',
+      icon: <Icon icon='mdi:google-spreadsheet' />,
+    },
   ];
   const modifiedFilterItems = [
-    [
-      { label: 'Today', icon: null },
-      { label: 'Last 7 days', icon: null },
-      { label: 'This year (2024)', icon: null },
-      { label: 'Last year (2023)', icon: null },
-      { label: 'Custom day range', icon: null },
-    ],
+    { label: 'Today', icon: null },
+    { label: 'Last 7 days', icon: null },
+    { label: 'This year (2024)', icon: null },
+    { label: 'Last year (2023)', icon: null },
+    { label: 'Custom day range', icon: null },
   ];
-  const sortItems = [
+  const sortItems: MenuItem[][] = [
     [
-      { label: 'Name', icon: null },
-      { label: 'Last modified', icon: null },
-      { label: 'Last modified by me', icon: null },
-      { label: 'Last opened by me', icon: null },
+      { label: 'Name', icon: null, action: () => {} },
+      { label: 'Last modified', icon: null, action: () => {} },
+      { label: 'Last modified by me', icon: null, action: () => {} },
+      { label: 'Last opened by me', icon: null, action: () => {} },
     ],
   ];
 
