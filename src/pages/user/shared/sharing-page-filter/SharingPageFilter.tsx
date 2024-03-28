@@ -17,32 +17,47 @@ const typeFilterItems = [
   },
 ];
 
-const peopleFilter = [
+const peopleFilterItems = [
   { label: 'Documents', icon: <Icon icon='simple-icons:googledocs' /> },
   { label: 'Spreadsheets', icon: <Icon icon='mdi:google-spreadsheet' /> },
 ];
 
-const modifiedFilter = [
+const modifiedFilterItems = [
   { label: 'Today', icon: null },
   { label: 'Last 7 days', icon: null },
   { label: 'This year (2024)', icon: null },
 ];
 
 type FilterChipProps = {
+  typeFilter: string;
   setTypeFilterItem: (value: string) => void;
+  peopleFilter: string;
   setPeopleFilterItem: (value: string) => void;
+  modifiedFilter: string;
   setModifiedFilterItem: (value: string) => void;
 };
 
-const SharingPageFilter: React.FC<FilterChipProps> = ({ setTypeFilterItem, setPeopleFilterItem, setModifiedFilterItem }) => {
+const SharingPageFilter: React.FC<FilterChipProps> = ({
+  setTypeFilterItem,
+  setPeopleFilterItem,
+  setModifiedFilterItem,
+  typeFilter,
+  peopleFilter,
+  modifiedFilter,
+}) => {
   return (
     <div className='flex gap-3'>
       {/* type fillter */}
-      <FilterChip name='Type' options={typeFilterItems} action={(value) => setTypeFilterItem(value)} />
+      <FilterChip name='Type' options={typeFilterItems} action={(value) => setTypeFilterItem(value)} value={typeFilter} />
       {/* people filter */}
-      <FilterChip name='People' options={peopleFilter} action={(value) => setPeopleFilterItem(value)} />
+      <FilterChip name='People' options={peopleFilterItems} action={(value) => setPeopleFilterItem(value)} value={peopleFilter} />
       {/* modified filter */}
-      <FilterChip name='Modified' options={modifiedFilter} action={(value) => setModifiedFilterItem(value)} />
+      <FilterChip
+        name='Modified'
+        options={modifiedFilterItems}
+        action={(value) => setModifiedFilterItem(value)}
+        value={modifiedFilter}
+      />
     </div>
   );
 };

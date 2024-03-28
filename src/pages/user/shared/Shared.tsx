@@ -5,6 +5,7 @@ import { useViewMode } from '../my-drive/MyDrive';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import SharingPageView from './sharing-page-view/SharingPageView';
 import { Entry } from '@/utils/types/Entry';
+import ButtonCore from '@/components/core/button/ButtonCore';
 
 const fakeData: Entry[] = [
   {
@@ -216,11 +217,29 @@ const Shared = () => {
           />
         </div>
       </div>
-      <SharingPageFilter
-        setModifiedFilterItem={setModifiedFilterItem}
-        setPeopleFilterItem={setPeopleFilterItem}
-        setTypeFilterItem={setTypeFilterItem}
-      />
+
+      <div className='flex items-center gap-3'>
+        <SharingPageFilter
+          setModifiedFilterItem={setModifiedFilterItem}
+          setPeopleFilterItem={setPeopleFilterItem}
+          setTypeFilterItem={setTypeFilterItem}
+          modifiedFilter={modifiedFilterItem}
+          peopleFilter={peopleFilterItem}
+          typeFilter={typeFilterItem}
+        />
+        {(typeFilterItem || peopleFilterItem || modifiedFilterItem) && (
+          <ButtonCore
+            title='Clear all filters'
+            contentColor='black'
+            onClick={() => {
+              setTypeFilterItem('');
+              setPeopleFilterItem('');
+              setModifiedFilterItem('');
+            }}
+            type={'text'}
+          />
+        )}
+      </div>
       <SharingPageView entries={fakeData} />
     </div>
   );

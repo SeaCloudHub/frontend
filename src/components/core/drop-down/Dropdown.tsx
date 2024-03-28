@@ -27,7 +27,6 @@ const Dropdown: React.FC<DropdownProps> = ({ button, items, left }) => {
       <div>
         <Menu.Button className='flex items-center'>{button}</Menu.Button>
       </div>
-
       <Transition
         as={Fragment}
         enter='transition ease-out duration-100'
