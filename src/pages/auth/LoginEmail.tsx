@@ -40,12 +40,8 @@ const LoginEmail = () => {
       }
     },
     onSuccess: (res) => {
-      if (res.data.exists) {
-        onEmailValid(formik.values.email);
-        navigate(AUTH_LOGIN_PASSWORD);
-      } else {
-        toast.error('Email is not found', toastError());
-      }
+      onEmailValid(formik.values.email);
+      navigate(AUTH_LOGIN_PASSWORD);
     },
   });
   return (

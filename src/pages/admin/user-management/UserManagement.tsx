@@ -1,6 +1,5 @@
 import ModalAddUser from '@/components/core/modal/ModalAddUser';
 import { useEffect, useRef, useState } from 'react';
-import { ToastContainer } from 'react-toastify';
 import IconifyIcon from '../../../components/core/Icon/IConCore';
 import ButtonContainer from '../../../components/core/button/ButtonContainer';
 import LinearChartBar from '../../../components/core/linear-chart-bar/linearChartBar';
@@ -72,7 +71,6 @@ const UserManagement = () => {
   };
   return (
     <div className='flex w-full flex-col items-end space-y-5'>
-      <ToastContainer />
       <div
         ref={filterRef}
         className={`z-10 w-full space-y-2 ${screenMode == ScreenMode.MOBILE ? 'fixed bottom-2 left-1/4  ' : ''}`}>

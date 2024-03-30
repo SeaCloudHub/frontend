@@ -16,6 +16,7 @@ export type TextInputCoreProps = {
   onChange?: (data?: string) => void;
   error?: boolean | undefined;
   helperText?: React.ReactNode;
+  className?:string;
 };
 
 const TextInputCore = ({
@@ -25,6 +26,7 @@ const TextInputCore = ({
   defaultValue,
   disabled,
   sx,
+  className,
   type,
   inputProps,
   fullWidth,
@@ -42,7 +44,8 @@ const TextInputCore = ({
     onChange && onChange(newValue);
   };
   return (
-    <div className={`${labelDirection === 'vertical' ? 'flex flex-col justify-start' : 'flex items-center space-x-1'} w-full`}>
+    <div
+      className={`${labelDirection === 'vertical' ? 'flex flex-col justify-start' : 'flex items-center space-x-1'} ${className} ${fullWidth ? 'w-full' : ''} `}>
       {label && <InputLabel sx={{ fontWeight: 'bold' }}>{label}</InputLabel>}
       <TextField
         fullWidth={fullWidth}

@@ -1,5 +1,9 @@
 export type AuthCheckEmailRESP = {
-  exists: boolean;
+  email: string;
+  first_name: string;
+  last_name: string;
+  avatar_url: string;
+  password_changed_at: string;
 };
 
 export type AuthSignInRESP = {
