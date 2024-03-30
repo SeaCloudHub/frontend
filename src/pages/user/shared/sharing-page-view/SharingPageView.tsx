@@ -9,23 +9,19 @@ type SharingPageViewProps = {
 const SharingPageView: React.FC<SharingPageViewProps> = ({ entries }) => {
   const { viewMode } = useViewMode();
   const processedEntries = _entryToMyEntry(entries);
-  const files = processedEntries.filter((entry) => !entry.isDir);
-  const folders = processedEntries.filter((entry) => entry.isDir);
 
   return (
-    <div>
-      <div className='overflow-y-auto p-5'>
-        {viewMode === 'grid' ? (
-          <div className='flex flex-col space-y-4'>
-            <div className='text-sm font-medium'> Folders</div>
-            <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'>
-              {_myEntryToFile(folders.concat(files))}
-            </div>
+    <div className='overflow-y-auto p-5'>
+      {viewMode === 'grid' ? (
+        <div className='flex flex-col space-y-4'>
+          <div className='text-sm font-medium'> Folders</div>
+          <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'>
+            {_myEntryToFile(processedEntries)}
           </div>
-        ) : (
-          _renderListView(folders.concat(files))
-        )}
-      </div>
+        </div>
+      ) : (
+        _renderListView(processedEntries)
+      )}
     </div>
   );
 };

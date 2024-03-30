@@ -7,7 +7,7 @@ import SharingPageView from './sharing-page-view/SharingPageView';
 import { Entry } from '@/utils/types/Entry';
 import ButtonCore from '@/components/core/button/ButtonCore';
 
-const fakeData: Entry[] = [
+export const fakeData: Entry[] = [
   {
     name: 'file0ádfasdfasdsadsadfasdf ádfasđfádf',
     full_path: '/file1',
