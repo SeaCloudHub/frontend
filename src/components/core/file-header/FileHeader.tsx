@@ -1,75 +1,75 @@
 import { Icon } from '@iconify/react/dist/iconify.js';
-import Dropdown from '../drop-down/Dropdown';
+import Dropdown, { MenuItem } from '../drop-down/Dropdown';
 import FilterChip from '../filter-chip/FilterChip';
 import { useViewMode } from '@/pages/user/my-drive/MyDrive';
+import { useState } from 'react';
 
 type FileHeaderProps = {
   headerName: string;
 };
 
 const FileHeader: React.FC<FileHeaderProps> = ({ headerName }) => {
-  const driveMenuItems = [
+  const driveMenuItems: MenuItem[][] = [
     [
       {
         label: 'New folder',
         icon: <Icon icon='ic:outline-create-new-folder' />,
+        action: () => {},
       },
     ],
     [
-      { label: 'File upload', icon: <Icon icon='ic:baseline-upload-file' /> },
+      { label: 'File upload', icon: <Icon icon='ic:baseline-upload-file' />, action: () => {} },
       {
         label: 'Folder upload',
         icon: <Icon icon='mdi:folder-upload-outline' />,
+        action: () => {},
       },
     ],
   ];
   const typeFilterItems = [
-    [
-      {
-        label: 'Documents',
-        icon: <Icon icon='simple-icons:googledocs' />,
-      },
-      {
-        label: 'Spreadsheets',
-        icon: <Icon icon='mdi:google-spreadsheet' />,
-      },
-      {
-        label: 'Presentations',
-        icon: <Icon icon='mdi:file-presentation-box' />,
-      },
-    ],
+    {
+      label: 'Documents',
+      icon: <Icon icon='simple-icons:googledocs' />,
+    },
+    {
+      label: 'Spreadsheets',
+      icon: <Icon icon='mdi:google-spreadsheet' />,
+    },
+    {
+      label: 'Presentations',
+      icon: <Icon icon='mdi:file-presentation-box' />,
+    },
   ];
   const peopleFilterItems = [
-    [
-      {
-        label: 'Documents',
-        icon: <Icon icon='simple-icons:googledocs' />,
-      },
-      {
-        label: 'Spreadsheets',
-        icon: <Icon icon='mdi:google-spreadsheet' />,
-      },
-    ],
+    {
+      label: 'Documents',
+      icon: <Icon icon='simple-icons:googledocs' />,
+    },
+    {
+      label: 'Spreadsheets',
+      icon: <Icon icon='mdi:google-spreadsheet' />,
+    },
   ];
   const modifiedFilterItems = [
-    [
-      { label: 'Today', icon: null },
-      { label: 'Last 7 days', icon: null },
-      { label: 'This year (2024)', icon: null },
-      { label: 'Last year (2023)', icon: null },
-      { label: 'Custom day range', icon: null },
-    ],
+    { label: 'Today', icon: null },
+    { label: 'Last 7 days', icon: null },
+    { label: 'This year (2024)', icon: null },
+    { label: 'Last year (2023)', icon: null },
+    { label: 'Custom day range', icon: null },
   ];
-  const sortItems = [
+  const sortItems: MenuItem[][] = [
     [
-      { label: 'Name', icon: null },
-      { label: 'Last modified', icon: null },
-      { label: 'Last modified by me', icon: null },
-      { label: 'Last opened by me', icon: null },
+      { label: 'Name', icon: null, action: () => {} },
+      { label: 'Last modified', icon: null, action: () => {} },
+      { label: 'Last modified by me', icon: null, action: () => {} },
+      { label: 'Last opened by me', icon: null, action: () => {} },
     ],
   ];
 
   const { viewMode, setViewMode } = useViewMode();
+  const [typeFilterItem, setTypeFilterItem] = useState<string>('');
+  const [peopleFilterItem, setPeopleFilterItem] = useState<string>('');
+  const [modifiedFilterItem, setModifiedFilterItem] = useState<string>('');
 
   return (
     <div className='flex flex-col space-y-4 px-1 pb-2'>
@@ -114,9 +114,7 @@ const FileHeader: React.FC<FileHeaderProps> = ({ headerName }) => {
               <Icon icon='ic:baseline-view-headline' className='h-6 w-6' />
             </div>
             <div
-              onClick={() => {
-                setViewMode('grid');
-              }}
+              onClick={() => setViewMode('grid')}
               className='flex w-16 items-center justify-center rounded-r-full border border-outline py-1 pr-1 hover:bg-surfaceContainer'>
               <Icon icon='mdi:view-grid-outline' className='h-6 w-6' />
             </div>
@@ -125,9 +123,24 @@ const FileHeader: React.FC<FileHeaderProps> = ({ headerName }) => {
       </div>
       <div className='flex justify-between pl-4 pr-8'>
         <div className='flex flex-wrap items-center gap-2'>
-          <FilterChip name='Type' options={typeFilterItems} />
-          <FilterChip name='People' options={peopleFilterItems} />
-          <FilterChip name='Modified' options={modifiedFilterItems} />
+          <FilterChip
+            name='Type'
+            options={typeFilterItems}
+            value={typeFilterItem}
+            action={(value: string) => setTypeFilterItem(value)}
+          />
+          <FilterChip
+            name='People'
+            options={peopleFilterItems}
+            action={(value: string) => setPeopleFilterItem(value)}
+            value={peopleFilterItem}
+          />
+          <FilterChip
+            name='Modified'
+            options={modifiedFilterItems}
+            action={(value: string) => setModifiedFilterItem(value)}
+            value={modifiedFilterItem}
+          />
         </div>
         <div className='flex flex-row items-center'>
           <div className='mr-2 rounded-full p-2 hover:bg-surfaceContainer active:bg-surfaceDim'>
