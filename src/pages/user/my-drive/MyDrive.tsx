@@ -1,12 +1,12 @@
 import FileCard from '@/components/core/file-card/FileCard';
 import fileIcons from '@/components/core/file-card/fileicon.constant';
 import FolderCard from '@/components/core/folder-card/FolderCard';
-import SidePanel from '@/components/core/side-panel/SidePanel';
 import { entries } from '@/utils/dumps/entries';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import React from 'react';
 import { create } from 'zustand';
 import { DataRow } from './DataRow';
+import SidePanel from '@/components/core/side-panel/SidePanel';
 import { Entry } from '@/utils/types/entry.type';
 
 type MyEntry = {
@@ -62,7 +62,7 @@ const MyDrive = () => {
 /**
  * Map Entry to MyEntry.
  */
-const _entryToMyEntry = (entries: Entry[]): MyEntry[] => {
+export const _entryToMyEntry = (entries: Entry[]): MyEntry[] => {
   return entries.map((entry) => {
     if (entry.is_dir) {
       return {
@@ -106,9 +106,9 @@ const _entryToMyEntry = (entries: Entry[]): MyEntry[] => {
 /**
  * Map MyEntry to FileCard
  */
-const _myEntryToFile = (files: MyEntry[]) => {
-  return files.map((file, index) => (
-    <div key={index} className='aspect-square w-auto'>
+export const _myEntryToFile = (files: MyEntry[]) => {
+  return files.map((file) => (
+    <div className='aspect-square w-auto'>
       <FileCard title={file.title} icon={file.icon} preview={file.preview} id={file.id} />
     </div>
   ));
@@ -117,8 +117,8 @@ const _myEntryToFile = (files: MyEntry[]) => {
 /**
  * Map MyEntry to FolderCard
  */
-const _myEntryToFolders = (folders: MyEntry[]) => {
-  return folders.map((folder, index) => {
+export const _myEntryToFolders = (folders: MyEntry[]) => {
+  return folders.map((folder) => {
     return (
       <div key={index} className='w-auto'>
         <FolderCard title={folder.title} icon={folder.icon} id={folder.id} />
@@ -151,7 +151,7 @@ const _header: React.FC<HeaderMyDriveProps> = ({ name, owner, lastModified, size
   );
 };
 
-const _renderListView = (entries: MyEntry[]) => {
+export const _renderListView = (entries: MyEntry[]) => {
   return (
     <div className='flex flex-col'>
       {_header({ name: 'Name', owner: 'Owner', lastModified: 'Last Modified', size: 'Size' })}

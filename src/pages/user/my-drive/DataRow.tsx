@@ -83,7 +83,7 @@ export const DataRow: React.FC<MyEntry> = ({ isDir, title, icon, lastModified, o
 
   // const [showTools, setShowTools] = useState(false);
   return (
-    <div className='py= flex items-center border-b hover:bg-surfaceContainer'>
+    <div className='py= flex items-center border-b py-1.5 hover:bg-surfaceContainer'>
       <div className='flex flex-1 basis-72 items-center text-sm font-medium'>
         <div className='px-4'>
           <div className='h-6 w-6'>{icon}</div>
