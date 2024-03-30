@@ -14,6 +14,9 @@ export default {
         '0.83em': '0.83em',
         '0.67em': '0.67em',
       },
+      width: {
+        '1/3': '33.333333%',
+      },
       zIndex: {
         navbar: '1498',
         sidebar: '1499',

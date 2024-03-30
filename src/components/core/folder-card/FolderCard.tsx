@@ -1,7 +1,7 @@
-import Dropdown, { MenuItem } from '../drop-down/Dropdown';
-import { BsThreeDotsVertical } from 'react-icons/bs';
-import { Icon } from '@iconify/react/dist/iconify.js';
 import { useDrawer } from '@/pages/user/my-drive/MyDrive';
+import { Icon } from '@iconify/react/dist/iconify.js';
+import { BsThreeDotsVertical } from 'react-icons/bs';
+import Dropdown, { MenuItem } from '../drop-down/Dropdown';
 
 interface FolderCardProps {
   title: string;
@@ -49,18 +49,16 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon }) => {
   ];
 
   return (
-    <div className='flex h-full w-full flex-col items-center justify-center rounded-xl bg-surfaceContainerLow px-2 shadow-sm hover:bg-surfaceDim'>
-      <div className='flex w-full items-center justify-between px-1 py-3'>
-        <div className='flex max-w-[calc(100%-24px)] items-center space-x-4'>
-          <div className='h-6 w-6 min-w-fit'>{icon}</div>
-          <div className='truncate text-sm font-medium'>{title}</div>
-        </div>
-        <Dropdown
-          button={<BsThreeDotsVertical className='h-6 w-6 rounded-full p-1 hover:bg-slate-300' />}
-          items={folderOps}
-          left={true}
-        />
+    <div className='flex w-full items-center justify-between rounded-xl bg-surfaceContainerLow px-3 py-3 shadow-sm hover:bg-surfaceDim '>
+      <div className='flex max-w-[calc(100%-24px)] items-center space-x-4'>
+        <div className='h-6 w-6 min-w-fit'>{icon}</div>
+        <div className='truncate text-sm font-medium'>{title}</div>
       </div>
+      <Dropdown
+        button={<BsThreeDotsVertical className='h-6 w-6 rounded-full p-1 hover:bg-slate-300' />}
+        items={folderOps}
+        left={true}
+      />
     </div>
   );
 };

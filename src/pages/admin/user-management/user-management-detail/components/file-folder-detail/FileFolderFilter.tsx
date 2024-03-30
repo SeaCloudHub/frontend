@@ -16,7 +16,7 @@ const FileFolderFilter = () => {
   const [type, setType] = useState(storageTypes[0].value);
   const [fileType, setFileType] = useState(fileTypes[0].value);
   return (
-    <div className='p-3'>
+    <div className='py-3'>
       <SectionBorder title='Storage Filter'>
         <div className='flex flex-wrap  space-y-2'>
           <TextInputCore className='mr-2' onChange={() => {}} label='Name' placeholder='name' />

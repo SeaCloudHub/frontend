@@ -18,7 +18,7 @@ const UserManagementDetail = () => {
   return (
     <>
       <div
-        className={`fixed ${screenMode != ScreenMode.DESKTOP ? 'left-1' : shrinkMode ? 'left-[76px]' : 'left-[310px]'}  top-[80px] z-10  flex w-full items-center space-x-1 border-b-2 bg-white p-2`}>
+        className={`fixed ${screenMode != ScreenMode.DESKTOP ? 'left-0' : shrinkMode ? 'left-[79px]' : 'left-[304px]'}  top-[80px] z-20  flex w-full items-center space-x-1 border-b-2 bg-white p-2`}>
         <p
           onClick={() => {
             navigate(ADMIN_USER_MANAGEMENT);
@@ -39,7 +39,7 @@ const UserManagementDetail = () => {
                 className='w-[70px] rounded-full object-contain'
                 src='https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75'
               />
-              <div className='spacey-2'>
+              <div className='space-y-2'>
                 <p className='statement-upper-medium h3'> Hung Vo Phi</p>
                 <p className='statement-medium'>admin@phihungtf.me</p>
                 <ul>
@@ -65,7 +65,7 @@ const UserManagementDetail = () => {
         </div>
         {/* <!--section --> */}
         <div
-          className={`${flex ? 'max-h-[calc(100vh-115px)] w-3/4 overflow-y-auto' : ''}
+          className={`${flex ? 'max-h-[calc(100vh-205px)] w-3/4 overflow-y-auto' : ''}
         flex flex-col  space-y-4`}>
           <div className='w-full space-y-2 p-3  shadow-md'>
             <p className='statement-medium h4 '>Personal Dropbox space of Hung Vo Phi</p>

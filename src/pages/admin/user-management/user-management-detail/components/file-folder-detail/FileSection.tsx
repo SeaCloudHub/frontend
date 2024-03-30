@@ -1,9 +1,11 @@
-import React from 'react'
+import AccordionCore from '../../../../../../components/core/accordion/AccordionCore';
 
 const FileSection = () => {
   return (
-    <div>FileSection</div>
-  )
-}
+    <AccordionCore title='Files'>
+      <div></div>
+    </AccordionCore>
+  );
+};
 
-export default FileSection
+export default FileSection;

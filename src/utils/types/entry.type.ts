@@ -1,4 +1,4 @@
-interface Entry {
+export interface Entry {
   name: string;
   full_path: string;
   size: number;
