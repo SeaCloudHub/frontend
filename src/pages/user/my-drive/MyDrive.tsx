@@ -118,7 +118,7 @@ export const _myEntryToFile = (files: MyEntry[]) => {
  * Map MyEntry to FolderCard
  */
 export const _myEntryToFolders = (folders: MyEntry[]) => {
-  return folders.map((folder) => {
+  return folders.map((folder,index) => {
     return (
       <div key={index} className='w-auto'>
         <FolderCard title={folder.title} icon={folder.icon} id={folder.id} />
