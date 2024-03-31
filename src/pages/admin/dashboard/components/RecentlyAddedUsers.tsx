@@ -79,7 +79,7 @@ type RecentlyAddedUsersProps = {
 const RecentlyAddedUsers: React.FC<RecentlyAddedUsersProps> = ({ users }) => {
   users = fakeData;
   return (
-    <AccordionCore title='Recently Added Users' className='mb-3'>
+    <AccordionCore title='User Log' className='mb-3 max-h-[400px] overflow-y-auto'>
       <List>
         {users.slice(0, 10).map((user, i) => (
           <Box key={user._id}>

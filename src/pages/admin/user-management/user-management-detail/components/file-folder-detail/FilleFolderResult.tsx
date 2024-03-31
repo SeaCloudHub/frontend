@@ -75,33 +75,35 @@ const FileFolderResult = ({ name, type, fileType }: FileFolderResultProps) => {
               }}
             />
           </div>
-          <div className='flex w-[50%] items-center  justify-end truncate'>
-            <p className='statement-upper-medium w-1/3'>Owner</p>
-            <div className='flex w-1/3 items-center '>
-              <DropdownCore options={fileOperations} isDefault={true} />
-              <Order
-                iconDown='ph:arrow-down-bold'
-                iconUp='ph:arrow-up-bold'
-                onChange={(isAscending: boolean) => {
-                  handleOnChangeOrder('name', isAscending);
-                }}
-              />
+          {!responsive && (
+            <div className='flex w-[50%] items-center  justify-end truncate'>
+              <p className='statement-upper-medium w-1/3'>Owner</p>
+              <div className='flex w-1/3 items-center '>
+                <DropdownCore options={fileOperations} isDefault={true} />
+                <Order
+                  iconDown='ph:arrow-down-bold'
+                  iconUp='ph:arrow-up-bold'
+                  onChange={(isAscending: boolean) => {
+                    handleOnChangeOrder('name', isAscending);
+                  }}
+                />
+              </div>
+              <div className='w flex w-1/3 items-center justify-start '>
+                <p className='statement-upper-medium'>Size</p>
+                <Order
+                  iconDown='ph:arrow-down-bold'
+                  iconUp='ph:arrow-up-bold'
+                  onChange={(isAscending: boolean) => {
+                    handleOnChangeOrder('name', isAscending);
+                  }}
+                />
+              </div>
             </div>
-            <div className='w flex w-1/3 items-center justify-start '>
-              <p className='statement-upper-medium'>Size</p>
-              <Order
-                iconDown='ph:arrow-down-bold'
-                iconUp='ph:arrow-up-bold'
-                onChange={(isAscending: boolean) => {
-                  handleOnChangeOrder('name', isAscending);
-                }}
-              />
-            </div>
-          </div>
+          )}
         </div>
         {/* Content section */}
         {processedEntries.map((item, index) => (
-          <div className='flex w-full items-center border-b py-2' key={item.id}>
+          <div className='flex w-full items-center border-b py-2' key={index}>
             <div className='w-[50%] items-center justify-start space-x-2'>
               <p className=' truncate'>{item.title}</p>
             </div>

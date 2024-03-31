@@ -6,6 +6,7 @@ import SectionBorder from '../../../../components/core/section-boder/SectionBode
 import { useScreenHook } from '../../../../hooks/useScreenHook';
 import { useScreenMode } from '../../../../store/responsive/screenMode';
 import { ADMIN_USER_MANAGEMENT } from '../../../../utils/constants/router.constant';
+import StorageStatistic from '../../shared/StorageStatistic';
 import UserDetailAction from './components/action/UserDetailAction';
 import FileFolderFilter from './components/file-folder-detail/FileFolderFilter';
 import FileSection from './components/file-folder-detail/FileSection';
@@ -69,37 +70,9 @@ const UserManagementDetail = () => {
         flex flex-col  space-y-4`}>
           <div className='w-full space-y-2 p-3  shadow-md'>
             <p className='statement-medium h4 '>Personal Dropbox space of Hung Vo Phi</p>
-            <div className='flex w-full space-x-4 border-b-2  border-black p-3'>
-              <div className=' flex items-center border-r-2 p-4'>
-                <IconifyIcon icon={'ic:twotone-cloud'} fontSize={30} />
-                <div className='ml-4 flex flex-col items-center'>
-                  <p className='h4 text-gray-600'>Total Memory</p>
-                  <p className='h3 statement-upper-medium text-green-500'>0 bytes</p>
-                </div>
-              </div>
-              <div className='flex flex-col items-center p-4'>
-                <p className='h4 text-gray-600'> Used Memory</p>
-                <p className='h3 statement-upper-medium text-red-500'>2 bytes</p>
-              </div>
-              <div className='spasce-x-2 flex border-r-2'></div>
-            </div>
-            <div className='h-8 w-full bg-gray-200'></div>
-            <div className='flex flex-wrap '>
-              <div className=' mx-2 flex space-x-2'>
-                <div className='flex h-8 w-8 items-center bg-slate-700'></div>
-                <p>Regular files (0 bytes)</p>
-              </div>
-              <div className='mx-2 flex items-center space-x-2'>
-                <div className='h-8 w-8 bg-blue-600'></div>
-                <p>Shared files(0 bytes)</p>
-              </div>
-              <div className='mx-2 flex  items-center space-x-2'>
-                <div className='h-8 w-8 bg-purple-800'></div>
-                <p>Backup files (0 bytes)</p>
-              </div>
-            </div>
+            <StorageStatistic />
           </div>
-          <div className='w-full space-y-2 p-3  shadow-md'>
+          <div className='z-0 w-full space-y-2 p-3 shadow-md'>
             <ButtonContainer title='Modify memory' icon={<IconifyIcon icon={'tabler:edit'} />} />
           </div>
           <SectionBorder title='Memory details'>
