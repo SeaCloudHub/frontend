@@ -1,7 +1,8 @@
 import * as Yup from 'yup';
 
 export const addUserSchema = Yup.object({
-  name: Yup.string().required('Name is required'),
+  first_name: Yup.string().required('First Name is required').min(5, 'First Name must be at least 5 characters long'),
+  last_name: Yup.string().required('Last Name is required').min(5, 'Last Name must be at least 5 characters long'),
   email: Yup.string().required('Email is required').email('Invalid email format'),
   password: Yup.string()
     .matches(
@@ -9,7 +10,7 @@ export const addUserSchema = Yup.object({
       'Password must contain at least 8 characters, including at least one letter, one number, and one special character',
     )
     .required('Password is required'),
-  confirmPassword: Yup.string()
+  confirm_password: Yup.string()
     .oneOf([Yup.ref('password')], 'Passwords must match')
     .required('Please confirm your password'),
 });

@@ -2,9 +2,11 @@ import { LinearProgress } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { useFormik } from 'formik';
+import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { AddUserREQ, addUserInitValue } from '../../../apis/admin/user-management/request/add-user.request';
 import { addUserApi } from '../../../apis/admin/user-management/user-management.api';
+import { uploadImage } from '../../../apis/shared/shared.api';
 import { addUserSchema } from '../../../helpers/form-schema/admin/add-user.schema';
 import { useScreenHook } from '../../../hooks/useScreenHook';
 import { toastError, toastSuccess } from '../../../utils/toast-options/toast-options';
@@ -23,14 +25,39 @@ type ModalAddUserProps = {
 
 const ModalAddUser = ({ title, isOpen, handleConfirm }: ModalAddUserProps) => {
   const flex = !useScreenHook(500);
-
+  const [file, setFile] = useState<File | null>(null);
+  const handleImageSelection = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      setFile(event.target.files[0]);
+    }
+  };
   const formik = useFormik({
     initialValues: addUserInitValue,
     validationSchema: addUserSchema,
     onSubmit: async (values) => {
+      let avatar_url: string | undefined;
+
+      if (file) {
+        try {
+          const res = await uploadImage({
+            image: file,
+          });
+          avatar_url = res.data.file_path;
+        } catch (error) {
+          console.log(error);
+          if (isAxiosError(error)) {
+            toast.error(error.response?.data.message, toastError());
+          }
+          return;
+        }
+      }
+      console.log('trieu');
       await addUserMutation.mutateAsync({
         email: values.email,
         password: values.password,
+        first_name: values.first_name,
+        last_name: values.last_name,
+        avatar_url: import.meta.env.VITE_BACKEND_API_ENDPOINT + avatar_url || null,
       });
     },
   });
@@ -77,71 +104,94 @@ const ModalAddUser = ({ title, isOpen, handleConfirm }: ModalAddUserProps) => {
           <div className='space-y-2 p-2'>
             <div className={`${flex ? 'flex items-center justify-center space-x-6' : ''}`}>
               <TextInputCore
-                onChange={(value?: string) => handleFieldChange('name', value!)}
-                label='Name'
-                value={formik.values.name}
-                name='name'
+                onChange={(value?: string) => handleFieldChange('first_name', value!)}
+                label='First Name'
+                value={formik.values.first_name}
+                name='first_name'
                 labelDirection='vertical'
-                placeholder='Name'
-                error={formik.touched.name && Boolean(formik.errors.name)}
-                helperText={formik.touched.name && formik.errors.name}
+                placeholder='First Name'
+                error={formik.touched.first_name && Boolean(formik.errors.first_name)}
+                helperText={formik.touched.first_name && formik.errors.first_name}
                 fullWidth={true}
               />
               <TextInputCore
-                onChange={(value?: string) => handleFieldChange('email', value!)}
-                label='Email'
-                name='email'
-                value={formik.values.email}
+                onChange={(value?: string) => handleFieldChange('last_name', value!)}
+                label='Last Name'
+                name='last_name'
+                value={formik.values.last_name}
                 labelDirection='vertical'
                 fullWidth={true}
+                error={formik.touched.last_name && Boolean(formik.errors.last_name)}
+                helperText={formik.touched.last_name && formik.errors.last_name}
+                placeholder='Last Name'
+              />
+            </div>
+            <div className={`${flex ? 'flex items-center  space-x-6' : ''}`}>
+              <TextInputCore
+                onChange={(value?: string) => handleFieldChange('email', value!)}
+                label='Email'
+                className='w-1/2'
+                value={formik.values.email}
+                name='email'
+                labelDirection='vertical'
+                placeholder='Email'
                 error={formik.touched.email && Boolean(formik.errors.email)}
                 helperText={formik.touched.email && formik.errors.email}
-                placeholder='Email'
               />
+              <label className='flex cursor-pointer items-center' htmlFor='upload-photo'>
+                <ButtonIcon icon='tabler:camera' color='blue' />
+                <p className='statement-upper-medium text-blue-600'>UPLOAD PROFILE PHOTO</p>
+              </label>
             </div>
             <div className={`${flex ? 'flex items-center justify-center space-x-6' : ''}  w-full `}>
               <TextInputCore
                 name='password'
-                value={formik.values.confirmPassword}
+                value={formik.values.password}
                 type={'password'}
                 onChange={(value?: string) => handleFieldChange('password', value!)}
                 fullWidth={true}
-                label='Confirm password'
+                label='Password'
                 labelDirection='vertical'
                 error={formik.touched.password && Boolean(formik.errors.password)}
                 helperText={formik.touched.password && formik.errors.password}
-                placeholder='Confirm password'
+                placeholder='Password'
               />
               <TextInputCore
-                name='confirmPassword'
-                value={formik.values.confirmPassword}
+                name='confirm_password'
+                value={formik.values.confirm_password}
                 type={'password'}
-                onChange={(value?: string) => handleFieldChange('confirmPassword', value!)}
+                onChange={(value?: string) => handleFieldChange('confirm_password', value!)}
                 fullWidth={true}
                 label='Confirm password'
                 labelDirection='vertical'
-                error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
-                helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
+                error={formik.touched.confirm_password && Boolean(formik.errors.confirm_password)}
+                helperText={formik.touched.confirm_password && formik.errors.confirm_password}
                 placeholder='Confirm password'
               />
             </div>
-            <div
-              className='flex cursor-pointer items-center '
-              onClick={() => {
-                //Lay anh
-              }}>
-              <ButtonIcon icon='tabler:camera' color='blue' />
-              <p className='statement-upper-medium text-blue-600'>UPLOAD PROFILE PHOTO</p>
+            <div className='file'>
+              <input
+                type='file'
+                accept='.png, .jpg, .jpeg'
+                style={{ display: 'none' }}
+                id='upload-photo'
+                onChange={handleImageSelection}
+              />
+              {file && (
+                <div className='flex items-center space-x-2'>
+                  <img className='max-w-[90px] object-contain' src={URL.createObjectURL(file)} />
+                  <ButtonIcon
+                    icon='uiw:delete'
+                    onClick={() => {
+                      setFile(null);
+                    }}
+                    color='red'
+                  />
+                </div>
+              )}
             </div>
             <div className='float-right'>
-              <ButtonContainer
-                type='submit'
-                title='Add User'
-                onClick={() => {
-                  formik.submitForm;
-                }}
-                icon={<IconifyIcon icon='tabler:playlist-add' />}
-              />
+              <ButtonContainer type='submit' title='Add User' icon={<IconifyIcon icon='tabler:playlist-add' />} />
             </div>
           </div>
         </div>

@@ -1,19 +1,18 @@
-import LoginPassword from '../../pages/auth/LoginPassword';
+import MyDrive from '@/pages/user/my-drive/MyDrive';
 import DashBoard from '../../pages/admin/dashboard/DashBoard';
 import StorageManagement from '../../pages/admin/storage-management/StorageManagement';
 import UserManagement from '../../pages/admin/user-management/UserManagement';
 import UserManagementDetail from '../../pages/admin/user-management/user-management-detail/UserManagementDetail';
 import ChangePassword from '../../pages/auth/ChangePassword';
 import LoginEmail from '../../pages/auth/LoginEmail';
-import Register from '../../pages/auth/Signup';
+import LoginPassword from '../../pages/auth/LoginPassword';
+import ResetPassword from '../../pages/auth/ResetPassword';
 import ErrorPage from '../../pages/error/ErrorPage';
 import Memory from '../../pages/user/memory/Memory';
-import MyDrive from '@/pages/user/my-drive/MyDrive';
 import Priority from '../../pages/user/priority/Priority';
 import Shared from '../../pages/user/shared/Shared';
 import Starred from '../../pages/user/starred/Starred';
 import Trash from '../../pages/user/trash/Trash';
-import ResetPassword from '../../pages/auth/ResetPassword';
 
 export const HOME = '/';
 export const AUTH_HOME = '/auth';
@@ -47,7 +46,6 @@ export const routes = {
   auth: [
     { path: AUTH_LOGIN_EMAIL, component: LoginEmail },
     { path: AUTH_LOGIN_PASSWORD, component: LoginPassword },
-    { path: SIGN_UP, component: Register },
     { path: AUTH_CHANGE_PASSWORD, component: ChangePassword },
     { path: AUTH_RESET_PASSWORD, component: ResetPassword },
   ],
