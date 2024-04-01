@@ -21,6 +21,16 @@ export default {
         navbar: '1498',
         sidebar: '1499',
       },
+      screens: {
+        xs: '375px',
+        sm: '640px',
+        smL: '700px',
+        md: '768px',
+        mdL: '850px',
+        lg: '1024px',
+        xl: '1280px',
+        '2xl': '1536px',
+      },
       colors: {
         primary: '#216487',
         surfaceTint: '#216487',

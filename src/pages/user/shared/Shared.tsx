@@ -2,10 +2,11 @@ import SharingPageFilter from './sharing-page-filter/SharingPageFilter';
 import { useState } from 'react';
 import SharingPageViewMode from './sharing-page-view/SharingPageViewMode';
 import { useViewMode } from '../my-drive/MyDrive';
-import { Icon } from '@iconify/react/dist/iconify.js';
 import SharingPageView from './sharing-page-view/SharingPageView';
-import { Entry } from '@/utils/types/Entry';
+import DriveLayout from '@/components/layout/DriveLayout';
 import ButtonCore from '@/components/core/button/ButtonCore';
+import { Icon } from '@iconify/react/dist/iconify.js';
+import { Entry } from '@/utils/types/entry.type';
 
 export const fakeData: Entry[] = [
   {
@@ -205,43 +206,49 @@ const Shared = () => {
   const [isShowDetail, setIsShowDetail] = useState<boolean>(false);
 
   return (
-    <div className='w-full'>
-      <div className='flex justify-between space-x-2 text-2xl'>
-        <h2 className='py-2 text-3xl font-semibold'>Shared with me</h2>
-        <div className='flex items-center gap-2'>
-          <SharingPageViewMode setViewMode={setViewMode} viewMode={viewMode} />
-          <Icon
-            icon='mdi:information-outline'
-            className='h-8 w-8 cursor-pointer rounded-full p-1 transition-all hover:bg-surfaceContainerLow active:brightness-90'
-            onClick={() => setIsShowDetail(!isShowDetail)}
-          />
-        </div>
-      </div>
+    <DriveLayout
+      headerLeft={
+        <div className='px-4'>
+          <div className='flex justify-between space-x-2 text-2xl'>
+            <h2 className='py-2 text-3xl font-semibold'>Shared with me</h2>
+            <div className='flex items-center gap-2'>
+              <SharingPageViewMode setViewMode={setViewMode} viewMode={viewMode} />
+              <Icon
+                icon='mdi:information-outline'
+                className='h-8 w-8 cursor-pointer rounded-full p-1 transition-all hover:bg-surfaceContainerLow active:brightness-90'
+                onClick={() => setIsShowDetail(!isShowDetail)}
+              />
+            </div>
+          </div>
 
-      <div className='flex items-center gap-3'>
-        <SharingPageFilter
-          setModifiedFilterItem={setModifiedFilterItem}
-          setPeopleFilterItem={setPeopleFilterItem}
-          setTypeFilterItem={setTypeFilterItem}
-          modifiedFilter={modifiedFilterItem}
-          peopleFilter={peopleFilterItem}
-          typeFilter={typeFilterItem}
-        />
-        {(typeFilterItem || peopleFilterItem || modifiedFilterItem) && (
-          <ButtonCore
-            title='Clear all filters'
-            contentColor='black'
-            onClick={() => {
-              setTypeFilterItem('');
-              setPeopleFilterItem('');
-              setModifiedFilterItem('');
-            }}
-            type={'text'}
-          />
-        )}
-      </div>
-      <SharingPageView entries={fakeData} />
-    </div>
+          <div className='flex items-center gap-3'>
+            <SharingPageFilter
+              setModifiedFilterItem={setModifiedFilterItem}
+              setPeopleFilterItem={setPeopleFilterItem}
+              setTypeFilterItem={setTypeFilterItem}
+              modifiedFilter={modifiedFilterItem}
+              peopleFilter={peopleFilterItem}
+              typeFilter={typeFilterItem}
+            />
+            {(typeFilterItem || peopleFilterItem || modifiedFilterItem) && (
+              <ButtonCore
+                title='Clear all filters'
+                contentColor='black'
+                onClick={() => {
+                  setTypeFilterItem('');
+                  setPeopleFilterItem('');
+                  setModifiedFilterItem('');
+                }}
+                type={'text'}
+              />
+            )}
+          </div>
+        </div>
+      }
+      headerRight={<div>Detail</div>}
+      bodyLeft={<SharingPageView entries={fakeData} />}
+      bodyRight={<div>Detail</div>}
+    />
   );
 };
 

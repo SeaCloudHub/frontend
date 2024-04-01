@@ -1,6 +1,6 @@
 import React from 'react';
 import { _entryToMyEntry, _myEntryToFile, _myEntryToFolders, _renderListView, useViewMode } from '../../my-drive/MyDrive';
-import { Entry } from '@/utils/types/Entry';
+import { Entry } from '@/utils/types/entry.type';
 
 type StarredPageViewProps = {
   entries: Entry[];
