@@ -15,5 +15,8 @@ export type IdentityRESP = {
   id: string;
   email: string;
   password_changed_at: string;
+  first_name: string;
+  last_name: string;
+  avatar_url: string;
   is_admin: boolean;
 };

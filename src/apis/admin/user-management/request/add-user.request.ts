@@ -1,12 +1,16 @@
 export type AddUserREQ = {
-  // name: string;
+  first_name: string;
+  last_name: string;
   email: string;
   password: string;
+  avatar_url: string;
 };
 
-export const addUserInitValue: { confirmPassword: string } & AddUserREQ = {
-  // name: '',
+export const addUserInitValue: { confirm_password: string } & AddUserREQ = {
+  first_name: '',
+  last_name: '',
   email: '',
   password: '',
-  confirmPassword: '',
+  confirm_password: '',
+  avatar_url: '',
 };

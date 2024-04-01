@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { checkEmailApi } from '../../apis/auth/auth.api';
 import { loginInitialValue } from '../../apis/auth/request/auth-sign-in.request';
-import { default as IconifyIcon } from '../../components/core/Icon/IConCore';
 import { default as TextFieldCore } from '../../components/core/form/TextFieldCore';
 import { emailSchema } from '../../helpers/form-schema/auth/login.schema';
 import { useSession } from '../../store/auth/session';
@@ -51,8 +50,11 @@ const LoginEmail = () => {
           <div className='absolute left-0 top-0 w-full px-1'>
             {checkEmailMutation.isPending && <LinearProgress className=' translate-y-1' />}
           </div>
-          <div className='logo mb-8'>
-            <IconifyIcon icon='flat-color-icons:google' className='text-5xl' />
+          <div className=' w-[50px]'>
+            <img
+              className='w-full object-contain'
+              src='https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75'
+            />
           </div>
           <div className='content gap-4 md:flex md:justify-between'>
             <div>

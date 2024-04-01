@@ -7,7 +7,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { signinApi } from '../../apis/auth/auth.api';
 import { AuthSignInREQ, loginInitialValue } from '../../apis/auth/request/auth-sign-in.request';
-import IconifyIcon from '../../components/core/Icon/IConCore';
 import TextFieldCore from '../../components/core/form/TextFieldCore';
 import { passwordSchema } from '../../helpers/form-schema/auth/login.schema';
 import { useSession } from '../../store/auth/session';
@@ -67,7 +66,10 @@ const LoginPassword = () => {
         {loginMutation.isPending && <LinearProgress className='mx-5 translate-y-1' />}
         <form onSubmit={formik.handleSubmit} className='rounded-3xl border bg-white p-10 md:border-none'>
           <div className='logo mb-4'>
-            <IconifyIcon icon='flat-color-icons:google' className='text-5xl' />
+            <img
+              className='w-[70px]  object-contain'
+              src='https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75'
+            />
             <Typography variant='h3'>Welcome</Typography>
           </div>
           <div className='content flex flex-col gap-20 md:flex-row md:justify-between'>
