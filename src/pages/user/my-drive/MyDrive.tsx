@@ -1,13 +1,13 @@
 import FileCard from '@/components/core/file-card/FileCard';
 import fileIcons from '@/components/core/file-card/fileicon.constant';
-import FileHeader from '@/components/core/file-header/FileHeader';
 import FolderCard from '@/components/core/folder-card/FolderCard';
+import { entries } from '@/utils/dumps/entries';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import React from 'react';
 import { create } from 'zustand';
 import { DataRow } from './DataRow';
 import SidePanel from '@/components/core/side-panel/SidePanel';
-import { Entry } from '@/utils/types/Entry';
+import { Entry } from '@/utils/types/entry.type';
 
 type MyEntry = {
   isDir: boolean;
@@ -21,196 +21,6 @@ type MyEntry = {
   size: string;
 };
 
-const entries: Entry[] = [
-  {
-    name: 'file0ádfasdfasdsadsadfasdf ádfasđfádf',
-    full_path: '/file1',
-    size: 1024,
-    mode: 0o777,
-    mime_type: 'text/plain',
-    md5: '1',
-    is_dir: false,
-    created_at: '2021-09-21T14:00:00Z',
-    updated_at: '2021-09-21T14:00:00Z',
-  },
-  {
-    name: 'file1.mp3',
-    full_path: '/file1.mp3',
-    size: 1024,
-    mode: 0o777,
-    mime_type: 'text/plain',
-    md5: '1',
-    is_dir: false,
-    created_at: '2021-09-21T14:00:00Z',
-    updated_at: '2021-09-21T14:00:00Z',
-  },
-  {
-    name: 'file2.mp4',
-    full_path: '/file2.mp4',
-    size: 1024,
-    mode: 0o777,
-    mime_type: 'text/plain',
-    md5: '2',
-    is_dir: false,
-    created_at: '2021-09-21T14:00:00Z',
-    updated_at: '2021-09-21T14:00:00Z',
-  },
-  {
-    name: 'file3.pdf',
-    full_path: '/file3.pdf',
-    size: 1024,
-    mode: 0o777,
-    mime_type: 'text/plain',
-    md5: '3',
-    is_dir: false,
-    created_at: '2021-09-21T14:00:00Z',
-    updated_at: '2021-09-21T14:00:00Z',
-  },
-  {
-    name: 'file4.docx',
-    full_path: '/file4.docx',
-    size: 1024,
-    mode: 0o777,
-    mime_type: 'text/plain',
-    md5: '4',
-    is_dir: false,
-    created_at: '2021-09-21T14:00:00Z',
-    updated_at: '2021-09-21T14:00:00Z',
-  },
-  {
-    name: 'file5.jpg',
-    full_path: '/file5.jpg',
-    size: 1024,
-    mode: 0o777,
-    mime_type: 'text/plain',
-    md5: '5',
-    is_dir: false,
-    created_at: '2021-09-21T14:00:00Z',
-    updated_at: '2021-09-21T14:00:00Z',
-  },
-  {
-    name: 'file6.txt',
-    full_path: '/file6.txt',
-    size: 1024,
-    mode: 0o777,
-    mime_type: 'text/plain',
-    md5: '6',
-    is_dir: false,
-    created_at: '2021-09-21T14:00:00Z',
-    updated_at: '2021-09-21T14:00:00Z',
-  },
-  {
-    name: 'file7.zip',
-    full_path: '/file7.zip',
-    size: 1024,
-    mode: 0o777,
-    mime_type: 'text/plain',
-    md5: '7',
-    is_dir: false,
-    created_at: '2021-09-21T14:00:00Z',
-    updated_at: '2021-09-21T14:00:00Z',
-  },
-  {
-    name: 'file8.jpeg',
-    full_path: '/file8.jpeg',
-    size: 1024,
-    mode: 0o777,
-    mime_type: 'text/plain',
-    md5: 'md5',
-    is_dir: false,
-    created_at: '2021-09-21T14:00:00Z',
-    updated_at: '2021-09-21T14:00:00Z',
-  },
-  {
-    name: 'file9.png',
-    full_path: '/file9.png',
-    size: 1024,
-    mode: 0o777,
-    mime_type: 'text/plain',
-    md5: '8',
-    is_dir: false,
-    created_at: '2021-09-21T14:00:00Z',
-    updated_at: '2021-09-21T14:00:00Z',
-  },
-  {
-    name: 'file10.jfif',
-    full_path: '/file10.jfif',
-    size: 1024,
-    mode: 0o777,
-    mime_type: 'text/plain',
-    md5: '9',
-    is_dir: false,
-    created_at: '2021-09-21T14:00:00Z',
-    updated_at: '2021-09-21T14:00:00Z',
-  },
-  {
-    name: 'file11.gif',
-    full_path: '/file11.gif',
-    size: 1024,
-    mode: 0o777,
-    mime_type: 'text/plain',
-    md5: '10',
-    is_dir: false,
-    created_at: '2021-09-21T14:00:00Z',
-    updated_at: '2021-09-21T14:00:00Z',
-  },
-  {
-    name: 'file12.webp',
-    full_path: '/file12.webp',
-    size: 1024,
-    mode: 0o777,
-    mime_type: 'text/plain',
-    md5: '11',
-    is_dir: false,
-    created_at: '2021-09-21T14:00:00Z',
-    updated_at: '2021-09-21T14:00:00Z',
-  },
-  {
-    name: 'file13.ico',
-    full_path: '/file13.ico',
-    size: 1024,
-    mode: 0o777,
-    mime_type: 'text/plain',
-    md5: '12',
-    is_dir: false,
-    created_at: '2021-09-21T14:00:00Z',
-    updated_at: '2021-09-21T14:00:00Z',
-  },
-  {
-    name: 'file14.svg',
-    full_path: '/file14.svg',
-    size: 1024,
-    mode: 0o777,
-    mime_type: 'text/plain',
-    md5: '13',
-    is_dir: false,
-    created_at: '2021-09-21T14:00:00Z',
-    updated_at: '2021-09-21T14:00:00Z',
-  },
-  {
-    name: 'dir1',
-    full_path: '/dir1',
-    size: 0,
-    mode: 0o777,
-    mime_type: 'text/plain',
-    md5: '14',
-    is_dir: true,
-    created_at: '2021-09-21T14:00:00Z',
-    updated_at: '2021-09-21T14:00:00Z',
-  },
-  {
-    name: 'dir2',
-    full_path: '/dir2',
-    size: 0,
-    mode: 0o777,
-    mime_type: 'text/plain',
-    md5: '15',
-    is_dir: true,
-    created_at: '2021-09-21T14:00:00Z',
-    updated_at: '2021-09-21T14:00:00Z',
-  },
-];
-
 const MyDrive = () => {
   //TODO: const entries: Entry[] = getEntries();
 
@@ -220,20 +30,19 @@ const MyDrive = () => {
 
   const viewMode = useViewMode((state) => state.viewMode);
   const drawerOpen = useDrawer((state) => state.drawerOpen);
-
   return (
     // temmporary solution
-    <div className='flex h-[85vh] bg-surfaceContainerLow'>
+    <div className='mx-auto flex  overflow-x-hidden bg-surfaceContainerLow'>
       <div className='flex h-full grow flex-col rounded-2xl bg-white'>
-        <FileHeader headerName='My Drive' />
-        <div className='overflow-y-auto p-5'>
+        {/* <FileHeader headerName='My Drive' /> */}
+        <div className='overflow-y-auto'>
           {viewMode === 'grid' ? (
             <div className='flex flex-col space-y-4'>
-              <div className='text-sm font-medium'> Folders</div>
+              <div className='statement-bold'> Folders</div>
               <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'>
                 {_myEntryToFolders(folders)}
               </div>
-              <div className='text-sm font-medium'> Files</div>
+              <div className='statement-bold'> Files</div>
               <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'>
                 {_myEntryToFile(files)}
               </div>
@@ -309,9 +118,9 @@ export const _myEntryToFile = (files: MyEntry[]) => {
  * Map MyEntry to FolderCard
  */
 export const _myEntryToFolders = (folders: MyEntry[]) => {
-  return folders.map((folder) => {
+  return folders.map((folder,index) => {
     return (
-      <div className='w-auto'>
+      <div key={index} className='w-auto'>
         <FolderCard title={folder.title} icon={folder.icon} id={folder.id} />
       </div>
     );
@@ -346,8 +155,8 @@ export const _renderListView = (entries: MyEntry[]) => {
   return (
     <div className='flex flex-col'>
       {_header({ name: 'Name', owner: 'Owner', lastModified: 'Last Modified', size: 'Size' })}
-      {entries.map((entry) => {
-        return <DataRow {...entry} />;
+      {entries.map((entry, index) => {
+        return <DataRow key={index} {...entry} />;
       })}
     </div>
   );

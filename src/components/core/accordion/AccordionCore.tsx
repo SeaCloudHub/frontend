@@ -1,6 +1,6 @@
 import { Paper } from '@mui/material';
-import DashboardTitlePage from './AccordionTitle';
 import React from 'react';
+import DashboardTitlePage from './AccordionTitle';
 
 type DashboardPageProps = {
   title: string;
@@ -12,11 +12,11 @@ const AccordionCore: React.FC<DashboardPageProps> = ({ title, children, classNam
   const [open, setOpen] = React.useState(true);
   const handleOpen = () => setOpen(!open);
   return (
-    <Paper elevation={3} className={className}>
+    <Paper elevation={3} className='w-full'>
       <div>
         <DashboardTitlePage title={title} handleOpen={handleOpen} open={open} />
       </div>
-      {open && children}
+      <div className={className}>{open && children}</div>
     </Paper>
   );
 };
