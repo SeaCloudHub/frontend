@@ -1,6 +1,6 @@
-import { Entry } from '@/utils/types/Entry';
 import React from 'react';
 import { _entryToMyEntry, _myEntryToFile, _renderListView, useViewMode } from '../../my-drive/MyDrive';
+import { Entry } from '@/utils/types/entry.type';
 
 type SharingPageViewProps = {
   entries: Entry[];

@@ -5,6 +5,8 @@ import { ScreenMode } from '../../utils/enums/screen-mode.enum';
 
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
+import { classNames } from '../core/drop-down/Dropdown';
+import { Role } from '@/utils/enums/role.enum';
 
 const DynamicLayout = ({ children }: PropsWithChildren) => {
   const { shrinkMode, screenMode } = useScreenMode();
@@ -14,11 +16,21 @@ const DynamicLayout = ({ children }: PropsWithChildren) => {
     <>
       <Navbar phoneMode={screenMode == ScreenMode.MOBILE} isShrink={shrinkMode} />
       {!(screenMode == ScreenMode.MOBILE) && <Sidebar shrinkMode={shrinkMode} role={role!} />}
-      <div
-        className={`content-default-mode p-3 ${shrinkMode ? 'content-shrink-mode' : ''}
+      {role === Role.ADMIN ? (
+        <div
+          className={`content-default-mode p-3 ${shrinkMode ? 'content-shrink-mode' : ''}
         ${screenMode == ScreenMode.MOBILE ? 'ml-0' : ''}`}>
-        {children}
-      </div>
+          {children}
+        </div>
+      ) : (
+        <div
+          className={classNames(
+            'h-full w-full pt-[80px]',
+            shrinkMode ? (screenMode == ScreenMode.MOBILE ? 'ml-0' : 'pl-[75px]') : 'pl-[300px]',
+          )}>
+          {children}
+        </div>
+      )}
     </>
   );
 };
