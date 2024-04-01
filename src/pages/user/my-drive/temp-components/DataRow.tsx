@@ -1,13 +1,14 @@
 import Dropdown from '@/components/core/drop-down/Dropdown';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import React from 'react';
-import { MyEntry, useDrawer } from './MyDrive';
 import { Tooltip } from '@mui/material';
+import { useDrawer } from '@/store/my-drive/myDrive.store';
+import { LocalEntry } from '../MyDrive';
 
 /**
  * Map processed Entry to row
  */
-export const DataRow: React.FC<MyEntry> = ({ id, isDir, title, icon, lastModified, owner, size }) => {
+export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModified, owner, size }) => {
   const setDrawerOpen = useDrawer((state) => state.openDrawer);
   const fileOps = [
     [{ label: 'Preview', icon: <Icon icon='material-symbols:visibility' /> }],
@@ -91,7 +92,7 @@ export const DataRow: React.FC<MyEntry> = ({ id, isDir, title, icon, lastModifie
         </div>
         <Tooltip title={title}>
           <div
-            className='max-xs:w-20 line-clamp-1 w-96 max-2xl:w-72 max-lg:w-48 max-md:w-36 max-sm:w-28
+            className='line-clamp-1 w-96 max-2xl:w-72 max-lg:w-48 max-md:w-36 max-sm:w-28 max-xs:w-20
           '>
             {title}
           </div>

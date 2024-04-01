@@ -1,12 +1,12 @@
 import SharingPageFilter from './sharing-page-filter/SharingPageFilter';
 import { useState } from 'react';
 import SharingPageViewMode from './sharing-page-view/SharingPageViewMode';
-import { useViewMode } from '../my-drive/MyDrive';
 import SharingPageView from './sharing-page-view/SharingPageView';
 import DriveLayout from '@/components/layout/DriveLayout';
 import ButtonCore from '@/components/core/button/ButtonCore';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { Entry } from '@/utils/types/entry.type';
+import { useViewMode } from '@/store/my-drive/myDrive.store';
 
 export const fakeData: Entry[] = [
   {

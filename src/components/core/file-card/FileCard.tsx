@@ -61,7 +61,10 @@ const FileCard: React.FC<FileCardProps> = (props) => {
       {
         label: 'Detail',
         icon: <Icon icon='mdi:information-outline' />,
-        action: () => openDrawer(id),
+        action: () => {
+          console.log('[FileCard] detail ' + id);
+          openDrawer(id);
+        },
       },
       { label: 'Activity', icon: <Icon icon='mdi:graph-line-variant' />, action: () => {} },
       { label: 'Lock', icon: <Icon icon='mdi:lock-outline' />, action: () => {} },

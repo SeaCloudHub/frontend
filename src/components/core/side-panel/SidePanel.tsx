@@ -5,9 +5,8 @@ import React from 'react';
 import { Avatar, Button } from '@mui/material';
 import { useDrawer } from '@/store/my-drive/myDrive.store';
 import { Activity, ActivityAction, DownloadPermission, EntryDetails } from '@/utils/types/entry.type';
-import { MdMovie } from 'react-icons/md';
 import { useQuery } from '@tanstack/react-query';
-import { DriveButton } from '../button/DriveButton';
+import { DriveLocationButton } from '../../../pages/user/my-drive/temp-components/DriveLocationButton';
 
 type SidePanelProps = {};
 
@@ -108,7 +107,7 @@ const SidePanel: React.FC<SidePanelProps> = () => {
                     <div>
                       <div className='mb-1 text-xs font-medium'>Location</div>
                       {/* <div className='text-sm'>My Drive</div> */}
-                      <DriveButton label='My Drive' icon='drive' />
+                      <DriveLocationButton label='My Drive' icon='drive' />
                     </div>
                     <div>
                       <div className='text-xs font-medium'>Owner</div>

@@ -1,5 +1,3 @@
-// import { useState } from 'react';
-
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import DynamicLayout from './components/layout/DynamicLayout';
 import RequireAuth from './helpers/routers/RequireAuth';
@@ -56,7 +54,6 @@ function App() {
 
           <Route path="*" element={<Navigate to="/404" />} />
         </Routes>
-      </QueryClientProvider>
     </>
   );
 }
