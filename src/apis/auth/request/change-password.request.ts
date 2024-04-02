@@ -1,9 +1,10 @@
 export type AuthChangePasswordREQ = {
-  password: string;
-  confirmPassword: string;
+  old_password: string;
+  new_password: string;
 };
 
-export const changePasswordInitialValue: AuthChangePasswordREQ = {
-  password: '',
+export const changePasswordInitialValue: { confirmPassword: string } & AuthChangePasswordREQ = {
+  old_password: '',
+  new_password: '',
   confirmPassword: '',
 };

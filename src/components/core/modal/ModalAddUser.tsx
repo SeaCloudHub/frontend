@@ -56,7 +56,7 @@ const ModalAddUser = ({ title, isOpen, handleConfirm }: ModalAddUserProps) => {
         password: values.password,
         first_name: values.first_name,
         last_name: values.last_name,
-        avatar_url: import.meta.env.VITE_BACKEND_API_ENDPOINT + avatar_url || null,
+        avatar_url: import.meta.env.VITE_BACKEND_API + avatar_url || null,
       });
     },
   });

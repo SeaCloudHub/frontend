@@ -1,36 +1,65 @@
+import ModalChangePasswordSuccess from '../../components/core/modal/ModalChangePasswordSuccess';
+import { AUTH_LOGIN_EMAIL } from '../../utils/constants/router.constant';
+import { Button, LinearProgress, Paper, Typography } from '@mui/material';
+import { useMutation } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import { useFormik } from 'formik';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { changePasswordApi } from '../../apis/auth/auth.api';
+import { changePasswordInitialValue } from '../../apis/auth/request/change-password.request';
 import IconifyIcon from '../../components/core/Icon/IConCore';
 import TextFieldCore from '../../components/core/form/TextFieldCore';
-import { Button, LinearProgress, Paper, Typography } from '@mui/material';
 import { changePasswordSchema } from '../../helpers/form-schema/change-password.schema';
-import { useState } from 'react';
 import { useScreenMode } from '../../store/responsive/screenMode';
 import { ScreenMode } from '../../utils/enums/screen-mode.enum';
-import { changePasswordInitialValue } from '../../apis/auth/request/change-password.request';
+import { toastError } from '../../utils/toast-options/toast-options';
+import { ApiGenericError } from '../../utils/types/api-generic-error.type';
 // import React from 'react';
 
 const ChangePassword = () => {
-  const [isChange, setIsChange] = useState(false);
+  const navigate = useNavigate();
   const screenMode = useScreenMode((state) => state.screenMode);
+  const [modalOpen, setModalOpen] = useState(false);
   const formik = useFormik({
     initialValues: changePasswordInitialValue,
     validationSchema: changePasswordSchema,
     onSubmit: (values) => {
-      console.log(values);
-      setIsChange(true);
-      setTimeout(() => {
-        setIsChange(false);
-      }, 2000);
+      changPasswordMutation.mutateAsync();
     },
   });
-
+  const changPasswordMutation = useMutation({
+    mutationFn: () => {
+      return changePasswordApi({ old_password: formik.values.old_password, new_password: formik.values.new_password });
+    },
+    onError: (error) => {
+      if (isAxiosError<ApiGenericError>(error)) {
+        toast.error(error.response?.data.message, toastError());
+      }
+    },
+    onSuccess: () => {
+      setModalOpen(true);
+    },
+  });
+  const navigateLogin = () => {
+    localStorage.clear();
+    navigate(AUTH_LOGIN_EMAIL);
+  };
   return (
     <div className={`${screenMode == ScreenMode.MOBILE ? 'mx-2' : 'mx-auto'} max-w-[700px] text-gray-600 `}>
       <IconifyIcon icon='logos:google' className='mx-auto h-20 w-40' />
       <div className='title text-center text-2xl '>Change password for</div>
       <div className='email text-center text-2xl'>kimhieu@gmail.com</div>
       <div className='help'></div>
-      {isChange && <LinearProgress className='mx-5 translate-y-6' />}
+      {changPasswordMutation.isPending && <LinearProgress className='mx-5 translate-y-6' />}
+      <ModalChangePasswordSuccess
+        isOpen={modalOpen}
+        handleConfirm={() => {
+          setModalOpen(false);
+          navigateLogin();
+        }}
+      />
       <Paper
         component={'form'}
         onSubmit={formik.handleSubmit}
@@ -46,6 +75,25 @@ const ChangePassword = () => {
           Create a new, strong password that you don't use for other websites
         </div>
         <div className='form mt-5 flex flex-col gap-3'>
+          <div className='old-password'>
+            <Typography
+              className='label'
+              fontWeight={{
+                fontWeight: 600,
+              }}>
+              Old password
+            </Typography>
+            <TextFieldCore
+              name={'old_password'}
+              disabled={changPasswordMutation.isPending}
+              type='password'
+              value={formik.values.old_password}
+              onChange={formik.handleChange}
+              error={formik.touched.old_password && Boolean(formik.errors.old_password)}
+              onBlur={formik.handleBlur}
+              helperText={formik.touched.old_password && formik.errors.old_password}
+            />
+          </div>
           <div className='create-password'>
             <Typography
               className='label'
@@ -55,14 +103,14 @@ const ChangePassword = () => {
               Create password
             </Typography>
             <TextFieldCore
-              name={'password'}
-              disabled={isChange}
+              name={'new_password'}
+              disabled={changPasswordMutation.isPending}
               type='password'
-              value={formik.values.password}
+              value={formik.values.new_password}
               onChange={formik.handleChange}
-              error={formik.touched.password && Boolean(formik.errors.password)}
+              error={formik.touched.new_password && Boolean(formik.errors.new_password)}
               onBlur={formik.handleBlur}
-              helperText={formik.touched.password && formik.errors.password}
+              helperText={formik.touched.new_password && formik.errors.new_password}
             />
           </div>
           <div className='confirm-password'>
@@ -74,8 +122,9 @@ const ChangePassword = () => {
               Confirm password
             </Typography>
             <TextFieldCore
+              type='password'
               name={'confirmPassword'}
-              disabled={isChange}
+              disabled={changPasswordMutation.isPending}
               value={formik.values.confirmPassword}
               onChange={formik.handleChange}
               error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
@@ -83,7 +132,14 @@ const ChangePassword = () => {
               helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
             />
           </div>
-          <Button type='submit' className='btn' fullWidth variant='contained' size='large' disabled={isChange}>
+
+          <Button
+            type='submit'
+            className='btn'
+            fullWidth
+            variant='contained'
+            size='large'
+            disabled={changPasswordMutation.isPending}>
             Change password
           </Button>
         </div>
