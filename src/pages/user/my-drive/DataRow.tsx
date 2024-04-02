@@ -2,6 +2,7 @@ import Dropdown from '@/components/core/drop-down/Dropdown';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import React from 'react';
 import { MyEntry, useDrawer } from './MyDrive';
+import { Tooltip } from '@mui/material';
 
 /**
  * Map processed Entry to row
@@ -88,7 +89,13 @@ export const DataRow: React.FC<MyEntry> = ({ isDir, title, icon, lastModified, o
         <div className='px-4'>
           <div className='h-6 w-6'>{icon}</div>
         </div>
-        <div>{title}</div>
+        <Tooltip title={title}>
+          <div
+            className='max-xs:w-20 line-clamp-1 w-96 max-2xl:w-72 max-lg:w-48 max-md:w-36 max-sm:w-28
+          '>
+            {title}
+          </div>
+        </Tooltip>
       </div>
       <div className='basis-64 text-sm font-normal max-2xl:basis-36 max-lg:hidden'>{owner}</div>
       <div className='basis-48 text-sm font-normal max-2xl:shrink max-md:hidden'>{lastModified}</div>

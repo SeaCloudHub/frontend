@@ -6,8 +6,9 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import React from 'react';
 import { create } from 'zustand';
 import { DataRow } from './DataRow';
-import SidePanel from '@/components/core/side-panel/SidePanel';
 import { Entry } from '@/utils/types/entry.type';
+import FileHeader from '@/components/core/file-header/FileHeader';
+import DriveLayout from '@/components/layout/DriveLayout';
 
 type MyEntry = {
   isDir: boolean;
@@ -29,33 +30,81 @@ const MyDrive = () => {
   const folders = processedEntries.filter((entry) => entry.isDir);
 
   const viewMode = useViewMode((state) => state.viewMode);
-  const drawerOpen = useDrawer((state) => state.drawerOpen);
-  return (
-    // temmporary solution
-    <div className='mx-auto flex  overflow-x-hidden bg-surfaceContainerLow'>
-      <div className='flex h-full grow flex-col rounded-2xl bg-white'>
-        {/* <FileHeader headerName='My Drive' /> */}
-        <div className='overflow-y-auto'>
-          {viewMode === 'grid' ? (
-            <div className='flex flex-col space-y-4'>
-              <div className='statement-bold'> Folders</div>
-              <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'>
-                {_myEntryToFolders(folders)}
-              </div>
-              <div className='statement-bold'> Files</div>
-              <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'>
-                {_myEntryToFile(files)}
-              </div>
-            </div>
-          ) : (
-            // <div></div>
-            _renderListView(folders.concat(files))
-          )}
+
+  const bodyLeft = (
+    <div className='p-4'>
+      {viewMode === 'grid' ? (
+        <div className='flex flex-col space-y-4'>
+          <div className='statement-bold'> Folders</div>
+          <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'>
+            {_myEntryToFolders(folders)}
+          </div>
+          <div className='statement-bold'> Files</div>
+          <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'>
+            {_myEntryToFile(files)}
+          </div>
         </div>
-      </div>
-      {drawerOpen && <SidePanel icon={fileIcons['any']} title='filename' />}
-      {/* <SidePanel icon={fileIcons['any']} title='filename' /> */}
+      ) : (
+        _renderListView(folders.concat(files))
+      )}
     </div>
+  );
+
+  const bodyRight = (
+    <div className='flex flex-col pl-5 pr-3 pt-4'>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+      <div>info</div>
+    </div>
+  );
+
+  return (
+    <DriveLayout
+      headerLeft={<FileHeader headerName='My Drive' />}
+      headerRight={<div className=''>header</div>}
+      bodyLeft={bodyLeft}
+      bodyRight={bodyRight}
+    />
   );
 };
 
@@ -107,8 +156,8 @@ export const _entryToMyEntry = (entries: Entry[]): MyEntry[] => {
  * Map MyEntry to FileCard
  */
 export const _myEntryToFile = (files: MyEntry[]) => {
-  return files.map((file) => (
-    <div className='aspect-square w-auto'>
+  return files.map((file, ind) => (
+    <div className='aspect-square w-auto' key={ind}>
       <FileCard title={file.title} icon={file.icon} preview={file.preview} id={file.id} />
     </div>
   ));
@@ -118,7 +167,7 @@ export const _myEntryToFile = (files: MyEntry[]) => {
  * Map MyEntry to FolderCard
  */
 export const _myEntryToFolders = (folders: MyEntry[]) => {
-  return folders.map((folder,index) => {
+  return folders.map((folder, index) => {
     return (
       <div key={index} className='w-auto'>
         <FolderCard title={folder.title} icon={folder.icon} id={folder.id} />
@@ -167,12 +216,13 @@ export const _renderListView = (entries: MyEntry[]) => {
  */
 type DrawerType = {
   drawerOpen: boolean;
-  setDrawerOpen: () => void;
+  // mặc định là true, ngược lại truyền vào state: boolean
+  setDrawerOpen: (state?: boolean) => void;
 };
 
 const useDrawer = create<DrawerType>((set) => ({
   drawerOpen: false,
-  setDrawerOpen: () => set({ drawerOpen: true }),
+  setDrawerOpen: (state?: boolean) => set({ drawerOpen: state === undefined ? true : state }),
 }));
 
 type ViewModeType = {
