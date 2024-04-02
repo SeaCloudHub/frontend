@@ -44,7 +44,6 @@ const LoginPassword = () => {
       return signinApi(body);
     },
     onError: (error) => {
-      console.log(error);
       if (isAxiosError<ApiGenericError>(error)) {
         toast.error(error.response?.data.message, toastError());
       }

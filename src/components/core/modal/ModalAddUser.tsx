@@ -51,7 +51,6 @@ const ModalAddUser = ({ title, isOpen, handleConfirm }: ModalAddUserProps) => {
           return;
         }
       }
-      console.log('trieu');
       await addUserMutation.mutateAsync({
         email: values.email,
         password: values.password,

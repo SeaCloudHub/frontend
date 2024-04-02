@@ -4,13 +4,14 @@ import ButtonIcon from '../button/ButtonIcon';
 import MenuItemCore, { MenuItemCoreProps } from './MenuItem';
 
 type MenuCoreProps = {
+  children?: React.ReactNode;
   menuItems: MenuItemCoreProps[];
 };
 
-export default function MenuCore({ menuItems }: MenuCoreProps) {
+export default function MenuCore({ menuItems, children }: MenuCoreProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const handleClick = (event?: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (event?: React.MouseEvent<HTMLButtonElement>| React.MouseEvent<HTMLDivElement>) => {
     if (event) {
       setAnchorEl(event.currentTarget);
     }
@@ -21,7 +22,8 @@ export default function MenuCore({ menuItems }: MenuCoreProps) {
 
   return (
     <div>
-      <ButtonIcon icon='radix-icons:hamburger-menu' size={'25px'} onClick={handleClick} />
+      {!children && <ButtonIcon icon='radix-icons:hamburger-menu' size={'25px'} onClick={handleClick} />}
+      {children && <div onClick={handleClick}>{children}</div>}
       <Menu id='basic-menu' anchorEl={anchorEl} open={open} onClose={handleClose}>
         {menuItems.map((item, index) => (
           <MenuItemCore key={index} title={item.title} onClick={item.onClick} icon={item.icon} />
