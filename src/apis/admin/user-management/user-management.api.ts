@@ -17,6 +17,6 @@ export const importExcelApi = async (body: ImportExcelREQ) => {
 };
 
 export const downloadTemplateCSV = async () => {
-  const res = await api.get<BaseResponse<void>>('');
-  return res.data;
+  const res = await api.get<Blob>('/admin/identities/template', { responseType: 'blob' });
+  return res;
 };

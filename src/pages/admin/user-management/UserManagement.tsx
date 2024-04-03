@@ -80,7 +80,14 @@ const UserManagement = () => {
       title: 'Download template excel',
       onClick: async () => {
         try {
-          await downloadTemplateCSV();
+          const res = await downloadTemplateCSV();
+          const blob = new Blob([res.data], { type: res.headers['content-type'] });
+          const blobUrl = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = blobUrl;
+          link.setAttribute('download', `template.csv`);
+          link.click();
+          URL.revokeObjectURL(blobUrl);
         } catch (error) {
           if (isAxiosError<ApiGenericError>(error)) {
             toast.error(error.response?.data.message, toastError());
