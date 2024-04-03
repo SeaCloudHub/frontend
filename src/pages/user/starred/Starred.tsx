@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useDrawer, useViewMode } from '../my-drive/MyDrive';
 import SharingPageViewMode from '../shared/sharing-page-view/SharingPageViewMode';
 import SharingPageFilter from '../shared/sharing-page-filter/SharingPageFilter';
 import { Icon } from '@iconify/react/dist/iconify.js';
@@ -7,6 +6,7 @@ import ButtonCore from '@/components/core/button/ButtonCore';
 import StarredView from './stared-view/StarredView';
 import { fakeData } from '../shared/Shared';
 import DriveLayout from '@/components/layout/DriveLayout';
+import { useDrawer, useViewMode } from '@/store/my-drive/myDrive.store';
 
 const Starred = () => {
   const { viewMode, setViewMode } = useViewMode();
@@ -14,7 +14,7 @@ const Starred = () => {
   const [peopleFilterItem, setPeopleFilterItem] = useState<string>('');
   const [modifiedFilterItem, setModifiedFilterItem] = useState<string>('');
 
-  const { drawerOpen, setDrawerOpen } = useDrawer();
+  const { drawerOpen, openDrawer } = useDrawer();
   return (
     <DriveLayout
       headerLeft={
@@ -26,7 +26,7 @@ const Starred = () => {
               <Icon
                 icon='mdi:information-outline'
                 className='h-8 w-8 cursor-pointer rounded-full p-1 transition-all hover:bg-surfaceContainerLow active:brightness-90'
-                onClick={() => setDrawerOpen(!drawerOpen)}
+                onClick={() => openDrawer('1')}
               />
             </div>
           </div>

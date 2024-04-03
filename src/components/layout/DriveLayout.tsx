@@ -1,4 +1,4 @@
-import { useDrawer } from '@/pages/user/my-drive/MyDrive';
+import { useDrawer } from '@/store/my-drive/myDrive.store';
 import React from 'react';
 
 type DriveLayoutProps = {
@@ -11,6 +11,7 @@ type DriveLayoutProps = {
 const DriveLayout: React.FC<DriveLayoutProps> = ({ headerLeft, headerRight, bodyLeft, bodyRight }) => {
   const drawerOpen = useDrawer((state) => state.drawerOpen);
 
+  console.log('drawerOpen', drawerOpen);
   return (
     <div className='h-[calc(100vh-80px)]'>
       <div className='grid h-full grid-flow-col grid-cols-[1fr_auto] grid-rows-[auto_1fr] gap-1'>

@@ -1,8 +1,8 @@
 import { Icon } from '@iconify/react/dist/iconify.js';
 import Dropdown, { MenuItem } from '../drop-down/Dropdown';
 import FilterChip from '../filter-chip/FilterChip';
-import { useViewMode } from '@/pages/user/my-drive/MyDrive';
 import { useState } from 'react';
+import { useViewMode } from '@/store/my-drive/myDrive.store';
 
 type FileHeaderProps = {
   headerName: string;

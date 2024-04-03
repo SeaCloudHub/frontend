@@ -1,6 +1,6 @@
 import { Entry } from '../types/entry.type';
 
-export const entries: Entry[] = [
+export const mockEntries: Entry[] = [
   {
     name: 'file0ádfasdfasdsadsadfasdf đâsđâssađasadsadsadsadsadsadsadsadsadsadsadsadsadáđasađasadsadasdasdasdádfasđfádf',
     full_path: '/file1',
