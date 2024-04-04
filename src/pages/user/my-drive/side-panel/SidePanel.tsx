@@ -1,12 +1,12 @@
 import { Tab } from '@headlessui/react';
-import { classNames } from '../drop-down/Dropdown';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import React from 'react';
 import { Avatar, Button } from '@mui/material';
 import { useDrawer } from '@/store/my-drive/myDrive.store';
 import { Activity, ActivityAction, DownloadPermission, EntryDetails } from '@/utils/types/entry.type';
 import { useQuery } from '@tanstack/react-query';
-import { DriveLocationButton } from '../../../pages/user/my-drive/temp-components/DriveLocationButton';
+import { DriveLocationButton } from '../temp-components/DriveLocationButton';
+import { classNames } from '@/components/core/drop-down/Dropdown';
 
 type SidePanelProps = {};
 
@@ -26,7 +26,7 @@ const SidePanel: React.FC<SidePanelProps> = () => {
   const details = detailsQuery.data;
 
   return (
-    <div className='ml-4 flex w-80 flex-col overflow-y-auto rounded-2xl bg-white'>
+    <div className='ml-4 flex h-full w-[336px] flex-col overflow-hidden'>
       <div className='flex w-full items-center justify-between px-6 py-4 pr-2'>
         <div className='flex items-center space-x-4'>
           <div className='h-6 w-6'>{details ? details.icon : <Icon icon='mdi:folder-mydrive' className='h-full w-full' />}</div>
@@ -40,7 +40,7 @@ const SidePanel: React.FC<SidePanelProps> = () => {
       </div>
       <Tab.Group>
         <Tab.List className='flex border-b border-[#cbcbcb]  pb-4'>
-          <Tab className='flex basis-1/2'>
+          <Tab className='flex basis-1/2 focus:outline-none'>
             {({ selected }) => (
               <div
                 className={classNames(
@@ -57,7 +57,7 @@ const SidePanel: React.FC<SidePanelProps> = () => {
               </div>
             )}
           </Tab>
-          <Tab className='flex basis-1/2'>
+          <Tab className='flex basis-1/2 focus:outline-none'>
             {({ selected }) => (
               <div
                 className={classNames(
@@ -75,7 +75,7 @@ const SidePanel: React.FC<SidePanelProps> = () => {
             )}
           </Tab>
         </Tab.List>
-        <Tab.Panels>
+        <Tab.Panels className='relative h-full w-full overflow-y-auto'>
           {details ? (
             <Tab.Panel>
               <div className='flex flex-col space-y-6 '>

@@ -1,6 +1,7 @@
-import { Entry } from '../types/entry.type';
+import { Icon } from '@iconify/react/dist/iconify.js';
+import { Activity, ActivityAction, DownloadPermission, Entry, EntryDetails } from '../types/entry.type';
 
-export const mockEntries: Entry[] = [
+export const fakeEntries: Entry[] = [
   {
     name: 'file0ádfasdfasdsadsadfasdf đâsđâssađasadsadsadsadsadsadsadsadsadsadsadsadsadáđasađasadsadasdasdasdádfasđfádf',
     full_path: '/file1',
@@ -187,5 +188,49 @@ export const mockEntries: Entry[] = [
     is_dir: true,
     created_at: '2021-09-21T14:00:00Z',
     updated_at: '2021-09-21T14:00:00Z',
+  },
+];
+
+export const fakeDetails: EntryDetails = {
+  id: 'id',
+  isDir: true,
+  title: 'title',
+  icon: <Icon icon='ic:baseline-folder' className='h-full w-full' />,
+  preview: <div className='h-40 w-40 bg-gray-200'></div>,
+  accessUsers: [
+    { username: 'username', url: 'url' },
+    { username: 'username', url: 'url' },
+  ],
+  owner: { username: 'username', url: 'url' },
+  type: 'type',
+  size: 'size',
+  storageUsed: 'storageUsed',
+  location: <div>location</div>,
+  modified: new Date(),
+  opened: new Date(),
+  created: new Date(),
+  downloadPermissions: DownloadPermission.DOWNLOAD,
+};
+
+export const fakeActivities: Activity[] = [
+  {
+    id: 'id',
+    action: ActivityAction.CREATE,
+    actor: {
+      username: 'daccong',
+      url: 'https://slaydarkkkk.github.io/img/slaydark_avt.jpg',
+    },
+    target: <div>target</div>,
+    time: new Date(),
+  },
+  {
+    id: 'id',
+    action: ActivityAction.OPEN,
+    actor: {
+      username: 'daccong',
+      url: 'https://slaydarkkkk.github.io/img/slaydark_avt.jpg',
+    },
+    target: <div>target</div>,
+    time: new Date(),
   },
 ];

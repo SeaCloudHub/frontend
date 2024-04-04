@@ -2,7 +2,6 @@ import React from 'react';
 import Sort from './Sort';
 import FolderCard from '@/components/core/folder-card/FolderCard';
 import FileCard from '@/components/core/file-card/FileCard';
-import { mockEntries } from '@/utils/dumps/entries';
 import { Entry } from '@/utils/types/entry.type';
 import fileIcons from '@/components/core/file-card/fileicon.constant';
 import { Icon } from '@iconify/react/dist/iconify.js';
@@ -15,19 +14,16 @@ type Filter = {
 };
 
 type DriveGridViewProps = {
-  dirId: string;
-  filter: Filter;
+  dirId?: string;
   sort: string;
   order: string;
   setSort: ({ sort, order }: { sort: string; order: string }) => void;
+  entries: LocalEntry[];
 };
 
-export const DriveGridView: React.FC<DriveGridViewProps> = ({ dirId, filter, order, sort, setSort }) => {
-  // const entries = getEntries(dirId, filter, sort, order);
-  const remoteEntries: Entry[] = mockEntries;
-  const localEntries: LocalEntry[] = remoteToLocalEntries(remoteEntries);
-  const files = localEntries.filter((entry) => !entry.isDir);
-  const folders = localEntries.filter((entry) => entry.isDir);
+export const DriveGridView: React.FC<DriveGridViewProps> = ({ dirId, order, sort, setSort, entries }) => {
+  const files = entries.filter((entry) => !entry.isDir);
+  const folders = entries.filter((entry) => entry.isDir);
 
   return (
     <div className='bg-white pl-5 pr-3 pt-4'>

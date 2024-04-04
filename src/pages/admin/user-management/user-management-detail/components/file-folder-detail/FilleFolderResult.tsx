@@ -5,7 +5,7 @@ import Order from '../../../../../../components/core/order/Order';
 import { useScreenHook } from '../../../../../../hooks/useScreenHook';
 import { LocalEntry } from '../../../../../../pages/user/my-drive/MyDrive';
 import { fileOperations } from '../../../../../../utils/constants/dopdown.constant';
-import { mockEntries } from '../../../../../../utils/dumps/entries';
+import { fakeEntries } from '../../../../../../utils/dumps/entries';
 import { Entry } from '../../../../../../utils/types/entry.type';
 
 type FileFolderResultProps = {
@@ -53,7 +53,7 @@ const _entryToMyEntry = (entries: Entry[]): LocalEntry[] => {
   });
 };
 
-const processedEntries = _entryToMyEntry(mockEntries);
+const processedEntries = _entryToMyEntry(fakeEntries);
 
 const FileFolderResult = ({ name, type, fileType }: FileFolderResultProps) => {
   const responsive = useScreenHook(700);

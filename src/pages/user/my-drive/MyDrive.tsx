@@ -1,8 +1,8 @@
-import { mockEntries } from '@/utils/dumps/entries';
+import { fakeEntries } from '@/utils/dumps/entries';
 import React, { useState } from 'react';
 import FileHeader from '@/components/core/file-header/FileHeader';
 import DriveLayout from '@/components/layout/DriveLayout';
-import { Path, useViewMode } from '@/store/my-drive/myDrive.store';
+import { Path, useDrawer, useViewMode } from '@/store/my-drive/myDrive.store';
 import MyDriveHeader from './temp-components/MyDriveHeader';
 import Dropdown from '@/components/core/drop-down/Dropdown';
 import Sort from './browser/Sort';
@@ -10,6 +10,12 @@ import { DriveGridView, localEntriesToFiles } from './browser/DriveGridView';
 import { localEntriesToFolder } from './browser/DriveGridView';
 import { remoteToLocalEntries } from './browser/DriveGridView';
 import { DriveListView, _renderListView } from './browser/DriveListView';
+import { Entry } from '@/utils/types/entry.type';
+import SidePanel from '@/pages/user/my-drive/side-panel/SidePanel';
+import { Icon } from '@iconify/react/dist/iconify.js';
+import Header from './side-panel/Header';
+import Details from './side-panel/Details';
+import Activity from './side-panel/Activity';
 
 export type LocalEntry = {
   isDir: boolean;
@@ -24,7 +30,7 @@ export type LocalEntry = {
 };
 
 const MyDrive = () => {
-  const processedEntries = remoteToLocalEntries(mockEntries);
+  const processedEntries = remoteToLocalEntries(fakeEntries);
   const files = processedEntries.filter((entry) => !entry.isDir);
   const folders = processedEntries.filter((entry) => entry.isDir);
 
@@ -42,77 +48,28 @@ const MyDrive = () => {
 
   const viewMode = useViewMode((state) => state.viewMode);
 
-  const bodyLeft = (
-    <div className='bg-white pl-5 pr-3 pt-4'>
-      {viewMode === 'grid' ? (
-        <div className='relative flex flex-col space-y-4'>
-          <div className='absolute right-4 top-3'>
-            <Sort sort={sort} order={order} setSort={setSort} />
-          </div>
-          <div className='statement-bold'> Folders</div>
-          <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'>
-            {localEntriesToFolder(folders)}
-          </div>
-          <div className='statement-bold'> Files</div>
-          <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'>
-            {localEntriesToFiles(files)}
-          </div>
+  const sidePanel = (
+    <div className='h-full w-[336px] overflow-hidden'>
+      <div className='h-28 bg-yellow-400'>header</div>
+      <div className='relative flex h-full w-full flex-col overflow-y-auto'>
+        <div className='flex flex-col pl-5 pr-3 pt-4'>
+          <div>info</div>
+          <div>info</div>
+          <div>info</div>
+          <div>info</div>
+          <div>info</div>
+          <div>info</div>
+          <div>info</div>
+          <div>info</div>
+          <div>info</div>
         </div>
-      ) : (
-        _renderListView(folders.concat(files))
-      )}
+      </div>
     </div>
   );
 
-  const bodyRight = (
-    <div className='flex flex-col pl-5 pr-3 pt-4'>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-      <div>info</div>
-    </div>
-  );
-
-  // const headerLeft = <FileHeader headerName='My Drive' />;
+  // const remoteEntries = getEntries(dirId, filter, sort, order);
+  const remoteEntries: Entry[] = fakeEntries;
+  const localEntries: LocalEntry[] = remoteToLocalEntries(remoteEntries);
 
   return (
     <DriveLayout
@@ -130,19 +87,12 @@ const MyDrive = () => {
       }
       bodyLeft={
         viewMode === 'grid' ? (
-          <DriveGridView
-            dirId={path[path.length - 1].id}
-            filter={{ typeFilter, peopleFilter, modifiedFilter }}
-            sort={sort}
-            order={order}
-            setSort={setSort}
-          />
+          <DriveGridView sort={sort} order={order} setSort={setSort} entries={localEntries} />
         ) : (
-          <DriveListView />
+          <DriveListView order={order} sort={sort} setSort={setSort} entries={localEntries} />
         )
       }
-      headerRight={<div className=''>header</div>}
-      bodyRight={bodyRight}
+      sidePanel={<SidePanel />}
     />
   );
 };
