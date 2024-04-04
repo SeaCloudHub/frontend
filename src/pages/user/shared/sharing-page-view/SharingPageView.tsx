@@ -1,7 +1,7 @@
 import React from 'react';
-import { _renderListView } from '../../my-drive/browser/DriveListView';
-import { remoteToLocalEntries } from '../../my-drive/browser/DriveGridView';
-import { localEntriesToFiles } from '../../my-drive/browser/DriveGridView';
+import { _renderListView } from '../../my-drive/content/DriveListView';
+import { remoteToLocalEntries } from '../../my-drive/content/DriveGridView';
+import { localEntriesToFiles } from '../../my-drive/content/DriveGridView';
 import { Entry } from '@/utils/types/entry.type';
 import { useViewMode } from '@/store/my-drive/myDrive.store';
 

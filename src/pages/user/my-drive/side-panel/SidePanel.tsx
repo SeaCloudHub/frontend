@@ -5,7 +5,7 @@ import { Avatar, Button } from '@mui/material';
 import { useDrawer } from '@/store/my-drive/myDrive.store';
 import { Activity, ActivityAction, DownloadPermission, EntryDetails } from '@/utils/types/entry.type';
 import { useQuery } from '@tanstack/react-query';
-import { DriveLocationButton } from '../temp-components/DriveLocationButton';
+import { DriveLocationButton } from './DriveLocationButton';
 import { classNames } from '@/components/core/drop-down/Dropdown';
 
 type SidePanelProps = {};

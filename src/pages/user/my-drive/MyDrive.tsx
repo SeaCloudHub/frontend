@@ -1,21 +1,13 @@
 import { fakeEntries } from '@/utils/dumps/entries';
 import React, { useState } from 'react';
-import FileHeader from '@/components/core/file-header/FileHeader';
 import DriveLayout from '@/components/layout/DriveLayout';
 import { Path, useDrawer, useViewMode } from '@/store/my-drive/myDrive.store';
-import MyDriveHeader from './temp-components/MyDriveHeader';
-import Dropdown from '@/components/core/drop-down/Dropdown';
-import Sort from './browser/Sort';
-import { DriveGridView, localEntriesToFiles } from './browser/DriveGridView';
-import { localEntriesToFolder } from './browser/DriveGridView';
-import { remoteToLocalEntries } from './browser/DriveGridView';
-import { DriveListView, _renderListView } from './browser/DriveListView';
+import MyDriveHeader from './header/MyDriveHeader';
+import { DriveGridView, localEntriesToFiles } from './content/DriveGridView';
+import { remoteToLocalEntries } from './content/DriveGridView';
+import { DriveListView, _renderListView } from './content/DriveListView';
 import { Entry } from '@/utils/types/entry.type';
 import SidePanel from '@/pages/user/my-drive/side-panel/SidePanel';
-import { Icon } from '@iconify/react/dist/iconify.js';
-import Header from './side-panel/Header';
-import Details from './side-panel/Details';
-import Activity from './side-panel/Activity';
 
 export type LocalEntry = {
   isDir: boolean;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { LocalEntry } from '../MyDrive';
-import { DataRow } from '../temp-components/DataRow';
+import { DataRow } from './DataRow';
 import { HeaderMyDriveProps } from '../MyDrive';
 import Sort from './Sort';
 

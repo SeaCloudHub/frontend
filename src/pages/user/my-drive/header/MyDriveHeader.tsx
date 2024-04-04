@@ -1,8 +1,8 @@
-import DriveViewMode from '../header/DriveViewMode';
+import DriveViewMode from './DriveViewMode';
 import { Path } from '@/store/my-drive/myDrive.store';
 import InfoButton from './InfoButton';
-import DrivePath from '../header/drive-path/DrivePath';
-import DriveFilter from '../header/DriveFilter';
+import DrivePath from './drive-path/DrivePath';
+import DriveFilter from './DriveFilter';
 import { useState } from 'react';
 
 type MyDriveHeaderProps = {
