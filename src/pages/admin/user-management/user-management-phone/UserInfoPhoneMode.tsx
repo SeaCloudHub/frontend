@@ -1,7 +1,3 @@
-import ButtonOutline from '../../../../components/core/button/ButtonOutline';
-import LinearChartBar from '../../../../components/core/linear-chart-bar/linearChartBar';
-import { userInfoColumns } from '../../../../utils/constants/userInfo-column.constant';
-
 type UserInfoPhoneModeProps = {
   userId?: string;
   name?: string;
@@ -13,7 +9,7 @@ type UserInfoPhoneModeProps = {
 const UserInfoPhoneMode = ({ userId, name, usedMemory, lastAccess, avatar }: UserInfoPhoneModeProps) => {
   return (
     <>
-      <div className='w-full border-y border-b-2 border-t-2 border-[#063768] p-2'>
+      {/* <div className='w-full border-y border-b-2 border-t-2 border-[#063768] p-2'>
         <img src={avatar} className='h-[50px] rounded-full object-contain' />
         {userInfoColumns.map((item, index) => (
           <UserInfoItem
@@ -33,7 +29,7 @@ const UserInfoPhoneMode = ({ userId, name, usedMemory, lastAccess, avatar }: Use
           <ButtonOutline title='Delete' size={20} color='red' />
           <ButtonOutline title='Block' size={20} color='black' />
         </div>
-      </div>
+      </div> */}
     </>
   );
 };
