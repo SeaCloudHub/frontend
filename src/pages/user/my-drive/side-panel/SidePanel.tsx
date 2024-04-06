@@ -1,7 +1,7 @@
 import { Tab } from '@headlessui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import React from 'react';
-import { Avatar, Button } from '@mui/material';
+import { Avatar } from '@mui/material';
 import { useDrawer } from '@/store/my-drive/myDrive.store';
 import { Activity, ActivityAction, DownloadPermission, EntryDetails } from '@/utils/types/entry.type';
 import { useQuery } from '@tanstack/react-query';

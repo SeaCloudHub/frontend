@@ -1,11 +1,11 @@
 import { fakeEntries } from '@/utils/dumps/entries';
 import React, { useState } from 'react';
 import DriveLayout from '@/components/layout/DriveLayout';
-import { Path, useDrawer, useViewMode } from '@/store/my-drive/myDrive.store';
+import { Path, useViewMode } from '@/store/my-drive/myDrive.store';
 import MyDriveHeader from './header/MyDriveHeader';
-import { DriveGridView, localEntriesToFiles } from './content/DriveGridView';
+import { DriveGridView } from './content/DriveGridView';
 import { remoteToLocalEntries } from './content/DriveGridView';
-import { DriveListView, _renderListView } from './content/DriveListView';
+import { DriveListView } from './content/DriveListView';
 import { Entry } from '@/utils/types/entry.type';
 import SidePanel from '@/pages/user/my-drive/side-panel/SidePanel';
 

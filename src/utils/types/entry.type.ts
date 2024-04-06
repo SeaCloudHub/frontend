@@ -13,7 +13,7 @@ export type Entry = {
 export type UserAvatar = {
   username: string;
   url: string;
-}
+};
 
 export enum DownloadPermission {
   DOWNLOAD,
@@ -36,7 +36,7 @@ export type EntryDetails = {
   opened: Date;
   created: Date;
   downloadPermissions: DownloadPermission;
-}
+};
 
 export enum ActivityAction {
   CREATE,
@@ -54,4 +54,4 @@ export type Activity = {
   time: Date;
   action: ActivityAction;
   target: React.ReactNode;
-}
+};

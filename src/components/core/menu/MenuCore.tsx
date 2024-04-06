@@ -11,7 +11,7 @@ type MenuCoreProps = {
 export default function MenuCore({ menuItems, children }: MenuCoreProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const handleClick = (event?: React.MouseEvent<HTMLButtonElement>| React.MouseEvent<HTMLDivElement>) => {
+  const handleClick = (event?: React.MouseEvent<HTMLButtonElement> | React.MouseEvent<HTMLDivElement>) => {
     if (event) {
       setAnchorEl(event.currentTarget);
     }

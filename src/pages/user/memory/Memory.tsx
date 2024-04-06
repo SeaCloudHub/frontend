@@ -1,6 +1,5 @@
 import DriveLayout from '@/components/layout/DriveLayout';
 import SidePanel from '../my-drive/side-panel/SidePanel';
-import MyDriveHeader from '../my-drive/header/MyDriveHeader';
 import MemoryHeader from './header/MemoryHeader';
 import { useState } from 'react';
 import { MemoryView } from './content/MemoryView';

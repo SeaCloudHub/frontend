@@ -1,3 +1,1 @@
-export type AddUserOptions ={
-  
-}
+export type AddUserOptions = {};

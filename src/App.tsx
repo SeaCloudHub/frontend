@@ -3,10 +3,6 @@ import DynamicLayout from './components/layout/DynamicLayout';
 import RequireAuth from './helpers/routers/RequireAuth';
 import { AUTH_LOGIN_EMAIL, routes } from './utils/constants/router.constant';
 import { Role } from './utils/enums/role.enum';
-import { CssBaseline } from '@mui/material';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-
-const queryClient = new QueryClient();
 
 function App() {
   return (
@@ -20,40 +16,29 @@ function App() {
         <Route path={routes.notFound.path} Component={routes.notFound.component} />
         {/* layout routes */}
 
-          <Route
-            element={
-              // <TuyenLayout children={<Outlet />} />
-              // <Outlet />
-              <DynamicLayout>
-                <Outlet />
-              </DynamicLayout>
-            }
-          >
-            {/* route của admin và custom */}
-            <Route element={<RequireAuth allowedRole={[Role.ADMIN]} />}>
-              {routes.admin.map((item, index) => (
-                <Route
-                  path={item.path}
-                  Component={item.component}
-                  key={index}
-                />
-              ))}
-            </Route>
-            <Route
-              element={<RequireAuth allowedRole={[Role.USER, Role.ADMIN]} />}
-            >
-              {routes.customer.map((item, index) => (
-                <Route
-                  path={item.path}
-                  Component={item.component}
-                  key={index}
-                />
-              ))}
-            </Route>
+        <Route
+          element={
+            // <TuyenLayout children={<Outlet />} />
+            // <Outlet />
+            <DynamicLayout>
+              <Outlet />
+            </DynamicLayout>
+          }>
+          {/* route của admin và custom */}
+          <Route element={<RequireAuth allowedRole={[Role.ADMIN]} />}>
+            {routes.admin.map((item, index) => (
+              <Route path={item.path} Component={item.component} key={index} />
+            ))}
           </Route>
+          <Route element={<RequireAuth allowedRole={[Role.USER, Role.ADMIN]} />}>
+            {routes.customer.map((item, index) => (
+              <Route path={item.path} Component={item.component} key={index} />
+            ))}
+          </Route>
+        </Route>
 
-          <Route path="*" element={<Navigate to="/404" />} />
-        </Routes>
+        <Route path='*' element={<Navigate to='/404' />} />
+      </Routes>
     </>
   );
 }
