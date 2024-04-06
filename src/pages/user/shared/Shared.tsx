@@ -1,12 +1,14 @@
 import SharingPageFilter from './sharing-page-filter/SharingPageFilter';
 import { useState } from 'react';
 import SharingPageViewMode from './sharing-page-view/SharingPageViewMode';
-import { useViewMode } from '../my-drive/MyDrive';
-import SharingPageView from './sharing-page-view/SharingPageView';
 import DriveLayout from '@/components/layout/DriveLayout';
 import ButtonCore from '@/components/core/button/ButtonCore';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { Entry } from '@/utils/types/entry.type';
+import { useDrawer, useViewMode } from '@/store/my-drive/myDrive.store';
+import SidePanel from '../my-drive/side-panel/SidePanel';
+import { DriveGridView, remoteToLocalEntries } from '../my-drive/content/DriveGridView';
+import { DriveListView } from '../my-drive/content/DriveListView';
 
 export const fakeData: Entry[] = [
   {
@@ -18,7 +20,7 @@ export const fakeData: Entry[] = [
     md5: '1',
     is_dir: false,
     created_at: '2021-09-21T14:00:00Z',
-    updated_at: '2021-09-21T14:00:00Z',
+    updated_at: '2021-09-23T14:00:00Z',
   },
   {
     name: 'file1.mp3',
@@ -29,7 +31,7 @@ export const fakeData: Entry[] = [
     md5: '1',
     is_dir: false,
     created_at: '2021-09-21T14:00:00Z',
-    updated_at: '2021-09-21T14:00:00Z',
+    updated_at: '2021-09-22T14:00:00Z',
   },
   {
     name: 'file2.mp4',
@@ -40,7 +42,7 @@ export const fakeData: Entry[] = [
     md5: '2',
     is_dir: false,
     created_at: '2021-09-21T14:00:00Z',
-    updated_at: '2021-09-21T14:00:00Z',
+    updated_at: '2021-09-26T14:00:00Z',
   },
   {
     name: 'file3.pdf',
@@ -51,7 +53,7 @@ export const fakeData: Entry[] = [
     md5: '3',
     is_dir: false,
     created_at: '2021-09-21T14:00:00Z',
-    updated_at: '2021-09-21T14:00:00Z',
+    updated_at: '2021-09-27T14:00:00Z',
   },
   {
     name: 'file4.docx',
@@ -62,7 +64,7 @@ export const fakeData: Entry[] = [
     md5: '4',
     is_dir: false,
     created_at: '2021-09-21T14:00:00Z',
-    updated_at: '2021-09-21T14:00:00Z',
+    updated_at: '2021-09-22T14:00:00Z',
   },
   {
     name: 'file5.jpg',
@@ -73,7 +75,7 @@ export const fakeData: Entry[] = [
     md5: '5',
     is_dir: false,
     created_at: '2021-09-21T14:00:00Z',
-    updated_at: '2021-09-21T14:00:00Z',
+    updated_at: '2021-09-23T14:00:00Z',
   },
   {
     name: 'file6.txt',
@@ -84,7 +86,7 @@ export const fakeData: Entry[] = [
     md5: '6',
     is_dir: false,
     created_at: '2021-09-21T14:00:00Z',
-    updated_at: '2021-09-21T14:00:00Z',
+    updated_at: '2021-09-24T14:00:00Z',
   },
   {
     name: 'file7.zip',
@@ -95,7 +97,7 @@ export const fakeData: Entry[] = [
     md5: '7',
     is_dir: false,
     created_at: '2021-09-21T14:00:00Z',
-    updated_at: '2021-09-21T14:00:00Z',
+    updated_at: '2021-09-27T14:00:00Z',
   },
   {
     name: 'file8.jpeg',
@@ -106,7 +108,7 @@ export const fakeData: Entry[] = [
     md5: 'md5',
     is_dir: false,
     created_at: '2021-09-21T14:00:00Z',
-    updated_at: '2021-09-21T14:00:00Z',
+    updated_at: '2021-09-28T14:00:00Z',
   },
   {
     name: 'file9.png',
@@ -117,7 +119,7 @@ export const fakeData: Entry[] = [
     md5: '8',
     is_dir: false,
     created_at: '2021-09-21T14:00:00Z',
-    updated_at: '2021-09-21T14:00:00Z',
+    updated_at: '2021-09-22T14:00:00Z',
   },
   {
     name: 'file10.jfif',
@@ -128,7 +130,7 @@ export const fakeData: Entry[] = [
     md5: '9',
     is_dir: false,
     created_at: '2021-09-21T14:00:00Z',
-    updated_at: '2021-09-21T14:00:00Z',
+    updated_at: '2021-09-29T14:00:00Z',
   },
   {
     name: 'file11.gif',
@@ -139,7 +141,7 @@ export const fakeData: Entry[] = [
     md5: '10',
     is_dir: false,
     created_at: '2021-09-21T14:00:00Z',
-    updated_at: '2021-09-21T14:00:00Z',
+    updated_at: '2021-09-23T14:00:00Z',
   },
   {
     name: 'file12.webp',
@@ -150,7 +152,7 @@ export const fakeData: Entry[] = [
     md5: '11',
     is_dir: false,
     created_at: '2021-09-21T14:00:00Z',
-    updated_at: '2021-09-21T14:00:00Z',
+    updated_at: '2021-09-25T14:00:00Z',
   },
   {
     name: 'file13.ico',
@@ -203,7 +205,11 @@ const Shared = () => {
   const [typeFilterItem, setTypeFilterItem] = useState<string>('');
   const [peopleFilterItem, setPeopleFilterItem] = useState<string>('');
   const [modifiedFilterItem, setModifiedFilterItem] = useState<string>('');
-  const [isShowDetail, setIsShowDetail] = useState<boolean>(false);
+  const { drawerOpen, openDrawer, closeDrawer } = useDrawer();
+  const [{ sort, order }, setSort] = useState<{ sort: string; order: string }>({ sort: 'Name', order: 'desc' });
+
+  const processedEntries = remoteToLocalEntries(fakeData);
+  console.log(processedEntries);
 
   return (
     <DriveLayout
@@ -216,7 +222,13 @@ const Shared = () => {
               <Icon
                 icon='mdi:information-outline'
                 className='h-8 w-8 cursor-pointer rounded-full p-1 transition-all hover:bg-surfaceContainerLow active:brightness-90'
-                onClick={() => setIsShowDetail(!isShowDetail)}
+                onClick={() => {
+                  if (!drawerOpen) {
+                    openDrawer();
+                  } else {
+                    closeDrawer();
+                  }
+                }}
               />
             </div>
           </div>
@@ -245,9 +257,14 @@ const Shared = () => {
           </div>
         </div>
       }
-      headerRight={<div>Detail</div>}
-      bodyLeft={<SharingPageView entries={fakeData} />}
-      bodyRight={<div>Detail</div>}
+      bodyLeft={
+        viewMode === 'grid' ? (
+          <DriveGridView sort={sort} order={order} setSort={setSort} entries={processedEntries} />
+        ) : (
+          <DriveListView order={order} sort={sort} setSort={setSort} entries={processedEntries} />
+        )
+      }
+      sidePanel={<SidePanel />}
     />
   );
 };

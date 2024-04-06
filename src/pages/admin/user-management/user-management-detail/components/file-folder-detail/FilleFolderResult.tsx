@@ -3,9 +3,9 @@ import fileIcons from '../../../../../../components/core/file-card/fileicon.cons
 import DropdownCore from '../../../../../../components/core/input/DropdownCore';
 import Order from '../../../../../../components/core/order/Order';
 import { useScreenHook } from '../../../../../../hooks/useScreenHook';
-import { MyEntry } from '../../../../../../pages/user/my-drive/MyDrive';
+import { LocalEntry } from '../../../../../../pages/user/my-drive/MyDrive';
 import { fileOperations } from '../../../../../../utils/constants/dopdown.constant';
-import { entries } from '../../../../../../utils/dumps/entries';
+import { fakeEntries } from '../../../../../../utils/dumps/entries';
 import { Entry } from '../../../../../../utils/types/entry.type';
 
 type FileFolderResultProps = {
@@ -14,7 +14,7 @@ type FileFolderResultProps = {
   fileType?: string;
 };
 
-const _entryToMyEntry = (entries: Entry[]): MyEntry[] => {
+const _entryToMyEntry = (entries: Entry[]): LocalEntry[] => {
   return entries.map((entry) => {
     if (entry.is_dir) {
       return {
@@ -53,7 +53,7 @@ const _entryToMyEntry = (entries: Entry[]): MyEntry[] => {
   });
 };
 
-const processedEntries = _entryToMyEntry(entries);
+const processedEntries = _entryToMyEntry(fakeEntries);
 
 const FileFolderResult = ({ name, type, fileType }: FileFolderResultProps) => {
   const responsive = useScreenHook(700);

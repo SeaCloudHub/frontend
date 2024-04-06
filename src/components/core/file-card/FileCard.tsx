@@ -5,7 +5,7 @@ import React from 'react';
 import { Info } from '@mui/icons-material';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Dropdown, { MenuItem } from '../drop-down/Dropdown';
-import { useDrawer } from '@/pages/user/my-drive/MyDrive';
+import { useDrawer } from '@/store/my-drive/myDrive.store';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 type FileCardProps = {
@@ -22,16 +22,9 @@ export const fileOperation = [
   { icon: <TrashIcon />, label: 'Delete file' },
 ];
 
-// const supportedFileTypes = [
-//   { type: 'doc', icon: <DocumentTextIcon /> },
-//   { type: 'docx', icon: <DocumentTextIcon /> },
-//   { type: 'mp3', icon: <MusicalNoteIcon /> },
-//   { type: 'png', icon: <PhotoIcon /> },
-//   { type: 'jpg', icon: <PhotoIcon /> },
-// ];
-
-const FileCard: React.FC<FileCardProps> = ({ title, icon, preview }) => {
-  const setDrawerOpen = useDrawer((state) => state.setDrawerOpen);
+const FileCard: React.FC<FileCardProps> = (props) => {
+  const { title, icon, preview, id } = props;
+  const openDrawer = useDrawer((state) => state.openDrawer);
   const menuItems: MenuItem[][] = [
     [{ label: 'Preview', icon: <Icon icon='material-symbols:visibility' />, action: () => {} }],
     [
@@ -68,7 +61,10 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview }) => {
       {
         label: 'Detail',
         icon: <Icon icon='mdi:information-outline' />,
-        action: setDrawerOpen,
+        action: () => {
+          console.log('[FileCard] detail ' + id);
+          openDrawer(id);
+        },
       },
       { label: 'Activity', icon: <Icon icon='mdi:graph-line-variant' />, action: () => {} },
       { label: 'Lock', icon: <Icon icon='mdi:lock-outline' />, action: () => {} },

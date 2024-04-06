@@ -25,12 +25,12 @@ const FilterChip: React.FC<FilterChipProps> = ({ name, options, action, value })
       button={
         value === '' ? (
           // selected === null ? (
-          <button className='border-1 flex cursor-pointer items-center space-x-2 rounded-lg border border-outline px-4 py-1 text-sm font-medium hover:bg-surfaceContainer active:bg-surfaceDim'>
+          <button className='border-1 flex h-[30px] cursor-pointer items-center space-x-2 rounded-lg border border-outline px-4 py-1 text-sm font-medium hover:bg-surfaceContainer active:bg-surfaceDim'>
             <span>{name}</span>
             <Icon icon='mdi:caret-down' />
           </button>
         ) : (
-          <div className='flex'>
+          <div className='flex h-[30px]'>
             <button className='flex cursor-pointer items-center space-x-2 rounded-l-lg border-0  bg-primaryContainer px-4 py-1 text-sm font-medium hover:bg-primaryFixedDim active:brightness-90'>
               {/* <span>{selected}</span> */}
               <span>{value}</span>

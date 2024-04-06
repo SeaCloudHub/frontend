@@ -1,7 +1,7 @@
-import { useDrawer } from '@/pages/user/my-drive/MyDrive';
-import { Icon } from '@iconify/react/dist/iconify.js';
-import { BsThreeDotsVertical } from 'react-icons/bs';
 import Dropdown, { MenuItem } from '../drop-down/Dropdown';
+import { BsThreeDotsVertical } from 'react-icons/bs';
+import { Icon } from '@iconify/react/dist/iconify.js';
+import { useDrawer } from '@/store/my-drive/myDrive.store';
 
 interface FolderCardProps {
   title: string;
@@ -10,7 +10,7 @@ interface FolderCardProps {
 }
 
 const FolderCard: React.FC<FolderCardProps> = ({ title, icon }) => {
-  const setDrawerOpen = useDrawer((state) => state.setDrawerOpen);
+  const setDrawerOpen = useDrawer((state) => state.openDrawer);
   const folderOps: MenuItem[][] = [
     [
       { label: 'Download', icon: <Icon icon='ic:outline-file-download' />, action: () => {} },
@@ -41,7 +41,7 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon }) => {
       {
         label: 'Detail',
         icon: <Icon icon='mdi:information-outline' />,
-        action: setDrawerOpen,
+        action: () => setDrawerOpen(id),
       },
       { label: 'Activity', icon: <Icon icon='mdi:graph-line-variant' />, action: () => {} },
     ],

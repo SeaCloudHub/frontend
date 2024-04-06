@@ -11,11 +11,12 @@ import TextFieldCore from '../../components/core/form/TextFieldCore';
 import { passwordSchema } from '../../helpers/form-schema/auth/login.schema';
 import { useSession } from '../../store/auth/session';
 import { accountAuthorityCallback } from '../../utils/constants/account-login-callback.constant';
-import { Role } from '../../utils/enums/role.enum';
+import { AUTH_CHANGE_PASSWORD } from '../../utils/constants/router.constant';
 import { toastError } from '../../utils/toast-options/toast-options';
 import { ApiGenericError } from '../../utils/types/api-generic-error.type';
 import AuthFooter from './AuthFooter';
 import AuthLink from './auth-link/AuthLink';
+import { Role } from '../../utils/enums/role.enum';
 
 const LoginPassword = () => {
   const [currentValue, setCurrentValue] = React.useState('');
@@ -31,11 +32,7 @@ const LoginPassword = () => {
     initialValues: { ...loginInitialValue, email },
     validationSchema: passwordSchema,
     onSubmit: async (values) => {
-      const res = await loginMutation.mutateAsync(values as AuthSignInREQ);
-      if (res.status == 200) {
-        const { data } = res.data;
-        signIn(data.session_token, data.identity.is_admin ? Role.ADMIN : Role.USER);
-      }
+      await loginMutation.mutateAsync(values as AuthSignInREQ);
     },
   });
 
@@ -44,9 +41,15 @@ const LoginPassword = () => {
       return signinApi(body);
     },
     onError: (error) => {
-      console.log(error);
       if (isAxiosError<ApiGenericError>(error)) {
         toast.error(error.response?.data.message, toastError());
+      }
+    },
+    onSuccess: (data) => {
+      if (data.data.identity.password_changed_at == null) {
+        navigate(AUTH_CHANGE_PASSWORD);
+      } else {
+        signIn(data.data.session_token, data.data.identity.is_admin ? Role.ADMIN : Role.USER);
       }
     },
   });

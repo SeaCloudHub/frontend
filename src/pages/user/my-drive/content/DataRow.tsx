@@ -1,14 +1,12 @@
 import Dropdown from '@/components/core/drop-down/Dropdown';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import React from 'react';
-import { MyEntry, useDrawer } from './MyDrive';
 import { Tooltip } from '@mui/material';
+import { useDrawer } from '@/store/my-drive/myDrive.store';
+import { LocalEntry } from '../MyDrive';
 
-/**
- * Map processed Entry to row
- */
-export const DataRow: React.FC<MyEntry> = ({ isDir, title, icon, lastModified, owner, size }) => {
-  const setDrawerOpen = useDrawer((state) => state.setDrawerOpen);
+export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModified, owner, size }) => {
+  const setDrawerOpen = useDrawer((state) => state.openDrawer);
   const fileOps = [
     [{ label: 'Preview', icon: <Icon icon='material-symbols:visibility' /> }],
     [
@@ -41,7 +39,7 @@ export const DataRow: React.FC<MyEntry> = ({ isDir, title, icon, lastModified, o
       {
         label: 'Detail',
         icon: <Icon icon='mdi:information-outline' />,
-        action: setDrawerOpen,
+        action: () => setDrawerOpen(id),
       },
       { label: 'Activity', icon: <Icon icon='mdi:graph-line-variant' /> },
       { label: 'Lock', icon: <Icon icon='mdi:lock-outline' /> },
@@ -75,7 +73,7 @@ export const DataRow: React.FC<MyEntry> = ({ isDir, title, icon, lastModified, o
       {
         label: 'Detail',
         icon: <Icon icon='mdi:information-outline' />,
-        action: setDrawerOpen,
+        action: () => setDrawerOpen(id),
       },
       { label: 'Activity', icon: <Icon icon='mdi:graph-line-variant' /> },
     ],
@@ -84,44 +82,27 @@ export const DataRow: React.FC<MyEntry> = ({ isDir, title, icon, lastModified, o
 
   // const [showTools, setShowTools] = useState(false);
   return (
-    <div className='py= flex items-center border-b py-1.5 hover:bg-surfaceContainer'>
-      <div className='flex flex-1 basis-72 items-center text-sm font-medium'>
+    <div className='flex h-8 items-center space-x-3 border-b border-b-[#dadce0] hover:bg-[#f0f1f1]'>
+      <div className='flex shrink grow basis-[304px] items-center text-sm font-medium'>
         <div className='px-4'>
           <div className='h-6 w-6'>{icon}</div>
         </div>
         <Tooltip title={title}>
           <div
-            className='max-xs:w-20 line-clamp-1 w-96 max-2xl:w-72 max-lg:w-48 max-md:w-36 max-sm:w-28
+            className='line-clamp-1 w-96 max-2xl:w-72 max-lg:w-48 max-md:w-36 max-sm:w-28 max-xs:w-20
           '>
             {title}
           </div>
         </Tooltip>
       </div>
-      <div className='basis-64 text-sm font-normal max-2xl:basis-36 max-lg:hidden'>{owner}</div>
-      <div className='basis-48 text-sm font-normal max-2xl:shrink max-md:hidden'>{lastModified}</div>
-      <div className='basis-20 text-sm font-normal max-xl:hidden'>{size}</div>
-      <div className='flex basis-48 justify-end max-2xl:basis-12'>
-        {/* removed because of lagging */}
-        {/* <div
-              className={classNames('flex', showTools ? 'visible' : 'invisible')}
-            >
-              <Icon
-                className="h-7 w-7 rounded-full p-1 hover:bg-surfaceContainerLow"
-                icon="lucide:user-plus"
-              />
-              <Icon
-                className="h-7 w-7 rounded-full p-1 hover:bg-surfaceContainerLow"
-                icon="ic:outline-file-download"
-              />
-              <Icon
-                className="h-7 w-7 rounded-full p-1 hover:bg-surfaceContainerLow"
-                icon="ic:round-drive-file-rename-outline"
-              />
-              <Icon
-                className="h-7 w-7 rounded-full p-1 hover:bg-surfaceContainerLow"
-                icon="material-symbols:star-outline"
-              />
-            </div> */}
+      <div className='shrink-0 grow-0 basis-[215px] text-sm font-medium max-[1450px]:basis-[140px] max-[1050px]:hidden'>
+        {owner}
+      </div>
+      <div className='shrink-0 grow-0 basis-[200px] text-sm font-medium max-[1450px]:basis-[144px] max-[1000px]:hidden'>
+        {lastModified}
+      </div>
+      <div className='shrink-0 grow-0 basis-[88px] text-sm font-medium max-[1450px]:basis-[88px] max-[1160px]:hidden'>{size}</div>
+      <div className='flex shrink-0 grow-0 basis-[192px] justify-end text-sm font-medium max-[1450px]:basis-[48px]'>
         <Dropdown
           button={<Icon icon='ic:baseline-more-vert' className='h-7 w-7 rounded-full p-1 hover:bg-surfaceContainerLow' />}
           items={isDir ? folderOps : fileOps}

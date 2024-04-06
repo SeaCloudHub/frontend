@@ -1,23 +1,40 @@
-import ModalAddUser from '@/components/core/modal/ModalAddUser';
+import { useMutation } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import { useEffect, useRef, useState } from 'react';
+import { toast } from 'react-toastify';
+import { ImportExcelREQ } from '../../../apis/admin/user-management/request/add-user-excel.request';
+import { downloadTemplateCSV, importExcelApi } from '../../../apis/admin/user-management/user-management.api';
 import IconifyIcon from '../../../components/core/Icon/IConCore';
 import ButtonContainer from '../../../components/core/button/ButtonContainer';
 import LinearChartBar from '../../../components/core/linear-chart-bar/linearChartBar';
 import MenuCore from '../../../components/core/menu/MenuCore';
+import { MenuItemCoreProps } from '../../../components/core/menu/MenuItem';
+import ModalAddUser from '../../../components/core/modal/ModalAddUser';
+import ModalChooseFile from '../../../components/core/modal/ModalChooseFile';
 import PaginationCore from '../../../components/core/pagination/PaginationCore';
 import TablePagination from '../../../components/core/table/TablePagination';
 import { useScreenMode } from '../../../store/responsive/screenMode';
 import { userInfoColumns } from '../../../utils/constants/userInfo-column.constant';
 import { userInfo } from '../../../utils/dumps/userInfo.dump';
 import { ScreenMode } from '../../../utils/enums/screen-mode.enum';
+import { toastError, toastSuccess } from '../../../utils/toast-options/toast-options';
+import { ApiGenericError } from '../../../utils/types/api-generic-error.type';
 import { PagingState, initialPagingState } from '../../../utils/types/paging-stage.type';
 import { UserInfo } from '../../../utils/types/user-Info.type';
 import './UserManagement.css';
 import UserManagementFilter from './UserManagementFilter';
 import UserInfoPhoneMode from './user-management-phone/UserInfoPhoneMode';
 
+type ModalState = {
+  isOpen: boolean;
+  name: string;
+};
+const initModalsState: ModalState[] = [
+  { isOpen: false, name: 'MANUAL' },
+  { isOpen: false, name: 'IMPORT' },
+];
 const UserManagement = () => {
-  const [openModal, setOpenModal] = useState(false);
+  const [modals, changeModalsState] = useState<ModalState[]>(initModalsState);
   const [paging, setPaging] = useState<PagingState>(initialPagingState);
   const screenMode = useScreenMode((state) => state.screenMode);
   const shrinkMode = useScreenMode((state) => state.shrinkMode);
@@ -38,6 +55,47 @@ const UserManagement = () => {
       </div>
     ),
   };
+
+  const addUserOptions: MenuItemCoreProps[] = [
+    {
+      icon: 'icon-park:add-one',
+      title: 'Manual',
+      onClick: () => {
+        changeModalsState((prevModals) =>
+          prevModals.map((modal) => (modal.name === 'MANUAL' ? { ...modal, isOpen: true } : modal)),
+        );
+      },
+    },
+    {
+      icon: 'grommet-icons:document-csv',
+      title: 'Import from CSV',
+      onClick: () => {
+        changeModalsState((prevModals) =>
+          prevModals.map((modal) => (modal.name === 'IMPORT' ? { ...modal, isOpen: true } : modal)),
+        );
+      },
+    },
+    {
+      icon: 'flat-color-icons:download',
+      title: 'Download template excel',
+      onClick: async () => {
+        try {
+          const res = await downloadTemplateCSV();
+          const blob = new Blob([res.data], { type: res.headers['content-type'] });
+          const blobUrl = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = blobUrl;
+          link.setAttribute('download', `template.csv`);
+          link.click();
+          URL.revokeObjectURL(blobUrl);
+        } catch (error) {
+          if (isAxiosError<ApiGenericError>(error)) {
+            toast.error(error.response?.data.message, toastError());
+          }
+        }
+      },
+    },
+  ];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -63,12 +121,31 @@ const UserManagement = () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
-  const onCloseModalClick = (data: boolean) => {
-    if (data) {
-      console.log(data);
-    }
-    setOpenModal(false);
+  const onCloseModalClick = (modalType: string) => {
+    changeModalsState((prevModals) => {
+      const updatedModals = prevModals.map((modal) => {
+        if (modal.name === modalType) {
+          return { ...modal, isOpen: false };
+        }
+        return modal;
+      });
+      return updatedModals;
+    });
   };
+  const uploadCSVMutation = useMutation({
+    mutationFn: (body: ImportExcelREQ) => {
+      return importExcelApi(body);
+    },
+    onError: (error) => {
+      if (isAxiosError<ApiGenericError>(error)) {
+        toast.error(error.response?.data.message, toastError());
+      }
+    },
+    onSuccess: (data) => {
+      console.log(data.data);
+      toast.success('Create user successfully', toastSuccess());
+    },
+  });
   return (
     <div className='flex w-full flex-col items-end space-y-5'>
       <div
@@ -77,7 +154,7 @@ const UserManagement = () => {
         {!scrollable && <UserManagementFilter />}
 
         <div
-          className={`${shrinkMode ? 'shrink-mode' : 'none-shrink-mode'} ${scrollable ? ' fixed  top-[80px] mx-auto w-full space-x-2 bg-white py-1' : ''}`}>
+          className={`${shrinkMode ? 'shrink-mode' : 'none-shrink-mode'} ${scrollable ? ' fixed  top-[80px] mx-auto flex w-full space-x-2 bg-white py-1' : ''}`}>
           {scrollable && (
             <ButtonContainer
               color='063768'
@@ -88,17 +165,30 @@ const UserManagement = () => {
               icon={<IconifyIcon icon={'ant-design:filter-twotone'} />}
             />
           )}
-          <ButtonContainer
-            color='063768'
-            tooltip={'Add user'}
-            title='Add user'
-            background='#063768'
-            onClick={() => {
-              setOpenModal(true);
+          <MenuCore menuItems={addUserOptions}>
+            <ButtonContainer
+              color='063768'
+              tooltip={'Add user'}
+              title='Add user'
+              background='#063768'
+              icon={<IconifyIcon icon={'gg:add'} />}
+            />
+          </MenuCore>
+          <ModalChooseFile
+            fileIcon='grommet-icons:document-csv'
+            title='Choose file to Import'
+            isOpen={modals.find((modal) => modal.name === 'IMPORT')?.isOpen || false}
+            handleConfirm={(data?: File) => {
+              data && uploadCSVMutation.mutateAsync({ file: data! });
+              onCloseModalClick('IMPORT');
             }}
-            icon={<IconifyIcon icon={'gg:add'} />}
           />
-          <ModalAddUser title='Add User' isOpen={openModal} handleConfirm={onCloseModalClick} />
+
+          <ModalAddUser
+            title='Add User'
+            isOpen={modals.find((modal) => modal.name === 'MANUAL')?.isOpen || false}
+            handleConfirm={() => onCloseModalClick('MANUAL')}
+          />
         </div>
       </div>
       {screenMode == ScreenMode.MOBILE && (
