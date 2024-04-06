@@ -1,9 +1,11 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
+import { UserManagementInfoDto } from '../../../apis/admin/user-management/dto/user-management-info.dto';
 import { ImportExcelREQ } from '../../../apis/admin/user-management/request/add-user-excel.request';
-import { downloadTemplateCSV, importExcelApi } from '../../../apis/admin/user-management/user-management.api';
+import { downloadTemplateCSV, getIdentititesApi, importExcelApi } from '../../../apis/admin/user-management/user-management.api';
+import { getIdentitiesRESToUserManagementInfoDto } from '../../../apis/admin/user-management/user-management.service';
 import IconifyIcon from '../../../components/core/Icon/IConCore';
 import ButtonContainer from '../../../components/core/button/ButtonContainer';
 import LinearChartBar from '../../../components/core/linear-chart-bar/linearChartBar';
@@ -15,12 +17,10 @@ import PaginationCore from '../../../components/core/pagination/PaginationCore';
 import TablePagination from '../../../components/core/table/TablePagination';
 import { useScreenMode } from '../../../store/responsive/screenMode';
 import { userInfoColumns } from '../../../utils/constants/userInfo-column.constant';
-import { userInfo } from '../../../utils/dumps/userInfo.dump';
 import { ScreenMode } from '../../../utils/enums/screen-mode.enum';
 import { toastError, toastSuccess } from '../../../utils/toast-options/toast-options';
 import { ApiGenericError } from '../../../utils/types/api-generic-error.type';
 import { PagingState, initialPagingState } from '../../../utils/types/paging-stage.type';
-import { UserInfo } from '../../../utils/types/user-Info.type';
 import './UserManagement.css';
 import UserManagementFilter from './UserManagementFilter';
 import UserInfoPhoneMode from './user-management-phone/UserInfoPhoneMode';
@@ -36,6 +36,7 @@ const initModalsState: ModalState[] = [
 const UserManagement = () => {
   const [modals, changeModalsState] = useState<ModalState[]>(initModalsState);
   const [paging, setPaging] = useState<PagingState>(initialPagingState);
+  const [pageToken, setPageToken] = useState<null | string>(null);
   const screenMode = useScreenMode((state) => state.screenMode);
   const shrinkMode = useScreenMode((state) => state.shrinkMode);
   const [scrollable, setScrollable] = useState(false);
@@ -46,15 +47,40 @@ const UserManagement = () => {
     }
   }, [screenMode]);
 
-  const renderCell: Record<string, (rowData: UserInfo) => React.ReactNode> = {
-    usedMemory: (rowData: UserInfo) => <LinearChartBar value={rowData['usedMemory'] as number} total={100} width='100%' />,
-    name: (rowData: UserInfo) => (
+  const renderCell: Record<string, (rowData: UserManagementInfoDto) => React.ReactNode> = {
+    usedMemory: (rowData: UserManagementInfoDto) => (
+      <LinearChartBar value={rowData['usedMemory'] as number} total={100} width='100%' />
+    ),
+    name: (rowData: UserManagementInfoDto) => (
       <div className='flex items-center space-x-5'>
-        <img className='max-w-[60px] rounded-full object-contain' src={rowData['avatar'] as string} />
+        {rowData.avatar && <img className='max-w-[60px] rounded-full object-contain' src={rowData['avatar'] as string} />}
+        {!rowData.avatar && (
+          <div>
+            <p>{rowData.name}</p>
+          </div>
+        )}
         <p className='statement-medium'>{rowData['name'] as string}</p>
       </div>
     ),
   };
+  const { data, error } = useQuery({
+    queryKey: ['get-identities'],
+    queryFn: () => getIdentititesApi({ page_size: 20, page_token: pageToken }),
+    select: (data) => {
+      if (data) {
+        return data.identities.map((user) => getIdentitiesRESToUserManagementInfoDto(user) as UserManagementInfoDto);
+      } else {
+        return null;
+      }
+    },
+  });
+  useEffect(() => {
+    if (error) {
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.message, toastError());
+      }
+    }
+  }, [error]);
 
   const addUserOptions: MenuItemCoreProps[] = [
     {
@@ -121,6 +147,7 @@ const UserManagement = () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
+
   const onCloseModalClick = (modalType: string) => {
     changeModalsState((prevModals) => {
       const updatedModals = prevModals.map((modal) => {
@@ -191,22 +218,23 @@ const UserManagement = () => {
           />
         </div>
       </div>
-      {screenMode == ScreenMode.MOBILE && (
+      {screenMode == ScreenMode.MOBILE && data && (
         <div className='flex w-full flex-col items-center space-y-3'>
-          {userInfo.map((item, index) => (
-            <UserInfoPhoneMode
-              avatar={item.avatar}
-              key={index}
-              lastAccess={item.lastAccess}
-              usedMemory={item.usedMemory}
-              userId={item.userId}
-              name={item.name}
-            />
-          ))}
+          {data &&
+            data.map((item, index) => (
+              <UserInfoPhoneMode
+                avatar={item.avatar}
+                key={index}
+                lastAccess={item.lastAccess}
+                usedMemory={item.usedMemory}
+                userId={item.userId}
+                name={item.name}
+              />
+            ))}
           <PaginationCore currentPage={paging.page} onPageChange={() => {}} totalPage={paging.totalPage} size='small' />
         </div>
       )}
-      {!(screenMode == ScreenMode.MOBILE) && (
+      {!(screenMode == ScreenMode.MOBILE) && data && (
         <>
           <div className='w-full'>
             <TablePagination
@@ -233,7 +261,7 @@ const UserManagement = () => {
               }
               columns={userInfoColumns}
               onPageChange={() => {}}
-              data={userInfo}
+              data={data}
             />
           </div>
         </>
