@@ -5,9 +5,9 @@ import { HeaderMyDriveProps } from '../MyDrive';
 import Sort from './Sort';
 
 type DriveListViewProps = {
-  sort: string;
-  order: string;
-  setSort: ({ sort, order }: { sort: string; order: string }) => void;
+  sort?: string;
+  order?: string;
+  setSort?: ({ sort, order }: { sort: string; order: string }) => void;
   entries: LocalEntry[];
 };
 
@@ -30,7 +30,7 @@ export const DriveListView: React.FC<DriveListViewProps> = ({ order, setSort, so
             File size
           </div>
           <div className='flex shrink-0 grow-0 basis-[192px] justify-end text-sm font-medium max-[1450px]:basis-[48px]'>
-            <Sort sort={sort} order={order} setSort={setSort} />
+            {/* <Sort sort={sort} order={order} setSort={setSort} /> */}
           </div>
         </div>
         {folders.map((entry, index) => {

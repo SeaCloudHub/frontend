@@ -68,22 +68,19 @@ const MyDrive = () => {
       headerLeft={
         <MyDriveHeader
           path={path}
-          setPath={setPath}
           typeFilter={typeFilter}
           modifiedFilter={modifiedFilter}
           peopleFilter={peopleFilter}
+          sort={sort}
+          order={order}
+          setPath={setPath}
           setTypeFilter={setTypeFilter}
           setModifiedFilter={setModifiedFilter}
           setPeopleFilter={setPeopleFilter}
+          setSort={setSort}
         />
       }
-      bodyLeft={
-        viewMode === 'grid' ? (
-          <DriveGridView sort={sort} order={order} setSort={setSort} entries={localEntries} />
-        ) : (
-          <DriveListView order={order} sort={sort} setSort={setSort} entries={localEntries} />
-        )
-      }
+      bodyLeft={viewMode === 'grid' ? <DriveGridView entries={localEntries} /> : <DriveListView entries={localEntries} />}
       sidePanel={<SidePanel />}
     />
   );
