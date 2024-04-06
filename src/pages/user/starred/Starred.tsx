@@ -7,6 +7,7 @@ import StarredView from './stared-view/StarredView';
 import { fakeData } from '../shared/Shared';
 import DriveLayout from '@/components/layout/DriveLayout';
 import { useDrawer, useViewMode } from '@/store/my-drive/myDrive.store';
+import SidePanel from '../my-drive/side-panel/SidePanel';
 
 const Starred = () => {
   const { viewMode, setViewMode } = useViewMode();
@@ -14,7 +15,7 @@ const Starred = () => {
   const [peopleFilterItem, setPeopleFilterItem] = useState<string>('');
   const [modifiedFilterItem, setModifiedFilterItem] = useState<string>('');
 
-  const { drawerOpen, openDrawer } = useDrawer();
+  const { drawerOpen, openDrawer, closeDrawer } = useDrawer();
   return (
     <DriveLayout
       headerLeft={
@@ -26,7 +27,13 @@ const Starred = () => {
               <Icon
                 icon='mdi:information-outline'
                 className='h-8 w-8 cursor-pointer rounded-full p-1 transition-all hover:bg-surfaceContainerLow active:brightness-90'
-                onClick={() => openDrawer('1')}
+                onClick={() => {
+                  if (!drawerOpen) {
+                    openDrawer();
+                  } else {
+                    closeDrawer();
+                  }
+                }}
               />
             </div>
           </div>
@@ -55,9 +62,8 @@ const Starred = () => {
           </div>
         </div>
       }
-      headerRight={<div>Detail</div>}
       bodyLeft={<StarredView entries={fakeData} />}
-      bodyRight={<div>Detail</div>}
+      sidePanel={<SidePanel />}
     />
   );
 };

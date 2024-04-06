@@ -88,8 +88,8 @@ export const remoteToLocalEntries = (entries: Entry[]): LocalEntry[] => {
         extra: 'extra',
         owner: 'owner',
         ownerAvt: 'https://slaydarkkkk.github.io/img/slaydark_avt.jpg',
-        lastModified: 'lastModified',
-        size: 'size',
+        lastModified: entry.updated_at,
+        size: entry.size.toString(),
       };
     }
     const ext = entry.name.split('.').pop() || 'any';
@@ -113,8 +113,8 @@ export const remoteToLocalEntries = (entries: Entry[]): LocalEntry[] => {
       extra: 'extra',
       owner: 'owner',
       ownerAvt: 'https://slaydarkkkk.github.io/img/slaydark_avt.jpg',
-      lastModified: 'lastModified',
-      size: 'size',
+      lastModified: entry.updated_at,
+      size: entry.size.toString(),
     };
   });
 };
