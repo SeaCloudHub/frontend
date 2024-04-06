@@ -1,0 +1,25 @@
+import React from 'react';
+import SharingPageViewMode from '../../shared/sharing-page-view/SharingPageViewMode';
+import PriorityViewType from '../priority-view-type/PriorityViewType';
+
+type PriorityFilterProps = {
+  viewMode: string;
+  setViewMode: (value: string) => void;
+
+  isFileMode: boolean;
+  setIsFileMode: (value: boolean) => void;
+};
+
+const PriorityFilter: React.FC<PriorityFilterProps> = ({ viewMode, setViewMode, isFileMode, setIsFileMode }) => {
+  return (
+    <div className='flex items-center justify-between'>
+      <div className='flex items-center gap-3'>
+        <span>Recomment</span>
+        <PriorityViewType isFileMode={isFileMode} setIsFileMode={setIsFileMode} />
+      </div>
+      <SharingPageViewMode setViewMode={setViewMode} viewMode={viewMode} />
+    </div>
+  );
+};
+
+export default PriorityFilter;
