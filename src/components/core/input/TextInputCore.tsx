@@ -16,7 +16,7 @@ export type TextInputCoreProps = {
   onChange?: (data?: string) => void;
   error?: boolean | undefined;
   helperText?: React.ReactNode;
-  className?:string;
+  className?: string;
 };
 
 const TextInputCore = ({

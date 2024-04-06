@@ -3,7 +3,6 @@ import { Path } from '@/store/my-drive/myDrive.store';
 import InfoButton from './InfoButton';
 import DrivePath from './drive-path/DrivePath';
 import DriveFilter from './DriveFilter';
-import { useState } from 'react';
 
 type MyDriveHeaderProps = {
   path: Path;

@@ -1,7 +1,7 @@
+import { UserManagementInfoDto } from '../../apis/admin/user-management/dto/user-management-info.dto';
 import { Column } from '../types/table-column.type';
-import { UserInfo } from '../types/user-Info.type';
 
-export const userInfoColumns: Column<UserInfo>[] = [
+export const userInfoColumns: Column<UserManagementInfoDto>[] = [
   {
     id: 'userId',
     label: 'User ID',

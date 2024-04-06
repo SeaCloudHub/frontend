@@ -1,4 +1,4 @@
-export type UserInfo = {
+export type UserManagementInfoDto = {
   userId?: string;
   name?: string;
   avatar?: string;

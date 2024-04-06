@@ -1,5 +1,4 @@
-import ModalChangePasswordSuccess from '../../components/core/modal/ModalChangePasswordSuccess';
-import { AUTH_LOGIN_EMAIL } from '../../utils/constants/router.constant';
+import { useSession } from '@/store/auth/session';
 import { Button, LinearProgress, Paper, Typography } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
@@ -11,8 +10,10 @@ import { changePasswordApi } from '../../apis/auth/auth.api';
 import { changePasswordInitialValue } from '../../apis/auth/request/change-password.request';
 import IconifyIcon from '../../components/core/Icon/IConCore';
 import TextFieldCore from '../../components/core/form/TextFieldCore';
+import ModalChangePasswordSuccess from '../../components/core/modal/ModalChangePasswordSuccess';
 import { changePasswordSchema } from '../../helpers/form-schema/change-password.schema';
 import { useScreenMode } from '../../store/responsive/screenMode';
+import { AUTH_LOGIN_EMAIL } from '../../utils/constants/router.constant';
 import { ScreenMode } from '../../utils/enums/screen-mode.enum';
 import { toastError } from '../../utils/toast-options/toast-options';
 import { ApiGenericError } from '../../utils/types/api-generic-error.type';
@@ -22,6 +23,7 @@ const ChangePassword = () => {
   const navigate = useNavigate();
   const screenMode = useScreenMode((state) => state.screenMode);
   const [modalOpen, setModalOpen] = useState(false);
+  const email = useSession((state) => state.email);
   const formik = useFormik({
     initialValues: changePasswordInitialValue,
     validationSchema: changePasswordSchema,
@@ -50,7 +52,7 @@ const ChangePassword = () => {
     <div className={`${screenMode == ScreenMode.MOBILE ? 'mx-2' : 'mx-auto'} max-w-[700px] text-gray-600 `}>
       <IconifyIcon icon='logos:google' className='mx-auto h-20 w-40' />
       <div className='title text-center text-2xl '>Change password for</div>
-      <div className='email text-center text-2xl'>kimhieu@gmail.com</div>
+      <div className='email text-center text-2xl'>{email}</div>
       <div className='help'></div>
       {changPasswordMutation.isPending && <LinearProgress className='mx-5 translate-y-6' />}
       <ModalChangePasswordSuccess

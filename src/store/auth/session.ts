@@ -7,8 +7,9 @@ type SessionState = {
   token: string | null;
   role: Role | null;
   email: string | null;
+  firstLogin: boolean;
   onEmailValid: (email: string | null) => void;
-  signIn: (token: string | null, role: Role | null) => void;
+  signIn: (token: string | null, role: Role | null, firstLogin?: boolean) => void;
 };
 
 const value = {
@@ -23,8 +24,10 @@ export const useSession = create<SessionState>()(
       (set) => ({
         token: value.token || null,
         role: value.role || null,
+        firstLogin: false,
         email: value.email || null,
-        signIn: (token: string | null, role: Role | null) => set({ token: token, role: role }),
+        signIn: (token: string | null, role: Role | null, firstLogin?: boolean) =>
+          set({ token: token, role: role, firstLogin: firstLogin }),
         onEmailValid: (email: string | null) => set((state) => ({ ...state, email: email })),
       }),
       {

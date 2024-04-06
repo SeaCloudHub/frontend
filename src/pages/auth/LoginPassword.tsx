@@ -1,6 +1,7 @@
 import { Avatar, Button, Checkbox, LinearProgress, Typography } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
+import dayjs from 'dayjs';
 import { useFormik } from 'formik';
 import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -12,11 +13,11 @@ import { passwordSchema } from '../../helpers/form-schema/auth/login.schema';
 import { useSession } from '../../store/auth/session';
 import { accountAuthorityCallback } from '../../utils/constants/account-login-callback.constant';
 import { AUTH_CHANGE_PASSWORD } from '../../utils/constants/router.constant';
+import { Role } from '../../utils/enums/role.enum';
 import { toastError } from '../../utils/toast-options/toast-options';
 import { ApiGenericError } from '../../utils/types/api-generic-error.type';
 import AuthFooter from './AuthFooter';
 import AuthLink from './auth-link/AuthLink';
-import { Role } from '../../utils/enums/role.enum';
 
 const LoginPassword = () => {
   const [currentValue, setCurrentValue] = React.useState('');
@@ -25,7 +26,7 @@ const LoginPassword = () => {
   const location = useLocation();
 
   const from = location.state?.from?.pathname;
-  const { token: authenticated, role, signIn, email } = useSession();
+  const { token: authenticated, role, signIn, email, firstLogin } = useSession();
   const handleChange = (e: { target: { value: React.SetStateAction<string> } }) => setCurrentValue(e.target.value);
 
   const formik = useFormik({
@@ -46,22 +47,24 @@ const LoginPassword = () => {
       }
     },
     onSuccess: (data) => {
+      const a = dayjs(data.data.identity.password_changed_at);
+      signIn(data.data.session_token, data.data.identity.is_admin ? Role.ADMIN : Role.USER, a.year >= 2024);
       if (data.data.identity.password_changed_at == null) {
         navigate(AUTH_CHANGE_PASSWORD);
-      } else {
-        signIn(data.data.session_token, data.data.identity.is_admin ? Role.ADMIN : Role.USER);
       }
     },
   });
 
   useEffect(() => {
     if (!authenticated) return;
-    else if (from) {
-      navigate(from);
-    } else {
-      navigate(accountAuthorityCallback[role!]);
+    if (!firstLogin) {
+      if (from) {
+        navigate(from);
+      } else {
+        navigate(accountAuthorityCallback[role!]);
+      }
     }
-  }, [authenticated, role]);
+  }, [authenticated, role, firstLogin]);
 
   return (
     <div className='flex h-screen items-center justify-center overflow-hidden bg-[#f0f4f9] px-10'>
