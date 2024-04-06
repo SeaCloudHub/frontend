@@ -18,6 +18,8 @@ import TablePagination from '../../../components/core/table/TablePagination';
 import { useScreenMode } from '../../../store/responsive/screenMode';
 import { userInfoColumns } from '../../../utils/constants/userInfo-column.constant';
 import { ScreenMode } from '../../../utils/enums/screen-mode.enum';
+import { getFirstCharacters } from '../../../utils/function/getFirstCharacter';
+import { getRandomColor } from '../../../utils/function/getRandomColor';
 import { toastError, toastSuccess } from '../../../utils/toast-options/toast-options';
 import { ApiGenericError } from '../../../utils/types/api-generic-error.type';
 import { PagingState, initialPagingState } from '../../../utils/types/paging-stage.type';
@@ -53,10 +55,12 @@ const UserManagement = () => {
     ),
     name: (rowData: UserManagementInfoDto) => (
       <div className='flex items-center space-x-5'>
-        {rowData.avatar && <img className='max-w-[60px] rounded-full object-contain' src={rowData['avatar'] as string} />}
+        {rowData.avatar && <img className='h-[50px] w-[50px] rounded-full object-contain' src={rowData['avatar'] as string} />}
         {!rowData.avatar && (
-          <div>
-            <p>{rowData.name}</p>
+          <div
+            className='round flex h-[50px] w-[50px] items-center justify-center rounded-full'
+            style={{ backgroundColor: getRandomColor() }}>
+            <p className='statement-bold truncate'>{getFirstCharacters(rowData.name || '')}</p>
           </div>
         )}
         <p className='statement-medium'>{rowData['name'] as string}</p>
