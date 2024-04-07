@@ -29,7 +29,7 @@ const ButtonOutlineStyle = styled(Button)(
   }) => ({
     fontWeight: 'bold',
     color: customecolor || 'black',
-    textTransform: 'none',
+    textTransform: 'none' as const,
     backgroundColor: background,
     borderRadius: borderradius,
     height: customsize,

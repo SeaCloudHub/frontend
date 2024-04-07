@@ -21,7 +21,7 @@ const Starred = () => {
       headerLeft={
         <div className='px-4'>
           <div className='flex justify-between space-x-2 text-2xl'>
-            <h2 className='py-2 text-3xl font-semibold'>Shared with me</h2>
+            <h2 className='py-2 text-3xl font-semibold'>Starred</h2>
             <div className='flex items-center gap-2'>
               <SharingPageViewMode setViewMode={setViewMode} viewMode={viewMode} />
               <Icon
