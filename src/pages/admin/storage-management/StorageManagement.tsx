@@ -55,9 +55,10 @@ const fakeData: StorageItem[] = [
   },
 ];
 
-const checkIdIsFolder = (id: string, data: StorageItem): string | null => {
-  if (data.id === id) {
-    return data.child ? data.name : null;
+const checkIdIsFolder = (id: string[], data: StorageItem): string | null => {
+  if(!id || id.length==0) return null;
+  if (data.id === id[0]) {
+    return data.name;
   }
   if (data.child) {
     for (const child of data.child) {
@@ -70,7 +71,7 @@ const checkIdIsFolder = (id: string, data: StorageItem): string | null => {
   return null;
 };
 
-const isFolder = (id: string, data: StorageItem[]): string | null => {
+const isFolder = (id: string[], data: StorageItem[]): string | null => {
   for (const item of data) {
     const result = checkIdIsFolder(id, item);
     if (result) {
