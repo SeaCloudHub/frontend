@@ -1,5 +1,5 @@
-import React, { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
+import React, { Fragment } from 'react';
 
 export function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
@@ -8,7 +8,7 @@ export function classNames(...classes: string[]) {
 type MenuItem = {
   label: string;
   icon: React.ReactNode;
-  action?: Function;
+  action?: (param?: any) => void;
 };
 
 export type { MenuItem };

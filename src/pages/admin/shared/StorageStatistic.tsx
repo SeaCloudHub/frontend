@@ -1,6 +1,8 @@
 import IconifyIcon from '../../../components/core/Icon/IConCore';
 
-type StorageStatisticProps = {};
+type StorageStatisticProps = {
+  name?: string;
+};
 const StorageStatistic = () => {
   return (
     <>

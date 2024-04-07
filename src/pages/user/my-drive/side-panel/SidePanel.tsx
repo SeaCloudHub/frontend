@@ -1,14 +1,16 @@
-import { Tab } from '@headlessui/react';
-import { Icon } from '@iconify/react/dist/iconify.js';
-import React from 'react';
-import { Avatar } from '@mui/material';
+import { classNames } from '@/components/core/drop-down/Dropdown';
 import { useDrawer } from '@/store/my-drive/myDrive.store';
 import { Activity, ActivityAction, DownloadPermission, EntryDetails } from '@/utils/types/entry.type';
+import { Tab } from '@headlessui/react';
+import { Icon } from '@iconify/react/dist/iconify.js';
+import { Avatar } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
+import React from 'react';
 import { DriveLocationButton } from './DriveLocationButton';
-import { classNames } from '@/components/core/drop-down/Dropdown';
 
-type SidePanelProps = {};
+type SidePanelProps = {
+  name?: string;
+};
 
 const SidePanel: React.FC<SidePanelProps> = () => {
   const { entryId, icon, title, closeDrawer } = useDrawer();
