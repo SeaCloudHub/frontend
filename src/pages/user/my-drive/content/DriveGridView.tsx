@@ -19,9 +19,11 @@ type DriveGridViewProps = {
   order: string;
   setSort: ({ sort, order }: { sort: string; order: string }) => void;
   entries: LocalEntry[];
+  fileShow?: boolean;
+  folderShow?: boolean;
 };
 
-export const DriveGridView: React.FC<DriveGridViewProps> = ({ dirId, order, sort, setSort, entries }) => {
+export const DriveGridView: React.FC<DriveGridViewProps> = ({ dirId, order, sort, setSort, entries, fileShow, folderShow }) => {
   const files = entries.filter((entry) => !entry.isDir);
   const folders = entries.filter((entry) => entry.isDir);
 
@@ -31,13 +33,13 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({ dirId, order, sort
         <div className='absolute right-4 top-3'>
           <Sort sort={sort} order={order} setSort={setSort} />
         </div>
-        <div className=''>
+        <div className={!folderShow ? 'visible' : 'hidden'}>
           <div className='pb-4 pt-2 text-sm font-medium'> Folders</div>
           <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'>
             {localEntriesToFolder(folders)}
           </div>
         </div>
-        <div>
+        <div className={!fileShow ? 'visible' : 'hidden'}>
           <div className='pb-4 pt-2 text-sm font-medium'> Files</div>
           <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'>
             {localEntriesToFiles(files)}
