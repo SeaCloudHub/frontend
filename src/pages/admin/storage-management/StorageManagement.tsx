@@ -56,7 +56,7 @@ const fakeData: StorageItem[] = [
 ];
 
 const checkIdIsFolder = (id: string[], data: StorageItem): string | null => {
-  if(!id || id.length==0) return null;
+  if (!id || id.length == 0) return null;
   if (data.id === id[0]) {
     return data.name;
   }

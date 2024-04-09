@@ -7,6 +7,9 @@ import { Info } from '@mui/icons-material';
 import React from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Dropdown, { MenuItem } from '../drop-down/Dropdown';
+import { CopyToClipboard } from '@/utils/function/copy.function';
+import SharePopUp from '../pop-up/SharePopUp';
+import MovePopUp from '../pop-up/MovePopUp';
 
 type FileCardProps = {
   title: string;
@@ -25,6 +28,9 @@ export const fileOperation = [
 const FileCard: React.FC<FileCardProps> = (props) => {
   const { title, icon, preview, id } = props;
   const openDrawer = useDrawer((state) => state.openDrawer);
+  const [isPopUpOpen, setIsPopUpOpen] = React.useState(false);
+  const [type, setType] = React.useState<'move'|'share'|null>();
+
   const menuItems: MenuItem[][] = [
     [{ label: 'Preview', icon: <Icon icon='material-symbols:visibility' />, action: () => {} }],
     [
@@ -41,15 +47,29 @@ const FileCard: React.FC<FileCardProps> = (props) => {
       },
     ],
     [
-      { label: 'Copy link', icon: <Icon icon='material-symbols:link' />, action: () => {} },
-      { label: 'Share', icon: <Icon icon='lucide:user-plus' />, action: () => {} },
+      { label: 'Copy link', icon: <Icon icon='material-symbols:link' />,
+        action: (text: string) => {
+          CopyToClipboard(text);
+        },
+      },
+      { label: 'Share', icon: <Icon icon='lucide:user-plus' />,
+        action: () => {
+          setType('share');
+          setIsPopUpOpen(true);
+        },
+      },
     ],
     [
-      { label: 'Move', icon: <Icon icon='mdi:folder-move-outline' />, action: () => {} },
+      { label: 'Move', icon: <Icon icon='mdi:folder-move-outline' />, action: () => {
+        console.log('[FileCard] add shortcut ' + id);
+          setType('move');
+          setIsPopUpOpen(true);
+        }
+      },
       {
         label: 'Add shortcut',
         icon: <Icon icon='material-symbols:add-to-drive' />,
-        action: () => {},
+        action: () => { },
       },
       {
         label: 'Add to starred',
@@ -86,6 +106,8 @@ const FileCard: React.FC<FileCardProps> = (props) => {
         />
       </div>
       <div className='mb-2 flex h-full w-full items-center justify-center overflow-hidden rounded-md bg-white'>{preview}</div>
+      { type === 'share' && <SharePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title}/> }
+      { type === 'move' && <MovePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} location={'adfasdfasdf asdfasdfasdf asdfasdf'}/> }
     </div>
   );
 };
