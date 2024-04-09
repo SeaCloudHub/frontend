@@ -22,10 +22,6 @@ export type LocalEntry = {
 };
 
 const MyDrive = () => {
-  const processedEntries = remoteToLocalEntries(fakeEntries);
-  const files = processedEntries.filter((entry) => !entry.isDir);
-  const folders = processedEntries.filter((entry) => entry.isDir);
-
   const [{ sort, order }, setSort] = useState<{ sort: string; order: string }>({ sort: 'Name', order: 'desc' });
   const [typeFilter, setTypeFilter] = useState<string>('');
   const [peopleFilter, setPeopleFilter] = useState<string>('');
@@ -39,26 +35,7 @@ const MyDrive = () => {
   ]);
 
   const viewMode = useViewMode((state) => state.viewMode);
-
-  const sidePanel = (
-    <div className='h-full w-[336px] overflow-hidden'>
-      <div className='h-28 bg-yellow-400'>header</div>
-      <div className='relative flex h-full w-full flex-col overflow-y-auto'>
-        <div className='flex flex-col pl-5 pr-3 pt-4'>
-          <div>info</div>
-          <div>info</div>
-          <div>info</div>
-          <div>info</div>
-          <div>info</div>
-          <div>info</div>
-          <div>info</div>
-          <div>info</div>
-          <div>info</div>
-        </div>
-      </div>
-    </div>
-  );
-
+  
   // const remoteEntries = getEntries(dirId, filter, sort, order);
   const remoteEntries: Entry[] = fakeEntries;
   const localEntries: LocalEntry[] = remoteToLocalEntries(remoteEntries);

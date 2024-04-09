@@ -7,16 +7,19 @@ import { Info } from '@mui/icons-material';
 import { Tooltip } from '@mui/material';
 import React, { useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
-import Dropdown, { MenuItem } from '../drop-down/Dropdown';
+import Dropdown, { MenuItem, classNames } from '../drop-down/Dropdown';
 // import FileViewerContainer from '../file-viewers/file-viewer-container/FileViewerContainer';
 import MovePopUp from '../pop-up/MovePopUp';
 import SharePopUp from '../pop-up/SharePopUp';
+import { useDrawer } from '@/store/my-drive/myDrive.store';
 
 type FileCardProps = {
   title: string;
   icon?: React.ReactNode;
   preview?: React.ReactNode;
   id: string;
+  onClick: (id: string) => void;
+  selected: boolean;
 };
 
 export const fileOperation = [
@@ -26,11 +29,11 @@ export const fileOperation = [
   { icon: <TrashIcon />, label: 'Delete file' },
 ];
 
-const FileCard: React.FC<FileCardProps> = (props) => {
+const FileCard: React.FC<FileCardProps> = ({ id, onClick, title, icon, preview, selected }) => {
   const [fileViewer, setFileViewer] = useState(false);
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
   const [type, setType] = useState<'move' | 'share' | null>(null);
-  const { title, icon, preview, id } = props;
+  const { openDrawer } = useDrawer();
 
   const menuItems: MenuItem[][] = [
     [{ label: 'Preview', icon: <Icon icon='material-symbols:visibility' />, action: () => {} }],
@@ -101,47 +104,40 @@ const FileCard: React.FC<FileCardProps> = (props) => {
   ];
 
   return (
-    <>
-      {/* {fileViewer && (
-        <FileViewerContainer
-          open={fileViewer}
-          closeOutside={() => {
-            setFileViewer(false);
-          }}
-          fileName={title}
-          fileType={''}
-        />
-      )} */}
-      <div
-        onDoubleClick={() => {
-          setFileViewer(true);
-        }}
-        className='flex h-full w-full flex-col items-center justify-center rounded-xl bg-surfaceContainerLow px-2 shadow-sm hover:bg-surfaceDim'>
-        <div className='flex w-full items-center justify-between px-1 py-3'>
-          <div className='flex max-w-[calc(100%-24px)] items-center space-x-4'>
-            <div className='h-6 w-6 min-w-fit'>{icon}</div>
-            <Tooltip title={title}>
-              <div className='truncate text-sm font-medium'>{title}</div>
-            </Tooltip>
-          </div>
-          <Dropdown
-            button={<BsThreeDotsVertical className='h-6 w-6 rounded-full p-1 hover:bg-slate-300' />}
-            items={menuItems}
-            left={true}
-          />
+    <div
+      className={classNames(
+        'file-card',
+        'flex h-full w-full flex-col items-center justify-center rounded-xl px-2 shadow-sm',
+        selected ? 'bg-[#c2e7ff]' : 'bg-[#f0f4f9] hover:bg-[#dfe3e7]',
+      )}
+      onDoubleClick={() => {
+        setFileViewer(true);
+      }}
+      onClick={() => onClick(id)}>
+      <div className='flex w-full items-center justify-between px-1 py-3'>
+        <div className='flex max-w-[calc(100%-24px)] items-center space-x-4'>
+          <div className='h-6 w-6 min-w-fit'>{icon}</div>
+          <Tooltip title={title}>
+            <div className='truncate text-sm font-medium'>{title}</div>
+          </Tooltip>
         </div>
-        <div className='mb-2 flex h-full w-full items-center justify-center overflow-hidden rounded-md bg-white'>{preview}</div>
-        {type === 'share' && <SharePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} />}
-        {type === 'move' && (
-          <MovePopUp
-            open={isPopUpOpen}
-            handleClose={() => setIsPopUpOpen(false)}
-            title={title}
-            location={'adfasdfasdf asdfasdfasdf asdfasdf'}
-          />
-        )}
+        <Dropdown
+          button={<BsThreeDotsVertical className='h-6 w-6 rounded-full p-1 hover:bg-slate-300' />}
+          items={menuItems}
+          left={true}
+        />
       </div>
-    </>
+      <div className='mb-2 flex h-full w-full items-center justify-center overflow-hidden rounded-md bg-white'>{preview}</div>
+      {type === 'share' && <SharePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} />}
+      {type === 'move' && (
+        <MovePopUp
+          open={isPopUpOpen}
+          handleClose={() => setIsPopUpOpen(false)}
+          title={title}
+          location={'adfasdfasdf asdfasdfasdf asdfasdf'}
+        />
+      )}
+    </div>
   );
 };
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import Sort from './Sort';
 import FolderCard from '@/components/core/folder-card/FolderCard';
 import FileCard from '@/components/core/file-card/FileCard';
@@ -6,12 +6,6 @@ import { Entry } from '@/utils/types/entry.type';
 import fileIcons from '@/components/core/file-card/fileicon.constant';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { LocalEntry } from '../MyDrive';
-
-type Filter = {
-  typeFilter: string;
-  peopleFilter: string;
-  modifiedFilter: string;
-};
 
 type DriveGridViewProps = {
   dirId?: string;
@@ -27,19 +21,76 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({ dirId, order, sort
   const files = entries.filter((entry) => !entry.isDir);
   const folders = entries.filter((entry) => entry.isDir);
 
+  const [selectedFileIds, setSelectedFileIds] = React.useState<string[]>([]);
+  const [selectedFolderIds, setSelectedFolderIds] = React.useState<string[]>([]);
+
+  const viewRef = useRef<HTMLDivElement>(null);
+
+  const handleClickOutside = (e: MouseEvent) => {
+    let targetElement = e.target as Element;
+    while (targetElement && targetElement !== viewRef.current) {
+      if (targetElement.classList.contains('file-card') || targetElement.classList.contains('folder-card')) {
+        return;
+      }
+      targetElement = targetElement.parentNode as Element;
+    }
+    setSelectedFileIds([]);
+    setSelectedFolderIds([]);
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const handleFileClick = (id: string) => {
+    setSelectedFileIds((prevIds) => {
+      return prevIds.includes(id) ? prevIds.filter((fileId) => fileId !== id) : [...prevIds, id];
+    });
+  };
+
+  const handleFolderClick = (id: string) => {
+    setSelectedFolderIds((prevIds) => {
+      return prevIds.includes(id) ? prevIds.filter((folderId) => folderId !== id) : [...prevIds, id];
+    });
+  };
+
   return (
-    <div className='bg-white pl-5 pr-3 pt-4'>
+    <div ref={viewRef} className='bg-white pl-5 pr-3 pt-4'>
       <div className='relative flex flex-col space-y-2'>
         <div className={!folderShow ? 'visible' : 'hidden'}>
           <div className='pb-4 pt-2 text-sm font-medium'> Folders</div>
           <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'>
-            {localEntriesToFolder(folders)}
+            {folders.map((folder) => (
+              <FolderCard
+                key={folder.id}
+                id={folder.id}
+                title={folder.title}
+                icon={folder.icon}
+                onClick={() => handleFolderClick(folder.id)}
+                selected={selectedFolderIds.includes(folder.id)}
+              />
+            ))}
           </div>
         </div>
         <div className={!fileShow ? 'visible' : 'hidden'}>
           <div className='pb-4 pt-2 text-sm font-medium'> Files</div>
           <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'>
-            {localEntriesToFiles(files)}
+            {files.map((file) => (
+              <div className='aspect-square'>
+                <FileCard
+                  key={file.id}
+                  id={file.id}
+                  title={file.title}
+                  icon={file.icon}
+                  preview={file.preview}
+                  onClick={() => handleFileClick(file.id)}
+                  selected={selectedFileIds.includes(file.id)}
+                />
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -47,26 +98,19 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({ dirId, order, sort
   );
 };
 
-/**
- * Map MyEntry to FileCard
- */
-
 export const localEntriesToFiles = (files: LocalEntry[]) => {
   return files.map((file, ind) => (
     <div className='aspect-square w-auto' key={ind}>
-      <FileCard title={file.title} icon={file.icon} preview={file.preview} id={file.id} />
+      <FileCard title={file.title} icon={file.icon} preview={file.preview} id={file.id} onClick={() => {}} selected={false} />
     </div>
   ));
 };
 
-/**
- * Map MyEntry to FolderCard
- */
 export const localEntriesToFolder = (folders: LocalEntry[]) => {
   return folders.map((folder, index) => {
     return (
       <div key={index} className='w-auto'>
-        <FolderCard title={folder.title} icon={folder.icon} id={folder.id} />
+        <FolderCard title={folder.title} icon={folder.icon} id={folder.id} onClick={() => {}} selected={false} />
       </div>
     );
   });

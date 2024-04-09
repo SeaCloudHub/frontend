@@ -258,7 +258,7 @@ function getActivities(entryId: string): Activity[] {
   ];
 }
 
-function wait(duration: number): Promise<void> {
+export function wait(duration: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, duration));
 }
 

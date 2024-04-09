@@ -8,7 +8,7 @@ export const fakeEntries: Entry[] = [
     size: 1024,
     mode: 0o777,
     mime_type: 'text/plain',
-    md5: '1',
+    md5: '0',
     is_dir: false,
     created_at: '2021-09-21T14:00:00Z',
     updated_at: '2021-09-21T14:00:00Z',
@@ -232,5 +232,30 @@ export const fakeActivities: Activity[] = [
     },
     target: <div>target</div>,
     time: new Date(),
+  },
+];
+
+export const fakeCopiedEntries: Entry[] = [
+  {
+    name: 'file0ádfasdfasdsadsadfasdf đâsđâssađasadsadsadsadsadsadsadsadsadsadsadsadsadáđasađasadsadasdasdasdádfasđfádf',
+    full_path: '/file1',
+    size: 1024,
+    mode: 0o777,
+    mime_type: 'text/plain',
+    md5: '112',
+    is_dir: false,
+    created_at: '2021-09-21T14:00:00Z',
+    updated_at: '2021-09-21T14:00:00Z',
+  },
+  {
+    name: 'file1.mp3',
+    full_path: '/file1.mp3',
+    size: 1024,
+    mode: 0o777,
+    mime_type: 'text/plain',
+    md5: '133',
+    is_dir: false,
+    created_at: '2021-09-21T14:00:00Z',
+    updated_at: '2021-09-21T14:00:00Z',
   },
 ];
