@@ -137,7 +137,7 @@ const ModalAddUser = ({ title, isOpen, handleConfirm }: ModalAddUserProps) => {
                 error={formik.touched.email && Boolean(formik.errors.email)}
                 helperText={formik.touched.email && formik.errors.email}
               />
-              <label className='flex cursor-pointer items-center' htmlFor='upload-photo'>
+              <label className='flex w-1/2 cursor-pointer items-center' htmlFor='upload-photo'>
                 <ButtonIcon icon='tabler:camera' color='blue' />
                 <p className='statement-upper-medium text-blue-600'>UPLOAD PROFILE PHOTO</p>
               </label>

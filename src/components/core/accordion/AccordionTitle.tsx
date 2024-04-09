@@ -12,7 +12,7 @@ const AccordionTitle: React.FC<AccordionTitleProps> = ({ title, open, handleOpen
   return (
     <>
       <div className='text-md flex items-center justify-between px-3 py-2 font-semibold'>
-        <div>{title}</div>
+        <div className='statement-bold'>{title}</div>
         <IconButton size='medium' onClick={handleOpen}>
           <IconifyIcon icon='vaadin:caret-up' className={`h-5 w-5 ${!open ? 'rotate-180' : 'rotate-0'} transition-all`} />
         </IconButton>

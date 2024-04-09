@@ -1,9 +1,10 @@
+import { accountAuthorityCallback } from '@/utils/constants/account-login-callback.constant';
 import { Button, LinearProgress, Typography } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { useFormik } from 'formik';
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { checkEmailApi } from '../../apis/auth/auth.api';
 import { loginInitialValue } from '../../apis/auth/request/auth-sign-in.request';
@@ -17,10 +18,24 @@ import AuthFooter from './AuthFooter';
 import { default as AuthLink } from './auth-link/AuthLink';
 
 const LoginEmail = () => {
+  const location = useLocation();
+  const from = location.state?.from?.pathname;
   const [currentValue, setCurrentValue] = React.useState('');
   const onEmailValid = useSession((state) => state.onEmailValid);
   const navigate = useNavigate();
+  const { token: authenticated, role } = useSession();
   const handleChange = (e: { target: { value: React.SetStateAction<string> } }) => setCurrentValue(e.target.value);
+
+  useEffect(() => {
+    console.log(authenticated);
+    if (!authenticated) return;
+    if (from) {
+      navigate(from);
+    } else {
+      navigate(accountAuthorityCallback[role!]);
+    }
+  }, [authenticated, role]);
+
   const formik = useFormik({
     initialValues: loginInitialValue,
     validationSchema: emailSchema,

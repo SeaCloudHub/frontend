@@ -52,19 +52,19 @@ export const userSidebar: SidebarItemType[] = [
 
 export const adminSidebar: SidebarItemType[] = [
   {
-    icon: 'mage:dashboard-3-fill',
+    icon: 'material-symbols-light:dashboard-outline',
     title: 'Dashboard',
     link: ADMIN_HOME,
     tooltip: 'Dashboard',
   },
   {
-    icon: 'ph:user-fill',
+    icon: 'solar:user-outline',
     title: 'User management',
     link: ADMIN_USER_MANAGEMENT,
     tooltip: 'User management',
   },
   {
-    icon: 'material-symbols:folder',
+    icon: 'iconamoon:folder-thin',
     title: 'Storage management',
     link: ADMIN_STORAGE_MANAGEMENT,
     tooltip: 'Storage management',

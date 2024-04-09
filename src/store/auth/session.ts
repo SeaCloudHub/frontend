@@ -10,6 +10,7 @@ type SessionState = {
   firstLogin: boolean;
   onEmailValid: (email: string | null) => void;
   signIn: (token: string | null, role: Role | null, firstLogin?: boolean) => void;
+  signOut: () => void;
 };
 
 const value = {
@@ -29,6 +30,7 @@ export const useSession = create<SessionState>()(
         signIn: (token: string | null, role: Role | null, firstLogin?: boolean) =>
           set({ token: token, role: role, firstLogin: firstLogin }),
         onEmailValid: (email: string | null) => set((state) => ({ ...state, email: email })),
+        signOut: () => set({ token: null, role: null, email: null }),
       }),
       {
         name: 'sessionStore',

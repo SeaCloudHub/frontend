@@ -79,8 +79,8 @@ type RecentlyAddedUsersProps = {
 const RecentlyAddedUsers: React.FC<RecentlyAddedUsersProps> = ({ users }) => {
   users = fakeData;
   return (
-    <AccordionCore title='User Log' className='mb-3 max-h-[400px] overflow-y-auto'>
-      <List>
+    <AccordionCore title='User Log' className='mb-1 max-h-[400px] overflow-y-auto'>
+      <List className='text-[13px]'>
         {users.slice(0, 10).map((user, i) => (
           <Box key={user._id}>
             <ListItem className='cursor-pointer transition-all duration-300 ease-in-out hover:bg-gray-300 active:bg-gray-400'>
@@ -93,7 +93,7 @@ const RecentlyAddedUsers: React.FC<RecentlyAddedUsersProps> = ({ users }) => {
                   user?.timeCreated ? new Date(user?.timeCreated).toLocaleString() : user?.timeCreated
                 }`}
                 secondaryTypographyProps={{
-                  className: ' overflow-hidden whitespace-nowrap overflow-ellipsis',
+                  className: ' overflow-hidden  whitespace-nowrap overflow-ellipsis',
                 }}
               />
             </ListItem>

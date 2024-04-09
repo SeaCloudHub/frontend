@@ -32,7 +32,7 @@ const StorageLog = () => {
   ];
   return (
     <AccordionCore title='Storage Log' className='mb-3 '>
-      <div className='max-h-[400px] overflow-y-auto'>
+      <div className='max-h-[400px] overflow-y-auto px-2 text-[14px]'>
         {logs.map((item, index) => (
           <div className='flex space-x-2' key={index}>
             <p className='italic'>{item.date}</p>
@@ -40,14 +40,14 @@ const StorageLog = () => {
             <p
               className={`${
                 item.action === 'Delete' ? 'text-red-600' : item.action === 'Add' ? 'text-green-600' : 'text-purple-500'
-              } statement-bold`}>
+              } statement-upper-medium `}>
               {`[${item.action}]`}
             </p>
             <p className='statement-upper-medium'>{item.file}</p>
           </div>
         ))}
       </div>
-      <p className='statement-bold cursor-pointer underline'>See more</p>
+      <p className='statement-bold cursor-pointer underline md:text-[11px]'>See more</p>
     </AccordionCore>
   );
 };

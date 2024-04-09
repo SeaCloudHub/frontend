@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { UserManagementInfoDto } from '../../../apis/admin/user-management/dto/user-management-info.dto';
 import { ImportExcelREQ } from '../../../apis/admin/user-management/request/add-user-excel.request';
@@ -48,7 +49,7 @@ const UserManagement = () => {
       setScrollable(true);
     }
   }, [screenMode]);
-
+  const navigate = useNavigate();
   const renderCell: Record<string, (rowData: UserManagementInfoDto) => React.ReactNode> = {
     usedMemory: (rowData: UserManagementInfoDto) => (
       <LinearChartBar value={rowData['usedMemory'] as number} total={100} width='100%' />
@@ -266,6 +267,9 @@ const UserManagement = () => {
               columns={userInfoColumns}
               onPageChange={() => {}}
               data={data}
+              onClick={(user: UserManagementInfoDto) => {
+                navigate(user.userId!);
+              }}
             />
           </div>
         </>
