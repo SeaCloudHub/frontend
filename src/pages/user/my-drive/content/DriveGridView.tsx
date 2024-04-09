@@ -15,9 +15,9 @@ type Filter = {
 
 type DriveGridViewProps = {
   dirId?: string;
-  sort: string;
-  order: string;
-  setSort: ({ sort, order }: { sort: string; order: string }) => void;
+  sort?: string;
+  order?: string;
+  setSort?: ({ sort, order }: { sort: string; order: string }) => void;
   entries: LocalEntry[];
   fileShow?: boolean;
   folderShow?: boolean;
@@ -30,9 +30,6 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({ dirId, order, sort
   return (
     <div className='bg-white pl-5 pr-3 pt-4'>
       <div className='relative flex flex-col space-y-2'>
-        <div className='absolute right-4 top-3'>
-          <Sort sort={sort} order={order} setSort={setSort} />
-        </div>
         <div className={!folderShow ? 'visible' : 'hidden'}>
           <div className='pb-4 pt-2 text-sm font-medium'> Folders</div>
           <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'>

@@ -11,7 +11,7 @@ export type StorageItem = {
 
 type StorageTreeProps = {
   selectedItems: StorageItem[];
-  handleSelectedItemsChange: (event: React.SyntheticEvent, ids: string | null) => void;
+  handleSelectedItemsChange: (event: React.SyntheticEvent, ids: string[]) => void;
 };
 
 const StorageTree: React.FC<StorageTreeProps> = ({ selectedItems, handleSelectedItemsChange }) => {
@@ -30,7 +30,7 @@ const StorageTree: React.FC<StorageTreeProps> = ({ selectedItems, handleSelected
                 <span className='line-clamp-1 overflow-hidden'>{item.name}</span>
               </div>
             }
-            onSelect={(event) => handleSelectedItemsChange(event, item.id)}
+            onSelect={(event) => handleSelectedItemsChange(event, [item.id])}
             className='line-clamp-1 overflow-hidden'>
             {item.child && renderTreeItems(item.child)}
           </TreeItem>
