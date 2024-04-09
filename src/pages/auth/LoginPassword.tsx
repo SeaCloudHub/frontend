@@ -49,7 +49,7 @@ const LoginPassword = () => {
     onSuccess: (data) => {
       const a = dayjs(data.data.identity.password_changed_at);
       console.log(a.year());
-      signIn(data.data.session_token, data.data.identity.is_admin ? Role.ADMIN : Role.USER, a.year()< 2024);
+      signIn(data.data.session_token, data.data.identity.is_admin ? Role.ADMIN : Role.USER, a.year() < 2024);
       if (data.data.identity.password_changed_at == null) {
         navigate(AUTH_CHANGE_PASSWORD);
       }

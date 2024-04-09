@@ -1,6 +1,7 @@
 import { Error } from '@mui/icons-material';
 import { FilledInputProps, InputLabel, InputProps, OutlinedInputProps, SxProps, TextField, Theme } from '@mui/material';
 import React from 'react';
+
 export type TextInputCoreProps = {
   labelDirection?: 'horizontal' | 'vertical';
   label?: React.ReactNode;
@@ -43,14 +44,26 @@ const TextInputCore = ({
     setInputValue(newValue);
     onChange && onChange(newValue);
   };
+
   return (
     <div
       className={`${labelDirection === 'vertical' ? 'flex flex-col justify-start' : 'flex items-center space-x-1'} ${className} ${fullWidth ? 'w-full' : ''} `}>
       {label && <InputLabel sx={{ fontWeight: 'bold' }}>{label}</InputLabel>}
       <TextField
         fullWidth={fullWidth}
-        InputProps={inputProps}
-        sx={sx}
+        InputProps={{ ...inputProps }}
+        sx={{
+          ...sx,
+          '& .MuiInputBase-root': {
+            height: '45px',
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+          },
+          '& .MuiInputLabel-root': {
+            transform: 'translateY(-50%)',
+          },
+        }}
         name={name}
         value={inputValue}
         type={type}
@@ -59,7 +72,7 @@ const TextInputCore = ({
         helperText={
           helperText && (
             <span className='flex -translate-x-3 items-center gap-1'>
-              {error && <Error color='error' sx={{ width: '15px', height: '15px' }} />}
+              {error && <Error color='error' sx={{ width: '15px', height: '10px' }} />}
               <span>{helperText}</span>
             </span>
           )

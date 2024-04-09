@@ -3,10 +3,10 @@ import { useSession } from '../../store/auth/session';
 import { useScreenMode } from '../../store/responsive/screenMode';
 import { ScreenMode } from '../../utils/enums/screen-mode.enum';
 
-import Navbar from './Navbar';
-import Sidebar from './Sidebar';
-import { classNames } from '../core/drop-down/Dropdown';
 import { Role } from '@/utils/enums/role.enum';
+import { classNames } from '../core/drop-down/Dropdown';
+import Navbar from './Navbar/Navbar';
+import Sidebar from './Sidebar/Sidebar';
 
 const DynamicLayout = ({ children }: PropsWithChildren) => {
   const { shrinkMode, screenMode } = useScreenMode();
@@ -25,8 +25,8 @@ const DynamicLayout = ({ children }: PropsWithChildren) => {
       ) : (
         <div
           className={classNames(
-            'h-full w-full pt-[80px]',
-            shrinkMode ? (screenMode == ScreenMode.MOBILE ? 'ml-0' : 'pl-[75px]') : 'pl-[300px]',
+            'px 0 h-full w-full pt-[4rem] ',
+            shrinkMode ? (screenMode == ScreenMode.MOBILE ? 'ml-0' : 'pl-[80px]') : 'pl-[305px]',
           )}>
           {children}
         </div>

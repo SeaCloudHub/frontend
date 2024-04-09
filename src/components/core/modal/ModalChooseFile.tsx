@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import IconifyIcon from '../Icon/IConCore';
 import ButtonContainer from '../button/ButtonContainer';
-import ButtonIcon from '../button/ButtonIcon';
 import ModalCore from './ModalCore';
 type ModalChooseFileProps = {
   title: string;
@@ -20,11 +19,13 @@ const ModalChooseFile = ({ title, isOpen, handleConfirm, fileIcon }: ModalChoose
 
   return (
     <ModalCore open={isOpen} width={'40%'} closeOutside={handleConfirm}>
-      <div className='mb-3 w-full flex-col space-y-3 md:flex'>
+      <div className='relative mb-3 min-h-[150px] w-full flex-col space-y-3 md:flex'>
         <h3 className='statement-bold text-[24px]'>{title}</h3>
         <div className='flex w-full flex-col space-y-2'>
-          <label htmlFor='upload-photo' className='flex w-fit items-center rounded-lg bg-blue-100 px-2'>
-            <ButtonIcon icon='tabler:upload' color='blue' />
+          <label
+            htmlFor='upload-photo'
+            className='flex w-fit items-center justify-center space-x-2 rounded-lg bg-blue-100 px-2 px-3 py-2'>
+            <IconifyIcon icon='tabler:upload' color='blue' />
             <p className='statement-upper-medium text-blue-600'>Add file</p>
           </label>
           {file && (
@@ -33,7 +34,7 @@ const ModalChooseFile = ({ title, isOpen, handleConfirm, fileIcon }: ModalChoose
             </div>
           )}
         </div>
-        <div className='mt-6 flex items-center justify-end gap-5'>
+        <div className='absolute -bottom-1 right-0 flex items-center justify-end gap-5'>
           <p
             onClick={() => {
               handleConfirm(undefined);

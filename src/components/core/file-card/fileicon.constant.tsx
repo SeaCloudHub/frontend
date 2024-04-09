@@ -1,8 +1,9 @@
 import { AiFillFile, AiFillFileZip } from 'react-icons/ai';
-import { MdMovie, MdPictureAsPdf } from 'react-icons/md';
+import { BiSolidFileDoc, BiSolidFileTxt, BiSolidImageAlt } from 'react-icons/bi';
+import { FaFilePowerpoint } from 'react-icons/fa6';
 import { IoMdHeadset } from 'react-icons/io';
-import { BiSolidImageAlt, BiSolidFileTxt, BiSolidFileDoc } from 'react-icons/bi';
-
+import { MdMovie, MdPictureAsPdf } from 'react-icons/md';
+import { RiFileExcel2Line } from 'react-icons/ri';
 interface FileIcons {
   [key: string]: React.ReactNode;
 }
@@ -20,7 +21,9 @@ const fileIcons: FileIcons = {
   ico: <BiSolidImageAlt className='h-full w-full text-[#CA2E24]' />,
   svg: <BiSolidImageAlt className='h-full w-full text-[#CA2E24]' />,
   docx: <BiSolidFileDoc className='h-full w-full text-[#447DD7]' />,
+  xlxs: <RiFileExcel2Line className=' w-fulltext-green-600 h-full' />,
   txt: <BiSolidFileTxt className='h-full w-full text-[#447DD7]' />,
+  pptx: <FaFilePowerpoint className='h-ull w-full text-red-500' />,
   zip: <AiFillFileZip className='text-textC h-full w-full' />,
   any: <AiFillFile className='text-textC h-full w-full' />,
 };

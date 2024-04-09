@@ -9,7 +9,7 @@ interface FolderCardProps {
   id: string;
 }
 
-const FolderCard: React.FC<FolderCardProps> = ({ title, icon,id }) => {
+const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id }) => {
   const setDrawerOpen = useDrawer((state) => state.openDrawer);
   const folderOps: MenuItem[][] = [
     [

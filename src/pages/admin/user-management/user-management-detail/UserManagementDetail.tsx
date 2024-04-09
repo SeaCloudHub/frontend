@@ -19,7 +19,7 @@ const UserManagementDetail = () => {
   return (
     <>
       <div
-        className={`fixed ${screenMode != ScreenMode.DESKTOP ? 'left-0' : shrinkMode ? 'left-[79px]' : 'left-[304px]'}  top-[80px] z-20  flex w-full items-center space-x-1 border-b-2 bg-white p-2`}>
+        className={`fixed ${screenMode != ScreenMode.DESKTOP ? 'left-0' : shrinkMode ? 'left-[76px]' : 'left-[301px]'}  top-[80px] z-20  flex w-full items-center space-x-1 border-b-2 bg-white px-3 py-1`}>
         <p
           onClick={() => {
             navigate(ADMIN_USER_MANAGEMENT);
@@ -27,7 +27,7 @@ const UserManagementDetail = () => {
           className='statement-upper-medium cursor-pointer text-gray-700'>
           Users
         </p>
-        <IconifyIcon icon={'material-symbols:arrow-forward-ios-rounded'} />
+        <IconifyIcon fontSize={15} icon={'material-symbols:arrow-forward-ios-rounded'} />
         <p className='statement-upper-medium'>Hung Phi Vo</p>
       </div>
       <div className={`${flex ? 'flex w-full items-start space-x-2' : ''} pt-[35px]`}>

@@ -21,7 +21,7 @@ const SidebarItem = ({ icon, title, link, shrink, tooltip }: SidebarItemProps) =
         <div
           onClick={onClick}
           className={` sidebar-item ${shrink ? '' : 'sidebar-item-lg'} ${link === pathName.pathname ? 'sidebar-item-active' : ''}`}>
-          <IconifyIcon height={'30px'} icon={icon} />
+          <IconifyIcon height={'20px'} icon={icon} />
           <p className={` ml-4 ${shrink ? 'hidden' : 'block'} statement-upper-medium `}>{title}</p>
         </div>
       </Tooltip>

@@ -8,7 +8,7 @@ html {
   .sidebar {
     @apply fixed left-0 top-0 flex h-screen
          w-[75px] flex-col items-center space-y-10 overflow-auto  overflow-x-hidden 
-         border border-r-2 border-r-slate-200 bg-gray-200 px-3
+         border border-r-2 border-r-slate-200 bg-gray-300 px-3
          shadow-md
         shadow-black;
   }
@@ -16,20 +16,20 @@ html {
     @apply w-[300px] !important;
   }
   .sidebar-item {
-    @apply flex w-full cursor-pointer items-center  justify-center rounded-2xl px-7  py-2;
+    @apply flex w-full cursor-pointer items-center  justify-center rounded-xl px-5  py-2;
   }
   .sidebar-item-lg {
     @apply justify-normal !important;
   }
   .sidebar-item:hover {
-    @apply bg-gray-300;
+    @apply bg-gray-400;
   }
   .sidebar-item-active {
     @apply bg-[#063768] text-white !important;
   }
   .nav-bar {
-    @apply fixed left-0 top-0 h-[80px] w-full  
-    border  border-b-2 border-b-slate-200  border-r-slate-200 bg-gray-200 
+    @apply fixed left-0 top-0 h-[4rem] w-full   flex
+    border  border-b-slate-200  bg-gray-300 
     pl-[300px] shadow-sm shadow-neutral-500;
   }
   .nav-bar-shrink {
