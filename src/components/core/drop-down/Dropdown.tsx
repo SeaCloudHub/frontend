@@ -41,7 +41,7 @@ const Dropdown: React.FC<DropdownProps> = ({ button, items, left }) => {
           {items.map((group) => (
             <div key={group[0].label} className='py-1'>
               {group.map(({ label, icon, action }) => (
-                <Menu.Item>
+                <Menu.Item key={label}>
                   {({ active }) => (
                     <div
                       className={classNames(active ? 'bg-[#e4e4e4] text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm')}

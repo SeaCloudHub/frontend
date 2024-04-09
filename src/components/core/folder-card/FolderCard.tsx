@@ -2,6 +2,11 @@ import Dropdown, { MenuItem } from '../drop-down/Dropdown';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useDrawer } from '@/store/my-drive/myDrive.store';
+import { useNavigate } from 'react-router-dom';
+import { CopyToClipboard } from '@/utils/function/copy.function';
+import { useState } from 'react';
+import SharePopUp from '../pop-up/SharePopUp';
+import MovePopUp from '../pop-up/MovePopUp';
 
 interface FolderCardProps {
   title: string;
@@ -9,8 +14,11 @@ interface FolderCardProps {
   id: string;
 }
 
-const FolderCard: React.FC<FolderCardProps> = ({ title, icon,id }) => {
+const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id }) => {
   const setDrawerOpen = useDrawer((state) => state.openDrawer);
+  const [isPopUpOpen, setIsPopUpOpen] = useState(false);
+  const [type, setType] = useState<'move' | 'share' | null>();
+
   const folderOps: MenuItem[][] = [
     [
       { label: 'Download', icon: <Icon icon='ic:outline-file-download' />, action: () => {} },
@@ -21,11 +29,23 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon,id }) => {
       },
     ],
     [
-      { label: 'Copy link', icon: <Icon icon='material-symbols:link' />, action: () => {} },
-      { label: 'Share', icon: <Icon icon='lucide:user-plus' />, action: () => {} },
+      {
+        label: 'Copy link',
+        icon: <Icon icon='material-symbols:link' />,
+        action: (text: string) => {
+          CopyToClipboard(text);
+        },
+      },
+      { label: 'Share', icon: <Icon icon='lucide:user-plus' />, action: () => {
+        setType('share');
+        setIsPopUpOpen(true);
+      } },
     ],
     [
-      { label: 'Move', icon: <Icon icon='mdi:folder-move-outline' />, action: () => {} },
+      { label: 'Move', icon: <Icon icon='mdi:folder-move-outline' />, action: () => {
+        setType('move');
+        setIsPopUpOpen(true);
+      } },
       {
         label: 'Add shortcut',
         icon: <Icon icon='material-symbols:add-to-drive' />,
@@ -59,6 +79,8 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon,id }) => {
         items={folderOps}
         left={true}
       />
+      { type === 'move' && <MovePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} location={'My drive'} />}
+      { type === 'share' && <SharePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} />}
     </div>
   );
 };
