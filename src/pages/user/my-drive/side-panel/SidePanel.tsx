@@ -5,12 +5,66 @@ import { Tab } from '@headlessui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { Avatar } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { DriveLocationButton } from './DriveLocationButton';
+import SidePanelAction from './SidePanelAction';
 
 type SidePanelProps = {
   name?: string;
 };
+
+const fakeDataSidePanelAction = [
+  {
+    time: new Date(),
+    data: [
+      {
+        action: 'created',
+        timeAction: new Date(),
+        actor: { name: 'daccong', avatar: 'https://picsum.photos/200/300' },
+        // root: { id: 'id', title: 'root' },
+        entry: [
+          { id: 'id', title: 'entry.pdf' },
+          { id: 'id', title: 'entry.docx' },
+        ],
+      },
+      {
+        action: 'opened',
+        timeAction: new Date(),
+        actor: { name: 'daccong', avatar: 'https://picsum.photos/200/300' },
+        root: { id: 'id', title: 'root' },
+        entry: [
+          { id: 'id', title: 'entry' },
+          { id: 'id', title: 'entry' },
+        ],
+      },
+    ],
+  },
+  {
+    time: new Date(),
+    data: [
+      {
+        action: 'created',
+        timeAction: new Date(),
+        actor: { name: 'daccong', avatar: 'https://picsum.photos/200/300' },
+        root: { id: 'id', title: 'root asdfasd addfasdf dsgsdg dfasf' },
+        entry: [
+          { id: 'id', title: 'entry 111111 111111111 1111111111 11111111111' },
+          { id: 'id', title: 'entry' },
+        ],
+      },
+      {
+        action: 'opened',
+        timeAction: new Date(),
+        actor: { name: 'daccong', avatar: 'https://picsum.photos/200/300' },
+        root: { id: 'id', title: 'root' },
+        entry: [
+          { id: 'id', title: 'entry' },
+          { id: 'id', title: 'entry' },
+        ],
+      },
+    ],
+  },
+];
 
 const SidePanel: React.FC<SidePanelProps> = () => {
   const { entryId, icon, title, closeDrawer } = useDrawer();
@@ -26,6 +80,11 @@ const SidePanel: React.FC<SidePanelProps> = () => {
   });
 
   const details = detailsQuery.data;
+
+  useEffect(() => {
+    detailsQuery.refetch();
+    activitiesQuery.refetch();
+  }, [entryId]);
 
   return (
     <div className='ml-4 flex h-full w-[336px] flex-col overflow-hidden'>
@@ -138,7 +197,9 @@ const SidePanel: React.FC<SidePanelProps> = () => {
           ) : (
             <DefaultTabPanel />
           )}
-          <Tab.Panel>Activity</Tab.Panel>
+          <Tab.Panel>
+            <SidePanelAction data={fakeDataSidePanelAction} />
+          </Tab.Panel>
         </Tab.Panels>
       </Tab.Group>
     </div>
@@ -179,7 +240,7 @@ function getActivities(entryId: string): Activity[] {
       action: ActivityAction.CREATE,
       actor: {
         username: 'daccong',
-        url: 'https://slaydarkkkk.github.io/img/slaydark_avt.jpg',
+        url: 'https://picsum.photos/200/300',
       },
       target: <div>target</div>,
       time: new Date(),
@@ -189,7 +250,7 @@ function getActivities(entryId: string): Activity[] {
       action: ActivityAction.OPEN,
       actor: {
         username: 'daccong',
-        url: 'https://slaydarkkkk.github.io/img/slaydark_avt.jpg',
+        url: 'https://picsum.photos/200/300',
       },
       target: <div>target</div>,
       time: new Date(),

@@ -10,6 +10,7 @@ import Dropdown, { MenuItem } from '../drop-down/Dropdown';
 import { CopyToClipboard } from '@/utils/function/copy.function';
 import SharePopUp from '../pop-up/SharePopUp';
 import MovePopUp from '../pop-up/MovePopUp';
+import { Tooltip } from '@mui/material';
 
 type FileCardProps = {
   title: string;
@@ -97,7 +98,9 @@ const FileCard: React.FC<FileCardProps> = (props) => {
       <div className='flex w-full items-center justify-between px-1 py-3'>
         <div className='flex max-w-[calc(100%-24px)] items-center space-x-4'>
           <div className='h-6 w-6 min-w-fit'>{icon}</div>
-          <div className='truncate text-sm font-medium'>{title}</div>
+          <Tooltip title={title}>
+            <div className='truncate text-sm font-medium'>{title}</div>
+          </Tooltip>
         </div>
         <Dropdown
           button={<BsThreeDotsVertical className='h-6 w-6 rounded-full p-1 hover:bg-slate-300' />}
