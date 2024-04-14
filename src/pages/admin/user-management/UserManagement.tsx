@@ -208,7 +208,7 @@ const UserManagement = () => {
           </MenuCore>
           <ModalChooseFile
             fileIcon='grommet-icons:document-csv'
-            title='Choose file to Import'
+            fileType='.csv'
             isOpen={modals.find((modal) => modal.name === 'IMPORT')?.isOpen || false}
             handleConfirm={(data?: File) => {
               data && uploadCSVMutation.mutateAsync({ file: data! });

@@ -21,7 +21,7 @@ export default function MenuCore({ menuItems, children }: MenuCoreProps) {
   };
 
   return (
-    <div>
+    <>
       {!children && <ButtonIcon icon='radix-icons:hamburger-menu' size={'25px'} onClick={handleClick} />}
       {children && <div onClick={handleClick}>{children}</div>}
       <Menu id='basic-menu' anchorEl={anchorEl} open={open} onClose={handleClose}>
@@ -29,6 +29,6 @@ export default function MenuCore({ menuItems, children }: MenuCoreProps) {
           <MenuItemCore key={index} title={item.title} onClick={item.onClick} icon={item.icon} />
         ))}
       </Menu>
-    </div>
+    </>
   );
 }

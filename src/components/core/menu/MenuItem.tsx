@@ -12,7 +12,9 @@ const MenuItemCore = ({ title, onClick, icon }: MenuItemCoreProps) => {
       <MenuItem onClick={onClick}>
         <div className='flex items-center justify-center space-x-3'>
           <IconifyIcon icon={icon} />
-          <span style={{ marginLeft: '20px' }}>{title}</span>
+          <span style={{ marginLeft: '20px' }} className='text-sm'>
+            {title}
+          </span>
         </div>
       </MenuItem>
     </div>

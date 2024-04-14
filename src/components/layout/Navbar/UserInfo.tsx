@@ -1,7 +1,7 @@
 import { useSession } from '@/store/auth/session';
 import { AUTH_LOGIN_EMAIL } from '@/utils/constants/router.constant';
 import { LinearProgress } from '@mui/material';
-import { useState } from 'react';
+import { useRef, useState } from 'react'; // Import useRef and useEffect
 import { AiOutlineClose } from 'react-icons/ai';
 import { PiSignOutBold } from 'react-icons/pi';
 import { useNavigate } from 'react-router-dom';
@@ -13,6 +13,8 @@ function UserInfo({ onClose }: UserInfoProps) {
   const navigate = useNavigate();
   const [isLogout, setIsLogout] = useState(false);
   const signOut = useSession((state) => state.signOut);
+
+  const modalRef = useRef(null);
   const onSignOutClick = async () => {
     setIsLogout(true);
     setTimeout(() => {
@@ -21,12 +23,12 @@ function UserInfo({ onClose }: UserInfoProps) {
       navigate(AUTH_LOGIN_EMAIL);
     }, 2000);
   };
+
   return (
     <div
-      className='bg-darkC2  z-100 relative z-10 flex flex-col items-center
-    justify-center space-y-3 rounded-2xl bg-white px-5 py-3 text-sm font-medium
-    shadow-md shadow-[#b4bebb]'>
-      <button onClick={onClose} className='bg-darkC2 hover:bg-darkC absolute right-3 top-3 rounded-full p-1'>
+      ref={modalRef}
+      className='bg-darkC2  z-100 relative z-10 flex flex-col items-center justify-center space-y-3 rounded-2xl bg-white px-5 py-3 text-sm font-medium shadow-md shadow-[#b4bebb]'>
+      <button onClick={onClose} className='bg-darkC2 hover:bg-dark absolute right-3 top-3 rounded-full p-1'>
         <AiOutlineClose className='h-5 w-5 rounded-full stroke-2' />
       </button>
       <p>'Phan Nhat trieu1'</p>
@@ -48,14 +50,14 @@ function UserInfo({ onClose }: UserInfoProps) {
         <button
           disabled={isLogout}
           onClick={onSignOutClick}
-          className='tablet:w-44 hover:bg-darkC flex w-36 items-center space-x-2 rounded-r-full bg-white py-3  pl-3'>
+          className='tablet:w-44 hover:bg-darkC flex w-36 items-center justify-center space-x-2 rounded-full bg-white py-3  hover:bg-gray-200'>
           <PiSignOutBold className='h-6 w-6' />
           <span>Sign out</span>
         </button>
       </div>
       <div className=' flex  h-10 items-center space-x-2  text-xs '>
-        <span className='cursor-pointer rounded-full p-2 hover:bg-blue-100'>Privacy policy</span>
-        <span className='-mt-[3px] '> . </span> <span className='rounded-full p-2 hover:bg-blue-100'>Terms of service</span>
+        <span className='cursor-pointer rounded-full px-3 py-2 hover:bg-blue-100'>Privacy policy</span>
+        <span className='-mt-[3px] '> . </span> <span className='rounded-full px-3 py-2 hover:bg-blue-100'>Terms of service</span>
       </div>
       {isLogout && <LinearProgress className=' w-full translate-y-1' />}
     </div>

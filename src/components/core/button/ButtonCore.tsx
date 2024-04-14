@@ -30,7 +30,15 @@ const ButtonCore: React.FC<ButtonCoreProps> = ({
     <Tooltip title={tooltip}>
       <Button
         type={clickType}
-        sx={{ textTransform: 'none', color: contentColor }}
+        sx={{
+          paddingY: '3px',
+          paddingX: '10px',
+          textTransform: 'none',
+          color: contentColor,
+          minHeight: 'auto',
+          minWidth: 'auto',
+          fontSize: '0.875rem',
+        }}
         startIcon={!loading && icon}
         {...others}
         variant={type}

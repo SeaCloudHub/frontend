@@ -2,14 +2,15 @@ import { PencilIcon, ShareIcon, TrashIcon } from '@heroicons/react/16/solid';
 // import { MusicalNoteIcon, PhotoIcon } from '@heroicons/react/24/outline';
 // import { DocumentTextIcon } from '@heroicons/react/24/outline';
 import { useDrawer } from '@/store/my-drive/myDrive.store';
+import { CopyToClipboard } from '@/utils/function/copy.function';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { Info } from '@mui/icons-material';
-import React from 'react';
+import React, { useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Dropdown, { MenuItem } from '../drop-down/Dropdown';
-import { CopyToClipboard } from '@/utils/function/copy.function';
-import SharePopUp from '../pop-up/SharePopUp';
+import FileViewerContainer from '../file-viewers/file-viewer-container/FileViewerContainer';
 import MovePopUp from '../pop-up/MovePopUp';
+import SharePopUp from '../pop-up/SharePopUp';
 
 type FileCardProps = {
   title: string;
@@ -26,10 +27,11 @@ export const fileOperation = [
 ];
 
 const FileCard: React.FC<FileCardProps> = (props) => {
+  const [fileViewer, setFileviewer] = useState(false);
   const { title, icon, preview, id } = props;
   const openDrawer = useDrawer((state) => state.openDrawer);
   const [isPopUpOpen, setIsPopUpOpen] = React.useState(false);
-  const [type, setType] = React.useState<'move'|'share'|null>();
+  const [type, setType] = React.useState<'move' | 'share' | null>();
 
   const menuItems: MenuItem[][] = [
     [{ label: 'Preview', icon: <Icon icon='material-symbols:visibility' />, action: () => {} }],
@@ -47,12 +49,16 @@ const FileCard: React.FC<FileCardProps> = (props) => {
       },
     ],
     [
-      { label: 'Copy link', icon: <Icon icon='material-symbols:link' />,
+      {
+        label: 'Copy link',
+        icon: <Icon icon='material-symbols:link' />,
         action: (text: string) => {
           CopyToClipboard(text);
         },
       },
-      { label: 'Share', icon: <Icon icon='lucide:user-plus' />,
+      {
+        label: 'Share',
+        icon: <Icon icon='lucide:user-plus' />,
         action: () => {
           setType('share');
           setIsPopUpOpen(true);
@@ -60,16 +66,19 @@ const FileCard: React.FC<FileCardProps> = (props) => {
       },
     ],
     [
-      { label: 'Move', icon: <Icon icon='mdi:folder-move-outline' />, action: () => {
-        console.log('[FileCard] add shortcut ' + id);
+      {
+        label: 'Move',
+        icon: <Icon icon='mdi:folder-move-outline' />,
+        action: () => {
+          console.log('[FileCard] add shortcut ' + id);
           setType('move');
           setIsPopUpOpen(true);
-        }
+        },
       },
       {
         label: 'Add shortcut',
         icon: <Icon icon='material-symbols:add-to-drive' />,
-        action: () => { },
+        action: () => {},
       },
       {
         label: 'Add to starred',
@@ -93,22 +102,43 @@ const FileCard: React.FC<FileCardProps> = (props) => {
   ];
 
   return (
-    <div className='flex h-full w-full flex-col items-center justify-center rounded-xl bg-surfaceContainerLow px-2 shadow-sm hover:bg-surfaceDim'>
-      <div className='flex w-full items-center justify-between px-1 py-3'>
-        <div className='flex max-w-[calc(100%-24px)] items-center space-x-4'>
-          <div className='h-6 w-6 min-w-fit'>{icon}</div>
-          <div className='truncate text-sm font-medium'>{title}</div>
-        </div>
-        <Dropdown
-          button={<BsThreeDotsVertical className='h-6 w-6 rounded-full p-1 hover:bg-slate-300' />}
-          items={menuItems}
-          left={true}
+    <>
+      {fileViewer && (
+        <FileViewerContainer
+          open={fileViewer}
+          closeOutside={() => {
+            setFileviewer(false);
+          }}
         />
+      )}
+      <div
+        onDoubleClick={() => {
+          setFileviewer(true);
+        }}
+        className='flex h-full w-full  flex-col items-center justify-center rounded-xl bg-surfaceContainerLow px-2 shadow-sm hover:bg-surfaceDim'>
+        <div className='flex w-full items-center justify-between px-1 py-3'>
+          <div className='flex max-w-[calc(100%-24px)] items-center space-x-4'>
+            <div className='h-6 w-6 min-w-fit'>{icon}</div>
+            <div className='truncate text-sm font-medium'>{title}</div>
+          </div>
+          <Dropdown
+            button={<BsThreeDotsVertical className='h-6 w-6 rounded-full p-1 hover:bg-slate-300' />}
+            items={menuItems}
+            left={true}
+          />
+        </div>
+        <div className='mb-2 flex h-full w-full items-center justify-center overflow-hidden rounded-md bg-white'>{preview}</div>
+        {type === 'share' && <SharePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} />}
+        {type === 'move' && (
+          <MovePopUp
+            open={isPopUpOpen}
+            handleClose={() => setIsPopUpOpen(false)}
+            title={title}
+            location={'adfasdfasdf asdfasdfasdf asdfasdf'}
+          />
+        )}
       </div>
-      <div className='mb-2 flex h-full w-full items-center justify-center overflow-hidden rounded-md bg-white'>{preview}</div>
-      { type === 'share' && <SharePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title}/> }
-      { type === 'move' && <MovePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} location={'adfasdfasdf asdfasdfasdf asdfasdf'}/> }
-    </div>
+    </>
   );
 };
 

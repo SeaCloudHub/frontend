@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ButtonIcon from '../../core/button/ButtonIcon';
 import Configuration from './Configuration';
 import Search from './Search';
@@ -10,6 +10,20 @@ type NavbarProps = {
 };
 const Navbar = ({ isShrink, phoneMode }: NavbarProps) => {
   const [showUserInfo, setShowUserInfo] = useState(false);
+  const userInfoRef = useRef(null);
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (userInfoRef.current && !userInfoRef.current.contains(event.target)) {
+        setShowUserInfo(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
     <div className={`z-20 ${phoneMode ? '!important pl-0' : ''} nav-bar  ${isShrink ? 'nav-bar-shrink' : ''}`}>
       <header className='relative flex  w-screen items-center justify-between py-2  pl-3 pr-5'>
@@ -27,13 +41,13 @@ const Navbar = ({ isShrink, phoneMode }: NavbarProps) => {
               setShowUserInfo(true);
             }}
             src={'https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75'}
-            className='h-[70%] rounded-full object-center  p-1 hover:bg-gray-400'
+            className='h-[70%] rounded-full object-center  p-1.5 hover:bg-gray-100'
             draggable={false}
             alt='avatar'
           />
         </div>
         {showUserInfo && (
-          <div className='z-100 absolute right-5 top-16'>
+          <div ref={userInfoRef} className='z-100 absolute right-5 top-16'>
             <UserInfo
               onClose={() => {
                 setShowUserInfo(false);
