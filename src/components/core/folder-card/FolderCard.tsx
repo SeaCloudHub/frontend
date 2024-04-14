@@ -7,6 +7,7 @@ import { CopyToClipboard } from '@/utils/function/copy.function';
 import { useState } from 'react';
 import SharePopUp from '../pop-up/SharePopUp';
 import MovePopUp from '../pop-up/MovePopUp';
+import { Tooltip } from '@mui/material';
 
 interface FolderCardProps {
   title: string;
@@ -72,7 +73,9 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id }) => {
     <div className='flex w-full items-center justify-between rounded-xl bg-surfaceContainerLow px-3 py-3 shadow-sm hover:bg-surfaceDim '>
       <div className='flex max-w-[calc(100%-24px)] items-center space-x-4'>
         <div className='h-6 w-6 min-w-fit'>{icon}</div>
-        <div className='truncate text-sm font-medium'>{title}</div>
+        <Tooltip title={title}>
+          <div className='truncate text-sm font-medium'>{title}</div>
+        </Tooltip>
       </div>
       <Dropdown
         button={<BsThreeDotsVertical className='h-6 w-6 rounded-full p-1 hover:bg-slate-300' />}

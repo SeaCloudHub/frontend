@@ -1,10 +1,10 @@
 import { PencilIcon, ShareIcon, TrashIcon } from '@heroicons/react/16/solid';
 // import { MusicalNoteIcon, PhotoIcon } from '@heroicons/react/24/outline';
 // import { DocumentTextIcon } from '@heroicons/react/24/outline';
-import { useDrawer } from '@/store/my-drive/myDrive.store';
 import { CopyToClipboard } from '@/utils/function/copy.function';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { Info } from '@mui/icons-material';
+import { Tooltip } from '@mui/material';
 import React, { useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Dropdown, { MenuItem } from '../drop-down/Dropdown';
@@ -27,11 +27,10 @@ export const fileOperation = [
 ];
 
 const FileCard: React.FC<FileCardProps> = (props) => {
-  const [fileViewer, setFileviewer] = useState(false);
+  const [fileViewer, setFileViewer] = useState(false);
+  const [isPopUpOpen, setIsPopUpOpen] = useState(false);
+  const [type, setType] = useState<'move' | 'share' | null>(null);
   const { title, icon, preview, id } = props;
-  const openDrawer = useDrawer((state) => state.openDrawer);
-  const [isPopUpOpen, setIsPopUpOpen] = React.useState(false);
-  const [type, setType] = React.useState<'move' | 'share' | null>();
 
   const menuItems: MenuItem[][] = [
     [{ label: 'Preview', icon: <Icon icon='material-symbols:visibility' />, action: () => {} }],
@@ -107,19 +106,23 @@ const FileCard: React.FC<FileCardProps> = (props) => {
         <FileViewerContainer
           open={fileViewer}
           closeOutside={() => {
-            setFileviewer(false);
+            setFileViewer(false);
           }}
+          fileName={title}
+          fileType={''}
         />
       )}
       <div
         onDoubleClick={() => {
-          setFileviewer(true);
+          setFileViewer(true);
         }}
-        className='flex h-full w-full  flex-col items-center justify-center rounded-xl bg-surfaceContainerLow px-2 shadow-sm hover:bg-surfaceDim'>
+        className='flex h-full w-full flex-col items-center justify-center rounded-xl bg-surfaceContainerLow px-2 shadow-sm hover:bg-surfaceDim'>
         <div className='flex w-full items-center justify-between px-1 py-3'>
           <div className='flex max-w-[calc(100%-24px)] items-center space-x-4'>
             <div className='h-6 w-6 min-w-fit'>{icon}</div>
-            <div className='truncate text-sm font-medium'>{title}</div>
+            <Tooltip title={title}>
+              <div className='truncate text-sm font-medium'>{title}</div>
+            </Tooltip>
           </div>
           <Dropdown
             button={<BsThreeDotsVertical className='h-6 w-6 rounded-full p-1 hover:bg-slate-300' />}

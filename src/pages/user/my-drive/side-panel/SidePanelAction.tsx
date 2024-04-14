@@ -1,0 +1,37 @@
+import { Avatar } from '@mui/material';
+import React, { useEffect, useRef, useState } from 'react';
+import ActionItem from './ActionItem';
+
+export type DataSidePanelAction = {
+  id: string;
+  title: string;
+};
+
+type SidePanelActionProps = {
+  data: {
+    time: Date;
+    data: {
+      action: string;
+      timeAction: Date;
+      actor: {name: string; avatar: string};
+      root?: DataSidePanelAction;
+      entry: DataSidePanelAction[];
+    }[];
+  }[];
+};
+
+const SidePanelAction: React.FC<SidePanelActionProps> = ({ data }) => {
+
+  return (
+    <div className='relative'>
+      {data.map((item, index) => (
+        <div key={index} className='flex flex-col'>
+          <div className={`font-semibold my-5 text-lg`}>{item.time.toDateString()}</div>
+          <ActionItem key={index} time={item.time} data={item.data}/>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default SidePanelAction;
