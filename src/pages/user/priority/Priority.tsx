@@ -5,7 +5,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import PriorityFilter from './priority-filter/PriorityFilter';
 import SidePanel from '../my-drive/side-panel/SidePanel';
 import PriorityView from './priority-view/PriorityView';
-import { remoteToLocalEntries } from '../my-drive/content/DriveGridView';
+import { remoteToLocalEntries2 } from '../my-drive/content/DriveGridView';
 import { fakeData } from '../shared/Shared';
 
 const Priority = () => {
@@ -13,7 +13,7 @@ const Priority = () => {
   const [isFileMode, setIsFileMode] = useState<boolean>(true);
   const { drawerOpen, openDrawer, closeDrawer } = useDrawer();
 
-  const entries = remoteToLocalEntries(fakeData);
+  const entries = remoteToLocalEntries2(fakeData);
   return (
     <div>
       <DriveLayout

@@ -18,6 +18,7 @@ import { toastError } from '../../utils/toast-options/toast-options';
 import { ApiGenericError } from '../../utils/types/api-generic-error.type';
 import AuthFooter from './AuthFooter';
 import AuthLink from './auth-link/AuthLink';
+import { useRootId } from '@/store/my-drive/myDrive.store';
 
 const LoginPassword = () => {
   const [currentValue, setCurrentValue] = React.useState('');
@@ -37,6 +38,8 @@ const LoginPassword = () => {
     },
   });
 
+  const { setRootId } = useRootId();
+
   const loginMutation = useMutation({
     mutationFn: (body: AuthSignInREQ) => {
       return signinApi(body);
@@ -50,6 +53,7 @@ const LoginPassword = () => {
       const a = dayjs(data.data.identity.password_changed_at);
       console.log(a.year());
       signIn(data.data.session_token, data.data.identity.is_admin ? Role.ADMIN : Role.USER, a.year() < 2024);
+      setRootId(data.data.identity.root_id);
       if (data.data.identity.password_changed_at == null) {
         navigate(AUTH_CHANGE_PASSWORD);
       }

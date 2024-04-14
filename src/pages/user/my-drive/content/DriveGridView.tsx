@@ -6,6 +6,7 @@ import { Entry } from '@/utils/types/entry.type';
 import fileIcons from '@/components/core/file-card/fileicon.constant';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { LocalEntry } from '../MyDrive';
+import { FileModel } from '@/apis/drive/drive.model';
 
 type DriveGridViewProps = {
   dirId?: string;
@@ -116,10 +117,50 @@ export const localEntriesToFolder = (folders: LocalEntry[]) => {
   });
 };
 
-/**
- * Map remote Entry to MyEntry.
- */
-export const remoteToLocalEntries = (entries: Entry[]): LocalEntry[] => {
+export const remoteToLocalEntries = (entries: FileModel[]): LocalEntry[] => {
+  return entries.map((entry) => {
+    if (entry.is_dir) {
+      return {
+        isDir: true,
+        title: entry.name,
+        icon: <Icon icon='ic:baseline-folder' className='object-cover-full h-full w-full' />,
+        preview: <Icon icon='ic:baseline-folder' className='h-full w-full' />,
+        id: entry.id,
+        extra: 'extra',
+        owner: 'owner',
+        ownerAvt: 'https://slaydarkkkk.github.io/img/slaydark_avt.jpg',
+        lastModified: entry.updated_at,
+        size: entry.size.toString(),
+      };
+    }
+    const ext = entry.name.split('.').pop() || 'any';
+    const icon = fileIcons[ext] || fileIcons.any;
+    /* Suport mp4, mp3, pdf, jpg, jpeg, png, jfif, gif, webp, ico, svg,
+    docx, txt, zip, any */
+    const preview = ['jpg', 'ico', 'webp', 'png', 'jpeg', 'gif', 'jfif'].includes(ext) ? (
+      <img
+        className='h-full w-full rounded-md object-cover'
+        src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrHRymTob1kd-ywHzIs0ty7UhrFUcJay839nNd6tcSig&s'
+      />
+    ) : (
+      <div className='h-16 w-16'>{icon}</div>
+    );
+    return {
+      isDir: false,
+      title: entry.name,
+      icon: icon,
+      preview: preview,
+      id: entry.md5,
+      extra: 'extra',
+      owner: 'owner',
+      ownerAvt: 'https://slaydarkkkk.github.io/img/slaydark_avt.jpg',
+      lastModified: entry.updated_at,
+      size: entry.size.toString(),
+    };
+  });
+};
+
+export const remoteToLocalEntries2 = (entries: Entry[]): LocalEntry[] => {
   return entries.map((entry) => {
     if (entry.is_dir) {
       return {
