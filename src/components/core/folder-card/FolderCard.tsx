@@ -15,9 +15,10 @@ interface FolderCardProps {
   id: string;
   selected: boolean;
   onClick: (id: string) => void;
+  onDoubleClick: (id: string) => void;
 }
 
-const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onClick, selected }) => {
+const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onClick, selected, onDoubleClick }) => {
   const setDrawerOpen = useDrawer((state) => state.openDrawer);
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
   const [type, setType] = useState<'move' | 'share' | null>();
@@ -78,7 +79,8 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onClick, selec
         'flex w-full items-center justify-between rounded-xl px-3 py-3 shadow-sm ',
         selected ? 'bg-[#c2e7ff]' : 'bg-[#f0f4f9] hover:bg-[#dfe3e7]',
       )}
-      onClick={() => onClick(id)}>
+      onClick={() => onClick(id)}
+      onDoubleClick={() => onDoubleClick(id)}>
       <div className='flex max-w-[calc(100%-24px)] items-center space-x-4'>
         <div className='h-6 w-6 min-w-fit'>{icon}</div>
         <Tooltip title={title}>

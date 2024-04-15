@@ -20,6 +20,7 @@ type FileCardProps = {
   id: string;
   onClick: (id: string) => void;
   selected: boolean;
+  onDoubleClick: (id: string) => void;
 };
 
 export const fileOperation = [

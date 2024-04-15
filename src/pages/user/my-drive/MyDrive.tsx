@@ -1,12 +1,13 @@
 import { fakeEntries } from '@/utils/dumps/entries';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DriveLayout from '@/components/layout/DriveLayout';
 import { Path, useRootId, useViewMode } from '@/store/my-drive/myDrive.store';
 import MyDriveHeader from './header/MyDriveHeader';
 import { DriveGridView, remoteToLocalEntries } from './content/DriveGridView';
 import { DriveListView } from './content/DriveListView';
 import SidePanel from '@/pages/user/my-drive/side-panel/SidePanel';
-import { listEntriesApi } from '@/apis/drive/drive.request';
+import { listEntriesQuery } from '@/apis/drive/drive.request';
+import { useParams } from 'react-router-dom';
 
 export type LocalEntry = {
   isDir: boolean;
@@ -28,25 +29,25 @@ const MyDrive = () => {
 
   const { viewMode } = useViewMode();
   const { rootId } = useRootId();
+  // const { curDirId } = useParams();  // failed to get param?
+  const curDirId = window.location.pathname.split('/').pop();
+  console.log('[MyDrive] curDirId 1', curDirId);
 
-  const [path, setPath] = useState<Path>([{ name: 'My Drive', id: rootId }]);
+  const [path, setPath] = useState<Path>([{ id: rootId, name: 'My Drive' }]);
 
-  const { data: testEntries, isPending, isError } = listEntriesApi(path[path.length - 1].id, typeFilter, sort, order);
-  console.log('[MyDrive] testEntries', testEntries);
-  // const remoteEntries: Entry[] = fakeEntries;
+  const { data: remoteEntries, isPending, isError } = listEntriesQuery(curDirId ? curDirId : rootId, typeFilter, sort, order);
 
   if (isPending) {
     return (
       <DriveLayout
         headerLeft={
           <MyDriveHeader
-            path={path}
+            path={[]}
             typeFilter={typeFilter}
             modifiedFilter={modifiedFilter}
             peopleFilter={peopleFilter}
             sort={sort}
             order={order}
-            setPath={setPath}
             setTypeFilter={setTypeFilter}
             setModifiedFilter={setModifiedFilter}
             setPeopleFilter={setPeopleFilter}
@@ -59,7 +60,8 @@ const MyDrive = () => {
     );
   }
 
-  const localEntries: LocalEntry[] = remoteToLocalEntries(testEntries);
+  let localEntries: LocalEntry[] = remoteToLocalEntries(remoteEntries);
+  localEntries = localEntries.filter((file) => file.title !== '.trash');
 
   return (
     <DriveLayout
@@ -71,7 +73,6 @@ const MyDrive = () => {
           peopleFilter={peopleFilter}
           sort={sort}
           order={order}
-          setPath={setPath}
           setTypeFilter={setTypeFilter}
           setModifiedFilter={setModifiedFilter}
           setPeopleFilter={setPeopleFilter}

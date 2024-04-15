@@ -8,7 +8,6 @@ import Sort from '../content/Sort';
 
 type MyDriveHeaderProps = {
   path: Path;
-  setPath: (path: Path) => void;
   typeFilter: string;
   peopleFilter: string;
   modifiedFilter: string;
@@ -22,7 +21,6 @@ type MyDriveHeaderProps = {
 
 const MyDriveHeader: React.FC<MyDriveHeaderProps> = ({
   path,
-  setPath,
   modifiedFilter,
   setModifiedFilter,
   peopleFilter,
@@ -37,7 +35,7 @@ const MyDriveHeader: React.FC<MyDriveHeaderProps> = ({
     <div className='flex flex-col bg-white pr-3'>
       <div className='flex'>
         <div className='w-full pb-[8px] pl-1 pt-[14px]'>
-          <DrivePath path={path} setPath={setPath} />
+          <DrivePath path={path} />
         </div>
         <div className='flex items-center pb-[6px] pl-[25px] pr-[11px] pt-[14px]'>
           <DriveViewMode />

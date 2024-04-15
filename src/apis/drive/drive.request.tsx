@@ -11,43 +11,12 @@ type Todo = {
 };
 type Todos = ReadonlyArray<Todo>;
 
-const fetchTodos = async (state: State): Promise<Todos> => {
-  const response = await axios.get(`todos/${state}`);
-  return response.data;
-};
-
-export const useTodosQuery = (state: State) =>
-  useQuery({
-    queryKey: ['todos', state],
-    queryFn: () => fetchTodos(state),
-    // initialData: () => {
-    //   const allTodos = queryClient.getQueryData<Todos>([
-    //     'todos',
-    //     'all',
-    //   ])
-    //   const filteredData =
-    //     allTodos?.filter((todo) => todo.state === state) ?? []
-
-    //   return filteredData.length > 0 ? filteredData : undefined
-    // },
-  });
-
-const usePasteItems = () => {
-  const queryClient = useQueryClient();
-
-  const mutation = useMutation({
-    mutationFn: ({ id, dest }: { id: string; dest: string }) => api.get(`drive/copy`, { params: { id, dest } }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['entries'] });
-    },
-  });
-
-  return mutation;
-};
-
-export const listEntriesApi = (dirId: string, filter: string, sort: string, order: string) => {
+export const listEntriesQuery = (dirId: string, filter: string, sort: string, order: string) => {
   return useQuery({
     queryKey: ['entries', dirId, filter, sort, order],
-    queryFn: () => api.get<BaseResponse<ListEntriesResponse>>(`files/${dirId}`).then((res) => res.data.data.entries),
+    queryFn: () =>
+      api
+        .get<BaseResponse<ListEntriesResponse>>(`files/${dirId}`, { params: { limit: 100 } })
+        .then((res) => res.data.data.entries),
   });
 };

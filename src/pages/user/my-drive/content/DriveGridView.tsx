@@ -7,6 +7,8 @@ import fileIcons from '@/components/core/file-card/fileicon.constant';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { LocalEntry } from '../MyDrive';
 import { FileModel } from '@/apis/drive/drive.model';
+import { CUSTOMER_HOME } from '@/utils/constants/router.constant';
+import { useNavigate } from 'react-router-dom';
 
 type DriveGridViewProps = {
   dirId?: string;
@@ -27,10 +29,15 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({ dirId, order, sort
 
   const viewRef = useRef<HTMLDivElement>(null);
 
+  const navigate = useNavigate();
+
   const handleClickOutside = (e: MouseEvent) => {
     let targetElement = e.target as Element;
     while (targetElement && targetElement !== viewRef.current) {
-      if (targetElement.classList.contains('file-card') || targetElement.classList.contains('folder-card')) {
+      if (
+        targetElement.classList &&
+        (targetElement.classList.contains('file-card') || targetElement.classList.contains('folder-card'))
+      ) {
         return;
       }
       targetElement = targetElement.parentNode as Element;
@@ -58,11 +65,21 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({ dirId, order, sort
     });
   };
 
+  const handleFileDoubleClick = (id: string) => {
+    console.log('[MyDrive] Double clicked', id);
+  };
+
+  const handleFolderDoubleClick = (id: string) => {
+    console.log('[MyDrive] Double clicked', id);
+    console.log('Navigate to folder', `${CUSTOMER_HOME}/my-drive/${id}`);
+    return navigate(`${CUSTOMER_HOME}/my-drive/${id}`);
+  };
+
   return (
     <div ref={viewRef} className='bg-white pl-5 pr-3 pt-4'>
       <div className='relative flex flex-col space-y-2'>
         <div className={!folderShow ? 'visible' : 'hidden'}>
-          <div className='pb-4 pt-2 text-sm font-medium'> Folders</div>
+          {folders.length !== 0 && <div className='pb-4 pt-2 text-sm font-medium'> Folders</div>}
           <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'>
             {folders.map((folder) => (
               <FolderCard
@@ -72,6 +89,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({ dirId, order, sort
                 icon={folder.icon}
                 onClick={() => handleFolderClick(folder.id)}
                 selected={selectedFolderIds.includes(folder.id)}
+                onDoubleClick={() => handleFolderDoubleClick(folder.id)}
               />
             ))}
           </div>
@@ -89,6 +107,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({ dirId, order, sort
                   preview={file.preview}
                   onClick={() => handleFileClick(file.id)}
                   selected={selectedFileIds.includes(file.id)}
+                  onDoubleClick={() => handleFileDoubleClick(file.id)}
                 />
               </div>
             ))}
@@ -102,7 +121,15 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({ dirId, order, sort
 export const localEntriesToFiles = (files: LocalEntry[]) => {
   return files.map((file, ind) => (
     <div className='aspect-square w-auto' key={ind}>
-      <FileCard title={file.title} icon={file.icon} preview={file.preview} id={file.id} onClick={() => {}} selected={false} />
+      <FileCard
+        title={file.title}
+        icon={file.icon}
+        preview={file.preview}
+        id={file.id}
+        onClick={() => {}}
+        onDoubleClick={() => {}}
+        selected={false}
+      />
     </div>
   ));
 };
@@ -111,7 +138,14 @@ export const localEntriesToFolder = (folders: LocalEntry[]) => {
   return folders.map((folder, index) => {
     return (
       <div key={index} className='w-auto'>
-        <FolderCard title={folder.title} icon={folder.icon} id={folder.id} onClick={() => {}} selected={false} />
+        <FolderCard
+          title={folder.title}
+          icon={folder.icon}
+          id={folder.id}
+          onClick={() => {}}
+          onDoubleClick={() => {}}
+          selected={false}
+        />
       </div>
     );
   });
