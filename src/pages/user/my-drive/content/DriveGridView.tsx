@@ -118,6 +118,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({ dirId, order, sort
   );
 };
 
+// will remove
 export const localEntriesToFiles = (files: LocalEntry[]) => {
   return files.map((file, ind) => (
     <div className='aspect-square w-auto' key={ind}>
@@ -134,6 +135,7 @@ export const localEntriesToFiles = (files: LocalEntry[]) => {
   ));
 };
 
+// will remove
 export const localEntriesToFolder = (folders: LocalEntry[]) => {
   return folders.map((folder, index) => {
     return (
@@ -184,7 +186,7 @@ export const remoteToLocalEntries = (entries: FileModel[]): LocalEntry[] => {
       title: entry.name,
       icon: icon,
       preview: preview,
-      id: entry.md5,
+      id: entry.id,
       extra: 'extra',
       owner: 'owner',
       ownerAvt: 'https://slaydarkkkk.github.io/img/slaydark_avt.jpg',
@@ -194,6 +196,7 @@ export const remoteToLocalEntries = (entries: FileModel[]): LocalEntry[] => {
   });
 };
 
+// will remove
 export const remoteToLocalEntries2 = (entries: Entry[]): LocalEntry[] => {
   return entries.map((entry) => {
     if (entry.is_dir) {
