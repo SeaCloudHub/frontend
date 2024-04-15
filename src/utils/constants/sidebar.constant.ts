@@ -37,7 +37,7 @@ export const userSidebar: SidebarItemType[] = [
     tooltip: 'Starred',
   },
   {
-    icon: 'mdi:trash',
+    icon: 'ph:trash',
     title: 'Trash',
     link: CUSTOMER_TRASH,
     tooltip: 'Trash',

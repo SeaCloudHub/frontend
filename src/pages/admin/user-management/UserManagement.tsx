@@ -186,7 +186,7 @@ const UserManagement = () => {
         {!scrollable && <UserManagementFilter />}
 
         <div
-          className={`${shrinkMode ? 'shrink-mode' : 'none-shrink-mode'} ${scrollable ? ' fixed  top-[80px] mx-auto flex w-full space-x-2 bg-white py-1' : ''}`}>
+          className={`${shrinkMode ? 'shrink-mode' : 'none-shrink-mode'} ${scrollable ? ' fixed  top-[4rem] mx-auto flex w-full space-x-2 bg-white py-1' : ''}`}>
           {scrollable && (
             <ButtonContainer
               color='063768'

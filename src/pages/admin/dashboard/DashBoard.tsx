@@ -10,7 +10,7 @@ import StorageLog from './components/StorageLog';
 
 const DashBoard = () => {
   return (
-    <div className='z-10 w-full gap-3 lg:flex'>
+    <div className='z-10 w-full gap-3 h-full overflow-y-auto lg:flex'>
       <div className='w-full'>
         <div className='w-full lg:flex lg:justify-between '>
           <div className='flex min-w-[30%] flex-col justify-between lg:mr-3 '>

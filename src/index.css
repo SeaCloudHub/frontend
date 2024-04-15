@@ -7,6 +7,23 @@ html {
   font-optical-sizing: auto;
   font-size:14px;
 }
+/* width */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 20px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+
 @layer components {
   .sidebar {
     @apply fixed left-0 top-0 flex h-screen
@@ -39,10 +56,10 @@ html {
     @apply pl-[75px];
   }
   .content-default-mode {
-    @apply ml-[300px] mt-[80px];
+    @apply ml-[300px] mt-[4rem];
   }
   .content-shrink-mode {
-    @apply ml-[75px] mt-[80px];
+    @apply ml-[75px] mt-[4rem];
   }
   .statement-upper-medium {
     @apply font-semibold;
