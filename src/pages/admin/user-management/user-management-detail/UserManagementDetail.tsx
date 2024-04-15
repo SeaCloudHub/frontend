@@ -19,7 +19,7 @@ const UserManagementDetail = () => {
   return (
     <>
       <div
-        className={`fixed ${screenMode != ScreenMode.DESKTOP ? 'left-0' : shrinkMode ? 'left-[76px]' : 'left-[301px]'}  top-[80px] z-20  flex w-full items-center space-x-1 border-b-2 bg-white px-3 py-1`}>
+        className={`fixed ${screenMode != ScreenMode.DESKTOP ? 'left-0' : shrinkMode ? 'left-[76px]' : 'left-[301px]'}  top-[4rem] z-20  flex w-full items-center space-x-1 border-b-2 bg-white px-3 py-1`}>
         <p
           onClick={() => {
             navigate(ADMIN_USER_MANAGEMENT);

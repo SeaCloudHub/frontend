@@ -1,7 +1,7 @@
 import { useViewMode } from '@/store/my-drive/myDrive.store';
 import { Entry } from '@/utils/types/entry.type';
 import React, { useState } from 'react';
-import { remoteToLocalEntries } from '../../my-drive/content/DriveGridView';
+import { remoteToLocalEntries2 } from '../../my-drive/content/DriveGridView';
 import DriveHistoryGridView from './DriveHistoryGridView';
 import DriveHistoryListView from './DriveHistoryListView';
 
@@ -11,7 +11,7 @@ type TrashPageViewProps = {
 
 const TrashPageView: React.FC<TrashPageViewProps> = ({ entries }) => {
   const { viewMode } = useViewMode();
-  const processedEntries = remoteToLocalEntries(entries);
+  const processedEntries = remoteToLocalEntries2(entries);
   const [{ sort, order }, setSort] = useState<{ sort: string; order: string }>({ sort: 'Name', order: 'desc' });
 
   return viewMode === 'grid' ? (

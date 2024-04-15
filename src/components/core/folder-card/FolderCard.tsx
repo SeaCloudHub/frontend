@@ -1,4 +1,4 @@
-import Dropdown, { MenuItem } from '../drop-down/Dropdown';
+import Dropdown, { MenuItem, classNames } from '../drop-down/Dropdown';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useDrawer } from '@/store/my-drive/myDrive.store';
@@ -13,9 +13,12 @@ interface FolderCardProps {
   title: string;
   icon: React.ReactNode;
   id: string;
+  selected: boolean;
+  onClick: (id: string) => void;
+  onDoubleClick: (id: string) => void;
 }
 
-const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id }) => {
+const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onClick, selected, onDoubleClick }) => {
   const setDrawerOpen = useDrawer((state) => state.openDrawer);
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
   const [type, setType] = useState<'move' | 'share' | null>();
@@ -70,7 +73,14 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id }) => {
   ];
 
   return (
-    <div className='flex w-full items-center justify-between rounded-xl bg-surfaceContainerLow px-3 py-3 shadow-sm hover:bg-surfaceDim '>
+    <div
+      className={classNames(
+        'folder-card',
+        'flex w-full items-center justify-between rounded-xl px-3 py-3 shadow-sm ',
+        selected ? 'bg-[#c2e7ff]' : 'bg-[#f0f4f9] hover:bg-[#dfe3e7]',
+      )}
+      onClick={() => onClick(id)}
+      onDoubleClick={() => onDoubleClick(id)}>
       <div className='flex max-w-[calc(100%-24px)] items-center space-x-4'>
         <div className='h-6 w-6 min-w-fit'>{icon}</div>
         <Tooltip title={title}>

@@ -5,6 +5,7 @@ import ScreenModeProvider from './ScreenModeProvider';
 type ProvidersProps = {
   children: React.ReactNode;
 };
+
 const Providers = ({ children }: ProvidersProps) => {
   return (
     <QueryClientProvider>

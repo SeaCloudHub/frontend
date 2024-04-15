@@ -1,4 +1,4 @@
-import { validateFileType } from '@/utils/function/validateFileType';
+// import { validateFileType } from '@/utils/function/validateFileType';
 import { useState } from 'react';
 import IconifyIcon from '../Icon/IConCore';
 import ButtonContainer from '../button/ButtonContainer';
@@ -22,13 +22,13 @@ const ModalChooseFile = ({ isOpen, handleConfirm, fileIcon, fileType }: ModalCho
   };
   const handleFile = async (file: File, fileType?: string) => {
     console.log(file, fileType);
-    if (await validateFileType(file, fileType)) {
-      setFile(file);
-      setError(null);
-    } else {
-      console.log('trieu xau trai qua di');
-      setError('Invalid file type*');
-    }
+    // if (await validateFileType(file, fileType)) {
+    //   setFile(file);
+    //   setError(null);
+    // } else {
+    //   console.log('trieu xau trai qua di');
+    //   setError('Invalid file type*');
+    // }
   };
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();

@@ -19,4 +19,5 @@ export type IdentityRESP = {
   last_name: string;
   avatar_url: string;
   is_admin: boolean;
+  root_id: string;
 };
