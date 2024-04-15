@@ -7,7 +7,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import { Entry } from '@/utils/types/entry.type';
 import { useDrawer, useViewMode } from '@/store/my-drive/myDrive.store';
 import SidePanel from '../my-drive/side-panel/SidePanel';
-import { DriveGridView, remoteToLocalEntries } from '../my-drive/content/DriveGridView';
+import { DriveGridView, remoteToLocalEntries2 } from '../my-drive/content/DriveGridView';
 import { DriveListView } from '../my-drive/content/DriveListView';
 
 export const fakeData: Entry[] = [
@@ -208,7 +208,7 @@ const Shared = () => {
   const { drawerOpen, openDrawer, closeDrawer } = useDrawer();
   const [{ sort, order }, setSort] = useState<{ sort: string; order: string }>({ sort: 'Name', order: 'desc' });
 
-  const processedEntries = remoteToLocalEntries(fakeData);
+  const processedEntries = remoteToLocalEntries2(fakeData);
   console.log(processedEntries);
 
   return (

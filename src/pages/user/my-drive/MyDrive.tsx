@@ -1,13 +1,13 @@
 import { fakeEntries } from '@/utils/dumps/entries';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DriveLayout from '@/components/layout/DriveLayout';
-import { Path, useViewMode } from '@/store/my-drive/myDrive.store';
+import { Path, useRootId, useViewMode } from '@/store/my-drive/myDrive.store';
 import MyDriveHeader from './header/MyDriveHeader';
-import { DriveGridView } from './content/DriveGridView';
-import { remoteToLocalEntries } from './content/DriveGridView';
+import { DriveGridView, remoteToLocalEntries } from './content/DriveGridView';
 import { DriveListView } from './content/DriveListView';
-import { Entry } from '@/utils/types/entry.type';
 import SidePanel from '@/pages/user/my-drive/side-panel/SidePanel';
+import { listEntriesQuery } from '@/apis/drive/drive.request';
+import { useParams } from 'react-router-dom';
 
 export type LocalEntry = {
   isDir: boolean;
@@ -22,46 +22,46 @@ export type LocalEntry = {
 };
 
 const MyDrive = () => {
-  const processedEntries = remoteToLocalEntries(fakeEntries);
-  const files = processedEntries.filter((entry) => !entry.isDir);
-  const folders = processedEntries.filter((entry) => entry.isDir);
-
   const [{ sort, order }, setSort] = useState<{ sort: string; order: string }>({ sort: 'Name', order: 'desc' });
   const [typeFilter, setTypeFilter] = useState<string>('');
   const [peopleFilter, setPeopleFilter] = useState<string>('');
   const [modifiedFilter, setModifiedFilter] = useState<string>('');
-  const [path, setPath] = useState<Path>([
-    { name: 'My Drive', id: '1' },
-    { name: 'Folder 1', id: '2' },
-    { name: 'Folder 2', id: '3' },
-    { name: 'Folder 3', id: '4' },
-    { name: 'Folder 4', id: '5' },
-  ]);
 
-  const viewMode = useViewMode((state) => state.viewMode);
+  const { viewMode } = useViewMode();
+  const { rootId } = useRootId();
+  // const { curDirId } = useParams();  // failed to get param?
+  const curDirId = window.location.pathname.split('/').pop();
+  console.log('[MyDrive] curDirId 1', curDirId);
 
-  const sidePanel = (
-    <div className='h-full w-[336px] overflow-hidden'>
-      <div className='h-28 bg-yellow-400'>header</div>
-      <div className='relative flex h-full w-full flex-col overflow-y-auto'>
-        <div className='flex flex-col pl-5 pr-3 pt-4'>
-          <div>info</div>
-          <div>info</div>
-          <div>info</div>
-          <div>info</div>
-          <div>info</div>
-          <div>info</div>
-          <div>info</div>
-          <div>info</div>
-          <div>info</div>
-        </div>
-      </div>
-    </div>
-  );
+  const [path, setPath] = useState<Path>([{ id: rootId, name: 'My Drive' }]);
 
-  // const remoteEntries = getEntries(dirId, filter, sort, order);
-  const remoteEntries: Entry[] = fakeEntries;
-  const localEntries: LocalEntry[] = remoteToLocalEntries(remoteEntries);
+  const { data: remoteEntries, isPending, isError } = listEntriesQuery(curDirId ? curDirId : rootId, typeFilter, sort, order);
+
+  if (isPending) {
+    return (
+      <DriveLayout
+        headerLeft={
+          <MyDriveHeader
+            path={[]}
+            typeFilter={typeFilter}
+            modifiedFilter={modifiedFilter}
+            peopleFilter={peopleFilter}
+            sort={sort}
+            order={order}
+            setTypeFilter={setTypeFilter}
+            setModifiedFilter={setModifiedFilter}
+            setPeopleFilter={setPeopleFilter}
+            setSort={setSort}
+          />
+        }
+        bodyLeft={[]}
+        sidePanel={<SidePanel />}
+      />
+    );
+  }
+
+  let localEntries: LocalEntry[] = remoteToLocalEntries(remoteEntries);
+  localEntries = localEntries.filter((file) => file.title !== '.trash');
 
   return (
     <DriveLayout
@@ -73,7 +73,6 @@ const MyDrive = () => {
           peopleFilter={peopleFilter}
           sort={sort}
           order={order}
-          setPath={setPath}
           setTypeFilter={setTypeFilter}
           setModifiedFilter={setModifiedFilter}
           setPeopleFilter={setPeopleFilter}
@@ -84,13 +83,6 @@ const MyDrive = () => {
       sidePanel={<SidePanel />}
     />
   );
-};
-
-export type HeaderMyDriveProps = {
-  name: string;
-  owner: string;
-  lastModified: string;
-  size: string;
 };
 
 export default MyDrive;

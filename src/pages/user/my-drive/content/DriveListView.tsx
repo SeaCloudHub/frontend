@@ -1,7 +1,6 @@
 import React from 'react';
 import { LocalEntry } from '../MyDrive';
 import { DataRow } from './DataRow';
-import { HeaderMyDriveProps } from '../MyDrive';
 import Sort from './Sort';
 
 type DriveListViewProps = {
@@ -44,29 +43,3 @@ export const DriveListView: React.FC<DriveListViewProps> = ({ order, setSort, so
   );
 };
 
-export const _renderListView = (entries: LocalEntry[]) => {
-  return (
-    <div className='flex flex-col'>
-      {_header({ name: 'Name', owner: 'Owner', lastModified: 'Last Modified', size: 'Size' })}
-      {entries.map((entry, index) => {
-        return <DataRow key={index} {...entry} />;
-      })}
-    </div>
-  );
-};
-const _header: React.FC<HeaderMyDriveProps> = ({ name, owner, lastModified, size }) => {
-  return (
-    <div className='flex items-center pb-2'>
-      <div className='flex-1 basis-72 text-sm font-medium'>{name}</div>
-      <div className='basis-64 text-sm font-medium max-2xl:basis-36 max-lg:hidden'>{owner}</div>
-      <div className='basis-48 text-sm font-medium max-2xl:shrink max-md:hidden'>{lastModified}</div>
-      <div className='basis-20 text-sm font-medium max-xl:hidden'>{size}</div>
-      <div className='flex basis-48 justify-end max-2xl:basis-12'>
-        {/* <Icon
-              icon="ic:baseline-more-vert"
-              className="h-7 w-7 rounded-full p-1 hover:bg-surfaceContainerLow"
-            /> */}
-      </div>
-    </div>
-  );
-};
