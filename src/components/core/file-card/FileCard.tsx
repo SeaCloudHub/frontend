@@ -9,6 +9,7 @@ import React, { useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Dropdown, { MenuItem } from '../drop-down/Dropdown';
 // import FileViewerContainer from '../file-viewers/file-viewer-container/FileViewerContainer';
+import FileViewerContainer from '../file-viewers/file-viewer-container/FileViewerContainer';
 import MovePopUp from '../pop-up/MovePopUp';
 import SharePopUp from '../pop-up/SharePopUp';
 
@@ -102,7 +103,7 @@ const FileCard: React.FC<FileCardProps> = (props) => {
 
   return (
     <>
-      {/* {fileViewer && (
+      {fileViewer && (
         <FileViewerContainer
           open={fileViewer}
           closeOutside={() => {
@@ -111,7 +112,7 @@ const FileCard: React.FC<FileCardProps> = (props) => {
           fileName={title}
           fileType={''}
         />
-      )} */}
+      )}
       <div
         onDoubleClick={() => {
           setFileViewer(true);
