@@ -1,10 +1,12 @@
 import React from 'react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { Tooltip } from '@mui/material';
+import { Path } from '@/store/my-drive/myDrive.store';
 
 export type SharingPageViewModeProps = {
   viewMode: string;
   setViewMode: (value: string) => void;
+  setPath?: React.Dispatch<React.SetStateAction<Path>>;
 };
 
 const SharingPageViewMode: React.FC<SharingPageViewModeProps> = ({ viewMode, setViewMode }) => {

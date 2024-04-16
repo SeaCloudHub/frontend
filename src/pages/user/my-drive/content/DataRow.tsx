@@ -5,7 +5,7 @@ import { Tooltip } from '@mui/material';
 import { useDrawer } from '@/store/my-drive/myDrive.store';
 import { LocalEntry } from '../MyDrive';
 
-export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModified, owner, size }) => {
+export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModified, owner, size, onDoubleClick }) => {
   const setDrawerOpen = useDrawer((state) => state.openDrawer);
   const fileOps = [
     [{ label: 'Preview', icon: <Icon icon='material-symbols:visibility' /> }],
@@ -82,7 +82,7 @@ export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModi
 
   // const [showTools, setShowTools] = useState(false);
   return (
-    <div className='flex h-8 items-center space-x-3 border-b border-b-[#dadce0] hover:bg-[#f0f1f1]'>
+    <div className='flex h-8 items-center cursor-pointer space-x-3 border-b border-b-[#dadce0] hover:bg-[#f0f1f1]' onDoubleClick={onDoubleClick}>
       <div className='flex shrink grow basis-[304px] items-center text-sm font-medium'>
         <div className='px-4'>
           <div className='h-6 w-6'>{icon}</div>

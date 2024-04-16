@@ -5,14 +5,51 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 type DrivePathMenuButtonProps = {
   entryId: string;
   dirName: string;
+  type?: 'MyDrive' | 'Shared' | 'Starred' | 'Trash';
 };
 
-const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ entryId, dirName }) => {
+const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ entryId, dirName, type }) => {
   const driveMenuItems: MenuItem[][] = [
     [
       {
         label: 'New folder',
         icon: <Icon icon='ic:outline-create-new-folder' />,
+        action: () => {},
+        isHidden: type !== 'MyDrive'
+      },
+    ],
+    [
+      {
+        label: 'Download',
+        icon: <Icon icon='ic:outline-file-download' />,
+        action: () => {},
+      },
+      {
+        label: 'Rename',
+        icon: <Icon icon='ic:round-drive-file-rename-outline' />,
+        action: () => {},
+        isHidden: type !== 'MyDrive'
+      },
+    ],
+    [
+      {
+        label: 'Copy link',
+        icon: <Icon icon='material-symbols:link' />,
+        action: (text: string) => {},
+      },
+      {
+        label: 'Share',
+        icon: <Icon icon='lucide:user-plus' />,
+        action: () => {},
+      },
+      {
+        label: 'Move',
+        icon: <Icon icon='mdi:folder-move-outline' />,
+        action: () => {},
+      },
+      {
+        label: 'Add to starred',
+        icon: <Icon icon='material-symbols:star-outline' />,
         action: () => {},
       },
     ],

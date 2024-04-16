@@ -1,5 +1,5 @@
 import { fakeEntries } from '@/utils/dumps/entries';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DriveLayout from '@/components/layout/DriveLayout';
 import { Path, useViewMode } from '@/store/my-drive/myDrive.store';
 import MyDriveHeader from './header/MyDriveHeader';
@@ -8,6 +8,11 @@ import { remoteToLocalEntries } from './content/DriveGridView';
 import { DriveListView } from './content/DriveListView';
 import { Entry } from '@/utils/types/entry.type';
 import SidePanel from '@/pages/user/my-drive/side-panel/SidePanel';
+import { useQuery } from '@tanstack/react-query';
+import { useSession } from '@/store/auth/session';
+import { toast } from 'react-toastify';
+import { getListEntriesMyDrive } from '@/apis/drive/list-entries.api';
+import { ListEntriesRESP } from '@/apis/drive/response/list-entries.reponse';
 
 export type LocalEntry = {
   isDir: boolean;
@@ -19,9 +24,12 @@ export type LocalEntry = {
   owner: string;
   lastModified: string;
   size: string;
+
+  onDoubleClick?: () => void;
 };
 
 const MyDrive = () => {
+  const {root_id} = useSession();
   const processedEntries = remoteToLocalEntries(fakeEntries);
   const files = processedEntries.filter((entry) => !entry.isDir);
   const folders = processedEntries.filter((entry) => entry.isDir);
@@ -31,37 +39,27 @@ const MyDrive = () => {
   const [peopleFilter, setPeopleFilter] = useState<string>('');
   const [modifiedFilter, setModifiedFilter] = useState<string>('');
   const [path, setPath] = useState<Path>([
-    { name: 'My Drive', id: '1' },
-    { name: 'Folder 1', id: '2' },
-    { name: 'Folder 2', id: '3' },
-    { name: 'Folder 3', id: '4' },
-    { name: 'Folder 4', id: '5' },
+    { name: 'My Drive', id: root_id }
   ]);
 
   const viewMode = useViewMode((state) => state.viewMode);
 
-  const sidePanel = (
-    <div className='h-full w-[336px] overflow-hidden'>
-      <div className='h-28 bg-yellow-400'>header</div>
-      <div className='relative flex h-full w-full flex-col overflow-y-auto'>
-        <div className='flex flex-col pl-5 pr-3 pt-4'>
-          <div>info</div>
-          <div>info</div>
-          <div>info</div>
-          <div>info</div>
-          <div>info</div>
-          <div>info</div>
-          <div>info</div>
-          <div>info</div>
-          <div>info</div>
-        </div>
-      </div>
-    </div>
-  );
+  const {data, error, refetch} = useQuery({
+    queryKey: ['mydrive-entries', root_id],
+    queryFn: async () => {
+      return (await getListEntriesMyDrive({id: path[path.length-1].id}).then((res) => res?.data?.entries||[])).filter(e=>!e.name.includes('.trash'))
+    },
+  });
+  const localEntries: LocalEntry[] = remoteToLocalEntries((data || []) as Required<Entry[]>&ListEntriesRESP['entries']);
 
-  // const remoteEntries = getEntries(dirId, filter, sort, order);
-  const remoteEntries: Entry[] = fakeEntries;
-  const localEntries: LocalEntry[] = remoteToLocalEntries(remoteEntries);
+  // const [entries, setEntries] = useState<LocalEntry[]>(localEntries);
+  useEffect(() => {
+    error && toast.error('Failed to fetch entries');
+  }, [error]);
+
+  useEffect(() => {
+    refetch();
+  }, [path, refetch]);
 
   return (
     <DriveLayout
@@ -80,7 +78,7 @@ const MyDrive = () => {
           setSort={setSort}
         />
       }
-      bodyLeft={viewMode === 'grid' ? <DriveGridView entries={localEntries} /> : <DriveListView entries={localEntries} />}
+      bodyLeft={viewMode === 'grid' ? <DriveGridView entries={localEntries} setPath={setPath} /> : <DriveListView entries={localEntries} setPath={setPath} />}
       sidePanel={<SidePanel />}
     />
   );

@@ -7,9 +7,10 @@ import Dropdown, { MenuItem } from '@/components/core/drop-down/Dropdown';
 type DrivePathProps = {
   path: Path;
   setPath: (path: Path) => void;
+  type?: 'MyDrive' | 'Shared' | 'Starred' | 'Trash';
 };
 
-const DrivePath: React.FC<DrivePathProps> = ({ path, setPath }) => {
+const DrivePath: React.FC<DrivePathProps> = ({ path, setPath, type }) => {
   if (path.length > 3) {
     const restDirs = path.slice(0, path.length - 2);
     const driveMenuItems: MenuItem[][] = [
@@ -41,7 +42,7 @@ const DrivePath: React.FC<DrivePathProps> = ({ path, setPath }) => {
         <Icon icon='ic:baseline-keyboard-arrow-right' className='h-6 w-6' />
         <DrivePathButton path={path.slice(0, -1)} setPath={setPath} />
         <Icon icon='ic:baseline-keyboard-arrow-right' className='h-6 w-6' />
-        <DrivePathMenuButton dirName={path[path.length - 1].name} entryId={path[path.length - 1].id} />
+        <DrivePathMenuButton dirName={path[path.length - 1].name} entryId={path[path.length - 1].id} type={type} />
       </div>
     );
   }
@@ -50,7 +51,7 @@ const DrivePath: React.FC<DrivePathProps> = ({ path, setPath }) => {
     <div className='flex items-center'>
       {path.map((d, index) => {
         if (index === path.length - 1) {
-          return <DrivePathMenuButton dirName={d.name} entryId={d.id} key={d.id} />;
+          return (type==='MyDrive') ? <DrivePathMenuButton dirName={d.name} entryId={d.id} key={d.id} type={type} /> : <DrivePathButton path={path} setPath={setPath} key={d.id} />;
         }
         const curPath = path.slice(0, index + 1);
         return (

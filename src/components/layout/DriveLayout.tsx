@@ -19,17 +19,7 @@ const DriveLayout: React.FC<DriveLayoutProps> = ({ headerLeft, bodyLeft, sidePan
           <div className='relative flex h-full w-full flex-col overflow-y-auto'>{bodyLeft}</div>
         </div>
         <span className='row-span-2 mb-4'>
-          {
-            drawerOpen &&
-              // (sidePanel ? (
-              sidePanel
-            // ) : (
-            //   <div className='h-full w-[336px] overflow-hidden'>
-            //     {headerRight}
-            //     <div className='relative flex h-full w-full flex-col overflow-y-auto'>{bodyRight}</div>
-            //   </div>
-            // ))
-          }
+          {drawerOpen && sidePanel}
         </span>
       </div>
     </div>
