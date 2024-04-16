@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDrawer, useViewMode } from '@/store/my-drive/myDrive.store';
 import DriveLayout from '@/components/layout/DriveLayout';
 import { Icon } from '@iconify/react/dist/iconify.js';
@@ -7,13 +7,31 @@ import SidePanel from '../my-drive/side-panel/SidePanel';
 import PriorityView from './priority-view/PriorityView';
 import { remoteToLocalEntries } from '../my-drive/content/DriveGridView';
 import { fakeData } from '../shared/Shared';
+import { toast } from 'react-toastify';
+import { LocalEntry } from '../my-drive/MyDrive';
+import { Entry } from '@/utils/types/entry.type';
+import { useQuery } from '@tanstack/react-query';
+import { useSession } from '@/store/auth/session';
+import { getListEntriesMyDrive } from '@/apis/drive/list-entries.api';
+import { ListEntriesRESP } from '@/apis/drive/response/list-entries.reponse';
 
 const Priority = () => {
   const { viewMode, setViewMode } = useViewMode();
   const [isFileMode, setIsFileMode] = useState<boolean>(true);
   const { drawerOpen, openDrawer, closeDrawer } = useDrawer();
+  const { root_id } = useSession();
 
-  const entries = remoteToLocalEntries(fakeData);
+  const {data, error, refetch} = useQuery({
+    queryKey: ['priority-entries', root_id],
+    queryFn: async () => (await getListEntriesMyDrive({id: root_id}).then((res) => res.data.entries)).filter(e=>!e.name.includes('.trash'))
+  });
+  const entries: LocalEntry[] = remoteToLocalEntries((data || []) as Required<Entry[]>&ListEntriesRESP['entries']);
+
+  useEffect(() => {
+    error && toast.error('Failed to fetch entries');
+  }, [error]);
+
+  // const entries = remoteToLocalEntries(fakeData);
   return (
     <div>
       <DriveLayout
