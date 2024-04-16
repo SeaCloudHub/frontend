@@ -3,9 +3,9 @@
 @tailwind utilities;
 html {
   scroll-behavior: smooth;
-  font-family: "Mulish", sans-serif;
+  font-family: 'Mulish', sans-serif;
   font-optical-sizing: auto;
-  font-size:14px;
+  font-size: 14px;
 }
 /* width */
 ::-webkit-scrollbar {
@@ -23,11 +23,10 @@ html {
   background: #999;
 }
 
-
 @layer components {
   .sidebar {
     @apply fixed left-0 top-0 flex h-screen
-         w-[75px] flex-col items-center space-y-5 overflow-auto  overflow-x-hidden 
+         w-[76px] flex-col items-center space-y-5 overflow-auto  overflow-x-hidden 
          border border-r-2 border-r-slate-200 bg-gray-300 px-3
          shadow-md
         shadow-black;
@@ -48,18 +47,18 @@ html {
     @apply bg-[#063768] text-white !important;
   }
   .nav-bar {
-    @apply fixed left-0 top-0 h-[4rem] w-full   flex
+    @apply fixed left-0 top-0 flex h-[4rem]   w-full
     border  border-b-slate-200  bg-gray-300 
-    pl-[300px] shadow-sm shadow-neutral-500;
+    pl-[302px] shadow-sm shadow-neutral-500;
   }
   .nav-bar-shrink {
-    @apply pl-[75px];
+    @apply pl-[76px];
   }
   .content-default-mode {
-    @apply  pl-[305px] pt-[5rem];
+    @apply pt-4.6rem pl-[302px] pr-1;
   }
   .content-shrink-mode {
-    @apply pl-[80px] pt-[5rem];
+    @apply pt-4.6rem pl-[76px] pr-1;
   }
   .statement-upper-medium {
     @apply font-semibold;

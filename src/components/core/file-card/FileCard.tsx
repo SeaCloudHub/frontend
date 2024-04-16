@@ -9,6 +9,7 @@ import React, { useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Dropdown, { MenuItem } from '../drop-down/Dropdown';
 // import FileViewerContainer from '../file-viewers/file-viewer-container/FileViewerContainer';
+import { useDrawer } from '@/store/my-drive/myDrive.store';
 import FileViewerContainer from '../file-viewers/file-viewer-container/FileViewerContainer';
 import MovePopUp from '../pop-up/MovePopUp';
 import SharePopUp from '../pop-up/SharePopUp';
@@ -32,7 +33,7 @@ const FileCard: React.FC<FileCardProps> = (props) => {
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
   const [type, setType] = useState<'move' | 'share' | null>(null);
   const { title, icon, preview, id } = props;
-
+  const openDrawer = useDrawer((state) => state.openDrawer);
   const menuItems: MenuItem[][] = [
     [{ label: 'Preview', icon: <Icon icon='material-symbols:visibility' />, action: () => {} }],
     [

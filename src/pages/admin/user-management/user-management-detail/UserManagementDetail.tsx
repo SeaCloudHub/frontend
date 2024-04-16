@@ -1,4 +1,5 @@
 import { ScreenMode } from '@/utils/enums/screen-mode.enum';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import IconifyIcon from '../../../../components/core/Icon/IConCore';
 import ButtonContainer from '../../../../components/core/button/ButtonContainer';
@@ -16,10 +17,20 @@ const UserManagementDetail = () => {
   const navigate = useNavigate();
   const { screenMode, shrinkMode } = useScreenMode();
   const flex = !useScreenHook(1024);
+  const divRef = useRef<HTMLDivElement>(null);
+  const [divHeight, setDivHeight] = useState<number | null>(null);
+  useEffect(() => {
+    if (divRef.current) {
+      const height = divRef.current.clientHeight;
+      setDivHeight(height);
+    }
+  }, []);
+  console.log(divHeight);
   return (
     <>
       <div
-        className={`fixed ${screenMode != ScreenMode.DESKTOP ? 'left-0' : shrinkMode ? 'left-[76px]' : 'left-[301px]'}  top-[4rem] z-20  flex w-full items-center space-x-1 border-b-2 bg-white px-3 py-1`}>
+        ref={divRef}
+        className={`fixed ${screenMode != ScreenMode.DESKTOP ? 'left-0' : shrinkMode ? 'left-[77px]' : 'left-[302px]'}  top-[4rem] z-20  flex w-full items-center space-x-1 border-b-2 bg-white px-3 py-1`}>
         <p
           onClick={() => {
             navigate(ADMIN_USER_MANAGEMENT);
@@ -30,7 +41,9 @@ const UserManagementDetail = () => {
         <IconifyIcon fontSize={15} icon={'material-symbols:arrow-forward-ios-rounded'} />
         <p className='statement-upper-medium'>Hung Phi Vo</p>
       </div>
-      <div className={`${flex ? 'flex w-full items-start space-x-2' : ''} pt-[35px]`}>
+      <div
+        style={{ maxHeight: flex ? `calc(100vh - 4rem - 28px)` : 'none' }}
+        className={`${flex ? 'flex w-full items-start space-x-2 overflow-hidden' : ''} pt-[28px]`}>
         {/* <!--section --> */}
         <div className={`${flex ? 'w-1/4' : ''} border-2`}>
           <div className='flex  flex-col space-y-2 border-b-2 p-4'>
@@ -40,7 +53,7 @@ const UserManagementDetail = () => {
                 className='w-[70px] rounded-full object-contain'
                 src='https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75'
               />
-              <div className='space-y-2'>
+              <div className='space-y-2 '>
                 <p className='statement-upper-medium h3'> Hung Vo Phi</p>
                 <p className='statement-medium'>admin@phihungtf.me</p>
                 <ul>
@@ -66,8 +79,8 @@ const UserManagementDetail = () => {
         </div>
         {/* <!--section --> */}
         <div
-          className={`${flex ? 'max-h-[calc(100vh-205px)] w-3/4 overflow-y-auto' : ''}
-        flex flex-col  space-y-4`}>
+          style={{ maxHeight: flex ? `calc(100vh - 4rem - 28px)` : 'none' }}
+          className={`flex  flex-col space-y-4 overflow-y-auto ${flex ? 'w-3/4 ' : ''}`}>
           <div className='w-full space-y-2 p-3  shadow-md'>
             <p className='statement-medium h4 '>Personal Dropbox space of Hung Vo Phi</p>
             <StorageStatistic />
