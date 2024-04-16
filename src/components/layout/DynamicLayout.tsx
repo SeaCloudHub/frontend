@@ -18,15 +18,15 @@ const DynamicLayout = ({ children }: PropsWithChildren) => {
       {!(screenMode == ScreenMode.MOBILE) && <Sidebar shrinkMode={shrinkMode} role={role!} />}
       {role === Role.ADMIN ? (
         <div
-          className={`overflow-y-hidden max-h-screen content-default-mode  ${shrinkMode ? 'content-shrink-mode' : ''}
-        ${screenMode == ScreenMode.MOBILE ? 'ml-0' : ''}`}>
+          className={` ${screenMode == ScreenMode.DESKTOP ? (shrinkMode ? 'content-shrink-mode' : 'content-default-mode') : 'pt-4.6rem pl-0'}    
+        ${screenMode == ScreenMode.MOBILE ? 'pl-0' : ''}`}>
           {children}
         </div>
       ) : (
         <div
           className={classNames(
-            'px 0 h-full w-full pt-[4rem] ',
-            shrinkMode ? (screenMode == ScreenMode.MOBILE ? 'ml-0' : 'pl-[80px]') : 'pl-[305px]',
+            'h-full w-full pt-[4rem] ',
+            screenMode == ScreenMode.DESKTOP ? (shrinkMode ? 'pl-[80px]' : 'pl-[305px]') : 'pl-0',
           )}>
           {children}
         </div>

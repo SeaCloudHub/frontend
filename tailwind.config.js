@@ -3,6 +3,10 @@ export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      spacing: {
+        '4.6rem': '4.6rem',
+      },
+
       fontSize: {
         '4em': '4em',
         '3em': '3em',
@@ -20,6 +24,11 @@ export default {
       zIndex: {
         navbar: '1498',
         sidebar: '1499',
+        9: '9',
+        8: '8',
+        7: '7',
+        6: '6',
+        5: '5',
       },
       screens: {
         xs: '375px',

@@ -88,7 +88,7 @@ const FileFolderResult = ({ name, type, fileType }: FileFolderResultProps) => {
                   }}
                 />
               </div>
-              <div className='w flex w-1/3 items-center justify-start '>
+              <div className='w flex w-1/3 items-center justify-end '>
                 <p className='statement-upper-medium'>Size</p>
                 <Order
                   iconDown='ph:arrow-down-bold'
@@ -111,7 +111,7 @@ const FileFolderResult = ({ name, type, fileType }: FileFolderResultProps) => {
               <div className='flex w-[50%] items-center justify-end'>
                 <p className='w-1/3 truncate'>{item.owner}</p>
                 <p className='w-1/3 truncate'>{item.lastModified}</p>
-                <p className='w-1/3  truncate'>{item.size}</p>
+                <p className='w-1/3  truncate pr-4 text-end'>{item.size}</p>
               </div>
             )}
           </div>

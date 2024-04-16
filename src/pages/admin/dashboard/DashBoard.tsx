@@ -10,10 +10,10 @@ import StorageLog from './components/StorageLog';
 
 const DashBoard = () => {
   return (
-    <div className='z-10 h-full w-full gap-3 lg:flex'>
-      <div className='w-full max-h-full overflow-y-auto'>
+    <div className='h-fit max-h-[calc(100vh-4.6rem)] w-full lg:flex  lg:overflow-hidden'>
+      <div className='w-full overflow-y-auto lg:max-h-screen lg:w-3/4'>
         <div className='w-full lg:flex lg:justify-between '>
-          <div className='flex min-w-[30%] flex-col justify-between lg:mr-3 '>
+          <div className='flex min-w-[40%] flex-col justify-between lg:mr-3'>
             <Paper
               sx={{
                 transition: 'transform 0.3s ease-in-out',
@@ -106,7 +106,7 @@ const DashBoard = () => {
           </div>
         </AccordionCore>
       </div>
-      <div className='h-12 bg-green-300 '>
+      <div className='h-12 bg-green-300 lg:w-1/4 '>
         <RecentlyAddedUsers />
         <StorageLog />
       </div>
