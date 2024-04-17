@@ -25,7 +25,6 @@ const UserManagementDetail = () => {
       setDivHeight(height);
     }
   }, []);
-  console.log(divHeight);
   return (
     <>
       <div

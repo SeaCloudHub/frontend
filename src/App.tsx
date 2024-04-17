@@ -31,7 +31,7 @@ function App() {
               <Route path={item.path} Component={item.component} key={index} />
             ))}
           </Route>
-          <Route element={<RequireAuth allowedRole={[Role.USER, Role.ADMIN]} />}>
+          <Route element={<RequireAuth allowedRole={[Role.USER]} />}>
             {routes.customer.map((item, index) => (
               <Route path={item.path} Component={item.component} key={index} />
             ))}
@@ -42,6 +42,13 @@ function App() {
       </Routes>
     </>
   );
+}
+
+declare module 'react' {
+  interface HTMLAttributes<T> extends AriaAttributes, DOMAttributes<T> {
+    directory?: string;
+    webkitdirectory?: string;
+  }
 }
 
 export default App;

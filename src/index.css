@@ -26,7 +26,7 @@ html {
 @layer components {
   .sidebar {
     @apply fixed left-0 top-0 flex h-screen
-         w-[76px] flex-col items-center space-y-5 overflow-auto  overflow-x-hidden 
+         w-[76px] flex-col items-center space-y-8 overflow-auto  overflow-x-hidden 
          border border-r-2 border-r-slate-200 bg-gray-300 px-3
          shadow-md
         shadow-black;
@@ -55,10 +55,10 @@ html {
     @apply pl-[76px];
   }
   .content-default-mode {
-    @apply pt-4.6rem pl-[302px] pr-1;
+    @apply pl-[302px] pr-1 pt-4.6rem;
   }
   .content-shrink-mode {
-    @apply pt-4.6rem pl-[76px] pr-1;
+    @apply pl-[76px] pr-1 pt-4.6rem;
   }
   .statement-upper-medium {
     @apply font-semibold;
