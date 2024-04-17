@@ -21,9 +21,7 @@ type DropdownProps = {
 };
 
 const Dropdown: React.FC<DropdownProps> = ({ button, items, left }) => {
-  console.log('[Dropdown] items: ', items);
   items = items.filter((group) => group.some((item) => !item.isHidden));
-  console.log('[Dropdown] items after filter: ', items);
   return (
     <Menu as='div' className='relative z-50 inline-block text-left '>
       <div>
