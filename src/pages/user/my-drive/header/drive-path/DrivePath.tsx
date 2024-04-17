@@ -7,7 +7,7 @@ import Dropdown, { MenuItem } from '@/components/core/drop-down/Dropdown';
 type DrivePathProps = {
   path: Path;
   setPath: (path: Path) => void;
-  type?: 'MyDrive' | 'Shared' | 'Starred' | 'Trash';
+  type?: 'MyDrive' | 'Shared' | 'Starred' | 'Trash' | 'Priority';
 };
 
 const DrivePath: React.FC<DrivePathProps> = ({ path, setPath, type }) => {
