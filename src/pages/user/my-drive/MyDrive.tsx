@@ -45,7 +45,7 @@ const MyDrive = () => {
   const viewMode = useViewMode((state) => state.viewMode);
 
   const {data, error, refetch} = useQuery({
-    queryKey: ['mydrive-entries', root_id],
+    queryKey: ['mydrive-entries', path[path.length-1].id],
     queryFn: async () => {
       return (await getListEntriesMyDrive({id: path[path.length-1].id}).then((res) => res?.data?.entries||[])).filter(e=>!e.name.includes('.trash'))
     },
