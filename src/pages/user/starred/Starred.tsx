@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SharingPageViewMode from '../shared/sharing-page-view/SharingPageViewMode';
 import SharingPageFilter from '../shared/sharing-page-filter/SharingPageFilter';
 import { Icon } from '@iconify/react/dist/iconify.js';
@@ -8,14 +8,32 @@ import { fakeData } from '../shared/Shared';
 import DriveLayout from '@/components/layout/DriveLayout';
 import { useDrawer, useViewMode } from '@/store/my-drive/myDrive.store';
 import SidePanel from '../my-drive/side-panel/SidePanel';
+import { useSession } from '@/store/auth/session';
+import { useQuery } from '@tanstack/react-query';
+import { getListEntriesMyDrive } from '@/apis/drive/list-entries.api';
+import { toast } from 'react-toastify';
+import { Entry } from '@/utils/types/entry.type';
+import { ListEntriesRESP } from '@/apis/drive/response/list-entries.reponse';
 
 const Starred = () => {
   const { viewMode, setViewMode } = useViewMode();
   const [typeFilterItem, setTypeFilterItem] = useState<string>('');
   const [peopleFilterItem, setPeopleFilterItem] = useState<string>('');
   const [modifiedFilterItem, setModifiedFilterItem] = useState<string>('');
-
   const { drawerOpen, openDrawer, closeDrawer } = useDrawer();
+  const { root_id } = useSession();
+
+  const {data, error, refetch} = useQuery({
+    queryKey: ['starred-entries', root_id],
+    queryFn: async () => (await getListEntriesMyDrive({id: root_id})
+      .then((res) => res?.data?.entries||[]))
+      .filter(e=>!e.name.includes('.trash'))
+  });
+
+  useEffect(() => {
+    error && toast.error('Failed to fetch entries');
+  }, [error]);
+
   return (
     <DriveLayout
       headerLeft={
@@ -62,7 +80,7 @@ const Starred = () => {
           </div>
         </div>
       }
-      bodyLeft={<StarredView entries={fakeData} />}
+      bodyLeft={<StarredView entries={(data||[]) as Required<Entry[]>&ListEntriesRESP['entries']} />}
       sidePanel={<SidePanel />}
     />
   );

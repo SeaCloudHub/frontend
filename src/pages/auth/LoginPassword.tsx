@@ -48,8 +48,16 @@ const LoginPassword = () => {
       }
     },
     onSuccess: (data) => {
+<<<<<<< HEAD
       const firstSignin = data.data.identity.password_changed_at === null;
       if (firstSignin) {
+=======
+      console.log(data.data);
+      const a = dayjs(data.data.identity.password_changed_at);
+      console.log(a.year());
+      signIn(data.data.session_token, data.data.identity.is_admin ? Role.ADMIN : Role.USER, a.year() < 2024, data.data.identity.root_id);
+      if (data.data.identity.password_changed_at == null) {
+>>>>>>> b9b5e9ef46f80dad71f86c24a348c3ec8f4bdc2e
         navigate(AUTH_CHANGE_PASSWORD);
       }
       console.log(data.data.identity);

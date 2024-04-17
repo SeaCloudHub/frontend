@@ -1,4 +1,5 @@
 export type Entry = {
+  id: string;
   name: string;
   full_path: string;
   size: number;

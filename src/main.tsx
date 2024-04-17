@@ -10,10 +10,10 @@ import Providers from './providers/index.tsx';
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
     <Providers>
-      <React.StrictMode>
+      {/* <React.StrictMode> */}
         <ToastContainer />
         <App />
-      </React.StrictMode>
+      {/* </React.StrictMode> */}
     </Providers>
   </BrowserRouter>,
 );

@@ -9,6 +9,7 @@ type MenuItem = {
   label: string;
   icon: React.ReactNode;
   action?: (param?: any) => void;
+  isHidden?: boolean;
 };
 
 export type { MenuItem };
@@ -20,6 +21,9 @@ type DropdownProps = {
 };
 
 const Dropdown: React.FC<DropdownProps> = ({ button, items, left }) => {
+  console.log('[Dropdown] items: ', items);
+  items = items.filter((group) => group.some((item) => !item.isHidden));
+  console.log('[Dropdown] items after filter: ', items);
   return (
     <Menu as='div' className='relative z-50 inline-block text-left '>
       <div>
@@ -40,11 +44,11 @@ const Dropdown: React.FC<DropdownProps> = ({ button, items, left }) => {
           )}>
           {items.map((group) => (
             <div key={group[0].label} className='py-1'>
-              {group.map(({ label, icon, action }) => (
+              {group.map(({ label, icon, action, isHidden }) => (
                 <Menu.Item key={label}>
                   {({ active }) => (
                     <div
-                      className={classNames(active ? 'bg-[#e4e4e4] text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm')}
+                      className={classNames(active ? 'bg-[#e4e4e4] text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm cursor-pointer')}
                       onClick={() => {
                         action && action();
                       }}>

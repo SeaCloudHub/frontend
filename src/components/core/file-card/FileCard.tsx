@@ -34,6 +34,7 @@ const FileCard: React.FC<FileCardProps> = (props) => {
   const [type, setType] = useState<'move' | 'share' | null>(null);
   const { title, icon, preview, id } = props;
   const openDrawer = useDrawer((state) => state.openDrawer);
+
   const menuItems: MenuItem[][] = [
     [{ label: 'Preview', icon: <Icon icon='material-symbols:visibility' />, action: () => {} }],
     [
@@ -118,7 +119,7 @@ const FileCard: React.FC<FileCardProps> = (props) => {
         onDoubleClick={() => {
           setFileViewer(true);
         }}
-        className='flex h-full w-full flex-col items-center justify-center rounded-xl bg-surfaceContainerLow px-2 shadow-sm hover:bg-surfaceDim'>
+        className='flex h-full w-full flex-col items-center justify-center rounded-xl bg-surfaceContainerLow px-2 shadow-sm hover:bg-surfaceDim cursor-pointer'>
         <div className='flex w-full items-center justify-between px-1 py-3'>
           <div className='flex max-w-[calc(100%-24px)] items-center space-x-4'>
             <div className='h-6 w-6 min-w-fit'>{icon}</div>

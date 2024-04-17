@@ -3,6 +3,7 @@ import { Activity, ActivityAction, DownloadPermission, Entry, EntryDetails } fro
 
 export const fakeEntries: Entry[] = [
   {
+    id: '1',
     name: 'file0ádfasdfasdsadsadfasdf đâsđâssađasadsadsadsadsadsadsadsadsadsadsadsadsadáđasađasadsadasdasdasdádfasđfádf',
     full_path: '/file1',
     size: 1024,
@@ -14,6 +15,7 @@ export const fakeEntries: Entry[] = [
     updated_at: '2021-09-21T14:00:00Z',
   },
   {
+    id: '2',
     name: 'file1.mp3',
     full_path: '/file1.mp3',
     size: 1024,
@@ -25,6 +27,7 @@ export const fakeEntries: Entry[] = [
     updated_at: '2021-09-21T14:00:00Z',
   },
   {
+    id: '3',
     name: 'file2.mp4',
     full_path: '/file2.mp4',
     size: 1024,
@@ -36,6 +39,7 @@ export const fakeEntries: Entry[] = [
     updated_at: '2021-09-21T14:00:00Z',
   },
   {
+    id: '4',
     name: 'file3.pdf',
     full_path: '/file3.pdf',
     size: 1024,
@@ -47,6 +51,7 @@ export const fakeEntries: Entry[] = [
     updated_at: '2021-09-21T14:00:00Z',
   },
   {
+    id: '5',
     name: 'file4.docx',
     full_path: '/file4.docx',
     size: 1024,
@@ -58,6 +63,7 @@ export const fakeEntries: Entry[] = [
     updated_at: '2021-09-21T14:00:00Z',
   },
   {
+    id: '6',
     name: 'file5.jpg',
     full_path: '/file5.jpg',
     size: 1024,
@@ -69,6 +75,7 @@ export const fakeEntries: Entry[] = [
     updated_at: '2021-09-21T14:00:00Z',
   },
   {
+    id: '7',
     name: 'file6.txt',
     full_path: '/file6.txt',
     size: 1024,
@@ -80,6 +87,7 @@ export const fakeEntries: Entry[] = [
     updated_at: '2021-09-21T14:00:00Z',
   },
   {
+    id: '8',
     name: 'file7.zip',
     full_path: '/file7.zip',
     size: 1024,
@@ -91,6 +99,7 @@ export const fakeEntries: Entry[] = [
     updated_at: '2021-09-21T14:00:00Z',
   },
   {
+    id: '9',
     name: 'file8.jpeg',
     full_path: '/file8.jpeg',
     size: 1024,
@@ -102,6 +111,7 @@ export const fakeEntries: Entry[] = [
     updated_at: '2021-09-21T14:00:00Z',
   },
   {
+    id: '10',
     name: 'file9.png',
     full_path: '/file9.png',
     size: 1024,
@@ -113,6 +123,7 @@ export const fakeEntries: Entry[] = [
     updated_at: '2021-09-21T14:00:00Z',
   },
   {
+    id: '11',
     name: 'file10.jfif',
     full_path: '/file10.jfif',
     size: 1024,
@@ -124,6 +135,7 @@ export const fakeEntries: Entry[] = [
     updated_at: '2021-09-21T14:00:00Z',
   },
   {
+    id: '12',
     name: 'file11.gif',
     full_path: '/file11.gif',
     size: 1024,
@@ -135,6 +147,7 @@ export const fakeEntries: Entry[] = [
     updated_at: '2021-09-21T14:00:00Z',
   },
   {
+    id: '13',
     name: 'file12.webp',
     full_path: '/file12.webp',
     size: 1024,
@@ -146,6 +159,7 @@ export const fakeEntries: Entry[] = [
     updated_at: '2021-09-21T14:00:00Z',
   },
   {
+    id: '14',
     name: 'file13.ico',
     full_path: '/file13.ico',
     size: 1024,
@@ -157,6 +171,7 @@ export const fakeEntries: Entry[] = [
     updated_at: '2021-09-21T14:00:00Z',
   },
   {
+    id: '15',
     name: 'file14.svg',
     full_path: '/file14.svg',
     size: 1024,
@@ -168,6 +183,7 @@ export const fakeEntries: Entry[] = [
     updated_at: '2021-09-21T14:00:00Z',
   },
   {
+    id: '16',
     name: 'dir1',
     full_path: '/dir1',
     size: 0,
@@ -179,6 +195,7 @@ export const fakeEntries: Entry[] = [
     updated_at: '2021-09-21T14:00:00Z',
   },
   {
+    id: '17',
     name: 'dir2',
     full_path: '/dir2',
     size: 0,

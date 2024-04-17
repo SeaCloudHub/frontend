@@ -13,6 +13,7 @@ function App() {
         {routes.auth.map((item, index) => (
           <Route path={item.path} Component={item.component} key={index} />
         ))}
+
         <Route path={routes.notFound.path} Component={routes.notFound.component} />
         {/* layout routes */}
 
