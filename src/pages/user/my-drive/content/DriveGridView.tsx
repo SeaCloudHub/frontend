@@ -7,6 +7,7 @@ import fileIcons from '@/components/core/file-card/fileicon.constant';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { LocalEntry } from '../MyDrive';
 import { Path } from '@/store/my-drive/myDrive.store';
+import { useNavigate } from 'react-router-dom';
 
 type Filter = {
   typeFilter: string;
@@ -25,40 +26,71 @@ type DriveGridViewProps = {
   setPath?: React.Dispatch<React.SetStateAction<Path>>;
 };
 
-export const DriveGridView: React.FC<DriveGridViewProps> = ({ dirId, order, sort, setSort, entries, fileShow, folderShow, setPath }) => {
+export const DriveGridView: React.FC<DriveGridViewProps> = ({
+  dirId,
+  order,
+  sort,
+  setSort,
+  entries,
+  fileShow,
+  folderShow,
+  setPath,
+}) => {
   const files = entries.filter((entry) => !entry.isDir);
   const folders = entries.filter((entry) => entry.isDir);
 
   const handlePath = (path: Path) => {
     setPath && setPath((prev) => [...prev, ...path]);
-  }
+  };
+
+  const navigate = useNavigate();
 
   return (
     <>
       {entries.length === 0 ? (
-        <div className='flex justify-center items-center h-96'>
+        <div className='flex h-96 items-center justify-center'>
           <div className='text-center'>
             <div className='text-3xl font-semibold'>No files or folders here</div>
             <div className='text-gray-500'>Try uploading a file or creating a folder</div>
           </div>
         </div>
       ) : (
-      <div className='bg-white pl-5 pr-3 pt-4'>
-        <div className='relative flex flex-col space-y-2'>
-          <div className={!folderShow ? 'visible' : 'hidden'}>
-            <div className='pb-4 pt-2 text-sm font-medium'> Folders</div>
-            <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'>
-              {localEntriesToFolder(folders, handlePath)}
-            </div>
-          </div>
-          <div className={!fileShow ? 'visible' : 'hidden'}>
-            <div className='pb-4 pt-2 text-sm font-medium'> Files</div>
-            <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'>
-              {localEntriesToFiles(files)}
-            </div>
+        <div className='bg-white pl-5 pr-3 pt-4'>
+          <div className='relative flex flex-col space-y-2'>
+            {folders.length !== 0 && (
+              <div className={!folderShow ? 'visible' : 'hidden'}>
+                <div className='pb-4 pt-2 text-sm font-medium'> Folders</div>
+                <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'>
+                  {/* {localEntriesToFolder(folders, handlePath)} */}
+                  {folders.map((folder, index) => {
+                    return (
+                      <div key={index} className='w-auto'>
+                        <FolderCard
+                          title={folder.title}
+                          icon={folder.icon}
+                          id={folder.id}
+                          onDoubleClick={() => {
+                            handlePath([{ id: folder.id, name: folder.title }]);
+                            navigate(`dir/${folder.id}`)
+                          }}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+            {files.length !== 0 && (
+              <div className={!fileShow ? 'visible' : 'hidden'}>
+                <div className='pb-4 pt-2 text-sm font-medium'> Files</div>
+                <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'>
+                  {localEntriesToFiles(files)}
+                </div>
+              </div>
+            )}
           </div>
         </div>
-      </div>)}
+      )}
     </>
   );
 };
@@ -78,15 +110,18 @@ export const localEntriesToFiles = (files: LocalEntry[]) => {
 /**
  * Map MyEntry to FolderCard
  */
-export const localEntriesToFolder = (folders: LocalEntry[], handlePath: (path: Path)=>void) => {
+export const localEntriesToFolder = (folders: LocalEntry[], handlePath: (path: Path) => void) => {
   return folders.map((folder, index) => {
     return (
       <div key={index} className='w-auto'>
-        <FolderCard title={folder.title} icon={folder.icon} id={folder.id} onDoubleClick={
-          ()=>{
-            handlePath([{id: folder.id, name: folder.title}]);
-          }
-        } />
+        <FolderCard
+          title={folder.title}
+          icon={folder.icon}
+          id={folder.id}
+          onDoubleClick={() => {
+            handlePath([{ id: folder.id, name: folder.title }]);
+          }}
+        />
       </div>
     );
   });

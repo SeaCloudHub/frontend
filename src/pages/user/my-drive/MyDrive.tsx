@@ -13,6 +13,8 @@ import { useSession } from '@/store/auth/session';
 import { toast } from 'react-toastify';
 import { getListEntriesMyDrive } from '@/apis/drive/list-entries.api';
 import { ListEntriesRESP } from '@/apis/drive/response/list-entries.reponse';
+import { useParams } from 'react-router-dom';
+import { useListEntries } from '@/hooks/useListEntries';
 
 export type LocalEntry = {
   isDir: boolean;
@@ -29,37 +31,35 @@ export type LocalEntry = {
 };
 
 const MyDrive = () => {
-  const {root_id} = useSession();
-  const processedEntries = remoteToLocalEntries(fakeEntries);
-  const files = processedEntries.filter((entry) => !entry.isDir);
-  const folders = processedEntries.filter((entry) => entry.isDir);
+  const { root_id } = useSession();
 
   const [{ sort, order }, setSort] = useState<{ sort: string; order: string }>({ sort: 'Name', order: 'desc' });
   const [typeFilter, setTypeFilter] = useState<string>('');
   const [peopleFilter, setPeopleFilter] = useState<string>('');
   const [modifiedFilter, setModifiedFilter] = useState<string>('');
-  const [path, setPath] = useState<Path>([
-    { name: 'My Drive', id: root_id }
-  ]);
+  const [path, setPath] = useState<Path>([{ name: 'My Drive', id: root_id }]);
 
   const viewMode = useViewMode((state) => state.viewMode);
 
-  const {data, error, refetch} = useQuery({
-    queryKey: ['mydrive-entries', root_id],
-    queryFn: async () => {
-      return (await getListEntriesMyDrive({id: path[path.length-1].id}).then((res) => res?.data?.entries||[])).filter(e=>!e.name.includes('.trash'))
-    },
-  });
-  const localEntries: LocalEntry[] = remoteToLocalEntries((data || []) as Required<Entry[]>&ListEntriesRESP['entries']);
+  // const { data, error, refetch } = useQuery({
+  //   queryKey: ['mydrive-entries', path[path.length - 1].id],
+  //   queryFn: async () => {
+  //     return (
+  //       await getListEntriesMyDrive({ id: path[path.length - 1].id, limit: 100 }).then((res) => res?.data?.entries || [])
+  //     ).filter((e) => !e.name.includes('.trash'));
+  //   },
+  // });
+  const {data, error, refetch} = useListEntries();
+  const localEntries: LocalEntry[] = remoteToLocalEntries((data || []) as Required<Entry[]> & ListEntriesRESP['entries']);
 
   // const [entries, setEntries] = useState<LocalEntry[]>(localEntries);
   useEffect(() => {
     error && toast.error('Failed to fetch entries');
   }, [error]);
 
-  useEffect(() => {
-    refetch();
-  }, [path, refetch]);
+  // useEffect(() => {
+  //   refetch();
+  // }, [path, refetch]);
 
   return (
     <DriveLayout
@@ -78,7 +78,13 @@ const MyDrive = () => {
           setSort={setSort}
         />
       }
-      bodyLeft={viewMode === 'grid' ? <DriveGridView entries={localEntries} setPath={setPath} /> : <DriveListView entries={localEntries} setPath={setPath} />}
+      bodyLeft={
+        viewMode === 'grid' ? (
+          <DriveGridView entries={localEntries} setPath={setPath} />
+        ) : (
+          <DriveListView entries={localEntries} setPath={setPath} />
+        )
+      }
       sidePanel={<SidePanel />}
     />
   );
