@@ -13,6 +13,15 @@ import { useDrawer } from '@/store/my-drive/myDrive.store';
 import FileViewerContainer from '../file-viewers/file-viewer-container/FileViewerContainer';
 import MovePopUp from '../pop-up/MovePopUp';
 import SharePopUp from '../pop-up/SharePopUp';
+import { useMutation } from '@tanstack/react-query';
+import { CopyFileREQ } from '@/apis/drive/request/copy.request';
+import { copyFiles } from '@/apis/drive/copy-files.api';
+import { isAxiosError } from 'axios';
+import { ApiGenericError } from '@/utils/types/api-generic-error.type';
+import { toast } from 'react-toastify';
+import { toastError } from '@/utils/toast-options/toast-options';
+import { useSession } from '@/store/auth/session';
+import { useCopyMutation } from '@/hooks/drive.hooks';
 
 type FileCardProps = {
   title: string;
@@ -35,6 +44,10 @@ const FileCard: React.FC<FileCardProps> = (props) => {
   const { title, icon, preview, id } = props;
   const openDrawer = useDrawer((state) => state.openDrawer);
 
+  const { root_id } = useSession();
+
+  const copyMutation = useCopyMutation();
+
   const menuItems: MenuItem[][] = [
     [{ label: 'Preview', icon: <Icon icon='material-symbols:visibility' />, action: () => {} }],
     [
@@ -47,7 +60,9 @@ const FileCard: React.FC<FileCardProps> = (props) => {
       {
         label: 'Make a copy',
         icon: <Icon icon='material-symbols:content-copy-outline' />,
-        action: () => {},
+        action: () => {
+          copyMutation.mutate({ ids: [id], to: root_id });
+        },
       },
     ],
     [
@@ -119,7 +134,7 @@ const FileCard: React.FC<FileCardProps> = (props) => {
         onDoubleClick={() => {
           setFileViewer(true);
         }}
-        className='flex h-full w-full flex-col items-center justify-center rounded-xl bg-surfaceContainerLow px-2 shadow-sm hover:bg-surfaceDim cursor-pointer'>
+        className='flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-xl bg-surfaceContainerLow px-2 shadow-sm hover:bg-surfaceDim'>
         <div className='flex w-full items-center justify-between px-1 py-3'>
           <div className='flex max-w-[calc(100%-24px)] items-center space-x-4'>
             <div className='h-6 w-6 min-w-fit'>{icon}</div>

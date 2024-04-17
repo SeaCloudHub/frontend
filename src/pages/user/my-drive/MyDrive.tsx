@@ -15,7 +15,7 @@ import { getListEntriesMyDrive } from '@/apis/drive/list-entries.api';
 import { ListEntriesRESP } from '@/apis/drive/response/list-entries.reponse';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { useParams } from 'react-router-dom';
-import { useListEntries } from '@/hooks/useListEntries';
+import { useListEntries } from '@/hooks/drive.hooks';
 
 export type LocalEntry = {
   isDir: boolean;
@@ -32,24 +32,24 @@ export type LocalEntry = {
 };
 
 const MyDrive = () => {
-  const {  rootId  } = useStorageStore();
+  const { rootId } = useStorageStore();
 
   const [{ sort, order }, setSort] = useState<{ sort: string; order: string }>({ sort: 'Name', order: 'desc' });
   const [typeFilter, setTypeFilter] = useState<string>('');
   const [peopleFilter, setPeopleFilter] = useState<string>('');
   const [modifiedFilter, setModifiedFilter] = useState<string>('');
-  const [path, setPath] = useState<Path>([
-    { name: 'My Drive', id: rootId }
-  ]);
+  const [path, setPath] = useState<Path>([{ name: 'My Drive', id: rootId }]);
   const viewMode = useViewMode((state) => state.viewMode);
 
-  const {data, error, refetch} = useQuery({
-    queryKey: ['mydrive-entries', path[path.length-1].id],
-    queryFn: async () => {
-      return (await getListEntriesMyDrive({id: path[path.length-1].id}).then((res) => res?.data?.entries||[])).filter(e=>!e.name.includes('.trash'))
-    },
-  });
-  const localEntries: LocalEntry[] = remoteToLocalEntries((data || []) as Required<Entry[]>&ListEntriesRESP['entries']);
+  // const {data, error, refetch} = useQuery({
+  //   queryKey: ['mydrive-entries', path[path.length-1].id],
+  //   queryFn: async () => {
+  //     return (await getListEntriesMyDrive({id: path[path.length-1].id}).then((res) => res?.data?.entries||[])).filter(e=>!e.name.includes('.trash'))
+  //   },
+  // });
+  const { data, error, refetch } = useListEntries();
+  console.log(data);
+  const localEntries: LocalEntry[] = remoteToLocalEntries((data || []) as Required<Entry[]> & ListEntriesRESP['entries']);
 
   // useEffect(() => {
   //   refetch();
