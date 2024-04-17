@@ -236,16 +236,11 @@ const Shared = () => {
     { name: 'Shared', id: root_id }
   ]);
 
-
   const {data, error, refetch} = useQuery({
     queryKey: ['shared-entries', root_id],
-    queryFn: async () => (await getSharedEntries({id: root_id})
+    queryFn: async () => (await getSharedEntries({id: path[path.length-1].id})
       .then((res) => res?.data?.entries||[]))
   });
-
-  useEffect(() => {
-    error && toast.error('Failed to fetch entries');
-  }, [error]);
 
   useEffect(() => {
     refetch();

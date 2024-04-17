@@ -5,7 +5,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 type DrivePathMenuButtonProps = {
   entryId: string;
   dirName: string;
-  type?: 'MyDrive' | 'Shared' | 'Starred' | 'Trash';
+  type?: 'MyDrive' | 'Shared' | 'Starred' | 'Trash' | 'Priority';
 };
 
 const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ entryId, dirName, type }) => {

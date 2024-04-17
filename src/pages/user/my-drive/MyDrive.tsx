@@ -13,6 +13,7 @@ import { useSession } from '@/store/auth/session';
 import { toast } from 'react-toastify';
 import { getListEntriesMyDrive } from '@/apis/drive/list-entries.api';
 import { ListEntriesRESP } from '@/apis/drive/response/list-entries.reponse';
+import { useStorageStore } from '@/store/storage/storage.store';
 
 export type LocalEntry = {
   isDir: boolean;
@@ -29,7 +30,7 @@ export type LocalEntry = {
 };
 
 const MyDrive = () => {
-  const {root_id} = useSession();
+  const { rootId } = useStorageStore();
   const processedEntries = remoteToLocalEntries(fakeEntries);
   const files = processedEntries.filter((entry) => !entry.isDir);
   const folders = processedEntries.filter((entry) => entry.isDir);
@@ -39,9 +40,8 @@ const MyDrive = () => {
   const [peopleFilter, setPeopleFilter] = useState<string>('');
   const [modifiedFilter, setModifiedFilter] = useState<string>('');
   const [path, setPath] = useState<Path>([
-    { name: 'My Drive', id: root_id }
+    { name: 'My Drive', id: rootId }
   ]);
-
   const viewMode = useViewMode((state) => state.viewMode);
 
   const {data, error, refetch} = useQuery({
@@ -51,11 +51,6 @@ const MyDrive = () => {
     },
   });
   const localEntries: LocalEntry[] = remoteToLocalEntries((data || []) as Required<Entry[]>&ListEntriesRESP['entries']);
-
-  // const [entries, setEntries] = useState<LocalEntry[]>(localEntries);
-  useEffect(() => {
-    error && toast.error('Failed to fetch entries');
-  }, [error]);
 
   useEffect(() => {
     refetch();

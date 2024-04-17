@@ -1,6 +1,6 @@
 import React from 'react';
 import { LocalEntry } from '../../my-drive/MyDrive';
-import { useViewMode } from '@/store/my-drive/myDrive.store';
+import { Path, useViewMode } from '@/store/my-drive/myDrive.store';
 import { DriveGridView } from '../../my-drive/content/DriveGridView';
 import { DriveListView } from '../../my-drive/content/DriveListView';
 
@@ -10,9 +10,10 @@ type PriorityViewProps = {
   sort: string;
   order: string;
   setSort: (value: { sort: string; order: string }) => void;
+  setPath?: React.Dispatch<React.SetStateAction<Path>>
 };
 
-const PriorityView: React.FC<PriorityViewProps> = ({ entries, sort, order, setSort, isFileMode }) => {
+const PriorityView: React.FC<PriorityViewProps> = ({ entries, sort, order, setSort, isFileMode, setPath }) => {
   const { viewMode } = useViewMode();
   const localEntries = isFileMode ? entries.filter((entry) => !entry.isDir) : entries.filter((entry) => entry.isDir);
 
@@ -24,9 +25,10 @@ const PriorityView: React.FC<PriorityViewProps> = ({ entries, sort, order, setSo
       entries={localEntries}
       fileShow={!isFileMode}
       folderShow={isFileMode}
+      setPath={setPath}
     />
   ) : (
-    <DriveListView order={order} sort={sort} setSort={setSort} entries={localEntries} />
+    <DriveListView order={order} sort={sort} setSort={setSort} entries={localEntries} setPath={setPath} />
   );
 };
 
