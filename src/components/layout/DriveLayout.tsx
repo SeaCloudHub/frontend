@@ -12,7 +12,7 @@ const DriveLayout: React.FC<DriveLayoutProps> = ({ headerLeft, bodyLeft, sidePan
 
   console.log('drawerOpen', drawerOpen);
   return (
-    <div className='h-[calc(100vh-80)]'>
+    <div className='h-[calc(100vh-80px)]'>
       <div className='grid h-full grid-flow-col grid-cols-[1fr_auto] grid-rows-[auto_1fr] gap-1'>
         {headerLeft}
         <div className='mb-4 overflow-hidden'>
