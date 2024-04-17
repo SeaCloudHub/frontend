@@ -21,7 +21,7 @@ type DropdownProps = {
 
 const Dropdown: React.FC<DropdownProps> = ({ button, items, left }) => {
   return (
-    <Menu as='div' className='relative inline-block text-left'>
+    <Menu as='div' className='relative z-50 inline-block text-left '>
       <div>
         <Menu.Button className='flex items-center'>{button}</Menu.Button>
       </div>
@@ -46,7 +46,6 @@ const Dropdown: React.FC<DropdownProps> = ({ button, items, left }) => {
                     <div
                       className={classNames(active ? 'bg-[#e4e4e4] text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm')}
                       onClick={() => {
-                        console.log('[Dropdown] action clicked');
                         action && action();
                       }}>
                       <div className='flex items-center space-x-2'>

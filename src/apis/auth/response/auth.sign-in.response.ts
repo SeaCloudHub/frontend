@@ -19,4 +19,10 @@ export type IdentityRESP = {
   last_name: string;
   avatar_url: string;
   is_admin: boolean;
+  last_sign_in_at: string;
+  root_id: string;
+  storage_usage: number;
+  storage_capacity: number;
+  created_at: string;
+  updated_at: string;
 };

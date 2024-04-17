@@ -7,6 +7,7 @@ import { SidebarItemType } from '../../../utils/types/sidebar-item.type';
 import ButtonIcon from '../../core/button/ButtonIcon';
 import LinearChartBar from '../../core/linear-chart-bar/linearChartBar';
 import SidebarItem from '../../core/sidebar-item/SidebarItem';
+import AddFileMenu from './AddFileMenu';
 
 type SidebarProps = {
   shrinkMode: boolean;
@@ -24,6 +25,7 @@ const Sidebar = ({ role, shrinkMode }: SidebarProps) => {
       setTabs(userSidebar);
     }
   }, [role]);
+  const [dropdown, setDropdown] = useState(false);
 
   return (
     <>
@@ -58,6 +60,7 @@ const Sidebar = ({ role, shrinkMode }: SidebarProps) => {
             </div>
           )}
         </div>
+        {role == Role.USER && <AddFileMenu shrinkMode={shrinkMode} />}
         <div>
           {tabs.map((item, index) => (
             <SidebarItem
