@@ -1,0 +1,121 @@
+import IconifyIcon from '@/components/core/Icon/IConCore';
+import Dropdown, { MenuItem } from '@/components/core/drop-down/Dropdown';
+import ModalCreateFolder from '@/components/core/modal/ModalCreateFolder';
+import ProgressIndicator from '@/components/core/progress-indicator/ProgressIndicator';
+import { useProgressIndicator } from '@/store/storage/progressIndicator.store';
+import React, { useRef, useState } from 'react';
+
+type AddFileMenuProps = {
+  shrinkMode?: boolean;
+};
+
+const AddFileMenu = ({ shrinkMode }: AddFileMenuProps) => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const folderInputRef = useRef<HTMLInputElement>(null);
+  const setFileNames = useProgressIndicator((state) => state.setFileNames);
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const fileList = e.target.files;
+    if (fileList) {
+      const filesArray = Array.from(fileList);
+      setFileNames(filesArray.map((item) => item.name));
+    }
+  };
+  const handleFolderUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const folderInput = e.target;
+    const fileList = folderInput.files;
+    if (fileList && fileList.length > 0) {
+      const selectedFolder = fileList[0];
+      console.log(selectedFolder);
+      const folderName = selectedFolder.webkitRelativePath.split('/')[0];
+      console.log('Selected folder:', folderName);
+      const listFilesAndFolders = (directory: string, files: FileList) => {
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          const relativePath = file.webkitRelativePath;
+          const parts = relativePath.split('/');
+          if (parts[0] === directory) {
+            if (parts.length === 1) {
+              console.log('File inside', directory, ':', parts[1]);
+            } else {
+              listFilesAndFolders(parts.slice(1).join('/'), files);
+            }
+          }
+        }
+      };
+
+      // Start listing files and folders from the root directory
+      listFilesAndFolders(folderName, fileList);
+    }
+  };
+
+  const toggleFolderPicker = () => {
+    if (folderInputRef.current) {
+      folderInputRef.current.click();
+    }
+  };
+
+  const toggleFilePicker = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+  const toggleCreateFolder = () => {
+    setCreateModal(true);
+  };
+  const onCreateModalResponse = (data: any) => {
+    if (data != false) {
+      console.log(data);
+    }
+    setCreateModal(false);
+  };
+
+  const addFileMenu: MenuItem[][] = [
+    [{ label: 'New Folder', icon: <IconifyIcon icon={'lets-icons:folder-add-light'} />, action: toggleCreateFolder }],
+    [
+      { label: 'File Upload', icon: <IconifyIcon icon={'ic:baseline-upload-file'} />, action: toggleFilePicker },
+      {
+        label: 'Folder Upload',
+        icon: <IconifyIcon icon={'uil:folder-upload'} />,
+        action: toggleFolderPicker,
+      },
+    ],
+  ];
+
+  const [createModal, setCreateModal] = useState<boolean>(false);
+  return (
+    <>
+      <Dropdown
+        button={
+          <div className='mt-5 flex cursor-pointer items-center rounded-full px-4 py-1 text-[#063768] hover:bg-gray-400'>
+            <IconifyIcon icon={'mdi:create-new-folder-outline'} fontSize={35} />
+            {!shrinkMode && <span className='font-bold'>New</span>}
+          </div>
+        }
+        items={addFileMenu}
+        left={false}
+      />
+      <input ref={fileInputRef} id='fileInput' type='file' style={{ display: 'none' }} onChange={handleFileUpload} multiple />
+      <input
+        ref={folderInputRef}
+        id='folderInput'
+        type=''
+        directory=''
+        webkitdirectory=''
+        style={{ display: 'none' }}
+        onChange={handleFolderUpload}
+        multiple={false}
+      />
+      {createModal && (
+        <ModalCreateFolder
+          isOpen={createModal}
+          handleConfirm={() => {
+            setCreateModal(false);
+          }}
+        />
+      )}
+      <ProgressIndicator />
+    </>
+  );
+};
+
+export default AddFileMenu;

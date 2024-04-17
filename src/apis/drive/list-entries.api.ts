@@ -14,13 +14,3 @@ export const getSharedEntries = async (param: Pick<ListEntriesREQ, 'id'>) => {
   const res = await api.get<BaseResponse<ListEntriesRESP>>(`/files/${param.id}/access`);
   return res.data;
 }
-
-// export const signinApi = async (body: AuthSignInREQ) => {
-//   const res = await api.post<AuthSignInRESP>('/users/login', body, {});
-//   return res.data;
-// };
-
-// export const changePasswordApi = async (body: AuthChangePasswordREQ) => {
-//   const res = await api.post<BaseResponse<void>>('users/change-password', body);
-//   return res.data;
-// };

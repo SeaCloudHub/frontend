@@ -1,7 +1,7 @@
+import { useStorageStore } from '@/store/storage/storage.store';
 import { Avatar, Button, Checkbox, LinearProgress, Typography } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
-import dayjs from 'dayjs';
 import { useFormik } from 'formik';
 import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -27,6 +27,7 @@ const LoginPassword = () => {
 
   const from = location.state?.from?.pathname;
   const { token: authenticated, role, signIn, email, firstLogin } = useSession();
+  const updateStorageStore = useStorageStore((state) => state.update);
   const handleChange = (e: { target: { value: React.SetStateAction<string> } }) => setCurrentValue(e.target.value);
 
   const formik = useFormik({
@@ -47,16 +48,15 @@ const LoginPassword = () => {
       }
     },
     onSuccess: (data) => {
-      console.log(data.data);
-      const a = dayjs(data.data.identity.password_changed_at);
-      console.log(a.year());
-      signIn(data.data.session_token, data.data.identity.is_admin ? Role.ADMIN : Role.USER, a.year() < 2024, data.data.identity.root_id);
-      if (data.data.identity.password_changed_at == null) {
+      const firstSignin = data.data.identity.password_changed_at === null;
+      if (firstSignin) {
         navigate(AUTH_CHANGE_PASSWORD);
       }
+      updateStorageStore(data.data.identity.storage_usage, data.data.identity.storage_capacity, data.data.identity.root_id);
+      signIn(data.data.session_token, data.data.identity.is_admin ? Role.ADMIN : Role.USER, firstSignin);
     },
   });
-
+  console.log(firstLogin);
   useEffect(() => {
     if (!authenticated) return;
     if (!firstLogin) {
