@@ -52,11 +52,6 @@ const MyDrive = () => {
   });
   const localEntries: LocalEntry[] = remoteToLocalEntries((data || []) as Required<Entry[]>&ListEntriesRESP['entries']);
 
-  // const [entries, setEntries] = useState<LocalEntry[]>(localEntries);
-  useEffect(() => {
-    error && toast.error('Failed to fetch entries');
-  }, [error]);
-
   useEffect(() => {
     refetch();
   }, [path, refetch]);

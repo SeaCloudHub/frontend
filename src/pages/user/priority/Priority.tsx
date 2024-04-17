@@ -27,10 +27,6 @@ const Priority = () => {
   });
   const entries: LocalEntry[] = remoteToLocalEntries((data || []) as Required<Entry[]>&ListEntriesRESP['entries']);
 
-  useEffect(() => {
-    error && toast.error('Failed to fetch entries');
-  }, [error]);
-
   // const entries = remoteToLocalEntries(fakeData);
   return (
     <div>
