@@ -9,7 +9,7 @@ type SessionState = {
   email: string | null;
   firstLogin: boolean;
   onEmailValid: (email: string | null) => void;
-  signIn: (token: string | null, role: Role | null, firstLogin?: boolean) => void;
+  signIn: (token: string | null, role: Role | null, firstLogin?: boolean, user_id?: string) => void;
   user_id: string | null;
   signOut: () => void;
 };
