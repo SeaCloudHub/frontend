@@ -48,23 +48,21 @@ function ProgressIndicator() {
                 {fileNames.length} upload{fileNames.length > 1 && 's'} complete
               </h3>
             )}
-            <div className='flex items-center'>
-              <div>
-                {minimize ? (
-                  <IoIosArrowDown
-                    onClick={() => setMinimize(!minimize)}
-                    className='h-9 w-9 cursor-pointer rounded-full p-2 hover:bg-gray-200'
-                    stroke='2'
-                  />
-                ) : (
-                  <IoIosArrowUp
-                    onClick={() => setMinimize(!minimize)}
-                    className='h-9 w-9 cursor-pointer rounded-full p-2 hover:bg-gray-200'
-                    stroke='2'
-                  />
-                )}
-              </div>
-              <AiOutlineClose onClick={() => reset()} className='h-9 w-9 cursor-pointer rounded-full p-2 hover:bg-gray-200' />
+            <div className='flex items-center text-white'>
+              {minimize ? (
+                <IoIosArrowDown
+                  onClick={() => setMinimize(!minimize)}
+                  className='h-9 w-9 cursor-pointer rounded-full p-2 hover:bg-gray-400'
+                  stroke='2'
+                />
+              ) : (
+                <IoIosArrowUp
+                  onClick={() => setMinimize(!minimize)}
+                  className='h-9 w-9 cursor-pointer rounded-full p-2 hover:bg-gray-400'
+                  stroke='2'
+                />
+              )}
+              <AiOutlineClose onClick={() => reset()} className='h-9 w-9   cursor-pointer rounded-full p-2 hover:bg-gray-400' />
             </div>
             {/* uploaded files progress */}
           </div>
