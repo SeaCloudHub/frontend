@@ -99,7 +99,7 @@ export const useEntryMetadata = (id: string) => {
         };
       }
     },
-    enabled: !!drawerOpen,
+    enabled: !!drawerOpen && !!id,
   });
 
   if (isAxiosError<ApiGenericError>(error)) {
@@ -110,6 +110,7 @@ export const useEntryMetadata = (id: string) => {
 };
 
 export const useEntryAccess = (id: string) => {
+  const { drawerOpen } = useDrawer();
   const { data, isLoading, error } = useQuery({
     queryKey: ['access', id],
     queryFn: () => getSharedEntries({ id }).then((res) => res?.data),
@@ -119,6 +120,7 @@ export const useEntryAccess = (id: string) => {
       };
     },
     staleTime: 10 * 1000,
+    enabled: !!drawerOpen && !!id,
   });
 
   if (isAxiosError<ApiGenericError>(error)) {
