@@ -1,9 +1,10 @@
-import { copyFiles, getEntryMetadata, getSharedEntries } from '@/apis/drive/drive.api';
-import { getListEntriesMyDrive } from '@/apis/drive/drive.api';
+import { copyFiles, getEntryMetadata, getListEntriesMyDrive, getSharedEntries } from '@/apis/drive/drive.api';
 import { CopyFileREQ } from '@/apis/drive/request/copy.request';
-import { fileTypeIcons } from '@/utils/constants/file-icons.constant';
 import { useSession } from '@/store/auth/session';
 import { useDrawer } from '@/store/my-drive/myDrive.store';
+import { useStorageStore } from '@/store/storage/storage.store';
+import { fileTypeIcons } from '@/utils/constants/file-icons.constant';
+import { fileTypes } from '@/utils/constants/file-types.constant';
 import { toastError } from '@/utils/toast-options/toast-options';
 import { ApiGenericError } from '@/utils/types/api-generic-error.type';
 import { Icon } from '@iconify/react/dist/iconify.js';
@@ -11,14 +12,13 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { fileTypes } from '@/utils/constants/file-types.constant';
 
 export const useListEntries = () => {
   const { dirId } = useParams();
-  const { root_id } = useSession();
-  const id = dirId || root_id;
+  const { rootId } = useStorageStore();
+  const id = dirId || rootId;
   // console.log('[useListEntries] id', id);
-  // console.log('[useListEntries] root_id', root_id);
+  // console.log('[useListEntries] rootId', rootId);
 
   const { data, error, refetch, isLoading } = useQuery({
     queryKey: ['mydrive-entries', id],

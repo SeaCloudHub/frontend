@@ -52,7 +52,7 @@ const LoginPassword = () => {
       if (firstSignin) {
         navigate(AUTH_CHANGE_PASSWORD);
       }
-      updateStorageStore(data.data.identity.storage_usage, data.data.identity.storage_capacity, data.data.identity.rootId);
+      updateStorageStore(data.data.identity.storage_usage, data.data.identity.storage_capacity, data.data.identity.root_id);
       signIn(
         data.data.session_token,
         data.data.identity.is_admin ? Role.ADMIN : Role.USER,
