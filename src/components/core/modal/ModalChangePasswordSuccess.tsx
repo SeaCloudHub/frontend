@@ -1,4 +1,4 @@
-import ButtonContainer from '../button/ButtonContainer';
+import ButtonCore from '../button/ButtonCore';
 import ModalCore from './ModalCore';
 
 type ModalChangePasswordSuccessProps = {
@@ -16,9 +16,15 @@ const ModalChangePasswordSuccess = ({ isOpen, handleConfirm }: ModalChangePasswo
             src={(import.meta.env.BASE_URL + 'success.png') as string}
             alt='Success'
           />
-          <p className='text-lg font-semibold text-gray-800'>Password Changed Successfully</p>
+          <p className='text-lg font-bold text-gray-800'>Password Changed Successfully</p>
           <p className='mb-6 text-sm text-gray-600'>Please login again.</p>
-          <ButtonContainer title='OK' onClick={handleConfirm} />
+          <ButtonCore
+            title='OK'
+            onClick={() => {
+              handleConfirm();
+            }}
+            type={'outlined'}
+          />
         </div>
       </div>
     </ModalCore>

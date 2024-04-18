@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import StorageTree, { StorageItem } from './storage-management-tree/StorageTree';
 import FileTableManagement from './file-table-management/FileTableManagement';
+import StorageTree, { StorageItem } from './storage-management-tree/StorageTree';
 
 const fakeData: StorageItem[] = [
   {
@@ -84,8 +84,8 @@ const isFolder = (id: string[], data: StorageItem[]): string | null => {
 const StorageManagement = () => {
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
   return (
-    <>
-      <div className='mb-5 text-2xl font-semibold'>Storage Management</div>
+    <div className='h-[calc(100vh-4.6rem)] w-full  overflow-y-auto   '>
+      <div className='mb-5text-2xl font-semibold'>Storage Management</div>
       <div className='flex'>
         <StorageTree
           selectedItems={fakeData}
@@ -102,7 +102,7 @@ const StorageManagement = () => {
           <FileTableManagement />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

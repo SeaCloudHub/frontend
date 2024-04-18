@@ -11,16 +11,21 @@ html {
 ::-webkit-scrollbar {
   width: 8px;
 }
-
+::-webkit-scrollbar-track {
+  background: #ecebeb;
+}
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #ccc;
+  background: rgba(6, 31, 48, 0.4);
   border-radius: 20px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #999;
+}
+* {
+  box-sizing: border-box;
 }
 
 @layer components {

@@ -27,7 +27,6 @@ const LoginEmail = () => {
   const handleChange = (e: { target: { value: React.SetStateAction<string> } }) => setCurrentValue(e.target.value);
 
   useEffect(() => {
-    console.log(authenticated);
     if (!authenticated) return;
     if (from) {
       navigate(from);

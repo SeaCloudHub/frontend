@@ -3,7 +3,6 @@ import DashBoard from '../../pages/admin/dashboard/DashBoard';
 import StorageManagement from '../../pages/admin/storage-management/StorageManagement';
 import UserManagement from '../../pages/admin/user-management/UserManagement';
 import UserManagementDetail from '../../pages/admin/user-management/user-management-detail/UserManagementDetail';
-import ChangePassword from '../../pages/auth/ChangePassword';
 import LoginEmail from '../../pages/auth/LoginEmail';
 import LoginPassword from '../../pages/auth/LoginPassword';
 import ResetPassword from '../../pages/auth/ResetPassword';
@@ -46,7 +45,7 @@ export const routes = {
   auth: [
     { path: AUTH_LOGIN_EMAIL, component: LoginEmail },
     { path: AUTH_LOGIN_PASSWORD, component: LoginPassword },
-    { path: AUTH_CHANGE_PASSWORD, component: ChangePassword },
+    // { path: AUTH_CHANGE_PASSWORD, component: ChangePassword },
     { path: AUTH_RESET_PASSWORD, component: ResetPassword },
   ],
   admin: [

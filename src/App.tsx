@@ -1,7 +1,8 @@
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import DynamicLayout from './components/layout/DynamicLayout';
 import RequireAuth from './helpers/routers/RequireAuth';
-import { AUTH_LOGIN_EMAIL, routes } from './utils/constants/router.constant';
+import ChangePassword from './pages/auth/ChangePassword';
+import { AUTH_CHANGE_PASSWORD, AUTH_LOGIN_EMAIL, routes } from './utils/constants/router.constant';
 import { Role } from './utils/enums/role.enum';
 
 function App() {
@@ -10,6 +11,9 @@ function App() {
       <Routes>
         {/* auth routes */}
         <Route path='/' element={<Navigate to={AUTH_LOGIN_EMAIL} />} />
+        <Route element={<RequireAuth allowedRole={[Role.ADMIN, Role.USER]} />}>
+          <Route path={AUTH_CHANGE_PASSWORD} element={<ChangePassword />} />
+        </Route>
         {routes.auth.map((item, index) => (
           <Route path={item.path} Component={item.component} key={index} />
         ))}
