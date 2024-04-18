@@ -7,7 +7,7 @@ import { Info } from '@mui/icons-material';
 import { Tooltip } from '@mui/material';
 import React, { useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
-import Dropdown, { MenuItem } from '../drop-down/Dropdown';
+import Dropdown, { MenuItem, classNames } from '../drop-down/Dropdown';
 // import FileViewerContainer from '../file-viewers/file-viewer-container/FileViewerContainer';
 import { useDrawer } from '@/store/my-drive/myDrive.store';
 import FileViewerContainer from '../file-viewers/file-viewer-container/FileViewerContainer';
@@ -15,7 +15,7 @@ import MovePopUp from '../pop-up/MovePopUp';
 import SharePopUp from '../pop-up/SharePopUp';
 import { useMutation } from '@tanstack/react-query';
 import { CopyFileREQ } from '@/apis/drive/request/copy.request';
-import { copyFiles } from '@/apis/drive/copy-files.api';
+import { copyFiles } from '@/apis/drive/drive.api';
 import { isAxiosError } from 'axios';
 import { ApiGenericError } from '@/utils/types/api-generic-error.type';
 import { toast } from 'react-toastify';
@@ -28,6 +28,8 @@ type FileCardProps = {
   icon?: React.ReactNode;
   preview?: React.ReactNode;
   id: string;
+  onClick?: () => void;
+  isSelected?: boolean;
 };
 
 export const fileOperation = [
@@ -37,11 +39,10 @@ export const fileOperation = [
   { icon: <TrashIcon />, label: 'Delete file' },
 ];
 
-const FileCard: React.FC<FileCardProps> = (props) => {
+const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelected, onClick }) => {
   const [fileViewer, setFileViewer] = useState(false);
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
   const [type, setType] = useState<'move' | 'share' | null>(null);
-  const { title, icon, preview, id } = props;
   const openDrawer = useDrawer((state) => state.openDrawer);
 
   const { root_id } = useSession();
@@ -134,7 +135,11 @@ const FileCard: React.FC<FileCardProps> = (props) => {
         onDoubleClick={() => {
           setFileViewer(true);
         }}
-        className='flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-xl bg-surfaceContainerLow px-2 shadow-sm hover:bg-surfaceDim'>
+        onClick={onClick}
+        className={classNames(
+          'flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-xl px-2 shadow-sm',
+          isSelected ? 'bg-[#c2e7ff]' : 'bg-[#f0f4f9] hover:bg-[#dfe3e7]',
+        )}>
         <div className='flex w-full items-center justify-between px-1 py-3'>
           <div className='flex max-w-[calc(100%-24px)] items-center space-x-4'>
             <div className='h-6 w-6 min-w-fit'>{icon}</div>

@@ -12,7 +12,7 @@ import { LocalEntry } from '../my-drive/MyDrive';
 import { Entry } from '@/utils/types/entry.type';
 import { useQuery } from '@tanstack/react-query';
 import { useSession } from '@/store/auth/session';
-import { getListEntriesMyDrive } from '@/apis/drive/list-entries.api';
+import { getListEntriesMyDrive } from '@/apis/drive/drive.api';
 import { ListEntriesRESP } from '@/apis/drive/response/list-entries.reponse';
 import { useStorageStore } from '@/store/storage/storage.store';
 import DrivePath from '../my-drive/header/drive-path/DrivePath';
@@ -22,15 +22,16 @@ const Priority = () => {
   const [isFileMode, setIsFileMode] = useState<boolean>(true);
   const { drawerOpen, openDrawer, closeDrawer } = useDrawer();
   const { rootId } = useStorageStore();
-  const [path, setPath] = useState<Path>([
-    { name: 'Priority', id: rootId }
-  ]);
+  const [path, setPath] = useState<Path>([{ name: 'Priority', id: rootId }]);
 
-  const {data, error, refetch} = useQuery({
-    queryKey: ['priority-entries', path[path.length-1].id],
-    queryFn: async () => (await getListEntriesMyDrive({id: path[path.length-1].id}).then((res) => res.data.entries)).filter(e=>!e.name.includes('.trash'))
+  const { data, error, refetch } = useQuery({
+    queryKey: ['priority-entries', path[path.length - 1].id],
+    queryFn: async () =>
+      (await getListEntriesMyDrive({ id: path[path.length - 1].id }).then((res) => res.data.entries)).filter(
+        (e) => !e.name.includes('.trash'),
+      ),
   });
-  const entries: LocalEntry[] = remoteToLocalEntries((data || []) as Required<Entry[]>&ListEntriesRESP['entries']);
+  const entries: LocalEntry[] = remoteToLocalEntries((data || []) as Required<Entry[]> & ListEntriesRESP['entries']);
 
   // const entries = remoteToLocalEntries(fakeData);
   return (
@@ -39,9 +40,9 @@ const Priority = () => {
         headerLeft={
           <div className='px-4'>
             <div className='flex justify-between space-x-2 text-2xl'>
-            <div className='w-full pb-[8px] pl-1 pt-[14px]'>
-              <DrivePath path={path} setPath={setPath} type='Priority' />
-            </div>
+              <div className='w-full pb-[8px] pl-1 pt-[14px]'>
+                <DrivePath path={path} setPath={setPath} type='Priority' />
+              </div>
               <div className='flex items-center gap-2'>
                 <Icon
                   icon='mdi:information-outline'

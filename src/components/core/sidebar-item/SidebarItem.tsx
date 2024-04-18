@@ -1,6 +1,7 @@
 import { Tooltip } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import IconifyIcon from '../Icon/IConCore';
+import { CUSTOMER_MY_DRIVE } from '@/utils/constants/router.constant';
 type SidebarItemProps = {
   icon: string;
   title: string;
@@ -15,12 +16,16 @@ const SidebarItem = ({ icon, title, link, shrink, tooltip }: SidebarItemProps) =
     navigate(link);
   };
 
+  const isMyDriveActive = () => {
+    return link.startsWith(CUSTOMER_MY_DRIVE) && pathName.pathname.startsWith(CUSTOMER_MY_DRIVE);
+  };
+
   return (
     <>
       <Tooltip arrow title={tooltip}>
         <div
           onClick={onClick}
-          className={` sidebar-item ${shrink ? '' : 'sidebar-item-lg'} ${link === pathName.pathname ? 'sidebar-item-active' : ''}`}>
+          className={` sidebar-item ${shrink ? '' : 'sidebar-item-lg'} ${link === pathName.pathname || isMyDriveActive() ? 'sidebar-item-active' : ''}`}>
           <IconifyIcon height={'20px'} icon={icon} />
           <p className={` ml-4 ${shrink ? 'hidden' : 'block'} statement-upper-medium `}>{title}</p>
         </div>

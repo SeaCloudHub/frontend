@@ -11,7 +11,7 @@ import { DriveGridView, remoteToLocalEntries } from '../my-drive/content/DriveGr
 import { DriveListView } from '../my-drive/content/DriveListView';
 import { useSession } from '@/store/auth/session';
 import { useQuery } from '@tanstack/react-query';
-import { getSharedEntries } from '@/apis/drive/list-entries.api';
+import { getSharedEntries } from '@/apis/drive/drive.api';
 import { ListEntriesRESP } from '@/apis/drive/response/list-entries.reponse';
 import { LocalEntry } from '../my-drive/MyDrive';
 import { toast } from 'react-toastify';
@@ -232,21 +232,18 @@ const Shared = () => {
   const { drawerOpen, openDrawer, closeDrawer } = useDrawer();
   const [{ sort, order }, setSort] = useState<{ sort: string; order: string }>({ sort: 'Name', order: 'desc' });
   const { root_id } = useSession();
-  const [path, setPath] = useState<Path>([
-    { name: 'Shared', id: root_id }
-  ]);
+  const [path, setPath] = useState<Path>([{ name: 'Shared', id: root_id }]);
 
-  const {data, error, refetch} = useQuery({
+  const { data, error, refetch } = useQuery({
     queryKey: ['shared-entries', root_id],
-    queryFn: async () => (await getSharedEntries({id: path[path.length-1].id})
-      .then((res) => res?.data?.entries||[]))
+    queryFn: async () => await getSharedEntries({ id: path[path.length - 1].id }).then((res) => res?.data?.entries || []),
   });
 
   useEffect(() => {
     refetch();
   }, [path, refetch]);
 
-  const processedEntries: LocalEntry[] = remoteToLocalEntries((data || []) as Required<Entry[]>&ListEntriesRESP['entries']);
+  const processedEntries: LocalEntry[] = remoteToLocalEntries((data || []) as Required<Entry[]> & ListEntriesRESP['entries']);
 
   return (
     <DriveLayout

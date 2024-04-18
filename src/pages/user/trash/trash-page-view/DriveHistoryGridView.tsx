@@ -1,7 +1,7 @@
 import React from 'react';
 import Sort from '../../my-drive/content/Sort';
-import { localEntriesToFiles } from '../../my-drive/content/DriveGridView';
 import { LocalEntry } from '../../my-drive/MyDrive';
+import FileCard from '@/components/core/file-card/FileCard';
 
 export type TimeEntry = {
   time: string;
@@ -56,7 +56,21 @@ const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({ sort, order, se
             <div key={index}>
               <div className='pb-4 pt-2 text-sm font-medium'>{entry.time}</div>
               <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'>
-                {localEntriesToFiles(entry.entries)}
+                {entry.entries.length !== 0 && (
+                  <div className=''>
+                    <div className='pb-4 pt-2 text-sm font-medium'> Files</div>
+                    <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'>
+                      {/* {localEntriesToFiles(files)} */}
+                      {entry.entries.map((file, index) => {
+                        return (
+                          <div key={index} className='aspect-square w-auto'>
+                            <FileCard title={file.title} icon={file.icon} preview={file.preview} id={file.id} />
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           );

@@ -25,7 +25,7 @@ const Memory = () => {
         />
       }
       bodyLeft={<MemoryView entries={localEntries} order={order} setSort={setSort} sort={sort} />}
-      sidePanel={<SidePanel />}
+      sidePanel={<SidePanel id={'0'}/>}
     />
   );
 };

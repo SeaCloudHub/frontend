@@ -1,4 +1,4 @@
-import fileIcons from '@/components/core/file-card/fileicon.constant';
+import fileTypeIcons from '@/utils/constants/file-icons.constant';
 import { fileSignatures } from '../constants/file-extension-validation.constant';
 
 export const validateFileType = async (file: File, fileType?: string): Promise<boolean> => {
@@ -32,9 +32,9 @@ export const validateFileType = async (file: File, fileType?: string): Promise<b
 };
 
 export const getFileIcon = (fileType: string): React.ReactNode => {
-  if (fileType in fileIcons) {
-    return fileIcons[fileType];
+  if (fileType in fileTypeIcons) {
+    return fileTypeIcons[fileType];
   } else {
-    return fileIcons['any'];
+    return fileTypeIcons['any'];
   }
 };

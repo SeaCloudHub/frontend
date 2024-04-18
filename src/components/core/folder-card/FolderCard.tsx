@@ -1,4 +1,4 @@
-import Dropdown, { MenuItem } from '../drop-down/Dropdown';
+import Dropdown, { MenuItem, classNames } from '../drop-down/Dropdown';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useDrawer } from '@/store/my-drive/myDrive.store';
@@ -14,9 +14,11 @@ interface FolderCardProps {
   icon: React.ReactNode;
   id: string;
   onDoubleClick?: () => void;
+  onClick?: () => void;
+  isSelected?: boolean;
 }
 
-const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick }) => {
+const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick, onClick, isSelected }) => {
   const setDrawerOpen = useDrawer((state) => state.openDrawer);
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
   const [type, setType] = useState<'move' | 'share' | null>();
@@ -39,16 +41,24 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick 
           CopyToClipboard(text);
         },
       },
-      { label: 'Share', icon: <Icon icon='lucide:user-plus' />, action: () => {
-        setType('share');
-        setIsPopUpOpen(true);
-      } },
+      {
+        label: 'Share',
+        icon: <Icon icon='lucide:user-plus' />,
+        action: () => {
+          setType('share');
+          setIsPopUpOpen(true);
+        },
+      },
     ],
     [
-      { label: 'Move', icon: <Icon icon='mdi:folder-move-outline' />, action: () => {
-        setType('move');
-        setIsPopUpOpen(true);
-      } },
+      {
+        label: 'Move',
+        icon: <Icon icon='mdi:folder-move-outline' />,
+        action: () => {
+          setType('move');
+          setIsPopUpOpen(true);
+        },
+      },
       {
         label: 'Add shortcut',
         icon: <Icon icon='material-symbols:add-to-drive' />,
@@ -72,7 +82,13 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick 
   ];
 
   return (
-    <div className='flex w-full items-center justify-between rounded-xl bg-surfaceContainerLow px-3 py-3 shadow-sm hover:bg-surfaceDim cursor-pointer' onDoubleClick={onDoubleClick}>
+    <div
+      className={classNames(
+        'flex w-full cursor-pointer items-center justify-between rounded-xl px-3 py-3 shadow-sm',
+        isSelected ? 'bg-[#c2e7ff]' : 'bg-[#f0f4f9] hover:bg-[#dfe3e7]',
+      )}
+      onDoubleClick={onDoubleClick}
+      onClick={onClick}>
       <div className='flex max-w-[calc(100%-24px)] items-center space-x-4'>
         <div className='h-6 w-6 min-w-fit'>{icon}</div>
         <Tooltip title={title}>
@@ -80,12 +96,14 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick 
         </Tooltip>
       </div>
       <Dropdown
-        button={<BsThreeDotsVertical className='h-6 w-6 rounded-full p-1 hover:bg-slate-300'/>}
+        button={<BsThreeDotsVertical className='h-6 w-6 rounded-full p-1 hover:bg-slate-300' />}
         items={folderOps}
         left={true}
       />
-      { type === 'move' && <MovePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} location={'My drive'} />}
-      { type === 'share' && <SharePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} />}
+      {type === 'move' && (
+        <MovePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} location={'My drive'} />
+      )}
+      {type === 'share' && <SharePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} />}
     </div>
   );
 };
