@@ -10,6 +10,7 @@ type SessionState = {
   firstLogin: boolean;
   onEmailValid: (email: string | null) => void;
   signIn: (token: string | null, role: Role | null, firstLogin?: boolean) => void;
+  user_id: string | null;
   signOut: () => void;
 };
 
@@ -17,6 +18,7 @@ const value = {
   role: JSON.parse(getLocalStorage('sessionStore') as string)?.state?.role,
   token: JSON.parse(getLocalStorage('sessionStore') as string)?.state?.token,
   email: JSON.parse(getLocalStorage('sessionStore') as string)?.state?.email,
+  user_id: JSON.parse(getLocalStorage('sessionStore') as string)?.state?.user_id,
 };
 
 export const useSession = create<SessionState>()(
@@ -27,8 +29,9 @@ export const useSession = create<SessionState>()(
         role: value.role || null,
         firstLogin: false,
         email: value.email || null,
-        signIn: (token: string | null, role: Role | null, firstLogin?: boolean, root_id?: string) =>
-          set({ token: token, role: role, firstLogin: firstLogin }),
+        user_id: value.user_id || null,
+        signIn: (token: string | null, role: Role | null, firstLogin?: boolean, user_id?: string) =>
+          set({ token: token, role: role, firstLogin: firstLogin, user_id: user_id }),
         onEmailValid: (email: string | null) => set((state) => ({ ...state, email: email })),
         signOut: () => {
           set({ token: null, role: null, email: null });

@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react/dist/iconify.js';
-import fileIcons from '../../../../../../components/core/file-card/fileicon.constant';
+import fileTypeIcons from '../../../../../../utils/constants/file-icons.constant';
 import DropdownCore from '../../../../../../components/core/input/DropdownCore';
 import Order from '../../../../../../components/core/order/Order';
 import { useScreenHook } from '../../../../../../hooks/useScreenHook';
@@ -30,7 +30,7 @@ const _entryToMyEntry = (entries: Entry[]): LocalEntry[] => {
       };
     }
     const ext = entry.name.split('.').pop() || 'any';
-    const icon = fileIcons[ext] || fileIcons.any;
+    const icon = fileTypeIcons[ext] || fileTypeIcons.any;
     const preview = ['jpg', 'ico', 'webp', 'png', 'jpeg', 'gif', 'jfif'].includes(ext) ? (
       <img
         className='h-full w-full rounded-md object-cover'

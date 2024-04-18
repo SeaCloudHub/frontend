@@ -1,17 +1,19 @@
 import { IdentityRESP } from "@/apis/auth/response/auth.sign-in.response";
 
 export type EntryRESP = {
-  created_at: string;
-  full_path: string;
-  general_access: string;
   id: string;
-  is_dir: boolean;
-  md5: number[];
-  mine_type: string;
-  mode: number;
   name: string;
-  owner: IdentityRESP;
+  path: string;
+  full_path: string;
+  shown_path: string;
+  size: number;
+  mode: number;
+  mine_type: string;
+  md5: string;
+  is_dir: boolean;
+  general_access: string;
   owner_id: string;
-  root_id: string;
+  owner: IdentityRESP;
+  created_at: string;
   updated_at: string;
 };

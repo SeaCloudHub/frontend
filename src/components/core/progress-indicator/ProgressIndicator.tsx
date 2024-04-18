@@ -3,7 +3,7 @@ import { useProgressIndicator } from '@/store/storage/progressIndicator.store';
 import { useState } from 'react';
 import { AiOutlineClose, AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { IoIosArrowDown, IoIosArrowUp, IoMdCheckmarkCircle } from 'react-icons/io';
-import fileIcons from '../file-card/fileicon.constant';
+import fileTypeIcons from '../../../utils/constants/file-icons.constant';
 
 function ProgressIndicator() {
   const [minimize, setMinimize] = useState(true);
@@ -14,10 +14,10 @@ function ProgressIndicator() {
     return (
       <div key={index} className='hover:bg-darkC flex cursor-pointer items-center justify-between bg-white py-2.5 pl-4 pr-2'>
         <div className='flex items-center space-x-3'>
-          {fileExtension && fileIcons[fileExtension] ? (
-            <div className='h-6 w-6'>{fileIcons[fileExtension]}</div>
+          {fileExtension && fileTypeIcons[fileExtension] ? (
+            <div className='h-6 w-6'>{fileTypeIcons[fileExtension]}</div>
           ) : (
-            <div className='h-6 w-6'>{fileIcons['any']}</div>
+            <div className='h-6 w-6'>{fileTypeIcons['any']}</div>
           )}
           <span className='w-60 truncate'>{name}</span>
         </div>

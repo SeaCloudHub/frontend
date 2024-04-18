@@ -46,7 +46,10 @@ const Dropdown: React.FC<DropdownProps> = ({ button, items, left }) => {
                 <Menu.Item key={label}>
                   {({ active }) => (
                     <div
-                      className={classNames(active ? 'bg-[#e4e4e4] text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm cursor-pointer')}
+                      className={classNames(
+                        active ? 'bg-[#e4e4e4] text-gray-900' : 'text-gray-700',
+                        'block cursor-pointer px-4 py-2 text-sm',
+                      )}
                       onClick={() => {
                         action && action();
                       }}>
