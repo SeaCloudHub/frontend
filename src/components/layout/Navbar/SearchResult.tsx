@@ -1,5 +1,5 @@
 import { AiFillFolder } from 'react-icons/ai';
-import fileIcons from '../../../components/core/file-card/fileicon.constant';
+import fileTypeIcons from '../../../utils/constants/file-icons.constant';
 
 type SearchResult = {
   data?: any[];
@@ -14,7 +14,7 @@ const SearchResult = ({ data }: SearchResult) => {
         {data &&
           data.length > 1 &&
           data.map((item, index) => {
-            const icon = fileIcons[item.fileExtension as keyof typeof fileIcons] ?? fileIcons['any'];
+            const icon = fileTypeIcons[item.fileExtension as keyof typeof fileTypeIcons] ?? fileTypeIcons['any'];
             return (
               <div
                 key={index}

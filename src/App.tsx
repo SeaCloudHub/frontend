@@ -19,8 +19,6 @@ function App() {
 
         <Route
           element={
-            // <TuyenLayout children={<Outlet />} />
-            // <Outlet />
             <DynamicLayout>
               <Outlet />
             </DynamicLayout>

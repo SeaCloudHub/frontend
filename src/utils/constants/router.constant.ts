@@ -38,6 +38,7 @@ export const ADMIN_STORAGE_MANAGEMENT = `${ADMIN_HOME}/storage-management`;
 export const CUSTOMER_SHARED = `${CUSTOMER_HOME}/shared`;
 export const CUSTOMER_PRIORITY = `${CUSTOMER_HOME}/priority`;
 export const CUSTOMER_MY_DRIVE = `${CUSTOMER_HOME}/my-drive`;
+export const CUSTOMER_MY_DRIVE_DIR = `${CUSTOMER_HOME}/my-drive/dir/:dirId`;
 export const CUSTOMER_STARRED = `${CUSTOMER_HOME}/starred`;
 export const CUSTOMER_TRASH = `${CUSTOMER_HOME}/trash`;
 export const CUSTOMER_MEMORY = `${CUSTOMER_HOME}/memory`;
@@ -63,6 +64,7 @@ export const routes = {
     { path: CUSTOMER_HOME, component: Priority },
     { path: CUSTOMER_SHARED, component: Shared },
     { path: CUSTOMER_MY_DRIVE, component: MyDrive },
+    { path: CUSTOMER_MY_DRIVE_DIR, component: MyDrive },
     { path: CUSTOMER_STARRED, component: Starred },
     { path: CUSTOMER_TRASH, component: Trash },
     { path: CUSTOMER_MEMORY, component: Memory },
