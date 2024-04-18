@@ -14,6 +14,7 @@ import { getListEntriesMyDrive } from '@/apis/drive/drive.api';
 import { toast } from 'react-toastify';
 import { Entry } from '@/utils/types/entry.type';
 import { ListEntriesRESP } from '@/apis/drive/response/list-entries.reponse';
+import { useStorageStore } from '@/store/storage/storage.store';
 
 const Starred = () => {
   const { viewMode, setViewMode } = useViewMode();
@@ -21,12 +22,12 @@ const Starred = () => {
   const [peopleFilterItem, setPeopleFilterItem] = useState<string>('');
   const [modifiedFilterItem, setModifiedFilterItem] = useState<string>('');
   const { drawerOpen, openDrawer, closeDrawer } = useDrawer();
-  const { root_id } = useSession();
+  const { rootId } = useStorageStore();
 
   const { data, error, refetch } = useQuery({
-    queryKey: ['starred-entries', root_id],
+    queryKey: ['starred-entries', rootId],
     queryFn: async () =>
-      (await getListEntriesMyDrive({ id: root_id }).then((res) => res?.data?.entries || [])).filter(
+      (await getListEntriesMyDrive({ id: rootId }).then((res) => res?.data?.entries || [])).filter(
         (e) => !e.name.includes('.trash'),
       ),
   });

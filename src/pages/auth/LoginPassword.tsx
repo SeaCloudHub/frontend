@@ -52,12 +52,11 @@ const LoginPassword = () => {
       if (firstSignin) {
         navigate(AUTH_CHANGE_PASSWORD);
       }
-      updateStorageStore(data.data.identity.storage_usage, data.data.identity.storage_capacity, data.data.identity.root_id);
+      updateStorageStore(data.data.identity.storage_usage, data.data.identity.storage_capacity, data.data.identity.rootId);
       signIn(
         data.data.session_token,
         data.data.identity.is_admin ? Role.ADMIN : Role.USER,
         firstSignin,
-        data.data.identity.root_id,
         data.data.identity.id,
       );
     },

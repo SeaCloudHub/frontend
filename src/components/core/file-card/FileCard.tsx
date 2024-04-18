@@ -22,6 +22,7 @@ import { toast } from 'react-toastify';
 import { toastError } from '@/utils/toast-options/toast-options';
 import { useSession } from '@/store/auth/session';
 import { useCopyMutation } from '@/hooks/drive.hooks';
+import { useStorageStore } from '@/store/storage/storage.store';
 
 type FileCardProps = {
   title: string;
@@ -45,7 +46,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
   const [type, setType] = useState<'move' | 'share' | null>(null);
   const openDrawer = useDrawer((state) => state.openDrawer);
 
-  const { root_id } = useSession();
+  const { rootId } = useStorageStore();
 
   const copyMutation = useCopyMutation();
 
@@ -62,7 +63,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
         label: 'Make a copy',
         icon: <Icon icon='material-symbols:content-copy-outline' />,
         action: () => {
-          copyMutation.mutate({ ids: [id], to: root_id });
+          copyMutation.mutate({ ids: [id], to: rootId });
         },
       },
     ],
