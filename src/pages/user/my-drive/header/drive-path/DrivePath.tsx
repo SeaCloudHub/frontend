@@ -30,7 +30,7 @@ const DrivePath: React.FC<DrivePathProps> = ({ path, setPath, type }) => {
     return (
       <div className='flex items-center pl-1'>
         {/* more */}
-        <Dropdown
+        {/* <Dropdown
           button={
             <div className='flex h-9 w-9 items-center justify-center rounded-full hover:bg-[#ededed]'>
               <Icon icon='ic:baseline-more-horiz' className='h-6 w-6' />
@@ -38,6 +38,15 @@ const DrivePath: React.FC<DrivePathProps> = ({ path, setPath, type }) => {
           }
           left={false}
           items={driveMenuItems}
+        /> */}
+        <Dropdown
+          button={
+            <div className='flex items-center justify-center rounded-full hover:bg-[#ededed]'>
+              <Icon icon='ic:baseline-more-horiz' className='h-6 w-6' />
+            </div>
+          }
+          items={driveMenuItems}
+          left={false}
         />
         <Icon icon='ic:baseline-keyboard-arrow-right' className='h-6 w-6' />
         <DrivePathButton path={path.slice(0, -1)} setPath={setPath} />

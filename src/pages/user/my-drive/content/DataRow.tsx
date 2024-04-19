@@ -4,6 +4,7 @@ import React from 'react';
 import { Tooltip } from '@mui/material';
 import { useDrawer } from '@/store/my-drive/myDrive.store';
 import { LocalEntry } from '../MyDrive';
+import CustomDropdown from '@/components/core/drop-down/CustomDropdown';
 
 export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModified, owner, size, onDoubleClick }) => {
   const setDrawerOpen = useDrawer((state) => state.openDrawer);
@@ -105,10 +106,14 @@ export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModi
       </div>
       <div className='shrink-0 grow-0 basis-[88px] text-sm font-medium max-[1450px]:basis-[88px] max-[1160px]:hidden'>{size}</div>
       <div className='flex shrink-0 grow-0 basis-[192px] justify-end text-sm font-medium max-[1450px]:basis-[48px]'>
-        <Dropdown
+        {/* <Dropdown
           button={<Icon icon='ic:baseline-more-vert' className='h-7 w-7 rounded-full p-1 hover:bg-surfaceContainerLow' />}
           items={isDir ? folderOps : fileOps}
           left={true}
+        /> */}
+        <CustomDropdown
+          button={<Icon icon='ic:baseline-more-vert' className='h-7 w-7 rounded-full p-1 hover:bg-surfaceContainerLow' />}
+          items={isDir ? folderOps : fileOps}
         />
       </div>
     </div>

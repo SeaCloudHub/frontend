@@ -13,6 +13,7 @@ import { useDrawer } from '@/store/my-drive/myDrive.store';
 import FileViewerContainer from '../file-viewers/file-viewer-container/FileViewerContainer';
 import MovePopUp from '../pop-up/MovePopUp';
 import SharePopUp from '../pop-up/SharePopUp';
+import CustomDropdown from '../drop-down/CustomDropdown';
 import { useMutation } from '@tanstack/react-query';
 import { CopyFileREQ } from '@/apis/drive/request/copy.request';
 import { copyFiles } from '@/apis/drive/drive.api';
@@ -148,10 +149,14 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
               <div className='truncate text-sm font-medium'>{title}</div>
             </Tooltip>
           </div>
-          <Dropdown
+          {/* <Dropdown
             button={<BsThreeDotsVertical className='h-6 w-6 rounded-full p-1 hover:bg-slate-300' />}
             items={menuItems}
             left={true}
+          /> */}
+          <CustomDropdown
+            button={<BsThreeDotsVertical className='h-6 w-6 rounded-full p-1 hover:bg-slate-300' />}
+            items={menuItems}
           />
         </div>
         <div className='mb-2 flex h-full w-full items-center justify-center overflow-hidden rounded-md bg-white'>{preview}</div>
