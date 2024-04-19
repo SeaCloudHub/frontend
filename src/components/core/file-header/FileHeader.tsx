@@ -3,6 +3,7 @@ import Dropdown, { MenuItem } from '../drop-down/Dropdown';
 import FilterChip from '../filter-chip/FilterChip';
 import { useState } from 'react';
 import { useViewMode } from '@/store/my-drive/myDrive.store';
+import CustomDropdown from '../drop-down/CustomDropdown';
 
 type FileHeaderProps = {
   headerName: string;
@@ -75,14 +76,7 @@ const FileHeader: React.FC<FileHeaderProps> = ({ headerName }) => {
     <div className='flex flex-col space-y-4 px-1 pb-2'>
       <div className='flex justify-between pr-8'>
         <div className='flex items-center space-x-2 text-2xl'>
-          {/* // TODO: display path here */}
-          {/* {isNestedFolder && (
-          <BsArrowLeftCircle
-          className="h-6 w-6 cursor-pointer"
-          onClick={() =>{}}
-          />
-        )} */}
-          <Dropdown
+          {/* <Dropdown
             button={
               <div className='flex cursor-pointer items-center justify-between rounded-full py-1 pb-2 pl-4 pr-3 hover:bg-surfaceDim'>
                 <h2>{headerName}</h2>
@@ -91,7 +85,13 @@ const FileHeader: React.FC<FileHeaderProps> = ({ headerName }) => {
             }
             items={driveMenuItems}
             left={false}
-          />
+          /> */}
+          <CustomDropdown button={
+            <div className='flex cursor-pointer items-center justify-between rounded-full py-1 pb-2 pl-4 pr-3 hover:bg-surfaceDim'>
+              <h2>{headerName}</h2>
+              <Icon icon='mdi:caret-down' />
+            </div>
+          } items={driveMenuItems} />
         </div>
         {viewMode === 'grid' ? (
           <div className='flex cursor-pointer items-center'>
@@ -146,7 +146,7 @@ const FileHeader: React.FC<FileHeaderProps> = ({ headerName }) => {
           <div className='mr-2 rounded-full p-2 hover:bg-surfaceContainer active:bg-surfaceDim'>
             <Icon icon='mdi:arrow-down' className='text-lg' />
           </div>
-          <Dropdown
+          {/* <Dropdown
             button={
               <button className='border-1 flex cursor-pointer items-center space-x-2 rounded-lg border border-outline px-4 py-1 text-sm font-medium hover:bg-surfaceContainer active:bg-surfaceDim'>
                 <span>Name</span>
@@ -155,7 +155,13 @@ const FileHeader: React.FC<FileHeaderProps> = ({ headerName }) => {
             }
             items={sortItems}
             left={true}
-          />
+          /> */}
+          <CustomDropdown button={
+            <button className='border-1 flex cursor-pointer items-center space-x-2 rounded-lg border border-outline px-4 py-1 text-sm font-medium hover:bg-surfaceContainer active:bg-surfaceDim'>
+              <span>Name</span>
+              <Icon icon='mdi:caret-down' />
+            </button>
+          } items={sortItems} />
         </div>
       </div>
     </div>

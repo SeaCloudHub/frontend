@@ -1,4 +1,5 @@
-import Dropdown, { MenuItem } from '@/components/core/drop-down/Dropdown';
+import { MenuItem } from '@/components/core/drop-down/Dropdown';
+import CustomDropdown from '@/components/core/drop-down/CustomDropdown';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 // last button of drive path which holds the menu
@@ -64,7 +65,7 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ entryId, dirN
   ];
 
   return (
-    <Dropdown
+    <CustomDropdown
       button={
         <div className='my-0.5 flex h-9 cursor-pointer items-center rounded-full py-1 pl-4 pr-3 hover:bg-[#ededed]'>
           <div className='pb-1 text-2xl'>{dirName}</div>
@@ -72,7 +73,6 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ entryId, dirN
         </div>
       }
       items={driveMenuItems}
-      left={false}
     />
   );
 };

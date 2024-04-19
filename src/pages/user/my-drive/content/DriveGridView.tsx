@@ -70,7 +70,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({ dirId, order, sort
 export const localEntriesToFiles = (files: LocalEntry[]) => {
   return files.map((file, ind) => (
     <div className='aspect-square w-auto' key={ind}>
-      <FileCard title={file.title} icon={file.icon} preview={file.preview} id={file.id} />
+      <FileCard title={file.title} icon={file.icon} preview={file.preview} id={file.id} key={ind}/>
     </div>
   ));
 };

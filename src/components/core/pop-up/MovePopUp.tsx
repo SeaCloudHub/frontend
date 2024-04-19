@@ -61,7 +61,7 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
             <div className='w-full h-[280px] md:w-[580px] lg:w-[600px] sm:w-[500px]'>
               <Tab.List className='flex gap-5 w-full px-3' >
                 {tab.map((item, index) => (
-                  <Tab className='flex focus:outline-none'>
+                  <Tab className='flex focus:outline-none' key={index}>
                   {({ selected }) => (
                     <div className={`flex grow justify-center active:bg-[#c7d8f4] ${ selected ? 'hover:bg-[#f5f8fd] ' : 'hover:bg-[#f5f8fd]'}`}>
                       <div className={`min-w-max w-14 py-3 text-sm font-medium ${ selected ? 'border-b-[3px] border-[#0B57D0] text-[#4f86dd]' : ''}`}>

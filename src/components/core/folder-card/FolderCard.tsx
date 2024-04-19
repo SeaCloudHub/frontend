@@ -8,6 +8,7 @@ import { useRef, useState } from 'react';
 import SharePopUp from '../pop-up/SharePopUp';
 import MovePopUp from '../pop-up/MovePopUp';
 import { Tooltip } from '@mui/material';
+import CustomDropdown from '../drop-down/CustomDropdown';
 
 interface FolderCardProps {
   title: string;
@@ -79,11 +80,12 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick 
           <div className='truncate text-sm font-medium'>{title}</div>
         </Tooltip>
       </div>
-      <Dropdown
+      {/* <Dropdown
         button={<BsThreeDotsVertical className='h-6 w-6 rounded-full p-1 hover:bg-slate-300'/>}
         items={folderOps}
         left={true}
-      />
+      /> */}
+      <CustomDropdown button={<BsThreeDotsVertical className='h-6 w-6 rounded-full p-1 hover:bg-slate-300'/>} items={folderOps} />
       { type === 'move' && <MovePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} location={'My drive'} />}
       { type === 'share' && <SharePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} />}
     </div>

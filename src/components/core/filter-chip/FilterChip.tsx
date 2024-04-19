@@ -1,6 +1,7 @@
 import { Icon } from '@iconify/react/dist/iconify.js';
 import Dropdown from '../drop-down/Dropdown';
 import React from 'react';
+import CustomDropdown from '../drop-down/CustomDropdown';
 
 type FilterChipProps = {
   name: string;
@@ -21,10 +22,9 @@ const FilterChip: React.FC<FilterChipProps> = ({ name, options, action, value })
     },
   }));
   return (
-    <Dropdown
+    <CustomDropdown
       button={
         value === '' ? (
-          // selected === null ? (
           <button className='border-1 flex h-[30px] cursor-pointer items-center space-x-2 rounded-lg border border-outline px-4 py-1 text-sm font-medium hover:bg-surfaceContainer active:bg-surfaceDim'>
             <span>{name}</span>
             <Icon icon='mdi:caret-down' />
@@ -32,7 +32,6 @@ const FilterChip: React.FC<FilterChipProps> = ({ name, options, action, value })
         ) : (
           <div className='flex h-[30px]'>
             <button className='flex cursor-pointer items-center space-x-2 rounded-l-lg border-0  bg-primaryContainer px-4 py-1 text-sm font-medium hover:bg-primaryFixedDim active:brightness-90'>
-              {/* <span>{selected}</span> */}
               <span>{value}</span>
               <Icon icon='mdi:caret-down' />
             </button>
@@ -49,9 +48,38 @@ const FilterChip: React.FC<FilterChipProps> = ({ name, options, action, value })
         )
       }
       items={[items]}
-      left={false}
     />
   );
+  // <Dropdown
+  //   button={
+  //     value === '' ? (
+  //       // selected === null ? (
+  //       <button className='border-1 flex h-[30px] cursor-pointer items-center space-x-2 rounded-lg border border-outline px-4 py-1 text-sm font-medium hover:bg-surfaceContainer active:bg-surfaceDim'>
+  //         <span>{name}</span>
+  //         <Icon icon='mdi:caret-down' />
+  //       </button>
+  //     ) : (
+  //       <div className='flex h-[30px]'>
+  //         <button className='flex cursor-pointer items-center space-x-2 rounded-l-lg border-0  bg-primaryContainer px-4 py-1 text-sm font-medium hover:bg-primaryFixedDim active:brightness-90'>
+  //           {/* <span>{selected}</span> */}
+  //           <span>{value}</span>
+  //           <Icon icon='mdi:caret-down' />
+  //         </button>
+  //         <button
+  //           onClick={(e) => {
+  //             e.stopPropagation();
+  //             // setSelected(null);
+  //             action && action('');
+  //           }}
+  //           className='cursor-pointer rounded-r-lg border-0  bg-primaryContainer p-2 text-sm font-medium hover:bg-primaryFixedDim active:brightness-90'>
+  //           <Icon icon='mdi:cancel-bold' />
+  //         </button>
+  //       </div>
+  //     )
+  //   }
+  //   items={[items]}
+  //   left={false}
+  // />
 };
 
 export default FilterChip;
