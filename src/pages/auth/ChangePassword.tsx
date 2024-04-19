@@ -22,6 +22,7 @@ import { ApiGenericError } from '../../utils/types/api-generic-error.type';
 const ChangePassword = () => {
   const navigate = useNavigate();
   const screenMode = useScreenMode((state) => state.screenMode);
+  const signOut = useSession((state) => state.signOut);
   const [modalOpen, setModalOpen] = useState(false);
   const email = useSession((state) => state.email);
   const formik = useFormik({
@@ -45,7 +46,7 @@ const ChangePassword = () => {
     },
   });
   const navigateLogin = () => {
-    localStorage.clear();
+    signOut();
     navigate(AUTH_LOGIN_EMAIL);
   };
   return (

@@ -12,7 +12,7 @@ import TextFieldCore from '../../components/core/form/TextFieldCore';
 import { passwordSchema } from '../../helpers/form-schema/auth/login.schema';
 import { useSession } from '../../store/auth/session';
 import { accountAuthorityCallback } from '../../utils/constants/account-login-callback.constant';
-import { AUTH_CHANGE_PASSWORD } from '../../utils/constants/router.constant';
+import { AUTH_CHANGE_PASSWORD, AUTH_LOGIN_EMAIL } from '../../utils/constants/router.constant';
 import { Role } from '../../utils/enums/role.enum';
 import { toastError } from '../../utils/toast-options/toast-options';
 import { ApiGenericError } from '../../utils/types/api-generic-error.type';
@@ -24,10 +24,10 @@ const LoginPassword = () => {
   const [isShowPassword, setIsShowPassword] = React.useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-
   const from = location.state?.from?.pathname;
   const { token: authenticated, role, signIn, email, firstLogin } = useSession();
   const updateStorageStore = useStorageStore((state) => state.update);
+
   const handleChange = (e: { target: { value: React.SetStateAction<string> } }) => setCurrentValue(e.target.value);
 
   const formik = useFormik({
@@ -53,11 +53,20 @@ const LoginPassword = () => {
         navigate(AUTH_CHANGE_PASSWORD);
       }
       updateStorageStore(data.data.identity.storage_usage, data.data.identity.storage_capacity, data.data.identity.root_id);
-      signIn(data.data.session_token, data.data.identity.is_admin ? Role.ADMIN : Role.USER, firstSignin);
+      signIn(
+        data.data.session_token,
+        data.data.identity.is_admin ? Role.ADMIN : Role.USER,
+        firstSignin,
+        data.data.identity.id,
+      );
     },
   });
-  console.log(firstLogin);
+
   useEffect(() => {
+    if (!email) {
+      navigate(AUTH_LOGIN_EMAIL);
+      return;
+    }
     if (!authenticated) return;
     if (!firstLogin) {
       if (from) {
@@ -66,7 +75,7 @@ const LoginPassword = () => {
         navigate(accountAuthorityCallback[role!]);
       }
     }
-  }, [authenticated, role, firstLogin]);
+  }, [authenticated, role, firstLogin, email]);
 
   return (
     <div className='flex h-screen items-center justify-center overflow-hidden bg-[#f0f4f9] px-10'>

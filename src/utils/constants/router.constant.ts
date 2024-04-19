@@ -3,7 +3,6 @@ import DashBoard from '../../pages/admin/dashboard/DashBoard';
 import StorageManagement from '../../pages/admin/storage-management/StorageManagement';
 import UserManagement from '../../pages/admin/user-management/UserManagement';
 import UserManagementDetail from '../../pages/admin/user-management/user-management-detail/UserManagementDetail';
-import ChangePassword from '../../pages/auth/ChangePassword';
 import LoginEmail from '../../pages/auth/LoginEmail';
 import LoginPassword from '../../pages/auth/LoginPassword';
 import ResetPassword from '../../pages/auth/ResetPassword';
@@ -38,6 +37,7 @@ export const ADMIN_STORAGE_MANAGEMENT = `${ADMIN_HOME}/storage-management`;
 export const CUSTOMER_SHARED = `${CUSTOMER_HOME}/shared`;
 export const CUSTOMER_PRIORITY = `${CUSTOMER_HOME}/priority`;
 export const CUSTOMER_MY_DRIVE = `${CUSTOMER_HOME}/my-drive`;
+export const CUSTOMER_MY_DRIVE_DIR = `${CUSTOMER_HOME}/my-drive/dir/:dirId`;
 export const CUSTOMER_STARRED = `${CUSTOMER_HOME}/starred`;
 export const CUSTOMER_TRASH = `${CUSTOMER_HOME}/trash`;
 export const CUSTOMER_MEMORY = `${CUSTOMER_HOME}/memory`;
@@ -46,7 +46,7 @@ export const routes = {
   auth: [
     { path: AUTH_LOGIN_EMAIL, component: LoginEmail },
     { path: AUTH_LOGIN_PASSWORD, component: LoginPassword },
-    { path: AUTH_CHANGE_PASSWORD, component: ChangePassword },
+    // { path: AUTH_CHANGE_PASSWORD, component: ChangePassword },
     { path: AUTH_RESET_PASSWORD, component: ResetPassword },
   ],
   admin: [
@@ -63,6 +63,7 @@ export const routes = {
     { path: CUSTOMER_HOME, component: Priority },
     { path: CUSTOMER_SHARED, component: Shared },
     { path: CUSTOMER_MY_DRIVE, component: MyDrive },
+    { path: CUSTOMER_MY_DRIVE_DIR, component: MyDrive },
     { path: CUSTOMER_STARRED, component: Starred },
     { path: CUSTOMER_TRASH, component: Trash },
     { path: CUSTOMER_MEMORY, component: Memory },

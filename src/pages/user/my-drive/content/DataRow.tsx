@@ -83,7 +83,9 @@ export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModi
 
   // const [showTools, setShowTools] = useState(false);
   return (
-    <div className='flex h-8 items-center cursor-pointer space-x-3 border-b border-b-[#dadce0] hover:bg-[#f0f1f1]' onDoubleClick={onDoubleClick}>
+    <div
+      className='flex h-8 cursor-pointer items-center space-x-3 border-b border-b-[#dadce0] hover:bg-[#f0f1f1]'
+      onDoubleClick={onDoubleClick}>
       <div className='flex shrink grow basis-[304px] items-center text-sm font-medium'>
         <div className='px-4'>
           <div className='h-6 w-6'>{icon}</div>

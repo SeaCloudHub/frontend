@@ -10,10 +10,11 @@ import { useDrawer, useViewMode } from '@/store/my-drive/myDrive.store';
 import SidePanel from '../my-drive/side-panel/SidePanel';
 import { useSession } from '@/store/auth/session';
 import { useQuery } from '@tanstack/react-query';
-import { getListEntriesMyDrive } from '@/apis/drive/list-entries.api';
+import { getListEntriesMyDrive } from '@/apis/drive/drive.api';
 import { toast } from 'react-toastify';
 import { Entry } from '@/utils/types/entry.type';
 import { ListEntriesRESP } from '@/apis/drive/response/list-entries.reponse';
+import { useStorageStore } from '@/store/storage/storage.store';
 
 const Starred = () => {
   const { viewMode, setViewMode } = useViewMode();
@@ -21,13 +22,14 @@ const Starred = () => {
   const [peopleFilterItem, setPeopleFilterItem] = useState<string>('');
   const [modifiedFilterItem, setModifiedFilterItem] = useState<string>('');
   const { drawerOpen, openDrawer, closeDrawer } = useDrawer();
-  const { root_id } = useSession();
+  const { rootId } = useStorageStore();
 
-  const {data, error, refetch} = useQuery({
-    queryKey: ['starred-entries', root_id],
-    queryFn: async () => (await getListEntriesMyDrive({id: root_id})
-      .then((res) => res?.data?.entries||[]))
-      .filter(e=>!e.name.includes('.trash'))
+  const { data, error, refetch } = useQuery({
+    queryKey: ['starred-entries', rootId],
+    queryFn: async () =>
+      (await getListEntriesMyDrive({ id: rootId }).then((res) => res?.data?.entries || [])).filter(
+        (e) => !e.name.includes('.trash'),
+      ),
   });
 
   useEffect(() => {
@@ -80,7 +82,7 @@ const Starred = () => {
           </div>
         </div>
       }
-      bodyLeft={<StarredView entries={(data||[]) as Required<Entry[]>&ListEntriesRESP['entries']} />}
+      bodyLeft={<StarredView entries={(data || []) as Required<Entry[]> & ListEntriesRESP['entries']} />}
       sidePanel={<SidePanel />}
     />
   );

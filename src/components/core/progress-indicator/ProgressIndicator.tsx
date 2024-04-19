@@ -3,7 +3,7 @@ import { useProgressIndicator } from '@/store/storage/progressIndicator.store';
 import { useState } from 'react';
 import { AiOutlineClose, AiOutlineLoading3Quarters } from 'react-icons/ai';
 import { IoIosArrowDown, IoIosArrowUp, IoMdCheckmarkCircle } from 'react-icons/io';
-import fileIcons from '../file-card/fileicon.constant';
+import fileTypeIcons from '../../../utils/constants/file-icons.constant';
 
 function ProgressIndicator() {
   const [minimize, setMinimize] = useState(true);
@@ -14,10 +14,10 @@ function ProgressIndicator() {
     return (
       <div key={index} className='hover:bg-darkC flex cursor-pointer items-center justify-between bg-white py-2.5 pl-4 pr-2'>
         <div className='flex items-center space-x-3'>
-          {fileExtension && fileIcons[fileExtension] ? (
-            <div className='h-6 w-6'>{fileIcons[fileExtension]}</div>
+          {fileExtension && fileTypeIcons[fileExtension] ? (
+            <div className='h-6 w-6'>{fileTypeIcons[fileExtension]}</div>
           ) : (
-            <div className='h-6 w-6'>{fileIcons['any']}</div>
+            <div className='h-6 w-6'>{fileTypeIcons['any']}</div>
           )}
           <span className='w-60 truncate'>{name}</span>
         </div>
@@ -48,23 +48,21 @@ function ProgressIndicator() {
                 {fileNames.length} upload{fileNames.length > 1 && 's'} complete
               </h3>
             )}
-            <div className='flex items-center'>
-              <div>
-                {minimize ? (
-                  <IoIosArrowDown
-                    onClick={() => setMinimize(!minimize)}
-                    className='h-9 w-9 cursor-pointer rounded-full p-2 hover:bg-gray-200'
-                    stroke='2'
-                  />
-                ) : (
-                  <IoIosArrowUp
-                    onClick={() => setMinimize(!minimize)}
-                    className='h-9 w-9 cursor-pointer rounded-full p-2 hover:bg-gray-200'
-                    stroke='2'
-                  />
-                )}
-              </div>
-              <AiOutlineClose onClick={() => reset()} className='h-9 w-9 cursor-pointer rounded-full p-2 hover:bg-gray-200' />
+            <div className='flex items-center text-white'>
+              {minimize ? (
+                <IoIosArrowDown
+                  onClick={() => setMinimize(!minimize)}
+                  className='h-9 w-9 cursor-pointer rounded-full p-2 hover:bg-gray-400'
+                  stroke='2'
+                />
+              ) : (
+                <IoIosArrowUp
+                  onClick={() => setMinimize(!minimize)}
+                  className='h-9 w-9 cursor-pointer rounded-full p-2 hover:bg-gray-400'
+                  stroke='2'
+                />
+              )}
+              <AiOutlineClose onClick={() => reset()} className='h-9 w-9   cursor-pointer rounded-full p-2 hover:bg-gray-400' />
             </div>
             {/* uploaded files progress */}
           </div>

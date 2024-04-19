@@ -179,7 +179,7 @@ const UserManagement = () => {
     },
   });
   return (
-    <div className='flex w-full flex-col items-end space-y-5'>
+    <div className=' flex h-[calc(100vh-4.6rem)] w-full flex-col items-end space-y-5 overflow-y-auto py-2'>
       <div
         ref={filterRef}
         className={`z-10 w-full space-y-2 ${screenMode == ScreenMode.MOBILE ? 'fixed bottom-2 left-1/4  ' : ''}`}>

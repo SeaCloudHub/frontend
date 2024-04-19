@@ -24,6 +24,7 @@ export default {
       zIndex: {
         navbar: '1498',
         sidebar: '1499',
+        popup: '1500',
         9: '9',
         8: '8',
         7: '7',

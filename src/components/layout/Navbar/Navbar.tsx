@@ -29,11 +29,10 @@ const Navbar = ({ isShrink, phoneMode }: NavbarProps) => {
       <header className='relative flex  w-screen items-center justify-between py-2  pl-3 pr-5'>
         {phoneMode && (
           <div className='flex h-full duration-500'>
-            <ButtonIcon icon={'radix-icons:hamburger-menu'} size={'100%'} />
+            <ButtonIcon icon={'radix-icons:hamburger-menu'} size={'1.5rem'} />
           </div>
         )}
         <Search />
-
         <div onClick={() => {}} className='rounded-full0 ml-3 flex h-full cursor-pointer items-center overflow-hidden'>
           {!phoneMode && <Configuration />}
           <img
@@ -41,7 +40,7 @@ const Navbar = ({ isShrink, phoneMode }: NavbarProps) => {
               setShowUserInfo(true);
             }}
             src={'https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75'}
-            className='h-[70%] rounded-full object-center  p-1.5 hover:bg-gray-100'
+            className='h-[2.5rem] w-[2.5rem] rounded-full object-contain p-1 hover:bg-gray-100'
             draggable={false}
             alt='avatar'
           />
