@@ -48,7 +48,6 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
   const openDrawer = useDrawer((state) => state.openDrawer);
 
   const { rootId } = useStorageStore();
-
   const copyMutation = useCopyMutation();
 
   const menuItems: MenuItem[][] = [
@@ -141,7 +140,8 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
         className={classNames(
           'flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-xl px-2 shadow-sm',
           isSelected ? 'bg-[#c2e7ff]' : 'bg-[#f0f4f9] hover:bg-[#dfe3e7]',
-        )}>
+        )}
+      >
         <div className='flex w-full items-center justify-between px-1 py-3'>
           <div className='flex max-w-[calc(100%-24px)] items-center space-x-4'>
             <div className='h-6 w-6 min-w-fit'>{icon}</div>
@@ -149,11 +149,6 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
               <div className='truncate text-sm font-medium'>{title}</div>
             </Tooltip>
           </div>
-          {/* <Dropdown
-            button={<BsThreeDotsVertical className='h-6 w-6 rounded-full p-1 hover:bg-slate-300' />}
-            items={menuItems}
-            left={true}
-          /> */}
           <CustomDropdown
             button={<BsThreeDotsVertical className='h-6 w-6 rounded-full p-1 hover:bg-slate-300' />}
             items={menuItems}
