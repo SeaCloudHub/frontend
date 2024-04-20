@@ -1,9 +1,16 @@
+import { uploadFilesApi } from '@/apis/user/storage/create-storage.api';
 import IconifyIcon from '@/components/core/Icon/IConCore';
 import Dropdown, { MenuItem } from '@/components/core/drop-down/Dropdown';
 import ModalCreateFolder from '@/components/core/modal/ModalCreateFolder';
 import ProgressIndicator from '@/components/core/progress-indicator/ProgressIndicator';
 import { useProgressIndicator } from '@/store/storage/progressIndicator.store';
+import { useStorageStore } from '@/store/storage/storage.store';
+import { toastError } from '@/utils/toast-options/toast-options';
+import { ApiGenericError } from '@/utils/types/api-generic-error.type';
+import { useMutation } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
 import React, { useRef, useState } from 'react';
+import { toast } from 'react-toastify';
 
 type AddFileMenuProps = {
   shrinkMode?: boolean;
@@ -12,12 +19,28 @@ type AddFileMenuProps = {
 const AddFileMenu = ({ shrinkMode }: AddFileMenuProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const folderInputRef = useRef<HTMLInputElement>(null);
+  const rootId = useStorageStore((state) => state.rootId);
   const setFileNames = useProgressIndicator((state) => state.setFileNames);
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const uploadFilesMutation = useMutation({
+    mutationFn: (files: File[]) => {
+      return uploadFilesApi({ files: files, id: rootId });
+    },
+    onError: (error) => {
+      if (isAxiosError<ApiGenericError>(error)) {
+        toast.error(error.response?.data.message, toastError());
+      }
+    },
+    onSuccess: (data) => {
+      console.log(data.data);
+      // setFileNames(data.data.map((item) => item.name));
+    },
+  });
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const fileList = e.target.files;
     if (fileList) {
       const filesArray = Array.from(fileList);
-      setFileNames(filesArray.map((item) => item.name));
+      console.log(filesArray);
+      await uploadFilesMutation.mutateAsync(filesArray);
     }
   };
   const handleFolderUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,9 +48,7 @@ const AddFileMenu = ({ shrinkMode }: AddFileMenuProps) => {
     const fileList = folderInput.files;
     if (fileList && fileList.length > 0) {
       const selectedFolder = fileList[0];
-      console.log(selectedFolder);
       const folderName = selectedFolder.webkitRelativePath.split('/')[0];
-      console.log('Selected folder:', folderName);
       const listFilesAndFolders = (directory: string, files: FileList) => {
         for (let i = 0; i < files.length; i++) {
           const file = files[i];
@@ -43,7 +64,6 @@ const AddFileMenu = ({ shrinkMode }: AddFileMenuProps) => {
         }
       };
 
-      // Start listing files and folders from the root directory
       listFilesAndFolders(folderName, fileList);
     }
   };
