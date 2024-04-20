@@ -112,6 +112,35 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
 };
 
 /**
+ * Map MyEntry to FileCard
+ */
+
+export const localEntriesToFiles = (files: LocalEntry[]) => {
+  return files.map((file, ind) => (
+    <div className='aspect-square w-auto' key={ind}>
+      <FileCard title={file.title} icon={file.icon} preview={file.preview} id={file.id} key={ind}/>
+    </div>
+  ));
+};
+
+/**
+ * Map MyEntry to FolderCard
+ */
+export const localEntriesToFolder = (folders: LocalEntry[], handlePath: (path: Path)=>void) => {
+  return folders.map((folder, index) => {
+    return (
+      <div key={index} className='w-auto'>
+        <FolderCard title={folder.title} icon={folder.icon} id={folder.id} onDoubleClick={
+          ()=>{
+            handlePath([{id: folder.id, name: folder.title}]);
+          }
+        } />
+      </div>
+    );
+  });
+};
+
+/**
  * Map remote Entry to MyEntry.
  */
 export const remoteToLocalEntries = (entries: Entry[]): LocalEntry[] => {

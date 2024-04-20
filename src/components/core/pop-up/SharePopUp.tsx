@@ -5,6 +5,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import Dropdown, { MenuItem as MenuItemCustom } from '../drop-down/Dropdown';
 import ListPeople from '../list-people/ListPeople';
 import ButtonContainer from '../button/ButtonContainer';
+import CustomDropdown from '../drop-down/CustomDropdown';
 
 type SharePopUpProps = {
   open: boolean;
@@ -61,9 +62,10 @@ const SharePopUp: React.FC<SharePopUpProps> = ({
         <Tooltip title={title} >
           <span className='text-xl font-semibold line-clamp-1 overflow-hidden'> Share {title} </span>
         </Tooltip>
-        <Dropdown button={
+        {/* <Dropdown button={
           <Icon icon='material-symbols:help-outline' className='text-xl' />
-        } items={[helpItems]} left={true} />
+        } items={[helpItems]} left={true} /> */}
+        <CustomDropdown button={<Icon icon='material-symbols:help-outline' className='text-xl' />} items={[helpItems]} />
       </div>
       <div className='h-[360px] lg:w-[580px] md:w-[500px] p-3'>
         <div className={values.length>0 ? 'flex gap-3 justify-between items-start': ''}>

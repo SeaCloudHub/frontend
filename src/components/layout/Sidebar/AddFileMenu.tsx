@@ -1,6 +1,7 @@
 import { uploadFilesApi } from '@/apis/user/storage/create-storage.api';
 import IconifyIcon from '@/components/core/Icon/IConCore';
 import Dropdown, { MenuItem } from '@/components/core/drop-down/Dropdown';
+import CustomDropdown from '@/components/core/drop-down/CustomDropdown';
 import ModalCreateFolder from '@/components/core/modal/ModalCreateFolder';
 import ProgressIndicator from '@/components/core/progress-indicator/ProgressIndicator';
 import { useProgressIndicator } from '@/store/storage/progressIndicator.store';
@@ -104,7 +105,7 @@ const AddFileMenu = ({ shrinkMode }: AddFileMenuProps) => {
   const [createModal, setCreateModal] = useState<boolean>(false);
   return (
     <>
-      <Dropdown
+      {/* <Dropdown
         button={
           <div className='mt-5 flex cursor-pointer items-center rounded-full px-4 py-1 text-[#063768] hover:bg-gray-400'>
             <IconifyIcon icon={'mdi:create-new-folder-outline'} fontSize={35} />
@@ -113,6 +114,15 @@ const AddFileMenu = ({ shrinkMode }: AddFileMenuProps) => {
         }
         items={addFileMenu}
         left={false}
+      /> */}
+      <CustomDropdown
+        button={
+          <div className='mt-5 flex cursor-pointer items-center rounded-full px-4 py-1 text-[#063768] hover:bg-gray-400'>
+            <IconifyIcon icon={'mdi:create-new-folder-outline'} fontSize={35} />
+            {!shrinkMode && <span className='font-bold'>New</span>}
+          </div>
+        }
+        items={addFileMenu}
       />
       <input ref={fileInputRef} id='fileInput' type='file' style={{ display: 'none' }} onChange={handleFileUpload} multiple />
       <input
