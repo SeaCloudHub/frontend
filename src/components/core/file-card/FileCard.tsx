@@ -32,6 +32,7 @@ type FileCardProps = {
   id: string;
   onClick?: () => void;
   isSelected?: boolean;
+  dirId: string;
 };
 
 export const fileOperation = [
@@ -41,13 +42,13 @@ export const fileOperation = [
   { icon: <TrashIcon />, label: 'Delete file' },
 ];
 
-const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelected, onClick }) => {
+const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelected, onClick, dirId }) => {
   const [fileViewer, setFileViewer] = useState(false);
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
   const [type, setType] = useState<'move' | 'share' | null>(null);
   const openDrawer = useDrawer((state) => state.openDrawer);
 
-  const { rootId } = useStorageStore();
+  // const { rootId } = useStorageStore();
   const copyMutation = useCopyMutation();
 
   const menuItems: MenuItem[][] = [
@@ -63,7 +64,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
         label: 'Make a copy',
         icon: <Icon icon='material-symbols:content-copy-outline' />,
         action: () => {
-          copyMutation.mutate({ ids: [id], to: rootId });
+          copyMutation.mutate({ ids: [id], to: dirId });
         },
       },
     ],

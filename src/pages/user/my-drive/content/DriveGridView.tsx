@@ -12,7 +12,7 @@ import { CUSTOMER_MY_DRIVE } from '@/utils/constants/router.constant';
 import { LinearProgress } from '@mui/material';
 
 type DriveGridViewProps = {
-  dirId?: string;
+  dirId: string;
   sort?: string;
   order?: string;
   setSort?: ({ sort, order }: { sort: string; order: string }) => void;
@@ -33,6 +33,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
   setSelected,
   selected,
   isLoading,
+  dirId,
 }) => {
   const files = entries.filter((entry) => !entry.isDir);
   const folders = entries.filter((entry) => entry.isDir);
@@ -95,6 +96,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
                           icon={file.icon}
                           preview={file.preview}
                           id={file.id}
+                          dirId={dirId}
                           onClick={() => setSelected({ id: file.id, name: file.title })}
                           isSelected={selected === file.id}
                         />
@@ -109,18 +111,6 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
       )}
     </>
   );
-};
-
-/**
- * Map MyEntry to FileCard
- */
-
-export const localEntriesToFiles = (files: LocalEntry[]) => {
-  return files.map((file, ind) => (
-    <div className='aspect-square w-auto' key={ind}>
-      <FileCard title={file.title} icon={file.icon} preview={file.preview} id={file.id} key={ind}/>
-    </div>
-  ));
 };
 
 /**

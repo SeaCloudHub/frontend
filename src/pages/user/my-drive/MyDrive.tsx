@@ -72,6 +72,7 @@ const MyDrive = () => {
             setSelected={setSelected}
             selected={selected.id}
             isLoading={isLoading}
+            dirId={dirId}
           />
         ) : (
           <DriveListView entries={localEntries} setPath={setPath} />
