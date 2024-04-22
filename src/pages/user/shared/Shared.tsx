@@ -12,7 +12,7 @@ import { DriveListView } from '../my-drive/content/DriveListView';
 import { useSession } from '@/store/auth/session';
 import { useQuery } from '@tanstack/react-query';
 import { getSharedEntries } from '@/apis/drive/drive.api';
-import { ListEntriesRESP } from '@/apis/drive/response/list-entries.reponse';
+import { ListEntriesRESP } from '@/apis/drive/drive.request';
 import { LocalEntry } from '../my-drive/MyDrive';
 import { toast } from 'react-toastify';
 import DrivePath from '../my-drive/header/drive-path/DrivePath';

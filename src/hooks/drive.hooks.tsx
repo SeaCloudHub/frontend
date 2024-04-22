@@ -1,5 +1,5 @@
 import { copyFiles, getEntryMetadata, getListEntriesMyDrive, getSharedEntries } from '@/apis/drive/drive.api';
-import { CopyFileREQ } from '@/apis/drive/request/copy.request';
+import { CopyFileREQ } from '@/apis/drive/drive.request';
 import { useSession } from '@/store/auth/session';
 import { useDrawer } from '@/store/my-drive/myDrive.store';
 import { useStorageStore } from '@/store/storage/storage.store';
@@ -65,7 +65,7 @@ export const useEntryMetadata = (id: string) => {
     staleTime: 10 * 1000,
     select: (data) => {
       const path = data.path.split('/'); // path: "/41d6329f-909a-400b-a519-834dd661d41b/dir/dir3/"
-      console.log('[useEntryMetadata] path', path);
+      // console.log('[useEntryMetadata] path', path);
       const location = { name: path[path.length - 2] === user_id ? 'My Drive' : path[path.length - 2], id };
       if (data.is_dir && data.path !== '/') {
         return {

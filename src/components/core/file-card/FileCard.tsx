@@ -15,8 +15,8 @@ import MovePopUp from '../pop-up/MovePopUp';
 import SharePopUp from '../pop-up/SharePopUp';
 import CustomDropdown from '../drop-down/CustomDropdown';
 import { useMutation } from '@tanstack/react-query';
-import { CopyFileREQ } from '@/apis/drive/request/copy.request';
-import { copyFiles } from '@/apis/drive/drive.api';
+import { CopyFileREQ } from '@/apis/drive/drive.request';
+import { copyFiles, downloadFile } from '@/apis/drive/drive.api';
 import { isAxiosError } from 'axios';
 import { ApiGenericError } from '@/utils/types/api-generic-error.type';
 import { toast } from 'react-toastify';
@@ -54,7 +54,13 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
   const menuItems: MenuItem[][] = [
     [{ label: 'Preview', icon: <Icon icon='material-symbols:visibility' />, action: () => {} }],
     [
-      { label: 'Download', icon: <Icon icon='ic:outline-file-download' />, action: () => {} },
+      {
+        label: 'Download',
+        icon: <Icon icon='ic:outline-file-download' />,
+        action: () => {
+          downloadFile({ id, name: title });
+        },
+      },
       {
         label: 'Rename',
         icon: <Icon icon='ic:round-drive-file-rename-outline' />,
@@ -141,8 +147,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
         className={classNames(
           'flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-xl px-2 shadow-sm',
           isSelected ? 'bg-[#c2e7ff]' : 'bg-[#f0f4f9] hover:bg-[#dfe3e7]',
-        )}
-      >
+        )}>
         <div className='flex w-full items-center justify-between px-1 py-3'>
           <div className='flex max-w-[calc(100%-24px)] items-center space-x-4'>
             <div className='h-6 w-6 min-w-fit'>{icon}</div>

@@ -12,7 +12,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useSession } from '@/store/auth/session';
 import { toast } from 'react-toastify';
 import { getListEntriesMyDrive } from '@/apis/drive/drive.api';
-import { ListEntriesRESP } from '@/apis/drive/response/list-entries.reponse';
+import { ListEntriesRESP } from '@/apis/drive/drive.request';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { useLocation, useParams } from 'react-router-dom';
 import { useListEntries } from '@/hooks/drive.hooks';

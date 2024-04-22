@@ -51,7 +51,7 @@ const DrivePath: React.FC<DrivePathProps> = ({ path, setPath, type }) => {
         <Icon icon='ic:baseline-keyboard-arrow-right' className='h-6 w-6' />
         <DrivePathButton path={path.slice(0, -1)} setPath={setPath} />
         <Icon icon='ic:baseline-keyboard-arrow-right' className='h-6 w-6' />
-        <DrivePathMenuButton dirName={path[path.length - 1].name} entryId={path[path.length - 1].id} type={type} />
+        <DrivePathMenuButton dirName={path[path.length - 1].name} dirId={path[path.length - 1].id} type={type} />
       </div>
     );
   }
@@ -60,7 +60,11 @@ const DrivePath: React.FC<DrivePathProps> = ({ path, setPath, type }) => {
     <div className='flex items-center'>
       {path.map((d, index) => {
         if (index === path.length - 1) {
-          return (type==='MyDrive') ? <DrivePathMenuButton dirName={d.name} entryId={d.id} key={d.id} type={type} /> : <DrivePathButton path={path} setPath={setPath} key={d.id} />;
+          return type === 'MyDrive' ? (
+            <DrivePathMenuButton dirName={d.name} dirId={d.id} key={d.id} type={type} />
+          ) : (
+            <DrivePathButton path={path} setPath={setPath} key={d.id} />
+          );
         }
         const curPath = path.slice(0, index + 1);
         return (
