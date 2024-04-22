@@ -52,7 +52,8 @@ const LoginEmail = () => {
       }
     },
     onSuccess: (res) => {
-      onEmailValid(formik.values.email);
+      const { email, avatar_url, first_name, last_name, password_changed_at } = res.data;
+      onEmailValid(email, avatar_url, first_name, last_name, password_changed_at);
       navigate(AUTH_LOGIN_PASSWORD);
     },
   });
@@ -72,7 +73,7 @@ const LoginEmail = () => {
           <div className='content gap-4 md:flex md:justify-between'>
             <div>
               <Typography variant='h3'>Sign in</Typography>
-              <h4 className='mt-3'>To continue to Google Drive</h4>
+              <h4 className='mt-3'>To continue to SeaweedFS</h4>
             </div>
             <div className='flex flex-col gap-5'>
               <div className='input w-full'>

@@ -58,7 +58,7 @@ export const useCopyMutation = () => {
 
 export const useEntryMetadata = (id: string) => {
   const { drawerOpen } = useDrawer();
-  const { user_id } = useSession();
+  const identity = useSession((state) => state.identity);
   const { data, isLoading, error } = useQuery({
     queryKey: ['file-metadata', id],
     queryFn: () => getEntryMetadata({ id }).then((res) => res?.data),
@@ -66,7 +66,7 @@ export const useEntryMetadata = (id: string) => {
     select: (data) => {
       const path = data.path.split('/'); // path: "/41d6329f-909a-400b-a519-834dd661d41b/dir/dir3/"
       console.log('[useEntryMetadata] path', path);
-      const location = { name: path[path.length - 2] === user_id ? 'My Drive' : path[path.length - 2], id };
+      const location = { name: path[path.length - 2] === identity.id ? 'My Drive' : path[path.length - 2], id };
       if (data.is_dir && data.path !== '/') {
         return {
           is_dir: true,

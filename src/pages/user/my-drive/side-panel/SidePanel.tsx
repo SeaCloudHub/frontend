@@ -1,20 +1,14 @@
 import { classNames } from '@/components/core/drop-down/Dropdown';
+import { useEntryAccess, useEntryMetadata } from '@/hooks/drive.hooks';
+import { useSession } from '@/store/auth/session';
 import { useDrawer } from '@/store/my-drive/myDrive.store';
-import { Activity, ActivityAction, DownloadPermission, EntryDetails } from '@/utils/types/entry.type';
+import { numToSize } from '@/utils/function/numbertToSize';
 import { Tab } from '@headlessui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { Avatar, LinearProgress } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
-import React, { useEffect } from 'react';
+import { LinearProgress } from '@mui/material';
+import React from 'react';
 import { DriveLocationButton } from './DriveLocationButton';
 import SidePanelAction from './SidePanelAction';
-import { useEntryAccess, useEntryMetadata } from '@/hooks/drive.hooks';
-import { isAxiosError } from 'axios';
-import { ApiGenericError } from '@/utils/types/api-generic-error.type';
-import { toast } from 'react-toastify';
-import { toastError } from '@/utils/toast-options/toast-options';
-import { useSession } from '@/store/auth/session';
-import { numToSize } from '@/utils/function/numbertToSize';
 
 type SidePanelProps = {
   id?: string;
@@ -77,8 +71,7 @@ const fakeDataSidePanelAction = [
 const SidePanel: React.FC<SidePanelProps> = ({ id, title }) => {
   console.log('[SidePanel] id:', id);
   const { closeDrawer } = useDrawer();
-  const { user_id: userId } = useSession();
-
+  const identity = useSession((state) => state.identity);
   const { data: details, isLoading } = useEntryMetadata(id);
   const { data: access, isLoading: isLoadingAccess } = useEntryAccess(id);
 
@@ -172,7 +165,7 @@ const SidePanel: React.FC<SidePanelProps> = ({ id, title }) => {
                       </div>
                       <div>
                         <div className='text-xs font-medium'>Owner</div>
-                        <div className='text-sm'>{details.owner.username === userId ? ' me ' : details.owner.username}</div>
+                        <div className='text-sm'>{details.owner.username === identity.id ? ' me ' : details.owner.username}</div>
                       </div>
                       <div>
                         <div className='text-xs font-medium'>Modified </div>

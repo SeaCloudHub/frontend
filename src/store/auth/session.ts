@@ -1,25 +1,33 @@
+import { IdentityRESP } from '@/apis/auth/response/auth.sign-in.response';
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 import { Role } from '../../utils/enums/role.enum';
 import { getLocalStorage } from '../../utils/function/auth.function';
-
+const initIdentityValue = {
+  id: null,
+  email: null,
+  password_changed_at: null,
+  first_name: null,
+  last_name: null,
+  avatar_url: null,
+  is_admin: null,
+  last_sign_in_at: null,
+};
+type Identity = Pick<
+  IdentityRESP,
+  'id' | 'email' | 'password_changed_at' | 'first_name' | 'last_name' | 'avatar_url' | 'is_admin' | 'last_sign_in_at'
+>;
 type SessionState = {
   token: string | null;
   role: Role | null;
-  email: string | null;
   firstLogin: boolean;
-  onEmailValid: (email: string | null) => void;
-  signIn: (token: string | null, role: Role | null, firstLogin?: boolean, user_id?: string) => void;
-  user_id: string | null;
+  onEmailValid: (email: string, avatar_url: string, first_name: string, last_name: string, password_changed_at: string) => void;
+  signIn: (token: string | null, role: Role | null, firstLogin: boolean, identity: Identity) => void;
+  identity: Identity;
   signOut: () => void;
 };
 
-const value = {
-  role: JSON.parse(getLocalStorage('sessionStore') as string)?.state?.role,
-  token: JSON.parse(getLocalStorage('sessionStore') as string)?.state?.token,
-  email: JSON.parse(getLocalStorage('sessionStore') as string)?.state?.email,
-  user_id: JSON.parse(getLocalStorage('sessionStore') as string)?.state?.user_id,
-};
+const value = JSON.parse(getLocalStorage('sessionStore') as string)?.state || {};
 
 export const useSession = create<SessionState>()(
   devtools(
@@ -27,14 +35,24 @@ export const useSession = create<SessionState>()(
       (set) => ({
         token: value.token || null,
         role: value.role || null,
-        firstLogin: false,
-        email: value.email || null,
-        user_id: value.user_id || null,
-        signIn: (token: string | null, role: Role | null, firstLogin?: boolean, user_id?: string) =>
-          set({ token: token, role: role, firstLogin: firstLogin, user_id: user_id }),
-        onEmailValid: (email: string | null) => set((state) => ({ ...state, email: email })),
+        firstLogin: true,
+        identity: value.identity || initIdentityValue,
+        signIn: (token: string | null, role: Role | null, firstLogin: boolean, identity: Identity) =>
+          set({ token, role, identity: identity, firstLogin: firstLogin }),
+        onEmailValid: (email, avatar_url: string, first_name: string, last_name: string, password_changed_at: string) =>
+          set((state) => ({
+            ...state,
+            identity: {
+              ...state.identity,
+              email,
+              avatar_url,
+              first_name,
+              last_name,
+              password_changed_at,
+            },
+          })),
         signOut: () => {
-          set({ token: null, role: null, email: null });
+          set({ token: null, role: null, email: null, identity: initIdentityValue });
           localStorage.clear();
         },
       }),

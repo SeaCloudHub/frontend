@@ -24,7 +24,7 @@ const ChangePassword = () => {
   const screenMode = useScreenMode((state) => state.screenMode);
   const signOut = useSession((state) => state.signOut);
   const [modalOpen, setModalOpen] = useState(false);
-  const email = useSession((state) => state.email);
+  const identity = useSession((state) => state.identity);
   const formik = useFormik({
     initialValues: changePasswordInitialValue,
     validationSchema: changePasswordSchema,
@@ -51,9 +51,14 @@ const ChangePassword = () => {
   };
   return (
     <div className={`${screenMode == ScreenMode.MOBILE ? 'mx-2' : 'mx-auto'} max-w-[700px] text-gray-600 `}>
-      <IconifyIcon icon='logos:google' className='mx-auto h-20 w-40' />
+      {/* <IconifyIcon icon='logos:google' className='mx-auto h-20 w-40' /> */}
+      <img
+        src='https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75'
+        alt='placeholder'
+        className='mx-auto h-[7rem] w-[7rem] rounded-full object-contain'
+      />
       <div className='title text-center text-2xl '>Change password for</div>
-      <div className='email text-center text-2xl'>{email}</div>
+      <div className='email text-center text-2xl'>{identity && identity.email}</div>
       <div className='help'></div>
       {changPasswordMutation.isPending && <LinearProgress className='mx-5 translate-y-6' />}
       <ModalChangePasswordSuccess

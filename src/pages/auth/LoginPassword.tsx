@@ -1,4 +1,7 @@
 import { useStorageStore } from '@/store/storage/storage.store';
+import { accountAuthorityCallback } from '@/utils/constants/account-login-callback.constant';
+import { getFirstCharacters } from '@/utils/function/getFirstCharacter';
+import { getRandomColor } from '@/utils/function/getRandomColor';
 import { Avatar, Button, Checkbox, LinearProgress, Typography } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
@@ -11,7 +14,6 @@ import { AuthSignInREQ, loginInitialValue } from '../../apis/auth/request/auth-s
 import TextFieldCore from '../../components/core/form/TextFieldCore';
 import { passwordSchema } from '../../helpers/form-schema/auth/login.schema';
 import { useSession } from '../../store/auth/session';
-import { accountAuthorityCallback } from '../../utils/constants/account-login-callback.constant';
 import { AUTH_CHANGE_PASSWORD, AUTH_LOGIN_EMAIL } from '../../utils/constants/router.constant';
 import { Role } from '../../utils/enums/role.enum';
 import { toastError } from '../../utils/toast-options/toast-options';
@@ -25,13 +27,12 @@ const LoginPassword = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname;
-  const { token: authenticated, role, signIn, email, firstLogin } = useSession();
+  const { token: authenticated, role, signIn, firstLogin, identity } = useSession();
   const updateStorageStore = useStorageStore((state) => state.update);
-
   const handleChange = (e: { target: { value: React.SetStateAction<string> } }) => setCurrentValue(e.target.value);
-
+  console.log(firstLogin);
   const formik = useFormik({
-    initialValues: { ...loginInitialValue, email },
+    initialValues: { ...loginInitialValue, email: identity.email },
     validationSchema: passwordSchema,
     onSubmit: async (values) => {
       await loginMutation.mutateAsync(values as AuthSignInREQ);
@@ -53,12 +54,12 @@ const LoginPassword = () => {
         navigate(AUTH_CHANGE_PASSWORD);
       }
       updateStorageStore(data.data.identity.storage_usage, data.data.identity.storage_capacity, data.data.identity.root_id);
-      signIn(data.data.session_token, data.data.identity.is_admin ? Role.ADMIN : Role.USER, firstSignin, data.data.identity.id);
+      signIn(data.data.session_token, data.data.identity.is_admin ? Role.ADMIN : Role.USER, firstSignin, data.data.identity);
     },
   });
 
   useEffect(() => {
-    if (!email) {
+    if (identity && !identity.email) {
       navigate(AUTH_LOGIN_EMAIL);
       return;
     }
@@ -70,7 +71,7 @@ const LoginPassword = () => {
         navigate(accountAuthorityCallback[role!]);
       }
     }
-  }, [authenticated, role, firstLogin, email]);
+  }, [authenticated, role, firstLogin, identity]);
 
   return (
     <div className='flex h-screen items-center justify-center overflow-hidden bg-[#f0f4f9] px-10'>
@@ -87,16 +88,27 @@ const LoginPassword = () => {
           <div className='content flex flex-col gap-20 md:flex-row md:justify-between'>
             <div className='min-w-60'>
               <div className='flex items-center gap-3 rounded-2xl border p-1 pr-5 ring-1 ring-black'>
-                <Avatar
-                  alt='Remy Sharp'
-                  src='https://picsum.photos/100/100'
-                  sx={{
-                    width: 25,
-                    height: 25,
-                  }}
-                  // className='w-6 h-6'
-                />
-                <span className='line-clamp-1 overflow-hidden'>John Doe</span>
+                {identity && identity.avatar_url && (
+                  <Avatar
+                    alt='Remy Sharp'
+                    src={identity.avatar_url}
+                    sx={{
+                      width: 25,
+                      height: 25,
+                    }}
+                    // className='w-6 h-6'
+                  />
+                )}
+                {identity && !identity.avatar_url && (
+                  <div
+                    className='round flex h-[25px] w-[25px] items-center justify-center rounded-full'
+                    style={{ backgroundColor: getRandomColor() }}>
+                    <p className='statement-bold truncate'>
+                      {getFirstCharacters(identity.first_name + ' ' + identity.last_name || '')}
+                    </p>
+                  </div>
+                )}
+                <span className='line-clamp-1 overflow-hidden'>{identity && identity.first_name}</span>
               </div>
             </div>
             <div className='flex flex-col gap-5'>
