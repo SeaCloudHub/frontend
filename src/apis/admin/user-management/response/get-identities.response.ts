@@ -1,12 +1,9 @@
+import { PaginationRESP } from '@/utils/types/api-base-response.type';
 import { IdentityRESP } from '../../../auth/response/auth.sign-in.response';
 
-export type IdentityFileRESP = IdentityRESP & {
-  last_access_at: string;
-  maximum_capacity: number;
-  used_capacity: number;
-};
+export type IdentityFileRESP = IdentityRESP;
 
 export type GetIdentitiesRESP = {
   identities: IdentityFileRESP[];
-  next_token: string;
+  pagination: PaginationRESP;
 };

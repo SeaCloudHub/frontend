@@ -16,22 +16,28 @@ const ModalCore = ({ width, children, open, isCloseOutside = true, closeOutside 
     <>
       <Modal
         open={open}
-        onClose={isCloseOutside ? closeOutside : () => {}}
+        onClose={
+          isCloseOutside
+            ? () => {
+                closeOutside(false);
+              }
+            : () => {}
+        }
         aria-labelledby='modal-modal-title'
         aria-describedby='modal-modal-description'>
         <Box
           sx={{
+            padding: '10px',
             maxWidth: 1000,
             outline: 'none',
             bgcolor: 'background.paper',
-            borderRadius: '12px',
+            borderRadius: screenMode == ScreenMode.MOBILE ? '0px' : '12px',
             boxShadow: 24,
-            p: 4,
             top: '50%',
             position: 'absolute',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            width: screenMode == ScreenMode.MOBILE ? '90vw' : width,
+            width: screenMode == ScreenMode.MOBILE ? '100vw' : { md: width, sx: '90vw' },
           }}>
           {children}
         </Box>

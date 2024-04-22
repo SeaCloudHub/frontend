@@ -5,9 +5,10 @@ import { IdentityFileRESP } from './response/get-identities.response';
 export const getIdentitiesRESToUserManagementInfoDto = (data: IdentityFileRESP): UserManagementInfoDto => {
   return {
     name: data.first_name + ' ' + data.last_name,
-    usedMemory: data.used_capacity,
+    usedMemory: data.storage_usage,
+    totalMemory: data.storage_capacity,
     avatar: data.avatar_url,
     userId: data.id,
-    lastAccess: dayjs(data.last_access_at).format('YYYY-MM-DD') || '',
+    lastAccess: dayjs(data.last_sign_in_at).format('YYYY-MM-DD') || '',
   };
 };

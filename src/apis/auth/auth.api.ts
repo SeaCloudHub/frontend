@@ -9,7 +9,7 @@ export const checkEmailApi = async (param: Pick<AuthSignInREQ, 'email'>) => {
   return res.data;
 };
 export const signinApi = async (body: AuthSignInREQ) => {
-  const res = await api.post<AuthSignInRESP>('/users/login', body, {});
+  const res = await api.post<BaseResponse<AuthSignInRESP>>('/users/login', body, {});
   return res.data;
 };
 

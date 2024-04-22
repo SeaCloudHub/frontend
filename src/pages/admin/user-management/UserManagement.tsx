@@ -1,4 +1,5 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { paginationRESPToDto } from '@/apis/shared/shared.service';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -36,57 +37,32 @@ const initModalsState: ModalState[] = [
   { isOpen: false, name: 'MANUAL' },
   { isOpen: false, name: 'IMPORT' },
 ];
+const renderCell: Record<string, (rowData: UserManagementInfoDto) => React.ReactNode> = {
+  usedMemory: (rowData: UserManagementInfoDto) => (
+    <LinearChartBar value={rowData['usedMemory'] as number} total={rowData['totalMemory'] as number} width='100%' />
+  ),
+  name: (rowData: UserManagementInfoDto) => (
+    <div className='flex items-center space-x-5'>
+      {rowData.avatar && <img className='h-[50px] w-[50px] rounded-full object-contain' src={rowData['avatar'] as string} />}
+      {!rowData.avatar && (
+        <div
+          className='round flex h-[50px] w-[50px] items-center justify-center rounded-full'
+          style={{ backgroundColor: getRandomColor() }}>
+          <p className='statement-bold truncate'>{getFirstCharacters(rowData.name || '')}</p>
+        </div>
+      )}
+      <p className='statement-medium'>{rowData['name'] as string}</p>
+    </div>
+  ),
+};
 const UserManagement = () => {
   const [modals, changeModalsState] = useState<ModalState[]>(initModalsState);
   const [paging, setPaging] = useState<PagingState>(initialPagingState);
-  const [pageToken, setPageToken] = useState<null | string>(null);
   const screenMode = useScreenMode((state) => state.screenMode);
   const shrinkMode = useScreenMode((state) => state.shrinkMode);
   const [scrollable, setScrollable] = useState(false);
   const filterRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (screenMode == ScreenMode.MOBILE) {
-      setScrollable(true);
-    }
-  }, [screenMode]);
-  const navigate = useNavigate();
-  const renderCell: Record<string, (rowData: UserManagementInfoDto) => React.ReactNode> = {
-    usedMemory: (rowData: UserManagementInfoDto) => (
-      <LinearChartBar value={rowData['usedMemory'] as number} total={100} width='100%' />
-    ),
-    name: (rowData: UserManagementInfoDto) => (
-      <div className='flex items-center space-x-5'>
-        {rowData.avatar && <img className='h-[50px] w-[50px] rounded-full object-contain' src={rowData['avatar'] as string} />}
-        {!rowData.avatar && (
-          <div
-            className='round flex h-[50px] w-[50px] items-center justify-center rounded-full'
-            style={{ backgroundColor: getRandomColor() }}>
-            <p className='statement-bold truncate'>{getFirstCharacters(rowData.name || '')}</p>
-          </div>
-        )}
-        <p className='statement-medium'>{rowData['name'] as string}</p>
-      </div>
-    ),
-  };
-  const { data, error } = useQuery({
-    queryKey: ['get-identities'],
-    queryFn: () => getIdentititesApi({ page_size: 20, page_token: pageToken }),
-    select: (data) => {
-      if (data) {
-        return data.identities.map((user) => getIdentitiesRESToUserManagementInfoDto(user) as UserManagementInfoDto);
-      } else {
-        return null;
-      }
-    },
-  });
-  useEffect(() => {
-    if (error) {
-      if (isAxiosError(error)) {
-        toast.error(error.response?.data.message, toastError());
-      }
-    }
-  }, [error]);
-
+  const containerRef = useRef<HTMLDivElement>(null);
   const addUserOptions: MenuItemCoreProps[] = [
     {
       icon: 'icon-park:add-one',
@@ -127,32 +103,69 @@ const UserManagement = () => {
       },
     },
   ];
-
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { data, error } = useQuery({
+    queryKey: ['get-identities', paging.size, paging.page],
+    queryFn: () => getIdentititesApi({ limit: paging.size, page: paging.page }),
+    staleTime: 0,
+    select: (data) => {
+      if (data) {
+        return {
+          paging: paginationRESPToDto(data.pagination),
+          identitiesDto: data.identities.map((user) => getIdentitiesRESToUserManagementInfoDto(user) as UserManagementInfoDto),
+        };
+      } else {
+        return null;
+      }
+    },
+  });
+  useEffect(() => {
+    if (error) {
+      if (isAxiosError(error)) {
+        toast.error(error.response?.data.message, toastError());
+      }
+    }
+    if (data) {
+      setPaging(data.paging);
+    }
+  }, [error, data]);
   useEffect(() => {
     const handleScroll = () => {
-      if (filterRef.current && window.scrollY > filterRef.current.offsetHeight && filterRef.current.offsetHeight != 0) {
+      if (
+        containerRef.current &&
+        containerRef.current.scrollTop > filterRef.current.offsetHeight &&
+        filterRef.current.offsetHeight !== 0
+      ) {
         setScrollable(true);
-      } else if (!(screenMode == ScreenMode.MOBILE) && filterRef.current && window.scrollY == filterRef.current.offsetHeight) {
+      } else if (
+        !(screenMode === ScreenMode.MOBILE) &&
+        containerRef.current &&
+        containerRef.current.scrollTop === filterRef.current.offsetHeight
+      ) {
         setScrollable(false);
       }
     };
     if (!(screenMode == ScreenMode.MOBILE)) {
-      window.addEventListener('scroll', handleScroll);
+      containerRef.current.addEventListener('scroll', handleScroll);
     }
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      containerRef.current?.removeEventListener('scroll', handleScroll);
     };
   }, []);
-
+  useEffect(() => {
+    if (screenMode == ScreenMode.MOBILE) {
+      setScrollable(true);
+    }
+  }, [screenMode]);
   const onFilterClick = () => {
     if (screenMode == ScreenMode.MOBILE) {
       //pop-up dialog for choose filter
     } else {
       setScrollable(false);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      containerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
-
   const onCloseModalClick = (modalType: string) => {
     changeModalsState((prevModals) => {
       const updatedModals = prevModals.map((modal) => {
@@ -174,17 +187,15 @@ const UserManagement = () => {
       }
     },
     onSuccess: (data) => {
-      console.log(data.data);
       toast.success('Create user successfully', toastSuccess());
     },
   });
   return (
-    <div className=' flex h-[calc(100vh-4.6rem)] w-full flex-col items-end space-y-5 overflow-y-auto py-2'>
+    <div ref={containerRef} className=' flex h-[calc(100vh-4.6rem)] w-full flex-col items-end space-y-5 overflow-y-auto py-2'>
       <div
         ref={filterRef}
         className={`z-10 w-full space-y-2 ${screenMode == ScreenMode.MOBILE ? 'fixed bottom-2 left-1/4  ' : ''}`}>
         {!scrollable && <UserManagementFilter />}
-
         <div
           className={`${shrinkMode ? 'shrink-mode' : 'none-shrink-mode'} ${scrollable ? ' fixed  top-[4rem] mx-auto flex w-full space-x-2 bg-white py-1' : ''}`}>
           {scrollable && (
@@ -211,22 +222,27 @@ const UserManagement = () => {
             fileType='.csv'
             isOpen={modals.find((modal) => modal.name === 'IMPORT')?.isOpen || false}
             handleConfirm={(data?: File) => {
+              console.log(data);
               data && uploadCSVMutation.mutateAsync({ file: data! });
               onCloseModalClick('IMPORT');
             }}
           />
-
           <ModalAddUser
             title='Add User'
             isOpen={modals.find((modal) => modal.name === 'MANUAL')?.isOpen || false}
-            handleConfirm={() => onCloseModalClick('MANUAL')}
+            handleConfirm={(data) => {
+              if (data) {
+                queryClient.invalidateQueries({ queryKey: ['get-identities', paging.size, paging.page] });
+              }
+              onCloseModalClick('MANUAL');
+            }}
           />
         </div>
       </div>
       {screenMode == ScreenMode.MOBILE && data && (
         <div className='flex w-full flex-col items-center space-y-3'>
-          {data &&
-            data.map((item, index) => (
+          {data.identitiesDto &&
+            data.identitiesDto.map((item, index) => (
               <UserInfoPhoneMode
                 avatar={item.avatar}
                 key={index}
@@ -265,8 +281,12 @@ const UserManagement = () => {
                 />
               }
               columns={userInfoColumns}
-              onPageChange={() => {}}
-              data={data}
+              onPageChange={(page: number) => {
+                if (page !== paging.page) {
+                  setPaging((prev) => ({ ...prev, page: page }));
+                }
+              }}
+              data={data.identitiesDto}
               onClick={(user: UserManagementInfoDto) => {
                 navigate(user.userId!);
               }}

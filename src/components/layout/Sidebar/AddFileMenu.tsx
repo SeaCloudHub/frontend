@@ -1,7 +1,7 @@
 import { uploadFilesApi } from '@/apis/user/storage/create-storage.api';
 import IconifyIcon from '@/components/core/Icon/IConCore';
-import Dropdown, { MenuItem } from '@/components/core/drop-down/Dropdown';
 import CustomDropdown from '@/components/core/drop-down/CustomDropdown';
+import { MenuItem } from '@/components/core/drop-down/Dropdown';
 import ModalCreateFolder from '@/components/core/modal/ModalCreateFolder';
 import ProgressIndicator from '@/components/core/progress-indicator/ProgressIndicator';
 import { useProgressIndicator } from '@/store/storage/progressIndicator.store';
@@ -32,18 +32,17 @@ const AddFileMenu = ({ shrinkMode }: AddFileMenuProps) => {
       }
     },
     onSuccess: (data) => {
-      console.log(data.data);
-      // setFileNames(data.data.map((item) => item.name));
+      setFileNames(data.data.map((item) => item.name));
     },
   });
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const fileList = e.target.files;
+    const fileList = e.currentTarget.files;
     if (fileList) {
       const filesArray = Array.from(fileList);
-      console.log(filesArray);
       await uploadFilesMutation.mutateAsync(filesArray);
     }
   };
+
   const handleFolderUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const folderInput = e.target;
     const fileList = folderInput.files;

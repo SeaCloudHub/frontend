@@ -7,6 +7,6 @@ export type PagingState = {
 
 export const initialPagingState: PagingState = {
   page: 1,
-  size: 20,
+  size: 10,
   totalPage: 1,
 };

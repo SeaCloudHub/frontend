@@ -40,7 +40,6 @@ const LoginEmail = () => {
     validationSchema: emailSchema,
     onSubmit: async (values) => {
       const res = await checkEmailMutation.mutateAsync(values.email);
-      console.log(res);
     },
   });
   const checkEmailMutation = useMutation({

@@ -3,5 +3,6 @@ export type UserManagementInfoDto = {
   name?: string;
   avatar?: string;
   usedMemory: number | 0;
+  totalMemory: number;
   lastAccess?: string;
 };

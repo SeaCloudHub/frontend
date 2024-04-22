@@ -1,3 +1,4 @@
+import { getIdentitiesRESToUserManagementInfoDto } from '@/apis/admin/user-management/user-management.service';
 import { LinearProgress } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
@@ -26,6 +27,7 @@ type ModalAddUserProps = {
 const ModalAddUser = ({ title, isOpen, handleConfirm }: ModalAddUserProps) => {
   const flex = !useScreenHook(500);
   const [file, setFile] = useState<File | null>(null);
+
   const handleImageSelection = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       setFile(event.target.files[0]);
@@ -44,7 +46,6 @@ const ModalAddUser = ({ title, isOpen, handleConfirm }: ModalAddUserProps) => {
           });
           avatar_url = res.data.file_path;
         } catch (error) {
-          console.log(error);
           if (isAxiosError(error)) {
             toast.error(error.response?.data.message, toastError());
           }
@@ -58,6 +59,7 @@ const ModalAddUser = ({ title, isOpen, handleConfirm }: ModalAddUserProps) => {
         last_name: values.last_name,
         avatar_url: avatar_url ? import.meta.env.VITE_BACKEND_API + avatar_url : null,
       });
+      handleConfirm(true);
     },
   });
   const addUserMutation = useMutation({
@@ -69,8 +71,8 @@ const ModalAddUser = ({ title, isOpen, handleConfirm }: ModalAddUserProps) => {
         toast.error(error.response?.data.message, toastError());
       }
     },
-    onSuccess: () => {
-      handleConfirm(true);
+    onSuccess: (data) => {
+      handleConfirm(getIdentitiesRESToUserManagementInfoDto(data.data));
       toast.success('Create user successfully', toastSuccess());
     },
   });

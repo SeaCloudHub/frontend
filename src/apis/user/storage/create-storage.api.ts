@@ -11,7 +11,7 @@ export const createFolderApi = async (body: CreateFolderREQ) => {
 };
 
 export const uploadFilesApi = async (body: UploadFileREQ) => {
-  const res = await api.post<BaseResponse<CreateFolderRES[]>>('files', objectToFormData(body), {
+  const res = await api.postForm<BaseResponse<CreateFolderRES[]>>('files', objectToFormData(body), {
     headers: { ...HTTP_HEADER.FORM_DATA },
   });
   return res.data;
