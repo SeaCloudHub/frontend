@@ -52,7 +52,7 @@ export const useSession = create<SessionState>()(
             },
           })),
         signOut: () => {
-          set({ token: null, role: null, email: null, identity: initIdentityValue });
+          set({ token: null, role: null, identity: initIdentityValue });
           localStorage.clear();
         },
       }),
