@@ -51,7 +51,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
   useEffect(() => {
     fileCardRefs.current = document.querySelectorAll('.file-card');
     folderCardRefs.current = document.querySelectorAll('.folder-card');
-    console.log('[DriveGridView] fileCardRefs', Array.from(fileCardRefs.current));
+    // console.log('[DriveGridView] fileCardRefs', Array.from(fileCardRefs.current));
 
     const handleClickOutside = (event) => {
       const clickedOutsideCards =
@@ -69,7 +69,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
     };
   });
   
-  console.log('[DriveGridView] current selected', selected);
+  // console.log('[DriveGridView] current selected', selected);
 
   return (
     <>

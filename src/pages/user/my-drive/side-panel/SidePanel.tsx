@@ -86,13 +86,13 @@ const SidePanel: React.FC<SidePanelProps> = ({ id, title }) => {
 
   return (
     <div className='flex h-full w-[336px] flex-col overflow-hidden border-l'>
-      <div className='mb-4 mt-6 flex h-9 w-full items-center justify-between px-6 pr-2'>
+      <div className='mb-4 mt-6 flex min-h-9 w-full items-center justify-between px-6 pr-2'>
         {id ? (
           <div className='flex items-center space-x-4'>
             <div className='w-6'>
               {details ? details.icon : <Icon icon='mdi:folder-google-drive' className='h-full w-full' />}
             </div>
-            <div className='... truncate font-medium'>{title}</div>
+            <div className='w-[236px] text-wrap font-medium'>{title}</div>
           </div>
         ) : (
           <div></div>
