@@ -3,7 +3,6 @@ import { CopyFileREQ, UploadFileREQ } from "./drive.request";
 import { BaseResponse } from "@/utils/types/api-base-response.type";
 import { EntryRESP } from "./response/entry.response";
 import { ListEntriesREQ } from "./drive.request";
-import { objectToFormData } from "@/utils/parser/http.parser";
 import { HTTP_HEADER } from '../../utils/constants/http.constant';
 import { ListEntriesRESP } from "./response/list-entries.reponse";
 

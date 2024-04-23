@@ -17,8 +17,17 @@ export const useListEntries = () => {
   const { dirId } = useParams();
   const { rootId } = useStorageStore();
   const id = dirId || rootId;
-  // console.log('[useListEntries] id', id);
-  // console.log('[useListEntries] rootId', rootId);
+
+  const { data: dirName, error: dirNameError } = useQuery({
+    queryKey: ['cur-dir', id],
+    queryFn: async () => getEntryMetadata({ id }).then((res) => res?.data),
+    staleTime: 10 * 1000,
+    select: (data) => data.name,
+  });
+
+  if (isAxiosError<ApiGenericError>(dirNameError)) {
+    toast.error(dirNameError.response?.data.message, toastError());
+  }
 
   const { data, error, refetch, isLoading } = useQuery({
     queryKey: ['mydrive-entries', id],
@@ -34,7 +43,7 @@ export const useListEntries = () => {
     toast.error(error.response?.data.message, toastError());
   }
 
-  return { dirId: id, data: data || [], refetch, isLoading };
+  return { dirId: id, dirName, data: data || [], refetch, isLoading };
 };
 
 export const useCopyMutation = () => {
@@ -60,7 +69,7 @@ export const useEntryMetadata = (id: string) => {
   const { drawerOpen } = useDrawer();
   const { user_id } = useSession();
   const { data, isLoading, error } = useQuery({
-    queryKey: ['file-metadata', id],
+    queryKey: ['entry-metadata', id],
     queryFn: () => getEntryMetadata({ id }).then((res) => res?.data),
     staleTime: 10 * 1000,
     select: (data) => {
