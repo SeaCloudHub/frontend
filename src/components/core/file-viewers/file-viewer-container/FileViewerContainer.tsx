@@ -129,7 +129,6 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({ isCloseOutsid
             title='Close'
             icon={<IconifyIcon icon='material-symbols:close' />}
             onClick={() => {
-              console.log('trieu dep trai');
               closeOutside && closeOutside(false);
             }}
           />

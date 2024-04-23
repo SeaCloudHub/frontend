@@ -5,9 +5,15 @@ import { Tooltip } from '@mui/material';
 import { useDrawer } from '@/store/my-drive/myDrive.store';
 import { LocalEntry } from '../MyDrive';
 import CustomDropdown from '@/components/core/drop-down/CustomDropdown';
+import SharePopUp from '@/components/core/pop-up/SharePopUp';
+import MovePopUp from '@/components/core/pop-up/MovePopUp';
+import RenamePopUp from '@/components/core/pop-up/RenamePopUp';
 
-export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModified, owner, size, onDoubleClick }) => {
+export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModified, owner, size, onDoubleClick, onChanged }) => {
   const setDrawerOpen = useDrawer((state) => state.openDrawer);
+  const [type, setType] = React.useState<'move' | 'share' | 'rename' | null>(null);
+  const [isPopUpOpen, setIsPopUpOpen] = React.useState(false);
+
   const fileOps = [
     [{ label: 'Preview', icon: <Icon icon='material-symbols:visibility' /> }],
     [
@@ -15,6 +21,12 @@ export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModi
       {
         label: 'Rename',
         icon: <Icon icon='ic:round-drive-file-rename-outline' />,
+        action: () => {
+          console.log('rename');
+          setType('rename');
+          setIsPopUpOpen(true);
+          // onChanged && onChanged();
+        }
       },
       {
         label: 'Make a copy',
@@ -23,10 +35,20 @@ export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModi
     ],
     [
       { label: 'Copy link', icon: <Icon icon='material-symbols:link' /> },
-      { label: 'Share', icon: <Icon icon='lucide:user-plus' /> },
+      { label: 'Share', icon: <Icon icon='lucide:user-plus' />,
+        action: () => {
+          setType('share');
+          setIsPopUpOpen(true);
+        }
+      },
     ],
     [
-      { label: 'Move', icon: <Icon icon='mdi:folder-move-outline' /> },
+      { label: 'Move', icon: <Icon icon='mdi:folder-move-outline' />,
+        action: () => {
+          setType('move');
+          setIsPopUpOpen(true);
+        }
+      },
       {
         label: 'Add shortcut',
         icon: <Icon icon='material-symbols:add-to-drive' />,
@@ -53,14 +75,29 @@ export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModi
       {
         label: 'Rename',
         icon: <Icon icon='ic:round-drive-file-rename-outline' />,
+        action: () => {
+          setType('rename');
+          setIsPopUpOpen(true);
+        },
       },
     ],
     [
       { label: 'Copy link', icon: <Icon icon='material-symbols:link' /> },
-      { label: 'Share', icon: <Icon icon='lucide:user-plus' /> },
+      { label: 'Share', icon: <Icon icon='lucide:user-plus' />,
+        action: () => {
+          setType('share');
+          setIsPopUpOpen(true);
+        }
+      },
     ],
     [
-      { label: 'Move', icon: <Icon icon='mdi:folder-move-outline' /> },
+      { label: 'Move', icon: <Icon icon='mdi:folder-move-outline' />,
+        action: () => {
+          console.log('[FileCard] add shortcut ' + id);
+          setType('move');
+          setIsPopUpOpen(true);
+        }
+      },
       {
         label: 'Add shortcut',
         icon: <Icon icon='material-symbols:add-to-drive' />,
@@ -106,16 +143,21 @@ export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModi
       </div>
       <div className='shrink-0 grow-0 basis-[88px] text-sm font-medium max-[1450px]:basis-[88px] max-[1160px]:hidden'>{size}</div>
       <div className='flex shrink-0 grow-0 basis-[192px] justify-end text-sm font-medium max-[1450px]:basis-[48px]'>
-        {/* <Dropdown
-          button={<Icon icon='ic:baseline-more-vert' className='h-7 w-7 rounded-full p-1 hover:bg-surfaceContainerLow' />}
-          items={isDir ? folderOps : fileOps}
-          left={true}
-        /> */}
         <CustomDropdown
           button={<Icon icon='ic:baseline-more-vert' className='h-7 w-7 rounded-full p-1 hover:bg-surfaceContainerLow' />}
           items={isDir ? folderOps : fileOps}
         />
       </div>
+      {type === 'share' && <SharePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} />}
+      {type === 'move' && (
+        <MovePopUp
+          open={isPopUpOpen}
+          handleClose={() => setIsPopUpOpen(false)}
+          title={title}
+          location={'adfasdfasdf asdfasdfasdf asdfasdf'}
+        />
+      )}
+      {type === 'rename' && <RenamePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} name={title} onChanged={onChanged} id={id} />}
     </div>
   );
 };
