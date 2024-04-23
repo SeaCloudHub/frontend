@@ -1,5 +1,6 @@
-import { copyFiles, getEntryMetadata, getListEntriesMyDrive, getSharedEntries } from '@/apis/drive/drive.api';
+import { copyFiles, getEntryMetadata, getListEntriesMyDrive, getSharedEntries, renameFile } from '@/apis/drive/drive.api';
 import { CopyFileREQ } from '@/apis/drive/request/copy.request';
+import { RenameREQ } from '@/apis/drive/request/rename.request';
 import { useSession } from '@/store/auth/session';
 import { useDrawer } from '@/store/my-drive/myDrive.store';
 import { useStorageStore } from '@/store/storage/storage.store';
@@ -52,6 +53,25 @@ export const useCopyMutation = () => {
     onSuccess: (data) => {
       toast.success('Created ' + (data.data.length > 1 ? `${data.data.length} files` : `${data.data[0].name}`));
       queryClient.invalidateQueries({ queryKey: ['mydrive-entries'] });
+    },
+  });
+};
+
+export const useRenameMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (body: RenameREQ) => {
+      return renameFile(body);
+    },
+    onError: (error) => {
+      if (isAxiosError<ApiGenericError>(error)) {
+        toast.error(error.response?.data.message, toastError());
+      }
+    },
+    onSuccess: (data) => {
+      toast.success(`Renamed to ${data.data.name}`);
+      queryClient.invalidateQueries({ queryKey: ['mydrive-rename'] });
     },
   });
 };

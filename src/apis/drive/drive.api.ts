@@ -4,6 +4,7 @@ import { BaseResponse } from "@/utils/types/api-base-response.type";
 import { EntryRESP } from "./response/entry.response";
 import { ListEntriesREQ } from "./request/list-entries.request";
 import { ListEntriesRESP } from "./response/list-entries.reponse";
+import { RenameREQ } from "./request/rename.request";
 
 export const getListEntriesMyDrive = async (param: ListEntriesREQ) => {
   const res = await api.get<BaseResponse<ListEntriesRESP>>(`/files/${param.id}`, {
@@ -25,5 +26,10 @@ export const copyFiles = async (body: CopyFileREQ) => {
 export const getEntryMetadata = async (param: Pick<ListEntriesREQ, 'id'>) => {
   console.log('[getEntryMetadata] param', `/files/${param.id}/metadata`)
   const res = await api.get<BaseResponse<EntryRESP>>(`/files/${param.id}/metadata`);
+  return res.data;
+}
+
+export const renameFile = async (body: RenameREQ) => {
+  const res = await api.patch<BaseResponse<EntryRESP>>(`/files/rename`, body);
   return res.data;
 }

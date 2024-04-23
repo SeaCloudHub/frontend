@@ -23,6 +23,7 @@ type DriveGridViewProps = {
   setSelected?: React.Dispatch<React.SetStateAction<{ id: string; name: string }>>;
   selected?: string;
   isLoading?: boolean;
+  onChanged?: () => void;
 };
 
 export const DriveGridView: React.FC<DriveGridViewProps> = ({
@@ -33,6 +34,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
   setSelected,
   selected,
   isLoading,
+  onChanged
 }) => {
   const files = entries.filter((entry) => !entry.isDir);
   const folders = entries.filter((entry) => entry.isDir);
@@ -61,7 +63,6 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
               <div className={!folderShow ? 'visible' : 'hidden'}>
                 <div className='pb-4 pt-2 text-sm font-medium'> Folders</div>
                 <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'>
-                  {/* {localEntriesToFolder(folders, handlePath)} */}
                   {folders.map((folder, index) => {
                     return (
                       <div key={index} className='w-auto'>
@@ -75,6 +76,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
                           }}
                           onClick={() => setSelected({ id: folder.id, name: folder.title })}
                           isSelected={selected === folder.id}
+                          onChanged={onChanged}
                         />
                       </div>
                     );
@@ -86,7 +88,6 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
               <div className={!fileShow ? 'visible' : 'hidden'}>
                 <div className='pb-4 pt-2 text-sm font-medium'> Files</div>
                 <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'>
-                  {/* {localEntriesToFiles(files)} */}
                   {files.map((file, index) => {
                     return (
                       <div key={index} className='aspect-square w-auto'>
@@ -97,6 +98,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
                           id={file.id}
                           onClick={() => setSelected({ id: file.id, name: file.title })}
                           isSelected={selected === file.id}
+                          onChanged={() => onChanged && onChanged()}
                         />
                       </div>
                     );
@@ -131,10 +133,11 @@ export const localEntriesToFolder = (folders: LocalEntry[], handlePath: (path: P
     return (
       <div key={index} className='w-auto'>
         <FolderCard title={folder.title} icon={folder.icon} id={folder.id} onDoubleClick={
-          ()=>{
-            handlePath([{id: folder.id, name: folder.title}]);
+            ()=>{
+              handlePath([{id: folder.id, name: folder.title}]);
+            }
           }
-        } />
+        />
       </div>
     );
   });

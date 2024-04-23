@@ -24,6 +24,7 @@ import { toastError } from '@/utils/toast-options/toast-options';
 import { useSession } from '@/store/auth/session';
 import { useCopyMutation } from '@/hooks/drive.hooks';
 import { useStorageStore } from '@/store/storage/storage.store';
+import RenamePopUp from '../pop-up/RenamePopUp';
 
 type FileCardProps = {
   title: string;
@@ -32,6 +33,7 @@ type FileCardProps = {
   id: string;
   onClick?: () => void;
   isSelected?: boolean;
+  onChanged?: () => void;
 };
 
 export const fileOperation = [
@@ -41,10 +43,10 @@ export const fileOperation = [
   { icon: <TrashIcon />, label: 'Delete file' },
 ];
 
-const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelected, onClick }) => {
+const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelected, onClick, onChanged }) => {
   const [fileViewer, setFileViewer] = useState(false);
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
-  const [type, setType] = useState<'move' | 'share' | null>(null);
+  const [type, setType] = useState<'move' | 'share' | 'rename' | null>(null);
   const openDrawer = useDrawer((state) => state.openDrawer);
 
   const { rootId } = useStorageStore();
@@ -57,7 +59,11 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
       {
         label: 'Rename',
         icon: <Icon icon='ic:round-drive-file-rename-outline' />,
-        action: () => {},
+        action: () => {
+          setType('rename');
+          setIsPopUpOpen(true);
+          // onChanged && onChanged();
+        },
       },
       {
         label: 'Make a copy',
@@ -164,6 +170,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
             location={'adfasdfasdf asdfasdfasdf asdfasdf'}
           />
         )}
+        {type === 'rename' && <RenamePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} name={title} id={id} onChanged={onChanged} />}
       </div>
     </>
   );

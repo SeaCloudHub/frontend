@@ -9,6 +9,9 @@ import SharePopUp from '../pop-up/SharePopUp';
 import MovePopUp from '../pop-up/MovePopUp';
 import { Tooltip } from '@mui/material';
 import CustomDropdown from '../drop-down/CustomDropdown';
+import RenamePopUp from '../pop-up/RenamePopUp';
+import { useRenameMutation } from '@/hooks/drive.hooks';
+import { RenameREQ } from '@/apis/drive/request/rename.request';
 
 interface FolderCardProps {
   title: string;
@@ -17,13 +20,14 @@ interface FolderCardProps {
   onDoubleClick?: () => void;
   onClick?: () => void;
   isSelected?: boolean;
+  onChanged?: () => void;
 }
 
-const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick, onClick, isSelected }) => {
+const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick, onClick, isSelected, onChanged }) => {
   const setDrawerOpen = useDrawer((state) => state.openDrawer);
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
-  const [type, setType] = useState<'move' | 'share' | null>();
-  const ref = useRef();
+  const [type, setType] = useState<'move' | 'share' | 'rename' | null>();
+  // const renameMutation = useRenameMutation();
 
   const folderOps: MenuItem[][] = [
     [
@@ -31,7 +35,12 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick,
       {
         label: 'Rename',
         icon: <Icon icon='ic:round-drive-file-rename-outline' />,
-        action: () => {},
+        action: (body: RenameREQ) => {
+          setType('rename');
+          setIsPopUpOpen(true);
+          // renameMutation.mutate(body);
+          // onChanged();
+        },
       },
     ],
     [
@@ -101,6 +110,7 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick,
         <MovePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} location={'My drive'} />
       )}
       {type === 'share' && <SharePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} />}
+      {type==='rename'&& <RenamePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} name={title} id={id} onChanged={onChanged} />}
     </div>
   );
 };
