@@ -1,7 +1,8 @@
-import { copyFiles, getEntryMetadata, getListEntriesMyDrive, getSharedEntries, renameFile } from '@/apis/drive/drive.api';
-import { CopyFileREQ } from '@/apis/drive/drive.request';
-import { RenameREQ } from '@/apis/drive/drive.request';
-import { EntryMetadataRES, EntryRESP, ParentRES } from '@/apis/drive/drive.response';
+import { copyFiles, getEntryMetadata, getListEntriesMyDrive, getSharedEntries, moveToTrash, renameFile } from '@/apis/drive/drive.api';
+import { CopyFileREQ, RenameREQ } from '@/apis/drive/drive.request';
+import { EntryMetadataRES, EntryRESP } from '@/apis/drive/drive.response';
+import { MoveToTrashREQ } from '@/apis/drive/request/move-to-trash.request';
+import { useSession } from '@/store/auth/session';
 import { Path, useDrawer } from '@/store/my-drive/myDrive.store';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { fileTypeIcons } from '@/utils/constants/file-icons.constant';
@@ -97,6 +98,25 @@ export const useRenameMutation = () => {
     },
   });
 };
+
+export const useMoveToTrashMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (body: MoveToTrashREQ) => {
+      return moveToTrash(body);
+    },
+    onError: (error) => {
+      if (isAxiosError<ApiGenericError>(error)) {
+        toast.error(error.response?.data.message, toastError());
+      }
+    },
+    onSuccess: (data) => {
+      toast.success(`${data.data.length} files moved to trash`);
+      queryClient.invalidateQueries({ queryKey: ['mydrive-entries'] });
+    },
+  });
+}
 
 export const useEntryMetadata = (id: string) => {
   const { drawerOpen } = useDrawer();

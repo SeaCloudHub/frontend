@@ -1,11 +1,8 @@
 import { api } from "@/helpers/http/config.http";
-import { CopyFileREQ, UploadFileREQ } from "./drive.request";
+import { CopyFileREQ, ListEntriesREQ, RenameREQ, UploadFileREQ } from "./drive.request";
 import { BaseResponse } from "@/utils/types/api-base-response.type";
-import { EntryMetadataRES, EntryRESP } from "./drive.response";
-import { ListEntriesREQ } from "./drive.request";
-import { HTTP_HEADER } from '../../utils/constants/http.constant';
-import { ListEntriesRESP } from "./drive.response";
-import { RenameREQ } from "./drive.request";
+import { MoveToTrashREQ } from "./request/move-to-trash.request";
+import { EntryMetadataRES, EntryRESP, ListEntriesRESP } from "./drive.response";
 
 export const getListEntriesMyDrive = async (param: ListEntriesREQ) => {
   const res = await api.get<BaseResponse<ListEntriesRESP>>(`/files/${param.id}`, {
@@ -55,5 +52,10 @@ export const uploadFiles = async (body: UploadFileREQ) => { // TODO: doesnt work
 
 export const renameFile = async (body: RenameREQ) => {
   const res = await api.patch<BaseResponse<EntryRESP>>(`/files/rename`, body);
+  return res.data;
+}
+
+export const moveToTrash = async (body: MoveToTrashREQ) => {
+  const res = await api.post<BaseResponse<EntryRESP[]>>(`/files/move/trash`, body);
   return res.data;
 }
