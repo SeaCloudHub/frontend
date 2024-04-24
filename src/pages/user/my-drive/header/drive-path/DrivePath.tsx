@@ -5,13 +5,15 @@ import { Path } from '@/store/my-drive/myDrive.store';
 import Dropdown, { MenuItem } from '@/components/core/drop-down/Dropdown';
 import { useNavigate } from 'react-router-dom';
 import { CUSTOMER_MY_DRIVE } from '@/utils/constants/router.constant';
+import { useQueryClient } from '@tanstack/react-query';
 
 type DrivePathProps = {
   path: Path;
   type?: 'MyDrive' | 'Shared' | 'Starred' | 'Trash' | 'Priority';
+  setSelected?: React.Dispatch<React.SetStateAction<{ id: string; name: string }>>;
 };
 
-const DrivePath: React.FC<DrivePathProps> = ({ path, type }) => {
+const DrivePath: React.FC<DrivePathProps> = ({ path, type, setSelected }) => {
   // console.log('[DrivePath] path: ', path);
   const navigate = useNavigate();
   if (path.length > 3) {
@@ -24,6 +26,7 @@ const DrivePath: React.FC<DrivePathProps> = ({ path, type }) => {
           action: () => {
             console.log('[DrivePath] newPath: ', newPath);
             navigate(`${CUSTOMER_MY_DRIVE}/dir/${d.id}`);
+            setSelected && setSelected({ id: d.id, name: d.name });
           },
           icon: <Icon icon='ic:baseline-folder' />,
         };
@@ -32,16 +35,6 @@ const DrivePath: React.FC<DrivePathProps> = ({ path, type }) => {
 
     return (
       <div className='flex items-center pl-1'>
-        {/* more */}
-        {/* <Dropdown
-          button={
-            <div className='flex h-9 w-9 items-center justify-center rounded-full hover:bg-[#ededed]'>
-              <Icon icon='ic:baseline-more-horiz' className='h-6 w-6' />
-            </div>
-          }
-          left={false}
-          items={driveMenuItems}
-        /> */}
         <Dropdown
           button={
             <div className='flex items-center justify-center rounded-full hover:bg-[#ededed]'>
@@ -52,7 +45,7 @@ const DrivePath: React.FC<DrivePathProps> = ({ path, type }) => {
           left={false}
         />
         <Icon icon='ic:baseline-keyboard-arrow-right' className='h-6 w-6' />
-        <DrivePathButton id={path[path.length - 2].id} name={path[path.length - 2].name} />
+        <DrivePathButton id={path[path.length - 2].id} name={path[path.length - 2].name} setSelected={setSelected} />
         <Icon icon='ic:baseline-keyboard-arrow-right' className='h-6 w-6' />
         <DrivePathMenuButton dirName={path[path.length - 1].name} dirId={path[path.length - 1].id} type={type} />
       </div>
@@ -66,13 +59,13 @@ const DrivePath: React.FC<DrivePathProps> = ({ path, type }) => {
           return type === 'MyDrive' ? (
             <DrivePathMenuButton dirName={d.name} dirId={d.id} key={d.id} type={type} />
           ) : (
-            <DrivePathButton id={d.id} name={d.name} key={d.id} />
+            <DrivePathButton id={d.id} name={d.name} key={d.id} setSelected={setSelected} />
           );
         }
         const curPath = path.slice(0, index + 1);
         return (
           <div className='flex items-center' key={d.id}>
-            <DrivePathButton id={d.id} name={d.name} />
+            <DrivePathButton id={d.id} name={d.name} setSelected={setSelected} />
             <Icon icon='ic:baseline-keyboard-arrow-right' className='h-6 w-6' />
           </div>
         );

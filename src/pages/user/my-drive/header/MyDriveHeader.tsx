@@ -17,6 +17,7 @@ type MyDriveHeaderProps = {
   sort: string;
   order: string;
   setSort: ({ sort, order }: { sort: string; order: string }) => void;
+  setSelected?: React.Dispatch<React.SetStateAction<{ id: string; name: string }>>;
 };
 
 const MyDriveHeader: React.FC<MyDriveHeaderProps> = ({
@@ -30,12 +31,13 @@ const MyDriveHeader: React.FC<MyDriveHeaderProps> = ({
   sort,
   order,
   setSort,
+  setSelected
 }) => {
   return (
     <div className='flex flex-col bg-white pr-3'>
       <div className='flex'>
         <div className='w-full pb-[8px] pl-1 pt-[14px]'>
-          <DrivePath path={path} type={'MyDrive'} />
+          <DrivePath path={path} type={'MyDrive'} setSelected={setSelected} />
         </div>
         <div className='flex items-center pb-[6px] pl-[25px] pr-[11px] pt-[14px]'>
           <DriveViewMode />

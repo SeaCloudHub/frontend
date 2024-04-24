@@ -6,16 +6,20 @@ import { useNavigate } from 'react-router-dom';
 type DrivePathButtonProps = {
   id: string;
   name: string;
+  setSelected?: React.Dispatch<React.SetStateAction<{ id: string; name: string }>>;
 };
 
 // button of drive path
-const DrivePathButton: React.FC<DrivePathButtonProps> = ({ id, name }) => {
+const DrivePathButton: React.FC<DrivePathButtonProps> = ({ id, name, setSelected }) => {
   const navigate = useNavigate();
   const { rootId } = useStorageStore();
   return (
     <div
       className='my-0.5 flex h-9 cursor-pointer items-center rounded-full py-1 pl-4 pr-3 hover:bg-[#ededed]'
-      onClick={() => (id === rootId ? navigate(`${CUSTOMER_MY_DRIVE}`) : navigate(`${CUSTOMER_MY_DRIVE}/dir/${id}`))}>
+      onClick={() => {
+        id === rootId ? navigate(`${CUSTOMER_MY_DRIVE}`) : navigate(`${CUSTOMER_MY_DRIVE}/dir/${id}`);
+        setSelected && setSelected({ id, name });
+      }}>
       <div className='pb-1 text-2xl'>{name}</div>
     </div>
   );

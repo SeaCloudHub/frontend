@@ -46,6 +46,7 @@ const MyDrive = () => {
           setModifiedFilter={setModifiedFilter}
           setPeopleFilter={setPeopleFilter}
           setSort={setSort}
+          setSelected={setSelected}
         />
       }
       bodyLeft={
