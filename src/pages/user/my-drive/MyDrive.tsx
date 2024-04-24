@@ -8,6 +8,21 @@ import SidePanel from '@/pages/user/my-drive/side-panel/SidePanel';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { useListEntries } from '@/hooks/drive.hooks';
 
+export type LocalEntry = {
+  isDir: boolean;
+  title: string;
+  icon: React.ReactNode;
+  preview: React.ReactNode;
+  id: string;
+  extra: string;
+  owner: string;
+  lastModified: string;
+  size: string;
+
+  onDoubleClick?: () => void;
+  onChanged?: () => void;
+};
+
 const MyDrive = () => {
   const { rootId } = useStorageStore();
 
@@ -15,7 +30,6 @@ const MyDrive = () => {
   const [typeFilter, setTypeFilter] = useState<string>('');
   const [peopleFilter, setPeopleFilter] = useState<string>('');
   const [modifiedFilter, setModifiedFilter] = useState<string>('');
-  const [onChanged, setOnChanged] = useState<boolean>(false);
 
   const viewMode = useViewMode((state) => state.viewMode);
   const { parents, data, refetch, isLoading } = useListEntries();
@@ -26,11 +40,6 @@ const MyDrive = () => {
 
   // console.log('[MyDrive] parents', parents);
   // console.log('[MyDrive] selected', selected);
-
-  useEffect(() => {
-    refetch();
-    setOnChanged(false);
-  }, [onChanged, refetch]);
 
   return (
     <DriveLayout
@@ -57,11 +66,10 @@ const MyDrive = () => {
             setSelected={setSelected}
             selected={selected}
             isLoading={isLoading}
-            onChanged={() => setOnChanged(true)}
             curDir={parents[parents.length - 1]}
           />
         ) : (
-          <DriveListView entries={data} setPath={() => {}} onChanged={() => setOnChanged(true)} />
+          <DriveListView entries={data} setPath={() => {}} />
         )
       }
       sidePanel={<SidePanel id={selected.id} title={selected.id === rootId ? 'My Drive' : selected.name} />}

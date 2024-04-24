@@ -22,7 +22,7 @@ import { ApiGenericError } from '@/utils/types/api-generic-error.type';
 import { toast } from 'react-toastify';
 import { toastError } from '@/utils/toast-options/toast-options';
 import { useSession } from '@/store/auth/session';
-import { useCopyMutation } from '@/hooks/drive.hooks';
+import { useCopyMutation, useRenameMutation } from '@/hooks/drive.hooks';
 import { useStorageStore } from '@/store/storage/storage.store';
 import RenamePopUp from '../pop-up/RenamePopUp';
 
@@ -52,6 +52,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
 
   // const { rootId } = useStorageStore();
   const copyMutation = useCopyMutation();
+  // const renameMutation = useRenameMutation();
 
   const menuItems: MenuItem[][] = [
     [{ label: 'Preview', icon: <Icon icon='material-symbols:visibility' />, action: () => {} }],
@@ -69,7 +70,6 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
         action: () => {
           setType('rename');
           setIsPopUpOpen(true);
-          // onChanged && onChanged();
         },
       },
       {
@@ -102,7 +102,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
         label: 'Move',
         icon: <Icon icon='mdi:folder-move-outline' />,
         action: () => {
-          console.log('[FileCard] add shortcut ' + id);
+          console.log('[FileCard] Move ' + id);
           setType('move');
           setIsPopUpOpen(true);
         },
@@ -176,7 +176,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
             location={'adfasdfasdf asdfasdfasdf asdfasdf'}
           />
         )}
-        {type === 'rename' && <RenamePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} name={title} id={id} onChanged={onChanged} />}
+        {type === 'rename' && <RenamePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} name={title} id={id} />}
       </div>
     </>
   );

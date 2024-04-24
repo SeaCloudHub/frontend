@@ -43,26 +43,20 @@ const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({ sort, order, se
         <div className='absolute right-4 top-3'>
           <Sort sort={sort} order={order} setSort={setSort} />
         </div>
-        {timeEntries.map((entry, index) => {
-          console.log(entry);
-          return (
-            <div key={index}>
-              <div className='pb-4 pt-2 text-sm font-medium'>{entry.time}</div>
-              {entry.entries.length !== 0 && (
-                <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'>
-                  {entry.entries.map((file, index) => {
-                    console.log(file);
-                    return (
-                      <div key={index} className='aspect-square w-auto'>
-                        <FileCard title={file.title} icon={file.icon} preview={file.preview} id={file.id} />
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          );
-        })}
+        {timeEntries.map((entry, index) => (
+          <div key={index}>
+            <div className='pb-4 pt-2 text-sm font-medium'>{entry.time}</div>
+            {entry.entries.length !== 0 && (
+              <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'>
+                {entry.entries.map((file, index) => (
+                  <div key={index} className='aspect-square w-auto'>
+                    <FileCard title={file.title} icon={file.icon} preview={file.preview} id={file.id} />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );

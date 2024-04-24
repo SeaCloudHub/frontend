@@ -9,17 +9,7 @@ import SharePopUp from '@/components/core/pop-up/SharePopUp';
 import MovePopUp from '@/components/core/pop-up/MovePopUp';
 import RenamePopUp from '@/components/core/pop-up/RenamePopUp';
 
-export const DataRow: React.FC<LocalEntry> = ({
-  id,
-  isDir,
-  title,
-  icon,
-  lastModified,
-  owner,
-  size,
-  onDoubleClick,
-  onChanged,
-}) => {
+export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModified, owner, size, onDoubleClick }) => {
   const setDrawerOpen = useDrawer((state) => state.openDrawer);
   const [type, setType] = React.useState<'move' | 'share' | 'rename' | null>(null);
   const [isPopUpOpen, setIsPopUpOpen] = React.useState(false);
@@ -175,9 +165,7 @@ export const DataRow: React.FC<LocalEntry> = ({
           location={'adfasdfasdf asdfasdfasdf asdfasdf'}
         />
       )}
-      {type === 'rename' && (
-        <RenamePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} name={title} onChanged={onChanged} id={id} />
-      )}
+      {type === 'rename' && <RenamePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} name={title} id={id} />}
     </div>
   );
 };

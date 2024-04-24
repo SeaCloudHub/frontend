@@ -20,7 +20,6 @@ type DriveGridViewProps = {
   setSelected?: React.Dispatch<React.SetStateAction<{ id: string; name: string }>>;
   selected?: { id: string; name: string };
   isLoading?: boolean;
-  onChanged?: () => void;
 };
 
 export const DriveGridView: React.FC<DriveGridViewProps> = ({
@@ -31,7 +30,6 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
   setSelected,
   selected,
   isLoading,
-  onChanged,
   curDir,
 }) => {
   const files = entries.filter((entry) => !entry.isDir);
@@ -100,7 +98,6 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
                             navigate(`${CUSTOMER_MY_DRIVE}/dir/${folder.id}`);
                           }}
                           onClick={() => setSelected({ id: folder.id, name: folder.title })}
-                          onChanged={onChanged}
                           isSelected={selected.id === folder.id}
                         />
                       </div>
@@ -123,7 +120,6 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
                           id={file.id}
                           dirId={curDir.id}
                           onClick={() => setSelected({ id: file.id, name: file.title })}
-                          onChanged={() => onChanged && onChanged()}
                           isSelected={selected.id === file.id}
                         />
                       </div>

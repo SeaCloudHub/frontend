@@ -93,7 +93,7 @@ export const useRenameMutation = () => {
     },
     onSuccess: (data) => {
       toast.success(`Renamed to ${data.data.name}`);
-      queryClient.invalidateQueries({ queryKey: ['mydrive-rename'] });
+      queryClient.invalidateQueries({ queryKey: ['mydrive-entries'] });
     },
   });
 };
