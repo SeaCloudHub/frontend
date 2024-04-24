@@ -3,7 +3,7 @@ import fileTypeIcons from '../../../../../../utils/constants/file-icons.constant
 import DropdownCore from '../../../../../../components/core/input/DropdownCore';
 import Order from '../../../../../../components/core/order/Order';
 import { useScreenHook } from '../../../../../../hooks/useScreenHook';
-import { LocalEntry } from '../../../../../../pages/user/my-drive/MyDrive';
+import { LocalEntry } from '@/hooks/drive.hooks';
 import { fileOperations } from '../../../../../../utils/constants/dopdown.constant';
 import { fakeEntries } from '../../../../../../utils/dumps/entries';
 import { Entry } from '../../../../../../utils/types/entry.type';

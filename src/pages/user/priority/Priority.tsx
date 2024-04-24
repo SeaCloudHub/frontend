@@ -5,17 +5,17 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import PriorityFilter from './priority-filter/PriorityFilter';
 import SidePanel from '../my-drive/side-panel/SidePanel';
 import PriorityView from './priority-view/PriorityView';
-import { remoteToLocalEntries } from '../my-drive/content/DriveGridView';
+import { transformEntries } from '@/hooks/drive.hooks';
 import { fakeData } from '../shared/Shared';
 import { toast } from 'react-toastify';
-import { LocalEntry } from '../my-drive/MyDrive';
+import { LocalEntry } from '@/hooks/drive.hooks';
 import { Entry } from '@/utils/types/entry.type';
 import { useQuery } from '@tanstack/react-query';
 import { useSession } from '@/store/auth/session';
 import { getListEntriesMyDrive } from '@/apis/drive/drive.api';
-import { ListEntriesRESP } from '@/apis/drive/response/list-entries.reponse';
 import { useStorageStore } from '@/store/storage/storage.store';
 import DrivePath from '../my-drive/header/drive-path/DrivePath';
+import { ListEntriesRESP } from '@/apis/drive/drive.response';
 
 const Priority = () => {
   const { viewMode, setViewMode } = useViewMode();
@@ -31,7 +31,7 @@ const Priority = () => {
         (e) => !e.name.includes('.trash'),
       ),
   });
-  const entries: LocalEntry[] = remoteToLocalEntries((data || []) as Required<Entry[]> & ListEntriesRESP['entries']);
+  const entries: LocalEntry[] = transformEntries((data || []) as Required<Entry[]> & ListEntriesRESP['entries']);
 
   // const entries = remoteToLocalEntries(fakeData);
   return (
@@ -41,7 +41,7 @@ const Priority = () => {
           <div className='px-4'>
             <div className='flex justify-between space-x-2 text-2xl'>
               <div className='w-full pb-[8px] pl-1 pt-[14px]'>
-                <DrivePath path={path} setPath={setPath} type='Priority' />
+                <DrivePath path={path} type='Priority' />
               </div>
               <div className='flex items-center gap-2'>
                 <Icon

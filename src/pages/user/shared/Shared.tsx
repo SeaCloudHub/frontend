@@ -7,16 +7,17 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import { Entry } from '@/utils/types/entry.type';
 import { Path, useDrawer, useViewMode } from '@/store/my-drive/myDrive.store';
 import SidePanel from '../my-drive/side-panel/SidePanel';
-import { DriveGridView, remoteToLocalEntries } from '../my-drive/content/DriveGridView';
+import { DriveGridView } from '../my-drive/content/DriveGridView';
+import { transformEntries } from '@/hooks/drive.hooks';
 import { DriveListView } from '../my-drive/content/DriveListView';
 import { useSession } from '@/store/auth/session';
 import { useQuery } from '@tanstack/react-query';
 import { getSharedEntries } from '@/apis/drive/drive.api';
-import { ListEntriesRESP } from '@/apis/drive/response/list-entries.reponse';
-import { LocalEntry } from '../my-drive/MyDrive';
+import { LocalEntry } from '@/hooks/drive.hooks';
 import { toast } from 'react-toastify';
 import DrivePath from '../my-drive/header/drive-path/DrivePath';
 import { useStorageStore } from '@/store/storage/storage.store';
+import { ListEntriesRESP } from '@/apis/drive/drive.response';
 
 export const fakeData: Entry[] = [
   {
@@ -244,7 +245,7 @@ const Shared = () => {
     refetch();
   }, [path, refetch]);
 
-  const processedEntries: LocalEntry[] = remoteToLocalEntries((data || []) as Required<Entry[]> & ListEntriesRESP['entries']);
+  const processedEntries: LocalEntry[] = transformEntries((data || []) as Required<Entry[]> & ListEntriesRESP['entries']);
 
   return (
     <DriveLayout
@@ -252,7 +253,7 @@ const Shared = () => {
         <div className='px-4'>
           <div className='flex justify-between space-x-2 text-2xl'>
             <div className='w-full pb-[8px] pl-1 pt-[14px]'>
-              <DrivePath path={path} setPath={setPath} type='Shared' />
+              <DrivePath path={path} type='Shared' />
             </div>
             <div className='flex items-center gap-2'>
               <SharingPageViewMode setViewMode={setViewMode} viewMode={viewMode} />

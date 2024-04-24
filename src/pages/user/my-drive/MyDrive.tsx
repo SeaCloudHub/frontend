@@ -1,23 +1,12 @@
-import { fakeEntries } from '@/utils/dumps/entries';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import DriveLayout from '@/components/layout/DriveLayout';
 import { Path, useViewMode } from '@/store/my-drive/myDrive.store';
 import MyDriveHeader from './header/MyDriveHeader';
 import { DriveGridView } from './content/DriveGridView';
-import { remoteToLocalEntries } from './content/DriveGridView';
 import { DriveListView } from './content/DriveListView';
-import { Entry } from '@/utils/types/entry.type';
 import SidePanel from '@/pages/user/my-drive/side-panel/SidePanel';
-import { useQuery } from '@tanstack/react-query';
-import { useSession } from '@/store/auth/session';
-import { toast } from 'react-toastify';
-import { getListEntriesMyDrive } from '@/apis/drive/drive.api';
-import { ListEntriesRESP } from '@/apis/drive/response/list-entries.reponse';
 import { useStorageStore } from '@/store/storage/storage.store';
-import { useLocation, useParams } from 'react-router-dom';
 import { useListEntries } from '@/hooks/drive.hooks';
-import { isAxiosError } from 'axios';
-import { ApiGenericError } from '@/utils/types/api-generic-error.type';
 
 export type LocalEntry = {
   isDir: boolean;
@@ -31,6 +20,7 @@ export type LocalEntry = {
   size: string;
 
   onDoubleClick?: () => void;
+  onChanged?: () => void;
 };
 
 const MyDrive = () => {
@@ -40,44 +30,49 @@ const MyDrive = () => {
   const [typeFilter, setTypeFilter] = useState<string>('');
   const [peopleFilter, setPeopleFilter] = useState<string>('');
   const [modifiedFilter, setModifiedFilter] = useState<string>('');
-  const [path, setPath] = useState<Path>([{ name: 'My Drive', id: rootId }]);
-  const viewMode = useViewMode((state) => state.viewMode);
 
-  const { dirId, data, refetch, isLoading } = useListEntries();
-  const localEntries: LocalEntry[] = remoteToLocalEntries((data || []) as Required<Entry[]> & ListEntriesRESP['entries']);
-  const [selected, setSelected] = useState<{ id: string; name: string }>({ id: dirId, name: 'My Drive' });
+  const viewMode = useViewMode((state) => state.viewMode);
+  const { parents, data, refetch, isLoading } = useListEntries();
+  const [selected, setSelected] = useState<{ id: string; name: string }>({
+    id: parents[parents.length - 1].id,
+    name: parents[parents.length - 1].name,
+  }); // select cur dir by default
+
+  // console.log('[MyDrive] parents', parents);
+  // console.log('[MyDrive] selected', selected);
 
   return (
     <DriveLayout
       headerLeft={
         <MyDriveHeader
-          path={path}
+          path={parents}
           typeFilter={typeFilter}
           modifiedFilter={modifiedFilter}
           peopleFilter={peopleFilter}
           sort={sort}
           order={order}
-          setPath={setPath}
           setTypeFilter={setTypeFilter}
           setModifiedFilter={setModifiedFilter}
           setPeopleFilter={setPeopleFilter}
           setSort={setSort}
+          setSelected={setSelected}
         />
       }
       bodyLeft={
         viewMode === 'grid' ? (
           <DriveGridView
-            entries={localEntries}
-            setPath={setPath}
+            entries={data}
+            setPath={() => {}}
             setSelected={setSelected}
-            selected={selected.id}
+            selected={selected}
             isLoading={isLoading}
+            curDir={parents[parents.length - 1]}
           />
         ) : (
-          <DriveListView entries={localEntries} setPath={setPath} />
+          <DriveListView entries={data} setPath={() => {}} />
         )
       }
-      sidePanel={<SidePanel id={selected.id} title={selected.name} />}
+      sidePanel={<SidePanel id={selected.id} title={selected.id === rootId ? 'My Drive' : selected.name} />}
     />
   );
 };

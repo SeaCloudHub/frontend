@@ -2,7 +2,7 @@ import { createFolderApi } from '@/apis/user/storage/create-storage.api';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { toastError } from '@/utils/toast-options/toast-options';
 import { ApiGenericError } from '@/utils/types/api-generic-error.type';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
@@ -11,17 +11,20 @@ import ModalCore from './ModalCore';
 type ModalCreateFolderProps = {
   isOpen: boolean;
   handleConfirm: (data?: any) => void;
+  dirId?: string;
 };
 
-const ModalCreateFolder = ({ isOpen, handleConfirm }: ModalCreateFolderProps) => {
+const ModalCreateFolder = ({ isOpen, handleConfirm, dirId }: ModalCreateFolderProps) => {
   const [folderName, setFolderName] = useState<string>('');
   const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFolderName(event.target.value);
   };
-  const rootId = useStorageStore((state) => state.rootId);
   const createFolderMutation = useMutation({
     mutationFn: () => {
-      return createFolderApi({ id: rootId, name: folderName });
+      const data = queryClient.getQueriesData({ queryKey: ['entry-metadata'] });
+      const dirIdFromQueryData = data?.[0]?.[0]?.[1] as string;
+      console.log('[ModalCreateFolder] dirIdFromQueryData', dirIdFromQueryData);
+      return createFolderApi({ id: dirId || dirIdFromQueryData, name: folderName });
     },
     onError: (error) => {
       if (isAxiosError<ApiGenericError>(error)) {
@@ -32,6 +35,9 @@ const ModalCreateFolder = ({ isOpen, handleConfirm }: ModalCreateFolderProps) =>
       console.log(data.data);
     },
   });
+
+  const queryClient = useQueryClient();
+
   return (
     <ModalCore
       open={isOpen}
@@ -57,6 +63,7 @@ const ModalCreateFolder = ({ isOpen, handleConfirm }: ModalCreateFolderProps) =>
               onClick={async () => {
                 await createFolderMutation.mutateAsync();
                 handleConfirm(true);
+                queryClient.invalidateQueries({ queryKey: ['mydrive-entries'] });
               }}
               className='rounded-full px-3 py-2 hover:bg-blue-100'>
               Create

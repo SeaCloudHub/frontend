@@ -1,9 +1,9 @@
 import { copyFiles, getEntryMetadata, getListEntriesMyDrive, getSharedEntries, moveToTrash, renameFile } from '@/apis/drive/drive.api';
-import { CopyFileREQ } from '@/apis/drive/request/copy.request';
+import { CopyFileREQ, RenameREQ } from '@/apis/drive/drive.request';
+import { EntryMetadataRES, EntryRESP } from '@/apis/drive/drive.response';
 import { MoveToTrashREQ } from '@/apis/drive/request/move-to-trash.request';
-import { RenameREQ } from '@/apis/drive/request/rename.request';
 import { useSession } from '@/store/auth/session';
-import { useDrawer } from '@/store/my-drive/myDrive.store';
+import { Path, useDrawer } from '@/store/my-drive/myDrive.store';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { fileTypeIcons } from '@/utils/constants/file-icons.constant';
 import { fileTypes } from '@/utils/constants/file-types.constant';
@@ -19,8 +19,29 @@ export const useListEntries = () => {
   const { dirId } = useParams();
   const { rootId } = useStorageStore();
   const id = dirId || rootId;
-  // console.log('[useListEntries] id', id);
-  // console.log('[useListEntries] rootId', rootId);
+
+  const { data: parents, error: parentsError } = useQuery({
+    queryKey: ['entry-metadata', id],
+    queryFn: () => getEntryMetadata({ id }).then((res) => res?.data),
+    staleTime: 10 * 1000,
+    select: (data): Path => {
+      if (data.parents) {
+        data.parents.sort((a, b) => a.path.localeCompare(b.path));
+
+        const path = data.parents.map((parent) =>
+          parent.id === rootId ? { id: rootId, name: 'My Drive' } : { id: parent.id, name: parent.name },
+        );
+        // console.log('[useListEntries] path', path);
+        path.push({ id: data.file.id, name: data.file.name });
+        return path;
+      }
+      return [{ id: rootId, name: 'My Drive' }];
+    },
+  });
+
+  if (isAxiosError<ApiGenericError>(parentsError)) {
+    toast.error(parentsError.response?.data.message, toastError());
+  }
 
   const { data, error, refetch, isLoading } = useQuery({
     queryKey: ['mydrive-entries', id],
@@ -30,13 +51,14 @@ export const useListEntries = () => {
       );
     },
     staleTime: 10 * 1000,
+    select: transformEntries,
   });
 
   if (isAxiosError<ApiGenericError>(error)) {
     toast.error(error.response?.data.message, toastError());
   }
 
-  return { dirId: id, data: data || [], refetch, isLoading };
+  return { parents: parents || [{ id, name: 'My Drive' }], data: data || [], refetch, isLoading };
 };
 
 export const useCopyMutation = () => {
@@ -98,47 +120,11 @@ export const useMoveToTrashMutation = () => {
 
 export const useEntryMetadata = (id: string) => {
   const { drawerOpen } = useDrawer();
-  const identity = useSession((state) => state.identity);
   const { data, isLoading, error } = useQuery({
-    queryKey: ['file-metadata', id],
+    queryKey: ['entry-metadata', id],
     queryFn: () => getEntryMetadata({ id }).then((res) => res?.data),
     staleTime: 10 * 1000,
-    select: (data) => {
-      const path = data.path.split('/');
-      console.log('[useEntryMetadata] path', path);
-      const location = { name: path[path.length - 2] === identity.id ? 'My Drive' : path[path.length - 2], id };
-      if (data.is_dir && data.path !== '/') {
-        return {
-          is_dir: true,
-          icon: <Icon icon='ic:baseline-folder' className='h-full w-full' />,
-          name: data.name,
-          preview: <Icon icon='ic:baseline-folder' className='h-full w-full' />,
-          type: 'Folder',
-          location,
-          owner: { username: data.owner.email, avatar_url: data.owner.avatar_url },
-          modified: new Date(data.updated_at),
-          opened: 'N/a',
-          created: new Date(data.created_at),
-          download_perm: 'N/a',
-        };
-      } else if (!data.is_dir) {
-        const ext = data.name.split('.').pop() || 'any';
-        return {
-          is_dir: false,
-          icon: fileTypeIcons[ext] || fileTypeIcons.any,
-          name: data.name,
-          preview: fileTypeIcons[ext] || fileTypeIcons.any,
-          type: fileTypes[ext] || fileTypes.any,
-          location,
-          owner: { username: data.owner.email, avatar_url: data.owner.avatar_url },
-          modified: new Date(data.updated_at),
-          opened: 'N/a',
-          created: new Date(data.created_at),
-          download_perm: 'N/a',
-          size: data.size,
-        };
-      }
-    },
+    select: transformMetadata,
     enabled: !!drawerOpen && !!id,
   });
 
@@ -168,4 +154,97 @@ export const useEntryAccess = (id: string) => {
   }
 
   return { data, isLoading };
+};
+
+const transformMetadata = (data: EntryMetadataRES) => {
+  data.parents?.sort((a, b) => a.path.localeCompare(b.path));
+  if (data.file.is_dir && data.parents) {
+    return {
+      is_dir: true,
+      icon: <Icon icon='ic:baseline-folder' className='h-full w-full' />,
+      name: data.file.name,
+      preview: <Icon icon='ic:baseline-folder' className='h-full w-full' />,
+      type: 'Folder',
+      location: { id: data.parents[data.parents.length - 1].id, name: data.parents[data.parents.length - 1].name },
+      owner: { username: data.file.owner.email, avatar_url: data.file.owner.avatar_url },
+      modified: new Date(data.file.updated_at),
+      opened: 'N/a',
+      created: new Date(data.file.created_at),
+      download_perm: 'N/a',
+    };
+  } else if (!data.file.is_dir) {
+    const ext = data.file.name.split('.').pop() || 'any';
+    return {
+      is_dir: false,
+      icon: fileTypeIcons[ext] || fileTypeIcons.any,
+      name: data.file.name,
+      preview: fileTypeIcons[ext] || fileTypeIcons.any,
+      type: fileTypes[ext] || fileTypes.any,
+      location: { id: data.parents[data.parents.length - 1].id, name: data.parents[data.parents.length - 1].name },
+      owner: { username: data.file.owner.email, avatar_url: data.file.owner.avatar_url },
+      modified: new Date(data.file.updated_at),
+      opened: 'N/a',
+      created: new Date(data.file.created_at),
+      download_perm: 'N/a',
+      size: data.file.size,
+    };
+  }
+};
+
+export type LocalEntry = {
+  isDir: boolean;
+  title: string;
+  icon: React.ReactNode;
+  preview: React.ReactNode;
+  id: string;
+  extra: string;
+  owner: string;
+  lastModified: string;
+  size: string;
+
+  onDoubleClick?: () => void;
+  onChanged?: () => void;
+};
+
+export const transformEntries = (entries: EntryRESP[]): LocalEntry[] => {
+  return entries.map((entry) => {
+    if (entry.is_dir) {
+      return {
+        isDir: true,
+        title: entry.name,
+        icon: <Icon icon='ic:baseline-folder' className='object-cover-full h-full w-full' />,
+        preview: <Icon icon='ic:baseline-folder' className='h-full w-full' />,
+        id: entry.id,
+        extra: 'extra',
+        owner: 'owner',
+        ownerAvt: 'https://slaydarkkkk.github.io/img/slaydark_avt.jpg',
+        lastModified: entry.updated_at,
+        size: entry.size.toString(),
+      };
+    }
+    const ext = entry.name.split('.').pop() || 'any';
+    const icon = fileTypeIcons[ext] || fileTypeIcons.any;
+    /* Suport mp4, mp3, pdf, jpg, jpeg, png, jfif, gif, webp, ico, svg,
+    docx, txt, zip, any */
+    const preview = ['jpg', 'ico', 'webp', 'png', 'jpeg', 'gif', 'jfif'].includes(ext) ? (
+      <img
+        className='h-full w-full rounded-md object-cover'
+        src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrHRymTob1kd-ywHzIs0ty7UhrFUcJay839nNd6tcSig&s'
+      />
+    ) : (
+      <div className='h-16 w-16'>{icon}</div>
+    );
+    return {
+      isDir: false,
+      title: entry.name,
+      icon: icon,
+      preview: preview,
+      id: entry.id,
+      extra: 'extra',
+      owner: 'owner',
+      ownerAvt: 'https://slaydarkkkk.github.io/img/slaydark_avt.jpg',
+      lastModified: entry.updated_at,
+      size: entry.size.toString(),
+    };
+  });
 };

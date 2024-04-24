@@ -3,7 +3,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import React from 'react';
 import { Tooltip } from '@mui/material';
 import { useDrawer } from '@/store/my-drive/myDrive.store';
-import { LocalEntry } from '../MyDrive';
+import { LocalEntry } from '@/hooks/drive.hooks';
 import CustomDropdown from '@/components/core/drop-down/CustomDropdown';
 import SharePopUp from '@/components/core/pop-up/SharePopUp';
 import MovePopUp from '@/components/core/pop-up/MovePopUp';
@@ -26,7 +26,7 @@ export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModi
           setType('rename');
           setIsPopUpOpen(true);
           // onChanged && onChanged();
-        }
+        },
       },
       {
         label: 'Make a copy',
@@ -35,19 +35,23 @@ export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModi
     ],
     [
       { label: 'Copy link', icon: <Icon icon='material-symbols:link' /> },
-      { label: 'Share', icon: <Icon icon='lucide:user-plus' />,
+      {
+        label: 'Share',
+        icon: <Icon icon='lucide:user-plus' />,
         action: () => {
           setType('share');
           setIsPopUpOpen(true);
-        }
+        },
       },
     ],
     [
-      { label: 'Move', icon: <Icon icon='mdi:folder-move-outline' />,
+      {
+        label: 'Move',
+        icon: <Icon icon='mdi:folder-move-outline' />,
         action: () => {
           setType('move');
           setIsPopUpOpen(true);
-        }
+        },
       },
       {
         label: 'Add shortcut',
@@ -83,20 +87,24 @@ export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModi
     ],
     [
       { label: 'Copy link', icon: <Icon icon='material-symbols:link' /> },
-      { label: 'Share', icon: <Icon icon='lucide:user-plus' />,
+      {
+        label: 'Share',
+        icon: <Icon icon='lucide:user-plus' />,
         action: () => {
           setType('share');
           setIsPopUpOpen(true);
-        }
+        },
       },
     ],
     [
-      { label: 'Move', icon: <Icon icon='mdi:folder-move-outline' />,
+      {
+        label: 'Move',
+        icon: <Icon icon='mdi:folder-move-outline' />,
         action: () => {
           console.log('[FileCard] add shortcut ' + id);
           setType('move');
           setIsPopUpOpen(true);
-        }
+        },
       },
       {
         label: 'Add shortcut',

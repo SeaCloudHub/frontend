@@ -1,4 +1,4 @@
-import { LocalEntry } from '../../my-drive/MyDrive';
+import { LocalEntry } from '@/hooks/drive.hooks';
 import { DataRow } from './DataRow';
 import Sort from './Sort';
 import Statistics from './Statistics';

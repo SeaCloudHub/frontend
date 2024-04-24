@@ -1,18 +1,15 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import Sort from './Sort';
 import FolderCard from '@/components/core/folder-card/FolderCard';
 import FileCard from '@/components/core/file-card/FileCard';
-import { Entry } from '@/utils/types/entry.type';
-import fileTypeIcons from '@/utils/constants/file-icons.constant';
-import { Icon } from '@iconify/react/dist/iconify.js';
-import { LocalEntry } from '../MyDrive';
+import { LocalEntry } from '@/hooks/drive.hooks';
 import { Path } from '@/store/my-drive/myDrive.store';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CUSTOMER_MY_DRIVE } from '@/utils/constants/router.constant';
 import { LinearProgress } from '@mui/material';
 
 type DriveGridViewProps = {
-  dirId?: string;
+  curDir?: { id: string; name: string };
   sort?: string;
   order?: string;
   setSort?: ({ sort, order }: { sort: string; order: string }) => void;
@@ -21,7 +18,7 @@ type DriveGridViewProps = {
   folderShow?: boolean;
   setPath?: React.Dispatch<React.SetStateAction<Path>>;
   setSelected?: React.Dispatch<React.SetStateAction<{ id: string; name: string }>>;
-  selected?: string;
+  selected?: { id: string; name: string };
   isLoading?: boolean;
 };
 
@@ -33,6 +30,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
   setSelected,
   selected,
   isLoading,
+  curDir,
 }) => {
   const files = entries.filter((entry) => !entry.isDir);
   const folders = entries.filter((entry) => entry.isDir);
@@ -42,6 +40,33 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
   };
 
   const navigate = useNavigate();
+
+  const driveGridViewRef = useRef(null);
+  const fileCardRefs = useRef<NodeListOf<Element>>(null);
+  const folderCardRefs = useRef<NodeListOf<Element>>(null);
+
+  useEffect(() => {
+    fileCardRefs.current = document.querySelectorAll('.file-card');
+    folderCardRefs.current = document.querySelectorAll('.folder-card');
+    // console.log('[DriveGridView] fileCardRefs', Array.from(fileCardRefs.current));
+
+    const handleClickOutside = (event) => {
+      const clickedOutsideCards =
+        Array.from(fileCardRefs.current).every((card) => !card.contains(event.target)) &&
+        Array.from(folderCardRefs.current).every((card) => !card.contains(event.target));
+
+      if (driveGridViewRef.current && driveGridViewRef.current.contains(event.target) && clickedOutsideCards) {
+        setSelected && setSelected(curDir);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  });
+
+  // console.log('[DriveGridView] current selected', selected);
 
   return (
     <>
@@ -55,7 +80,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
           </div>
         </div>
       ) : (
-        <div className='bg-white pl-5 pr-3 pt-4'>
+        <div ref={driveGridViewRef} className='bg-white pl-5 pr-3 pt-4'>
           <div className='relative flex flex-col space-y-2'>
             {folders.length !== 0 && (
               <div className={!folderShow ? 'visible' : 'hidden'}>
@@ -72,8 +97,8 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
                             handlePath([{ id: folder.id, name: folder.title }]);
                             navigate(`${CUSTOMER_MY_DRIVE}/dir/${folder.id}`);
                           }}
-                          onClick={() => setSelected && setSelected({ id: folder.id, name: folder.title })}
-                          isSelected={selected === folder.id}
+                          onClick={() => setSelected({ id: folder.id, name: folder.title })}
+                          isSelected={selected.id === folder.id}
                         />
                       </div>
                     );
@@ -93,8 +118,9 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
                           icon={file.icon}
                           preview={file.preview}
                           id={file.id}
-                          onClick={() => setSelected && setSelected({ id: file.id, name: file.title })}
-                          isSelected={selected === file.id}
+                          dirId={curDir.id}
+                          onClick={() => setSelected({ id: file.id, name: file.title })}
+                          isSelected={selected.id === file.id}
                         />
                       </div>
                     );
@@ -107,80 +133,4 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
       )}
     </>
   );
-};
-
-/**
- * Map MyEntry to FileCard
- */
-
-export const localEntriesToFiles = (files: LocalEntry[]) => {
-  return files.map((file, ind) => (
-    <div className='aspect-square w-auto' key={ind}>
-      <FileCard title={file.title} icon={file.icon} preview={file.preview} id={file.id} key={ind}/>
-    </div>
-  ));
-};
-
-/**
- * Map MyEntry to FolderCard
- */
-export const localEntriesToFolder = (folders: LocalEntry[], handlePath: (path: Path)=>void) => {
-  return folders.map((folder, index) => {
-    return (
-      <div key={index} className='w-auto'>
-        <FolderCard title={folder.title} icon={folder.icon} id={folder.id} onDoubleClick={
-            ()=>{
-              handlePath([{id: folder.id, name: folder.title}]);
-            }
-          }
-        />
-      </div>
-    );
-  });
-};
-
-/**
- * Map remote Entry to MyEntry.
- */
-export const remoteToLocalEntries = (entries: Entry[]): LocalEntry[] => {
-  return entries.map((entry) => {
-    if (entry.is_dir) {
-      return {
-        isDir: true,
-        title: entry.name,
-        icon: <Icon icon='ic:baseline-folder' className='object-cover-full h-full w-full' />,
-        preview: <Icon icon='ic:baseline-folder' className='h-full w-full' />,
-        id: entry.id,
-        extra: 'extra',
-        owner: 'owner',
-        ownerAvt: 'https://slaydarkkkk.github.io/img/slaydark_avt.jpg',
-        lastModified: entry.updated_at,
-        size: entry.size.toString(),
-      };
-    }
-    const ext = entry.name.split('.').pop() || 'any';
-    const icon = fileTypeIcons[ext] || fileTypeIcons.any;
-    /* Suport mp4, mp3, pdf, jpg, jpeg, png, jfif, gif, webp, ico, svg,
-    docx, txt, zip, any */
-    const preview = ['jpg', 'ico', 'webp', 'png', 'jpeg', 'gif', 'jfif'].includes(ext) ? (
-      <img
-        className='h-full w-full rounded-md object-cover'
-        src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrHRymTob1kd-ywHzIs0ty7UhrFUcJay839nNd6tcSig&s'
-      />
-    ) : (
-      <div className='h-16 w-16'>{icon}</div>
-    );
-    return {
-      isDir: false,
-      title: entry.name,
-      icon: icon,
-      preview: preview,
-      id: entry.id,
-      extra: 'extra',
-      owner: 'owner',
-      ownerAvt: 'https://slaydarkkkk.github.io/img/slaydark_avt.jpg',
-      lastModified: entry.updated_at,
-      size: entry.size.toString(),
-    };
-  });
 };

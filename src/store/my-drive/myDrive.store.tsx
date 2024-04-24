@@ -24,7 +24,6 @@ export const useDrawer = create<DrawerState>()((set) => ({
   drawerOpen: false,
   openDrawer: (entryId?: string, icon?: React.ReactNode, title?: string) => {
     set({ drawerOpen: true, entryId, icon, title });
-    console.log(useDrawer.getState());
   },
   closeDrawer: () => set({ drawerOpen: false }),
 }));

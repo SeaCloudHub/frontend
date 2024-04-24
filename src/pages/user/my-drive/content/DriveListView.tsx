@@ -1,5 +1,5 @@
 import React from 'react';
-import { LocalEntry } from '../MyDrive';
+import { LocalEntry } from '@/hooks/drive.hooks';
 import { DataRow } from './DataRow';
 import { HeaderMyDriveProps } from '../MyDrive';
 import Sort from './Sort';
