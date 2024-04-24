@@ -118,9 +118,9 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
                           icon={file.icon}
                           preview={file.preview}
                           id={file.id}
-                          dirId={curDir.id}
+                          dirId={curDir?.id}
                           onClick={() => setSelected({ id: file.id, name: file.title })}
-                          isSelected={selected.id === file.id}
+                          isSelected={selected && selected.id === file.id}  // [TODO]
                         />
                       </div>
                     );
