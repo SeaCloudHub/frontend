@@ -9,6 +9,7 @@ import { LinearProgress } from '@mui/material';
 import React from 'react';
 import { DriveLocationButton } from './DriveLocationButton';
 import SidePanelAction from './SidePanelAction';
+import { useStorageStore } from '@/store/storage/storage.store';
 
 type SidePanelProps = {
   id?: string;
@@ -69,11 +70,12 @@ const fakeDataSidePanelAction = [
 ];
 
 const SidePanel: React.FC<SidePanelProps> = ({ id, title }) => {
-  console.log('[SidePanel] id:', id);
+  console.log('[SidePanel] id:', id, 'title:', title);
   const { closeDrawer } = useDrawer();
   const identity = useSession((state) => state.identity);
   const { data: details, isLoading } = useEntryMetadata(id);
   const { data: access, isLoading: isLoadingAccess } = useEntryAccess(id);
+  const { rootId } = useStorageStore();
 
   const tabs = ['Details', 'Activity'];
 
@@ -85,7 +87,7 @@ const SidePanel: React.FC<SidePanelProps> = ({ id, title }) => {
             <div className='w-6'>
               {details ? details.icon : <Icon icon='mdi:folder-google-drive' className='h-full w-full' />}
             </div>
-            <div className='w-[236px] text-wrap font-medium'>{title}</div>
+            <div className='w-[236px] text-wrap font-medium'>{!isLoading ? details && details.name : title}</div>
           </div>
         ) : (
           <div></div>
@@ -161,7 +163,10 @@ const SidePanel: React.FC<SidePanelProps> = ({ id, title }) => {
                       )}
                       <div>
                         <div className='mb-1 text-xs font-medium'>Location</div>
-                        <DriveLocationButton label={details.location.name} icon='drive' />
+                        <DriveLocationButton
+                          label={details.location.id === rootId ? 'My Drive' : details.location.name}
+                          icon='drive'
+                        />
                       </div>
                       <div>
                         <div className='text-xs font-medium'>Owner</div>

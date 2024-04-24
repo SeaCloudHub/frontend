@@ -1,8 +1,8 @@
 import { copyFiles, getEntryMetadata, getListEntriesMyDrive, getSharedEntries, renameFile } from '@/apis/drive/drive.api';
 import { CopyFileREQ } from '@/apis/drive/drive.request';
 import { RenameREQ } from '@/apis/drive/drive.request';
-import { EntryMetadataRES, EntryRESP } from '@/apis/drive/drive.response';
-import { useDrawer } from '@/store/my-drive/myDrive.store';
+import { EntryMetadataRES, EntryRESP, ParentRES } from '@/apis/drive/drive.response';
+import { Path, useDrawer } from '@/store/my-drive/myDrive.store';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { fileTypeIcons } from '@/utils/constants/file-icons.constant';
 import { fileTypes } from '@/utils/constants/file-types.constant';
@@ -23,14 +23,24 @@ export const useListEntries = () => {
     queryKey: ['entry-metadata', id],
     queryFn: () => getEntryMetadata({ id }).then((res) => res?.data),
     staleTime: 10 * 1000,
-    select: (data) => data.parents,
+    select: (data): Path => {
+      if (data.parents) {
+        data.parents.sort((a, b) => a.path.localeCompare(b.path));
+
+        const path = data.parents.map((parent) =>
+          parent.id === rootId ? { id: rootId, name: 'My Drive' } : { id: parent.id, name: parent.name },
+        );
+        // console.log('[useListEntries] path', path);
+        path.push({ id: data.file.id, name: data.file.name });
+        return path;
+      }
+      return [{ id: rootId, name: 'My Drive' }];
+    },
   });
 
   if (isAxiosError<ApiGenericError>(parentsError)) {
     toast.error(parentsError.response?.data.message, toastError());
   }
-
-  const dirName = parents?.[0]?.name || 'My Drive';
 
   const { data, error, refetch, isLoading } = useQuery({
     queryKey: ['mydrive-entries', id],
@@ -40,14 +50,14 @@ export const useListEntries = () => {
       );
     },
     staleTime: 10 * 1000,
-    select: transformEntries
+    select: transformEntries,
   });
 
   if (isAxiosError<ApiGenericError>(error)) {
     toast.error(error.response?.data.message, toastError());
   }
 
-  return { dirId: id, dirName, data: data || [], refetch, isLoading };
+  return { parents: parents || [{ id, name: 'My Drive' }], data: data || [], refetch, isLoading };
 };
 
 export const useCopyMutation = () => {
@@ -127,6 +137,7 @@ export const useEntryAccess = (id: string) => {
 };
 
 const transformMetadata = (data: EntryMetadataRES) => {
+  data.parents?.sort((a, b) => a.path.localeCompare(b.path));
   if (data.file.is_dir && data.parents) {
     return {
       is_dir: true,
@@ -134,7 +145,7 @@ const transformMetadata = (data: EntryMetadataRES) => {
       name: data.file.name,
       preview: <Icon icon='ic:baseline-folder' className='h-full w-full' />,
       type: 'Folder',
-      location: { id: data.parents[0].id, name: data.parents[0].name },
+      location: { id: data.parents[data.parents.length - 1].id, name: data.parents[data.parents.length - 1].name },
       owner: { username: data.file.owner.email, avatar_url: data.file.owner.avatar_url },
       modified: new Date(data.file.updated_at),
       opened: 'N/a',
@@ -149,7 +160,7 @@ const transformMetadata = (data: EntryMetadataRES) => {
       name: data.file.name,
       preview: fileTypeIcons[ext] || fileTypeIcons.any,
       type: fileTypes[ext] || fileTypes.any,
-      location: { id: data.parents[0].id, name: data.parents[0].name },
+      location: { id: data.parents[data.parents.length - 1].id, name: data.parents[data.parents.length - 1].name },
       owner: { username: data.file.owner.email, avatar_url: data.file.owner.avatar_url },
       modified: new Date(data.file.updated_at),
       opened: 'N/a',

@@ -34,7 +34,6 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
   onChanged,
   curDir,
 }) => {
-  console.log('[DriveGridView] curDir', curDir);
   const files = entries.filter((entry) => !entry.isDir);
   const folders = entries.filter((entry) => entry.isDir);
 

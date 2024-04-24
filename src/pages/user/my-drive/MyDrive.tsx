@@ -18,8 +18,14 @@ const MyDrive = () => {
   const [onChanged, setOnChanged] = useState<boolean>(false);
 
   const viewMode = useViewMode((state) => state.viewMode);
-  const { dirId, dirName, data, refetch, isLoading } = useListEntries();
-  const [selected, setSelected] = useState<{ id: string; name: string }>({ id: dirId, name: 'My Drive' });
+  const { parents, data, refetch, isLoading } = useListEntries();
+  const [selected, setSelected] = useState<{ id: string; name: string }>({
+    id: parents[parents.length - 1].id,
+    name: parents[parents.length - 1].name,
+  }); // select cur dir by default
+
+  console.log('[MyDrive] parents', parents);
+  console.log('[MyDrive] selected', selected);
 
   useEffect(() => {
     refetch();
@@ -30,13 +36,12 @@ const MyDrive = () => {
     <DriveLayout
       headerLeft={
         <MyDriveHeader
-          path={[]}
+          path={parents}
           typeFilter={typeFilter}
           modifiedFilter={modifiedFilter}
           peopleFilter={peopleFilter}
           sort={sort}
           order={order}
-          setPath={() => {}}
           setTypeFilter={setTypeFilter}
           setModifiedFilter={setModifiedFilter}
           setPeopleFilter={setPeopleFilter}
@@ -51,14 +56,13 @@ const MyDrive = () => {
             setSelected={setSelected}
             selected={selected}
             isLoading={isLoading}
-            // onChanged={() => setOnChanged(true)}
-            curDir={{ id: dirId, name: dirName }}
+            onChanged={() => setOnChanged(true)}
+            curDir={parents[parents.length - 1]}
           />
         ) : (
           <DriveListView entries={data} setPath={() => {}} onChanged={() => setOnChanged(true)} />
         )
       }
-      // pass entry name so no need to wait for api
       sidePanel={<SidePanel id={selected.id} title={selected.id === rootId ? 'My Drive' : selected.name} />}
     />
   );

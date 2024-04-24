@@ -3,14 +3,17 @@ import DrivePathButton from './DrivePathButton';
 import DrivePathMenuButton from './DrivePathMenuButton';
 import { Path } from '@/store/my-drive/myDrive.store';
 import Dropdown, { MenuItem } from '@/components/core/drop-down/Dropdown';
+import { useNavigate } from 'react-router-dom';
+import { CUSTOMER_MY_DRIVE } from '@/utils/constants/router.constant';
 
 type DrivePathProps = {
   path: Path;
-  setPath: (path: Path) => void;
   type?: 'MyDrive' | 'Shared' | 'Starred' | 'Trash' | 'Priority';
 };
 
-const DrivePath: React.FC<DrivePathProps> = ({ path, setPath, type }) => {
+const DrivePath: React.FC<DrivePathProps> = ({ path, type }) => {
+  console.log('[DrivePath] path: ', path);
+  const navigate = useNavigate();
   if (path.length > 3) {
     const restDirs = path.slice(0, path.length - 2);
     const driveMenuItems: MenuItem[][] = [
@@ -20,7 +23,7 @@ const DrivePath: React.FC<DrivePathProps> = ({ path, setPath, type }) => {
           label: d.name,
           action: () => {
             console.log('[DrivePath] newPath: ', newPath);
-            setPath(newPath);
+            navigate(`${CUSTOMER_MY_DRIVE}/dir/${d.id}`);
           },
           icon: <Icon icon='ic:baseline-folder' />,
         };
@@ -49,7 +52,7 @@ const DrivePath: React.FC<DrivePathProps> = ({ path, setPath, type }) => {
           left={false}
         />
         <Icon icon='ic:baseline-keyboard-arrow-right' className='h-6 w-6' />
-        <DrivePathButton path={path.slice(0, -1)} setPath={setPath} />
+        <DrivePathButton id={path[path.length - 2].id} name={path[path.length - 2].name} />
         <Icon icon='ic:baseline-keyboard-arrow-right' className='h-6 w-6' />
         <DrivePathMenuButton dirName={path[path.length - 1].name} dirId={path[path.length - 1].id} type={type} />
       </div>
@@ -63,13 +66,13 @@ const DrivePath: React.FC<DrivePathProps> = ({ path, setPath, type }) => {
           return type === 'MyDrive' ? (
             <DrivePathMenuButton dirName={d.name} dirId={d.id} key={d.id} type={type} />
           ) : (
-            <DrivePathButton path={path} setPath={setPath} key={d.id} />
+            <DrivePathButton id={d.id} name={d.name} key={d.id} />
           );
         }
         const curPath = path.slice(0, index + 1);
         return (
           <div className='flex items-center' key={d.id}>
-            <DrivePathButton path={curPath} setPath={setPath} />
+            <DrivePathButton id={d.id} name={d.name} />
             <Icon icon='ic:baseline-keyboard-arrow-right' className='h-6 w-6' />
           </div>
         );
