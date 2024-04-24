@@ -11,10 +11,9 @@ type DriveListViewProps = {
   setSort?: ({ sort, order }: { sort: string; order: string }) => void;
   setPath?: React.Dispatch<React.SetStateAction<Path>>;
   entries: LocalEntry[];
-  onChanged?: () => void;
 };
 
-export const DriveListView: React.FC<DriveListViewProps> = ({ order, setSort, sort, entries, setPath, onChanged }) => {
+export const DriveListView: React.FC<DriveListViewProps> = ({ order, setSort, sort, entries, setPath }) => {
   const files = entries.filter((entry) => !entry.isDir);
   const folders = entries.filter((entry) => entry.isDir);
 
@@ -51,11 +50,10 @@ export const DriveListView: React.FC<DriveListViewProps> = ({ order, setSort, so
             </div>
             {folders.map((entry, index) => {
               return <DataRow key={index} {...entry}
-              onChanged={onChanged}
               onDoubleClick={() => handlePath([{ id: entry.id, name: entry.title }])} />;
             })}
             {files.map((entry, index) => {
-              return <DataRow key={index} {...entry} onChanged={onChanged} />;
+              return <DataRow key={index} {...entry} />;
             })}
           </div>
         </div>
