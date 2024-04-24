@@ -1,11 +1,11 @@
 import { api } from "@/helpers/http/config.http";
 import { CopyFileREQ, UploadFileREQ } from "./drive.request";
 import { BaseResponse } from "@/utils/types/api-base-response.type";
-import { EntryRESP } from "./response/entry.response";
+import { EntryMetadataRES, EntryRESP } from "./drive.response";
 import { ListEntriesREQ } from "./drive.request";
 import { HTTP_HEADER } from '../../utils/constants/http.constant';
-import { ListEntriesRESP } from "./response/list-entries.reponse";
-import { RenameREQ } from "./request/rename.request";
+import { ListEntriesRESP } from "./drive.response";
+import { RenameREQ } from "./drive.request";
 
 export const getListEntriesMyDrive = async (param: ListEntriesREQ) => {
   const res = await api.get<BaseResponse<ListEntriesRESP>>(`/files/${param.id}`, {
@@ -26,7 +26,7 @@ export const copyFiles = async (body: CopyFileREQ) => {
 
 export const getEntryMetadata = async (param: Pick<ListEntriesREQ, 'id'>) => {
   // console.log('[getEntryMetadata] param', `/files/${param.id}/metadata`)
-  const res = await api.get<BaseResponse<EntryRESP>>(`/files/${param.id}/metadata`);
+  const res = await api.get<BaseResponse<EntryMetadataRES>>(`/files/${param.id}/metadata`);
   return res.data;
 }
 

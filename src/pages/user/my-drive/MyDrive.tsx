@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DriveLayout from '@/components/layout/DriveLayout';
 import { Path, useViewMode } from '@/store/my-drive/myDrive.store';
 import MyDriveHeader from './header/MyDriveHeader';
@@ -9,7 +9,7 @@ import { Entry } from '@/utils/types/entry.type';
 import SidePanel from '@/pages/user/my-drive/side-panel/SidePanel';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { useListEntries } from '@/hooks/drive.hooks';
-import { ListEntriesRESP } from '@/apis/drive/response/list-entries.reponse';
+import { ListEntriesRESP } from '@/apis/drive/drive.response';
 
 export type LocalEntry = {
   isDir: boolean;
@@ -71,11 +71,11 @@ const MyDrive = () => {
             setSelected={setSelected}
             selected={selected}
             isLoading={isLoading}
-            onChanged={() => setOnChanged(true)}
+            // onChanged={() => setOnChanged(true)}
             curDir={{ id: dirId, name: dirName }}
           />
         ) : (
-          <DriveListView entries={localEntries} setPath={setPath} onChanged={()=>setOnChanged(true)} />
+          <DriveListView entries={localEntries} setPath={setPath} onChanged={() => setOnChanged(true)} />
         )
       }
       // pass entry name so no need to wait for api

@@ -14,3 +14,8 @@ export type UploadFileREQ = {
   files: File[], 
   id: string
 };
+
+export type RenameREQ = {
+  id: string;
+  name: string;
+};

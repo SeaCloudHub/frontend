@@ -1,6 +1,7 @@
 import { copyFiles, getEntryMetadata, getListEntriesMyDrive, getSharedEntries, renameFile } from '@/apis/drive/drive.api';
 import { CopyFileREQ } from '@/apis/drive/drive.request';
-import { RenameREQ } from '@/apis/drive/request/rename.request';
+import { RenameREQ } from '@/apis/drive/drive.request';
+import { EntryMetadataRES } from '@/apis/drive/drive.response';
 import { useSession } from '@/store/auth/session';
 import { useDrawer } from '@/store/my-drive/myDrive.store';
 import { useStorageStore } from '@/store/storage/storage.store';
@@ -19,16 +20,18 @@ export const useListEntries = () => {
   const { rootId } = useStorageStore();
   const id = dirId || rootId;
 
-  const { data: dirName, error: dirNameError } = useQuery({
-    queryKey: ['cur-dir', id],
-    queryFn: async () => getEntryMetadata({ id }).then((res) => res?.data),
+  const { data: parents, error: parentsError } = useQuery({
+    queryKey: ['entry-metadata', id],
+    queryFn: () => getEntryMetadata({ id }).then((res) => res?.data),
     staleTime: 10 * 1000,
-    select: (data) => data.name,
+    select: (data) => data.parents,
   });
 
-  if (isAxiosError<ApiGenericError>(dirNameError)) {
-    toast.error(dirNameError.response?.data.message, toastError());
+  if (isAxiosError<ApiGenericError>(parentsError)) {
+    toast.error(parentsError.response?.data.message, toastError());
   }
+
+  const dirName = parents?.[0]?.name || 'My Drive';
 
   const { data, error, refetch, isLoading } = useQuery({
     queryKey: ['mydrive-entries', id],
@@ -87,47 +90,11 @@ export const useRenameMutation = () => {
 
 export const useEntryMetadata = (id: string) => {
   const { drawerOpen } = useDrawer();
-  const identity = useSession((state) => state.identity);
   const { data, isLoading, error } = useQuery({
     queryKey: ['entry-metadata', id],
     queryFn: () => getEntryMetadata({ id }).then((res) => res?.data),
     staleTime: 10 * 1000,
-    select: (data) => {
-      const path = data.path.split('/'); // path: "/41d6329f-909a-400b-a519-834dd661d41b/dir/dir3/"
-      console.log('[useEntryMetadata] path', path);
-      const location = { name: path[path.length - 2] === identity.id ? 'My Drive' : path[path.length - 2], id };
-      if (data.is_dir && data.path !== '/') {
-        return {
-          is_dir: true,
-          icon: <Icon icon='ic:baseline-folder' className='h-full w-full' />,
-          name: data.name,
-          preview: <Icon icon='ic:baseline-folder' className='h-full w-full' />,
-          type: 'Folder',
-          location, // [TODO] wait for get path api
-          owner: { username: data.owner.email, avatar_url: data.owner.avatar_url },
-          modified: new Date(data.updated_at),
-          opened: 'N/a',
-          created: new Date(data.created_at),
-          download_perm: 'N/a',
-        };
-      } else if (!data.is_dir) {
-        const ext = data.name.split('.').pop() || 'any';
-        return {
-          is_dir: false,
-          icon: fileTypeIcons[ext] || fileTypeIcons.any,
-          name: data.name,
-          preview: fileTypeIcons[ext] || fileTypeIcons.any,
-          type: fileTypes[ext] || fileTypes.any,
-          location, // [TODO] wait for get path api
-          owner: { username: data.owner.email, avatar_url: data.owner.avatar_url },
-          modified: new Date(data.updated_at),
-          opened: 'N/a',
-          created: new Date(data.created_at),
-          download_perm: 'N/a',
-          size: data.size,
-        };
-      }
-    },
+    select: transformMetadata,
     enabled: !!drawerOpen && !!id,
   });
 
@@ -157,4 +124,38 @@ export const useEntryAccess = (id: string) => {
   }
 
   return { data, isLoading };
+};
+
+const transformMetadata = (data: EntryMetadataRES) => {
+  if (data.file.is_dir && data.parents) {
+    return {
+      is_dir: true,
+      icon: <Icon icon='ic:baseline-folder' className='h-full w-full' />,
+      name: data.file.name,
+      preview: <Icon icon='ic:baseline-folder' className='h-full w-full' />,
+      type: 'Folder',
+      location: { id: data.parents[0].id, name: data.parents[0].name },
+      owner: { username: data.file.owner.email, avatar_url: data.file.owner.avatar_url },
+      modified: new Date(data.file.updated_at),
+      opened: 'N/a',
+      created: new Date(data.file.created_at),
+      download_perm: 'N/a',
+    };
+  } else if (!data.file.is_dir) {
+    const ext = data.file.name.split('.').pop() || 'any';
+    return {
+      is_dir: false,
+      icon: fileTypeIcons[ext] || fileTypeIcons.any,
+      name: data.file.name,
+      preview: fileTypeIcons[ext] || fileTypeIcons.any,
+      type: fileTypes[ext] || fileTypes.any,
+      location: { id: data.parents[0].id, name: data.parents[0].name },
+      owner: { username: data.file.owner.email, avatar_url: data.file.owner.avatar_url },
+      modified: new Date(data.file.updated_at),
+      opened: 'N/a',
+      created: new Date(data.file.created_at),
+      download_perm: 'N/a',
+      size: data.file.size,
+    };
+  }
 };

@@ -34,9 +34,10 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
   setSelected,
   selected,
   isLoading,
-  onChanged
+  onChanged,
   curDir,
 }) => {
+  console.log("[DriveGridView] curDir", curDir)
   const files = entries.filter((entry) => !entry.isDir);
   const folders = entries.filter((entry) => entry.isDir);
 
@@ -64,13 +65,13 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
         setSelected && setSelected(curDir);
       }
     };
-    
+
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   });
-  
+
   // console.log('[DriveGridView] current selected', selected);
 
   return (

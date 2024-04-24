@@ -11,7 +11,7 @@ import { Tooltip } from '@mui/material';
 import CustomDropdown from '../drop-down/CustomDropdown';
 import RenamePopUp from '../pop-up/RenamePopUp';
 import { useRenameMutation } from '@/hooks/drive.hooks';
-import { RenameREQ } from '@/apis/drive/request/rename.request';
+import { RenameREQ } from '@/apis/drive/drive.request';
 
 interface FolderCardProps {
   title: string;
@@ -105,12 +105,17 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick,
           <div className='truncate text-sm font-medium'>{title}</div>
         </Tooltip>
       </div>
-      <CustomDropdown button={<BsThreeDotsVertical className='h-6 w-6 rounded-full p-1 hover:bg-slate-300'/>} items={folderOps} />
+      <CustomDropdown
+        button={<BsThreeDotsVertical className='h-6 w-6 rounded-full p-1 hover:bg-slate-300' />}
+        items={folderOps}
+      />
       {type === 'move' && (
         <MovePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} location={'My drive'} />
       )}
       {type === 'share' && <SharePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} />}
-      {type==='rename'&& <RenamePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} name={title} id={id} onChanged={onChanged} />}
+      {type === 'rename' && (
+        <RenamePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} name={title} id={id} onChanged={onChanged} />
+      )}
     </div>
   );
 };
