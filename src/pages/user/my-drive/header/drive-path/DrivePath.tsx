@@ -6,6 +6,7 @@ import Dropdown, { MenuItem } from '@/components/core/drop-down/Dropdown';
 import { useNavigate } from 'react-router-dom';
 import { CUSTOMER_MY_DRIVE } from '@/utils/constants/router.constant';
 import { useQueryClient } from '@tanstack/react-query';
+import { useStorageStore } from '@/store/storage/storage.store';
 
 type DrivePathProps = {
   path: Path;
@@ -16,6 +17,7 @@ type DrivePathProps = {
 const DrivePath: React.FC<DrivePathProps> = ({ path, type, setSelected }) => {
   // console.log('[DrivePath] path: ', path);
   const navigate = useNavigate();
+  const { rootId } = useStorageStore();
   if (path.length > 3) {
     const restDirs = path.slice(0, path.length - 2);
     const driveMenuItems: MenuItem[][] = [
@@ -25,7 +27,7 @@ const DrivePath: React.FC<DrivePathProps> = ({ path, type, setSelected }) => {
           label: d.name,
           action: () => {
             console.log('[DrivePath] newPath: ', newPath);
-            navigate(`${CUSTOMER_MY_DRIVE}/dir/${d.id}`);
+            d.id === rootId ? navigate(`${CUSTOMER_MY_DRIVE}`) : navigate(`${CUSTOMER_MY_DRIVE}/dir/${d.id}`);
             setSelected && setSelected({ id: d.id, name: d.name });
           },
           icon: <Icon icon='ic:baseline-folder' />,
