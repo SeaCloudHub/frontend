@@ -35,7 +35,6 @@ const CustomDropdown: React.FC<DropdownProps> = ({button, items}) => {
                   action && action();
                   handleClose();
                 }}
-                onDoubleClick={()=>{}}
                 sx={{minWidth: '200px'}}
               >
                 <div className='flex items-center space-x-2'>

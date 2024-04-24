@@ -20,14 +20,12 @@ interface FolderCardProps {
   onDoubleClick?: () => void;
   onClick?: () => void;
   isSelected?: boolean;
-  onChanged?: () => void;
 }
 
-const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick, onClick, isSelected, onChanged }) => {
+const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick, onClick, isSelected }) => {
   const setDrawerOpen = useDrawer((state) => state.openDrawer);
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
   const [type, setType] = useState<'move' | 'share' | 'rename' | null>();
-  // const renameMutation = useRenameMutation();
 
   const folderOps: MenuItem[][] = [
     [
@@ -38,8 +36,6 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick,
         action: (body: RenameREQ) => {
           setType('rename');
           setIsPopUpOpen(true);
-          // renameMutation.mutate(body);
-          // onChanged();
         },
       },
     ],
@@ -110,7 +106,7 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick,
         <MovePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} location={'My drive'} />
       )}
       {type === 'share' && <SharePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} />}
-      {type==='rename'&& <RenamePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} name={title} id={id} onChanged={onChanged} />}
+      {type==='rename'&& <RenamePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} name={title} id={id} />}
     </div>
   );
 };

@@ -41,18 +41,12 @@ const MyDrive = () => {
   const [typeFilter, setTypeFilter] = useState<string>('');
   const [peopleFilter, setPeopleFilter] = useState<string>('');
   const [modifiedFilter, setModifiedFilter] = useState<string>('');
-  const [onChanged, setOnChanged] = useState<boolean>(false);
   const [path, setPath] = useState<Path>([{ name: 'My Drive', id: rootId }]);
   const viewMode = useViewMode((state) => state.viewMode);
 
   const { dirId, data, refetch, isLoading } = useListEntries();
   const localEntries: LocalEntry[] = remoteToLocalEntries((data || []) as Required<Entry[]> & ListEntriesRESP['entries']);
   const [selected, setSelected] = useState<{ id: string; name: string }>({ id: dirId, name: 'My Drive' });
-
-  useEffect(() => {
-    refetch();
-    setOnChanged(false);
-  }, [onChanged, refetch]);
 
   return (
     <DriveLayout
@@ -79,10 +73,9 @@ const MyDrive = () => {
             setSelected={setSelected}
             selected={selected.id}
             isLoading={isLoading}
-            onChanged={() => setOnChanged(true)}
           />
         ) : (
-          <DriveListView entries={localEntries} setPath={setPath} onChanged={()=>setOnChanged(true)} />
+          <DriveListView entries={localEntries} setPath={setPath} />
         )
       }
       sidePanel={<SidePanel id={selected.id} title={selected.name} />}

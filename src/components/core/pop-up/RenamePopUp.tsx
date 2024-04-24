@@ -12,11 +12,10 @@ type RenamePopUpProps = {
   name: string;
   id: string;
   handleClose: () => void;
-  onChanged?: () => void;
 };
 
 const RenamePopUp: React.FC<RenamePopUpProps> = ({
-  open, handleClose, name, onChanged, id
+  open, handleClose, name, id
 }) => {
   const renameMutation = useRenameMutation();
 
@@ -29,7 +28,6 @@ const RenamePopUp: React.FC<RenamePopUpProps> = ({
     }),
     onSubmit: (values) => {
       renameMutation.mutate({ id, name: values.name });
-      onChanged && onChanged();
       handleClose();
     },
     onReset: () => {

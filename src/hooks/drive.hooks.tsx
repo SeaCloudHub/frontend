@@ -71,7 +71,7 @@ export const useRenameMutation = () => {
     },
     onSuccess: (data) => {
       toast.success(`Renamed to ${data.data.name}`);
-      queryClient.invalidateQueries({ queryKey: ['mydrive-rename'] });
+      queryClient.invalidateQueries({ queryKey: ['mydrive-entries'] });
     },
   });
 };
@@ -84,7 +84,7 @@ export const useEntryMetadata = (id: string) => {
     queryFn: () => getEntryMetadata({ id }).then((res) => res?.data),
     staleTime: 10 * 1000,
     select: (data) => {
-      const path = data.path.split('/'); // path: "/41d6329f-909a-400b-a519-834dd661d41b/dir/dir3/"
+      const path = data.path.split('/');
       console.log('[useEntryMetadata] path', path);
       const location = { name: path[path.length - 2] === identity.id ? 'My Drive' : path[path.length - 2], id };
       if (data.is_dir && data.path !== '/') {
@@ -94,7 +94,7 @@ export const useEntryMetadata = (id: string) => {
           name: data.name,
           preview: <Icon icon='ic:baseline-folder' className='h-full w-full' />,
           type: 'Folder',
-          location, // [TODO] wait for get path api
+          location,
           owner: { username: data.owner.email, avatar_url: data.owner.avatar_url },
           modified: new Date(data.updated_at),
           opened: 'N/a',
@@ -109,7 +109,7 @@ export const useEntryMetadata = (id: string) => {
           name: data.name,
           preview: fileTypeIcons[ext] || fileTypeIcons.any,
           type: fileTypes[ext] || fileTypes.any,
-          location, // [TODO] wait for get path api
+          location,
           owner: { username: data.owner.email, avatar_url: data.owner.avatar_url },
           modified: new Date(data.updated_at),
           opened: 'N/a',
