@@ -31,7 +31,6 @@ export type LocalEntry = {
   size: string;
 
   onDoubleClick?: () => void;
-  onChanged?: () => void;
 };
 
 const MyDrive = () => {
