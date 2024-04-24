@@ -12,6 +12,8 @@ import CustomDropdown from '../drop-down/CustomDropdown';
 import RenamePopUp from '../pop-up/RenamePopUp';
 import { useRenameMutation } from '@/hooks/drive.hooks';
 import { RenameREQ } from '@/apis/drive/request/rename.request';
+import DeleteTempPopUp from '../pop-up/DeleteTempPopUp';
+import { useStorageStore } from '@/store/storage/storage.store';
 
 interface FolderCardProps {
   title: string;
@@ -25,7 +27,8 @@ interface FolderCardProps {
 const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick, onClick, isSelected }) => {
   const setDrawerOpen = useDrawer((state) => state.openDrawer);
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
-  const [type, setType] = useState<'move' | 'share' | 'rename' | null>();
+  const [type, setType] = useState<'move' | 'share' | 'rename' | 'move to trash' | null>();
+  const { rootId } = useStorageStore();
 
   const folderOps: MenuItem[][] = [
     [
@@ -84,7 +87,14 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick,
       },
       { label: 'Activity', icon: <Icon icon='mdi:graph-line-variant' />, action: () => {} },
     ],
-    [{ label: 'Move to trash', icon: <Icon icon='fa:trash-o' />, action: () => {} }],
+    [
+      { label: 'Move to trash', icon: <Icon icon='fa:trash-o' />,
+        action: () => {
+          setType('move to trash');
+          setIsPopUpOpen(true);
+        }
+      }
+    ],
   ];
 
   return (
@@ -107,6 +117,7 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick,
       )}
       {type === 'share' && <SharePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} />}
       {type==='rename'&& <RenamePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} name={title} id={id} />}
+      {type === 'move to trash' && <DeleteTempPopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} id={rootId} source_ids={[id]} />}
     </div>
   );
 };

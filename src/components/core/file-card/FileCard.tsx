@@ -25,6 +25,7 @@ import { useSession } from '@/store/auth/session';
 import { useCopyMutation, useRenameMutation } from '@/hooks/drive.hooks';
 import { useStorageStore } from '@/store/storage/storage.store';
 import RenamePopUp from '../pop-up/RenamePopUp';
+import DeleteTempPopUp from '../pop-up/DeleteTempPopUp';
 
 type FileCardProps = {
   title: string;
@@ -45,7 +46,7 @@ export const fileOperation = [
 const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelected, onClick }) => {
   const [fileViewer, setFileViewer] = useState(false);
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
-  const [type, setType] = useState<'move' | 'share' | 'rename' | null>(null);
+  const [type, setType] = useState<'move' | 'share' | 'rename' | 'move to trash' | null>(null);
   const openDrawer = useDrawer((state) => state.openDrawer);
 
   const { rootId } = useStorageStore();
@@ -122,7 +123,12 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
       { label: 'Activity', icon: <Icon icon='mdi:graph-line-variant' />, action: () => {} },
       { label: 'Lock', icon: <Icon icon='mdi:lock-outline' />, action: () => {} },
     ],
-    [{ label: 'Move to trash', icon: <Icon icon='fa:trash-o' />, action: () => {} }],
+    [{ label: 'Move to trash', icon: <Icon icon='fa:trash-o' />,
+      action: () => {
+        setType('move to trash');
+        setIsPopUpOpen(true);
+      }
+    }],
   ];
 
   return (
@@ -170,6 +176,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
           />
         )}
         {type === 'rename' && <RenamePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} name={title} id={id} />}
+        {type === 'move to trash' && <DeleteTempPopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} id={rootId} source_ids={[id]} />}
       </div>
     </>
   );

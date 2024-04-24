@@ -5,6 +5,7 @@ import { EntryRESP } from "./response/entry.response";
 import { ListEntriesREQ } from "./request/list-entries.request";
 import { ListEntriesRESP } from "./response/list-entries.reponse";
 import { RenameREQ } from "./request/rename.request";
+import { MoveToTrashREQ } from "./request/move-to-trash.request";
 
 export const getListEntriesMyDrive = async (param: ListEntriesREQ) => {
   const res = await api.get<BaseResponse<ListEntriesRESP>>(`/files/${param.id}`, {
@@ -31,5 +32,10 @@ export const getEntryMetadata = async (param: Pick<ListEntriesREQ, 'id'>) => {
 
 export const renameFile = async (body: RenameREQ) => {
   const res = await api.patch<BaseResponse<EntryRESP>>(`/files/rename`, body);
+  return res.data;
+}
+
+export const moveToTrash = async (body: MoveToTrashREQ) => {
+  const res = await api.post<BaseResponse<EntryRESP[]>>(`/files/move/trash`, body);
   return res.data;
 }
