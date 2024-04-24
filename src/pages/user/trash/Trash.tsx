@@ -63,7 +63,7 @@ const Trash = () => {
           </div>
         </div>
       }
-      bodyLeft={<TrashPageView entries={fakeData} />}
+      bodyLeft={<TrashPageView entries={[]} />}
       sidePanel={<SidePanel />}
     />
   );

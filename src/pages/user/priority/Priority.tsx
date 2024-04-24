@@ -13,9 +13,9 @@ import { Entry } from '@/utils/types/entry.type';
 import { useQuery } from '@tanstack/react-query';
 import { useSession } from '@/store/auth/session';
 import { getListEntriesMyDrive } from '@/apis/drive/drive.api';
-import { ListEntriesRESP } from '@/apis/drive/drive.request';
 import { useStorageStore } from '@/store/storage/storage.store';
 import DrivePath from '../my-drive/header/drive-path/DrivePath';
+import { ListEntriesRESP } from '@/apis/drive/drive.response';
 
 const Priority = () => {
   const { viewMode, setViewMode } = useViewMode();
@@ -41,7 +41,7 @@ const Priority = () => {
           <div className='px-4'>
             <div className='flex justify-between space-x-2 text-2xl'>
               <div className='w-full pb-[8px] pl-1 pt-[14px]'>
-                <DrivePath path={path} setPath={setPath} type='Priority' />
+                <DrivePath path={path} type='Priority' />
               </div>
               <div className='flex items-center gap-2'>
                 <Icon

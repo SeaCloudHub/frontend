@@ -4,9 +4,10 @@ import { DriveGridView } from '../../my-drive/content/DriveGridView';
 import { transformEntries } from '@/hooks/drive.hooks';
 import { Entry } from '@/utils/types/entry.type';
 import { useViewMode } from '@/store/my-drive/myDrive.store';
+import { EntryRESP } from '@/apis/drive/drive.response';
 
 type StarredPageViewProps = {
-  entries: Entry[];
+  entries: EntryRESP[];
 };
 
 const StarredView: React.FC<StarredPageViewProps> = ({ entries }) => {

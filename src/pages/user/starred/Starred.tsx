@@ -13,8 +13,8 @@ import { useQuery } from '@tanstack/react-query';
 import { getListEntriesMyDrive } from '@/apis/drive/drive.api';
 import { toast } from 'react-toastify';
 import { Entry } from '@/utils/types/entry.type';
-import { ListEntriesRESP } from '@/apis/drive/drive.request';
 import { useStorageStore } from '@/store/storage/storage.store';
+import { ListEntriesRESP } from '@/apis/drive/drive.response';
 
 const Starred = () => {
   const { viewMode, setViewMode } = useViewMode();

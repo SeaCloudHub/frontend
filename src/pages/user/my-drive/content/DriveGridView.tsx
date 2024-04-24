@@ -9,7 +9,7 @@ import { CUSTOMER_MY_DRIVE } from '@/utils/constants/router.constant';
 import { LinearProgress } from '@mui/material';
 
 type DriveGridViewProps = {
-  curDir: { id: string; name: string };
+  curDir?: { id: string; name: string };
   sort?: string;
   order?: string;
   setSort?: ({ sort, order }: { sort: string; order: string }) => void;

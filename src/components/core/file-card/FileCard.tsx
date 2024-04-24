@@ -34,7 +34,7 @@ type FileCardProps = {
   onClick?: () => void;
   isSelected?: boolean;
   onChanged?: () => void;
-  dirId: string;
+  dirId?: string;
 };
 
 export const fileOperation = [

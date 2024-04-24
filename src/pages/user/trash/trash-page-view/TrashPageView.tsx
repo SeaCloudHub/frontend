@@ -4,9 +4,10 @@ import React, { useState } from 'react';
 import { transformEntries } from '@/hooks/drive.hooks';
 import DriveHistoryGridView from './DriveHistoryGridView';
 import DriveHistoryListView from './DriveHistoryListView';
+import { EntryRESP } from '@/apis/drive/drive.response';
 
 type TrashPageViewProps = {
-  entries: Entry[];
+  entries: EntryRESP[];
 };
 
 const TrashPageView: React.FC<TrashPageViewProps> = ({ entries }) => {

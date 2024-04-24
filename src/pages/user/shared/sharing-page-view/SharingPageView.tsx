@@ -4,9 +4,10 @@ import { transformEntries } from '@/hooks/drive.hooks';
 import { Entry } from '@/utils/types/entry.type';
 import { useViewMode } from '@/store/my-drive/myDrive.store';
 import { DriveListView } from '../../my-drive/content/DriveListView';
+import { EntryRESP } from '@/apis/drive/drive.response';
 
 type SharingPageViewProps = {
-  entries: Entry[];
+  entries: EntryRESP[];
 };
 
 const SharingPageView: React.FC<SharingPageViewProps> = ({ entries }) => {

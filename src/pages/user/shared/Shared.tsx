@@ -13,11 +13,11 @@ import { DriveListView } from '../my-drive/content/DriveListView';
 import { useSession } from '@/store/auth/session';
 import { useQuery } from '@tanstack/react-query';
 import { getSharedEntries } from '@/apis/drive/drive.api';
-import { ListEntriesRESP } from '@/apis/drive/drive.request';
 import { LocalEntry } from '@/hooks/drive.hooks';
 import { toast } from 'react-toastify';
 import DrivePath from '../my-drive/header/drive-path/DrivePath';
 import { useStorageStore } from '@/store/storage/storage.store';
+import { ListEntriesRESP } from '@/apis/drive/drive.response';
 
 export const fakeData: Entry[] = [
   {
@@ -253,7 +253,7 @@ const Shared = () => {
         <div className='px-4'>
           <div className='flex justify-between space-x-2 text-2xl'>
             <div className='w-full pb-[8px] pl-1 pt-[14px]'>
-              <DrivePath path={path} setPath={setPath} type='Shared' />
+              <DrivePath path={path} type='Shared' />
             </div>
             <div className='flex items-center gap-2'>
               <SharingPageViewMode setViewMode={setViewMode} viewMode={viewMode} />
