@@ -13,7 +13,7 @@ import { Entry } from '@/utils/types/entry.type';
 import { useQuery } from '@tanstack/react-query';
 import { useSession } from '@/store/auth/session';
 import { getListEntriesMyDrive } from '@/apis/drive/drive.api';
-import { ListEntriesRESP } from '@/apis/drive/response/list-entries.reponse';
+import { ListEntriesRESP } from '@/apis/drive/drive.request';
 import { useStorageStore } from '@/store/storage/storage.store';
 import DrivePath from '../my-drive/header/drive-path/DrivePath';
 

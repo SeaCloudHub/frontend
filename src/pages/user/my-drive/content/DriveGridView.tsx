@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import Sort from './Sort';
 import FolderCard from '@/components/core/folder-card/FolderCard';
 import FileCard from '@/components/core/file-card/FileCard';
@@ -12,7 +12,7 @@ import { CUSTOMER_MY_DRIVE } from '@/utils/constants/router.constant';
 import { LinearProgress } from '@mui/material';
 
 type DriveGridViewProps = {
-  dirId?: string;
+  curDir: { id: string; name: string };
   sort?: string;
   order?: string;
   setSort?: ({ sort, order }: { sort: string; order: string }) => void;
@@ -21,7 +21,7 @@ type DriveGridViewProps = {
   folderShow?: boolean;
   setPath?: React.Dispatch<React.SetStateAction<Path>>;
   setSelected?: React.Dispatch<React.SetStateAction<{ id: string; name: string }>>;
-  selected?: string;
+  selected?: { id: string; name: string };
   isLoading?: boolean;
   onChanged?: () => void;
 };
@@ -35,6 +35,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
   selected,
   isLoading,
   onChanged
+  curDir,
 }) => {
   const files = entries.filter((entry) => !entry.isDir);
   const folders = entries.filter((entry) => entry.isDir);
@@ -44,6 +45,33 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
   };
 
   const navigate = useNavigate();
+
+  const driveGridViewRef = useRef(null);
+  const fileCardRefs = useRef<NodeListOf<Element>>(null);
+  const folderCardRefs = useRef<NodeListOf<Element>>(null);
+
+  useEffect(() => {
+    fileCardRefs.current = document.querySelectorAll('.file-card');
+    folderCardRefs.current = document.querySelectorAll('.folder-card');
+    // console.log('[DriveGridView] fileCardRefs', Array.from(fileCardRefs.current));
+
+    const handleClickOutside = (event) => {
+      const clickedOutsideCards =
+        Array.from(fileCardRefs.current).every((card) => !card.contains(event.target)) &&
+        Array.from(folderCardRefs.current).every((card) => !card.contains(event.target));
+
+      if (driveGridViewRef.current && driveGridViewRef.current.contains(event.target) && clickedOutsideCards) {
+        setSelected && setSelected(curDir);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  });
+  
+  // console.log('[DriveGridView] current selected', selected);
 
   return (
     <>
@@ -57,7 +85,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
           </div>
         </div>
       ) : (
-        <div className='bg-white pl-5 pr-3 pt-4'>
+        <div ref={driveGridViewRef} className='bg-white pl-5 pr-3 pt-4'>
           <div className='relative flex flex-col space-y-2'>
             {folders.length !== 0 && (
               <div className={!folderShow ? 'visible' : 'hidden'}>
@@ -75,8 +103,8 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
                             navigate(`${CUSTOMER_MY_DRIVE}/dir/${folder.id}`);
                           }}
                           onClick={() => setSelected({ id: folder.id, name: folder.title })}
-                          isSelected={selected === folder.id}
                           onChanged={onChanged}
+                          isSelected={selected.id === folder.id}
                         />
                       </div>
                     );
@@ -96,9 +124,10 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
                           icon={file.icon}
                           preview={file.preview}
                           id={file.id}
+                          dirId={curDir.id}
                           onClick={() => setSelected({ id: file.id, name: file.title })}
-                          isSelected={selected === file.id}
                           onChanged={() => onChanged && onChanged()}
+                          isSelected={selected.id === file.id}
                         />
                       </div>
                     );
@@ -111,36 +140,6 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
       )}
     </>
   );
-};
-
-/**
- * Map MyEntry to FileCard
- */
-
-export const localEntriesToFiles = (files: LocalEntry[]) => {
-  return files.map((file, ind) => (
-    <div className='aspect-square w-auto' key={ind}>
-      <FileCard title={file.title} icon={file.icon} preview={file.preview} id={file.id} key={ind}/>
-    </div>
-  ));
-};
-
-/**
- * Map MyEntry to FolderCard
- */
-export const localEntriesToFolder = (folders: LocalEntry[], handlePath: (path: Path)=>void) => {
-  return folders.map((folder, index) => {
-    return (
-      <div key={index} className='w-auto'>
-        <FolderCard title={folder.title} icon={folder.icon} id={folder.id} onDoubleClick={
-            ()=>{
-              handlePath([{id: folder.id, name: folder.title}]);
-            }
-          }
-        />
-      </div>
-    );
-  });
 };
 
 /**

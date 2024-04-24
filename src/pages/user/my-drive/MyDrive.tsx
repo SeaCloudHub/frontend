@@ -1,5 +1,4 @@
-import { fakeEntries } from '@/utils/dumps/entries';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import DriveLayout from '@/components/layout/DriveLayout';
 import { Path, useViewMode } from '@/store/my-drive/myDrive.store';
 import MyDriveHeader from './header/MyDriveHeader';
@@ -8,16 +7,9 @@ import { remoteToLocalEntries } from './content/DriveGridView';
 import { DriveListView } from './content/DriveListView';
 import { Entry } from '@/utils/types/entry.type';
 import SidePanel from '@/pages/user/my-drive/side-panel/SidePanel';
-import { useQuery } from '@tanstack/react-query';
-import { useSession } from '@/store/auth/session';
-import { toast } from 'react-toastify';
-import { getListEntriesMyDrive } from '@/apis/drive/drive.api';
-import { ListEntriesRESP } from '@/apis/drive/response/list-entries.reponse';
 import { useStorageStore } from '@/store/storage/storage.store';
-import { useLocation, useParams } from 'react-router-dom';
 import { useListEntries } from '@/hooks/drive.hooks';
-import { isAxiosError } from 'axios';
-import { ApiGenericError } from '@/utils/types/api-generic-error.type';
+import { ListEntriesRESP } from '@/apis/drive/response/list-entries.reponse';
 
 export type LocalEntry = {
   isDir: boolean;
@@ -45,7 +37,7 @@ const MyDrive = () => {
   const [path, setPath] = useState<Path>([{ name: 'My Drive', id: rootId }]);
   const viewMode = useViewMode((state) => state.viewMode);
 
-  const { dirId, data, refetch, isLoading } = useListEntries();
+  const { dirId, dirName, data, refetch, isLoading } = useListEntries();
   const localEntries: LocalEntry[] = remoteToLocalEntries((data || []) as Required<Entry[]> & ListEntriesRESP['entries']);
   const [selected, setSelected] = useState<{ id: string; name: string }>({ id: dirId, name: 'My Drive' });
 
@@ -77,15 +69,17 @@ const MyDrive = () => {
             entries={localEntries}
             setPath={setPath}
             setSelected={setSelected}
-            selected={selected.id}
+            selected={selected}
             isLoading={isLoading}
             onChanged={() => setOnChanged(true)}
+            curDir={{ id: dirId, name: dirName }}
           />
         ) : (
           <DriveListView entries={localEntries} setPath={setPath} onChanged={()=>setOnChanged(true)} />
         )
       }
-      sidePanel={<SidePanel id={selected.id} title={selected.name} />}
+      // pass entry name so no need to wait for api
+      sidePanel={<SidePanel id={selected.id} title={selected.id === rootId ? 'My Drive' : selected.name} />}
     />
   );
 };
