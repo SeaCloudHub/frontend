@@ -8,7 +8,7 @@ import { useProgressIndicator } from '@/store/storage/progressIndicator.store';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { toastError } from '@/utils/toast-options/toast-options';
 import { ApiGenericError } from '@/utils/types/api-generic-error.type';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import React, { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -23,8 +23,8 @@ const AddFileMenu = ({ shrinkMode }: AddFileMenuProps) => {
   const rootId = useStorageStore((state) => state.rootId);
   const setFileNames = useProgressIndicator((state) => state.setFileNames);
   const uploadFilesMutation = useMutation({
-    mutationFn: (files: File[]) => {
-      return uploadFilesApi({ files: files, id: rootId });
+    mutationFn: (body: { files: File[]; id: string }) => {
+      return uploadFilesApi(body);
     },
     onError: (error) => {
       if (isAxiosError<ApiGenericError>(error)) {
@@ -35,15 +35,16 @@ const AddFileMenu = ({ shrinkMode }: AddFileMenuProps) => {
       setFileNames(data.data.map((item) => item.name));
     },
   });
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, curDirId: string) => {
     const fileList = e.currentTarget.files;
     if (fileList) {
       const filesArray = Array.from(fileList);
-      await uploadFilesMutation.mutateAsync(filesArray);
+      await uploadFilesMutation.mutateAsync({ files: filesArray, id: curDirId });
+      queryClient.invalidateQueries({ queryKey: ['mydrive-entries'] });
     }
   };
 
-  const handleFolderUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFolderUpload = (e: React.ChangeEvent<HTMLInputElement>, curDirId: string) => {
     const folderInput = e.target;
     const fileList = folderInput.files;
     if (fileList && fileList.length > 0) {
@@ -102,18 +103,10 @@ const AddFileMenu = ({ shrinkMode }: AddFileMenuProps) => {
   ];
 
   const [createModal, setCreateModal] = useState<boolean>(false);
+  const queryClient = useQueryClient();
+
   return (
     <>
-      {/* <Dropdown
-        button={
-          <div className='mt-5 flex cursor-pointer items-center rounded-full px-4 py-1 text-[#063768] hover:bg-gray-400'>
-            <IconifyIcon icon={'mdi:create-new-folder-outline'} fontSize={35} />
-            {!shrinkMode && <span className='font-bold'>New</span>}
-          </div>
-        }
-        items={addFileMenu}
-        left={false}
-      /> */}
       <CustomDropdown
         button={
           <div className='mt-5 flex cursor-pointer items-center rounded-full px-4 py-1 text-[#063768] hover:bg-gray-400'>
@@ -123,7 +116,19 @@ const AddFileMenu = ({ shrinkMode }: AddFileMenuProps) => {
         }
         items={addFileMenu}
       />
-      <input ref={fileInputRef} id='fileInput' type='file' style={{ display: 'none' }} onChange={handleFileUpload} multiple />
+      <input
+        ref={fileInputRef}
+        id='fileInput'
+        type='file'
+        style={{ display: 'none' }}
+        onChange={(e) => {
+          const data = queryClient.getQueriesData({ queryKey: ['entry-metadata'] });
+          const curDirId = data?.[0]?.[0]?.[1] as string;
+          console.log('[AddFileMenu] curDirId', curDirId);
+          handleFileUpload(e, curDirId);
+        }}
+        multiple
+      />
       <input
         ref={folderInputRef}
         id='folderInput'
@@ -131,7 +136,12 @@ const AddFileMenu = ({ shrinkMode }: AddFileMenuProps) => {
         directory=''
         webkitdirectory=''
         style={{ display: 'none' }}
-        onChange={handleFolderUpload}
+        onChange={(e) => {
+          const data = queryClient.getQueriesData({ queryKey: ['entry-metadata'] });
+          const curDirId = data?.[0]?.[0]?.[1] as string;
+          console.log('[AddFileMenu] curDirId', curDirId);
+          handleFolderUpload(e, curDirId);
+        }}
         multiple={false}
       />
       {createModal && (

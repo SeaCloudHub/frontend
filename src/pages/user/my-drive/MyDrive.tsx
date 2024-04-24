@@ -24,8 +24,8 @@ const MyDrive = () => {
     name: parents[parents.length - 1].name,
   }); // select cur dir by default
 
-  console.log('[MyDrive] parents', parents);
-  console.log('[MyDrive] selected', selected);
+  // console.log('[MyDrive] parents', parents);
+  // console.log('[MyDrive] selected', selected);
 
   useEffect(() => {
     refetch();

@@ -87,7 +87,7 @@ const SidePanel: React.FC<SidePanelProps> = ({ id, title }) => {
             <div className='w-6'>
               {details ? details.icon : <Icon icon='mdi:folder-google-drive' className='h-full w-full' />}
             </div>
-            <div className='w-[236px] text-wrap font-medium'>{!isLoading ? details && details.name : title}</div>
+            <div className='w-[236px] text-wrap font-medium'>{!isLoading ? (details ? details.name : title) : title}</div>
           </div>
         ) : (
           <div></div>

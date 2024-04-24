@@ -9,6 +9,12 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { uploadFiles } from '@/apis/drive/drive.api';
 import { api } from '@/helpers/http/config.http';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { uploadFilesApi } from '@/apis/user/storage/create-storage.api';
+import { isAxiosError } from 'axios';
+import { ApiGenericError } from '@/utils/types/api-generic-error.type';
+import { toast } from 'react-toastify';
+import { toastError } from '@/utils/toast-options/toast-options';
 
 type DrivePathMenuButtonProps = {
   dirId: string;
@@ -22,29 +28,36 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ dirId, dirNam
   const [createModal, setCreateModal] = useState<boolean>(false);
   const { setFileNames } = useProgressIndicator();
   const { rootId } = useStorageStore();
+  const queryClient = useQueryClient();
+  const uploadFilesMutation = useMutation({
+    mutationFn: (body: { files: File[]; id: string }) => {
+      return uploadFilesApi(body);
+    },
+    onError: (error) => {
+      if (isAxiosError<ApiGenericError>(error)) {
+        toast.error(error.response?.data.message, toastError());
+      }
+    },
+    onSuccess: (data) => {
+      setFileNames(data.data.map((item) => item.name));
+    },
+  });
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const fileList = e.target.files;
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, curDirId: string) => {
+    const fileList = e.currentTarget.files;
     if (fileList) {
       const filesArray = Array.from(fileList);
-      console.log("[DrivePathMenuButton] filesArray", filesArray);
-      api.interceptors.request.use(request => {
-        console.log('Starting Request', request);
-        return request;
-      });
-      uploadFiles({files: filesArray, id: dirId});
-      setFileNames(filesArray.map((item) => item.name));
+      await uploadFilesMutation.mutateAsync({ files: filesArray, id: curDirId });
+      queryClient.invalidateQueries({ queryKey: ['mydrive-entries'] });
     }
   };
 
-  const handleFolderUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFolderUpload = (e: React.ChangeEvent<HTMLInputElement>, curDirId: string) => {
     const folderInput = e.target;
     const fileList = folderInput.files;
     if (fileList && fileList.length > 0) {
       const selectedFolder = fileList[0];
-      console.log(selectedFolder);
       const folderName = selectedFolder.webkitRelativePath.split('/')[0];
-      console.log('Selected folder:', folderName);
       const listFilesAndFolders = (directory: string, files: FileList) => {
         for (let i = 0; i < files.length; i++) {
           const file = files[i];
@@ -60,17 +73,10 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ dirId, dirNam
         }
       };
 
-      // Start listing files and folders from the root directory
       listFilesAndFolders(folderName, fileList);
     }
   };
 
-  const onCreateModalResponse = (data: any) => {
-    if (data != false) {
-      console.log(data);
-    }
-    setCreateModal(false);
-  };
 
   const rootMenuItems: MenuItem[][] = [
     [
@@ -107,7 +113,7 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ dirId, dirNam
       {
         label: 'New folder',
         icon: <Icon icon='ic:outline-create-new-folder' />,
-        action: () => {},
+        action: () => setCreateModal(true),
         isHidden: type !== 'MyDrive',
       },
     ],
@@ -147,11 +153,23 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ dirId, dirNam
       },
     ],
     [
-      { label: 'File upload', icon: <Icon icon='ic:baseline-upload-file' />, action: () => {} },
+      {
+        label: 'File upload',
+        icon: <Icon icon='ic:baseline-upload-file' />,
+        action: () => {
+          if (fileInputRef.current) {
+            fileInputRef.current.click();
+          }
+        },
+      },
       {
         label: 'Folder upload',
         icon: <Icon icon='mdi:folder-upload-outline' />,
-        action: () => {},
+        action: () => {
+          if (folderInputRef.current) {
+            folderInputRef.current.click();
+          }
+        },
       },
     ],
   ];
@@ -167,7 +185,16 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ dirId, dirNam
         }
         items={dirId === rootId ? rootMenuItems : dirMenuItems}
       />
-      <input ref={fileInputRef} id='fileInput' type='file' style={{ display: 'none' }} onChange={handleFileUpload} multiple />
+      <input
+        ref={fileInputRef}
+        id='fileInput'
+        type='file'
+        style={{ display: 'none' }}
+        onChange={(e) => {
+          handleFileUpload(e, dirId);
+        }}
+        multiple
+      />
       <input
         ref={folderInputRef}
         id='folderInput'
@@ -175,11 +202,14 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ dirId, dirNam
         directory=''
         webkitdirectory=''
         style={{ display: 'none' }}
-        onChange={handleFolderUpload}
+        onChange={(e) => {
+          handleFolderUpload(e, dirId);
+        }}
         multiple={false}
       />
       {createModal && (
         <ModalCreateFolder
+          dirId={dirId}
           isOpen={createModal}
           handleConfirm={() => {
             setCreateModal(false);

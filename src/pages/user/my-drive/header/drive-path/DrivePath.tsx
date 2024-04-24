@@ -12,7 +12,7 @@ type DrivePathProps = {
 };
 
 const DrivePath: React.FC<DrivePathProps> = ({ path, type }) => {
-  console.log('[DrivePath] path: ', path);
+  // console.log('[DrivePath] path: ', path);
   const navigate = useNavigate();
   if (path.length > 3) {
     const restDirs = path.slice(0, path.length - 2);
