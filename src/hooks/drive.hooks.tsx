@@ -1,5 +1,6 @@
-import { copyFiles, getEntryMetadata, getListEntriesMyDrive, getSharedEntries, renameFile } from '@/apis/drive/drive.api';
+import { copyFiles, getEntryMetadata, getListEntriesMyDrive, getSharedEntries, moveToTrash, renameFile } from '@/apis/drive/drive.api';
 import { CopyFileREQ } from '@/apis/drive/request/copy.request';
+import { MoveToTrashREQ } from '@/apis/drive/request/move-to-trash.request';
 import { RenameREQ } from '@/apis/drive/request/rename.request';
 import { useSession } from '@/store/auth/session';
 import { useDrawer } from '@/store/my-drive/myDrive.store';
@@ -75,6 +76,25 @@ export const useRenameMutation = () => {
     },
   });
 };
+
+export const useMoveToTrashMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (body: MoveToTrashREQ) => {
+      return moveToTrash(body);
+    },
+    onError: (error) => {
+      if (isAxiosError<ApiGenericError>(error)) {
+        toast.error(error.response?.data.message, toastError());
+      }
+    },
+    onSuccess: (data) => {
+      toast.success(`${data.data.length} files moved to trash`);
+      queryClient.invalidateQueries({ queryKey: ['mydrive-entries'] });
+    },
+  });
+}
 
 export const useEntryMetadata = (id: string) => {
   const { drawerOpen } = useDrawer();
