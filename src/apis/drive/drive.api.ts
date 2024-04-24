@@ -3,6 +3,7 @@ import { CopyFileREQ, ListEntriesREQ, RenameREQ, UploadFileREQ } from "./drive.r
 import { BaseResponse } from "@/utils/types/api-base-response.type";
 import { MoveToTrashREQ } from "./request/move-to-trash.request";
 import { EntryMetadataRES, EntryRESP, ListEntriesRESP } from "./drive.response";
+import { HTTP_HEADER } from "@/utils/constants/http.constant";
 
 export const getListEntriesMyDrive = async (param: ListEntriesREQ) => {
   const res = await api.get<BaseResponse<ListEntriesRESP>>(`/files/${param.id}`, {

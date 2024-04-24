@@ -51,7 +51,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
   const [type, setType] = useState<'move' | 'share' | 'rename' | 'move to trash' | null>(null);
   const openDrawer = useDrawer((state) => state.openDrawer);
 
-  // const { rootId } = useStorageStore();
+  const { rootId } = useStorageStore();
   const copyMutation = useCopyMutation();
   // const renameMutation = useRenameMutation();
 
