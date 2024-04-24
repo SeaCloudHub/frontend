@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { DriveListView } from '../../my-drive/content/DriveListView';
-import { DriveGridView, remoteToLocalEntries } from '../../my-drive/content/DriveGridView';
+import { DriveGridView } from '../../my-drive/content/DriveGridView';
+import { transformEntries } from '@/hooks/drive.hooks';
 import { Entry } from '@/utils/types/entry.type';
 import { useViewMode } from '@/store/my-drive/myDrive.store';
 
@@ -10,7 +11,7 @@ type StarredPageViewProps = {
 
 const StarredView: React.FC<StarredPageViewProps> = ({ entries }) => {
   const { viewMode } = useViewMode();
-  const processedEntries = remoteToLocalEntries(entries);
+  const processedEntries = transformEntries(entries);
   const [{ sort, order }, setSort] = useState<{ sort: string; order: string }>({ sort: 'Name', order: 'desc' });
 
   return viewMode === 'grid' ? (

@@ -1,8 +1,7 @@
 import { copyFiles, getEntryMetadata, getListEntriesMyDrive, getSharedEntries, renameFile } from '@/apis/drive/drive.api';
 import { CopyFileREQ } from '@/apis/drive/drive.request';
 import { RenameREQ } from '@/apis/drive/drive.request';
-import { EntryMetadataRES } from '@/apis/drive/drive.response';
-import { useSession } from '@/store/auth/session';
+import { EntryMetadataRES, EntryRESP } from '@/apis/drive/drive.response';
 import { useDrawer } from '@/store/my-drive/myDrive.store';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { fileTypeIcons } from '@/utils/constants/file-icons.constant';
@@ -41,6 +40,7 @@ export const useListEntries = () => {
       );
     },
     staleTime: 10 * 1000,
+    select: transformEntries
   });
 
   if (isAxiosError<ApiGenericError>(error)) {
@@ -158,4 +158,62 @@ const transformMetadata = (data: EntryMetadataRES) => {
       size: data.file.size,
     };
   }
+};
+
+export type LocalEntry = {
+  isDir: boolean;
+  title: string;
+  icon: React.ReactNode;
+  preview: React.ReactNode;
+  id: string;
+  extra: string;
+  owner: string;
+  lastModified: string;
+  size: string;
+
+  onDoubleClick?: () => void;
+  onChanged?: () => void;
+};
+
+export const transformEntries = (entries: EntryRESP[]): LocalEntry[] => {
+  return entries.map((entry) => {
+    if (entry.is_dir) {
+      return {
+        isDir: true,
+        title: entry.name,
+        icon: <Icon icon='ic:baseline-folder' className='object-cover-full h-full w-full' />,
+        preview: <Icon icon='ic:baseline-folder' className='h-full w-full' />,
+        id: entry.id,
+        extra: 'extra',
+        owner: 'owner',
+        ownerAvt: 'https://slaydarkkkk.github.io/img/slaydark_avt.jpg',
+        lastModified: entry.updated_at,
+        size: entry.size.toString(),
+      };
+    }
+    const ext = entry.name.split('.').pop() || 'any';
+    const icon = fileTypeIcons[ext] || fileTypeIcons.any;
+    /* Suport mp4, mp3, pdf, jpg, jpeg, png, jfif, gif, webp, ico, svg,
+    docx, txt, zip, any */
+    const preview = ['jpg', 'ico', 'webp', 'png', 'jpeg', 'gif', 'jfif'].includes(ext) ? (
+      <img
+        className='h-full w-full rounded-md object-cover'
+        src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrHRymTob1kd-ywHzIs0ty7UhrFUcJay839nNd6tcSig&s'
+      />
+    ) : (
+      <div className='h-16 w-16'>{icon}</div>
+    );
+    return {
+      isDir: false,
+      title: entry.name,
+      icon: icon,
+      preview: preview,
+      id: entry.id,
+      extra: 'extra',
+      owner: 'owner',
+      ownerAvt: 'https://slaydarkkkk.github.io/img/slaydark_avt.jpg',
+      lastModified: entry.updated_at,
+      size: entry.size.toString(),
+    };
+  });
 };

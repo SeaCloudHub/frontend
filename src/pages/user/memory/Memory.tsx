@@ -4,7 +4,7 @@ import MemoryHeader from './header/MemoryHeader';
 import { useState } from 'react';
 import { MemoryView } from './content/MemoryView';
 import { fakeEntries } from '@/utils/dumps/entries';
-import { remoteToLocalEntries } from '../my-drive/content/DriveGridView';
+import { transformEntries } from '@/hooks/drive.hooks';
 
 const Memory = () => {
   const [typeFilter, setTypeFilter] = useState<string>('');
@@ -12,7 +12,7 @@ const Memory = () => {
   const [{ sort, order }, setSort] = useState<{ sort: string; order: string }>({ sort: 'Name', order: 'desc' });
 
   const entries = fakeEntries;
-  const localEntries = remoteToLocalEntries(entries);
+  const localEntries = transformEntries(entries);
 
   return (
     <DriveLayout

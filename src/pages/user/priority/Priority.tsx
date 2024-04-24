@@ -5,10 +5,10 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import PriorityFilter from './priority-filter/PriorityFilter';
 import SidePanel from '../my-drive/side-panel/SidePanel';
 import PriorityView from './priority-view/PriorityView';
-import { remoteToLocalEntries } from '../my-drive/content/DriveGridView';
+import { transformEntries } from '@/hooks/drive.hooks';
 import { fakeData } from '../shared/Shared';
 import { toast } from 'react-toastify';
-import { LocalEntry } from '../my-drive/MyDrive';
+import { LocalEntry } from '@/hooks/drive.hooks';
 import { Entry } from '@/utils/types/entry.type';
 import { useQuery } from '@tanstack/react-query';
 import { useSession } from '@/store/auth/session';
@@ -31,7 +31,7 @@ const Priority = () => {
         (e) => !e.name.includes('.trash'),
       ),
   });
-  const entries: LocalEntry[] = remoteToLocalEntries((data || []) as Required<Entry[]> & ListEntriesRESP['entries']);
+  const entries: LocalEntry[] = transformEntries((data || []) as Required<Entry[]> & ListEntriesRESP['entries']);
 
   // const entries = remoteToLocalEntries(fakeData);
   return (

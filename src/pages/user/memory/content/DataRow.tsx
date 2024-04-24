@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tooltip } from '@mui/material';
-import { LocalEntry } from '../../my-drive/MyDrive';
+import { LocalEntry } from '@/hooks/drive.hooks';
 
 export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModified, owner, size }) => {
   return (

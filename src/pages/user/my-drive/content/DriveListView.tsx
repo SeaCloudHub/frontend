@@ -1,5 +1,5 @@
 import React from 'react';
-import { LocalEntry } from '../MyDrive';
+import { LocalEntry } from '@/hooks/drive.hooks';
 import { DataRow } from './DataRow';
 import { HeaderMyDriveProps } from '../MyDrive';
 import Sort from './Sort';
@@ -50,9 +50,14 @@ export const DriveListView: React.FC<DriveListViewProps> = ({ order, setSort, so
               </div>
             </div>
             {folders.map((entry, index) => {
-              return <DataRow key={index} {...entry}
-              onChanged={onChanged}
-              onDoubleClick={() => handlePath([{ id: entry.id, name: entry.title }])} />;
+              return (
+                <DataRow
+                  key={index}
+                  {...entry}
+                  onChanged={onChanged}
+                  onDoubleClick={() => handlePath([{ id: entry.id, name: entry.title }])}
+                />
+              );
             })}
             {files.map((entry, index) => {
               return <DataRow key={index} {...entry} onChanged={onChanged} />;

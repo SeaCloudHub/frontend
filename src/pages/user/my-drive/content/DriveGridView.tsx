@@ -2,10 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import Sort from './Sort';
 import FolderCard from '@/components/core/folder-card/FolderCard';
 import FileCard from '@/components/core/file-card/FileCard';
-import { Entry } from '@/utils/types/entry.type';
-import fileTypeIcons from '@/utils/constants/file-icons.constant';
-import { Icon } from '@iconify/react/dist/iconify.js';
-import { LocalEntry } from '../MyDrive';
+import { LocalEntry } from '@/hooks/drive.hooks';
 import { Path } from '@/store/my-drive/myDrive.store';
 import { useNavigate, useParams } from 'react-router-dom';
 import { CUSTOMER_MY_DRIVE } from '@/utils/constants/router.constant';
@@ -37,7 +34,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
   onChanged,
   curDir,
 }) => {
-  console.log("[DriveGridView] curDir", curDir)
+  console.log('[DriveGridView] curDir', curDir);
   const files = entries.filter((entry) => !entry.isDir);
   const folders = entries.filter((entry) => entry.isDir);
 
@@ -141,50 +138,4 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
       )}
     </>
   );
-};
-
-/**
- * Map remote Entry to MyEntry.
- */
-export const remoteToLocalEntries = (entries: Entry[]): LocalEntry[] => {
-  return entries.map((entry) => {
-    if (entry.is_dir) {
-      return {
-        isDir: true,
-        title: entry.name,
-        icon: <Icon icon='ic:baseline-folder' className='object-cover-full h-full w-full' />,
-        preview: <Icon icon='ic:baseline-folder' className='h-full w-full' />,
-        id: entry.id,
-        extra: 'extra',
-        owner: 'owner',
-        ownerAvt: 'https://slaydarkkkk.github.io/img/slaydark_avt.jpg',
-        lastModified: entry.updated_at,
-        size: entry.size.toString(),
-      };
-    }
-    const ext = entry.name.split('.').pop() || 'any';
-    const icon = fileTypeIcons[ext] || fileTypeIcons.any;
-    /* Suport mp4, mp3, pdf, jpg, jpeg, png, jfif, gif, webp, ico, svg,
-    docx, txt, zip, any */
-    const preview = ['jpg', 'ico', 'webp', 'png', 'jpeg', 'gif', 'jfif'].includes(ext) ? (
-      <img
-        className='h-full w-full rounded-md object-cover'
-        src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrHRymTob1kd-ywHzIs0ty7UhrFUcJay839nNd6tcSig&s'
-      />
-    ) : (
-      <div className='h-16 w-16'>{icon}</div>
-    );
-    return {
-      isDir: false,
-      title: entry.name,
-      icon: icon,
-      preview: preview,
-      id: entry.id,
-      extra: 'extra',
-      owner: 'owner',
-      ownerAvt: 'https://slaydarkkkk.github.io/img/slaydark_avt.jpg',
-      lastModified: entry.updated_at,
-      size: entry.size.toString(),
-    };
-  });
 };

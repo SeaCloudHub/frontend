@@ -1,6 +1,6 @@
 import React from 'react';
 import Sort from '../../my-drive/content/Sort';
-import { LocalEntry } from '../../my-drive/MyDrive';
+import { LocalEntry } from '@/hooks/drive.hooks';
 import FileCard from '@/components/core/file-card/FileCard';
 
 export type TimeEntry = {

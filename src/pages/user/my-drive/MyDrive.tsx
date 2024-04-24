@@ -1,30 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import DriveLayout from '@/components/layout/DriveLayout';
 import { Path, useViewMode } from '@/store/my-drive/myDrive.store';
 import MyDriveHeader from './header/MyDriveHeader';
 import { DriveGridView } from './content/DriveGridView';
-import { remoteToLocalEntries } from './content/DriveGridView';
 import { DriveListView } from './content/DriveListView';
-import { Entry } from '@/utils/types/entry.type';
 import SidePanel from '@/pages/user/my-drive/side-panel/SidePanel';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { useListEntries } from '@/hooks/drive.hooks';
-import { ListEntriesRESP } from '@/apis/drive/drive.response';
-
-export type LocalEntry = {
-  isDir: boolean;
-  title: string;
-  icon: React.ReactNode;
-  preview: React.ReactNode;
-  id: string;
-  extra: string;
-  owner: string;
-  lastModified: string;
-  size: string;
-
-  onDoubleClick?: () => void;
-  onChanged?: () => void;
-};
 
 const MyDrive = () => {
   const { rootId } = useStorageStore();
@@ -34,11 +16,9 @@ const MyDrive = () => {
   const [peopleFilter, setPeopleFilter] = useState<string>('');
   const [modifiedFilter, setModifiedFilter] = useState<string>('');
   const [onChanged, setOnChanged] = useState<boolean>(false);
-  const [path, setPath] = useState<Path>([{ name: 'My Drive', id: rootId }]);
-  const viewMode = useViewMode((state) => state.viewMode);
 
+  const viewMode = useViewMode((state) => state.viewMode);
   const { dirId, dirName, data, refetch, isLoading } = useListEntries();
-  const localEntries: LocalEntry[] = remoteToLocalEntries((data || []) as Required<Entry[]> & ListEntriesRESP['entries']);
   const [selected, setSelected] = useState<{ id: string; name: string }>({ id: dirId, name: 'My Drive' });
 
   useEffect(() => {
@@ -50,13 +30,13 @@ const MyDrive = () => {
     <DriveLayout
       headerLeft={
         <MyDriveHeader
-          path={path}
+          path={[]}
           typeFilter={typeFilter}
           modifiedFilter={modifiedFilter}
           peopleFilter={peopleFilter}
           sort={sort}
           order={order}
-          setPath={setPath}
+          setPath={() => {}}
           setTypeFilter={setTypeFilter}
           setModifiedFilter={setModifiedFilter}
           setPeopleFilter={setPeopleFilter}
@@ -66,8 +46,8 @@ const MyDrive = () => {
       bodyLeft={
         viewMode === 'grid' ? (
           <DriveGridView
-            entries={localEntries}
-            setPath={setPath}
+            entries={data}
+            setPath={() => {}}
             setSelected={setSelected}
             selected={selected}
             isLoading={isLoading}
@@ -75,7 +55,7 @@ const MyDrive = () => {
             curDir={{ id: dirId, name: dirName }}
           />
         ) : (
-          <DriveListView entries={localEntries} setPath={setPath} onChanged={() => setOnChanged(true)} />
+          <DriveListView entries={data} setPath={() => {}} onChanged={() => setOnChanged(true)} />
         )
       }
       // pass entry name so no need to wait for api

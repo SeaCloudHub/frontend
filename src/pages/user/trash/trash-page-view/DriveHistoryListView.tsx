@@ -1,5 +1,5 @@
 import React from 'react';
-import { LocalEntry } from '../../my-drive/MyDrive';
+import { LocalEntry } from '@/hooks/drive.hooks';
 import Sort from '../../my-drive/content/Sort';
 import { DataRow } from '../../my-drive/content/DataRow';
 import { LocalEntryToTimeEntry } from './DriveHistoryGridView';
