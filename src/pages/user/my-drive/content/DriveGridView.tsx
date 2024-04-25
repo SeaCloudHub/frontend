@@ -1,12 +1,11 @@
-import React, { useEffect, useRef } from 'react';
-import Sort from './Sort';
-import FolderCard from '@/components/core/folder-card/FolderCard';
 import FileCard from '@/components/core/file-card/FileCard';
+import FolderCard from '@/components/core/folder-card/FolderCard';
 import { LocalEntry } from '@/hooks/drive.hooks';
 import { Path } from '@/store/my-drive/myDrive.store';
-import { useNavigate, useParams } from 'react-router-dom';
 import { CUSTOMER_MY_DRIVE } from '@/utils/constants/router.constant';
 import { LinearProgress } from '@mui/material';
+import React, { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 type DriveGridViewProps = {
   curDir?: { id: string; name: string };
@@ -98,7 +97,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
                             navigate(`${CUSTOMER_MY_DRIVE}/dir/${folder.id}`);
                           }}
                           onClick={() => setSelected({ id: folder.id, name: folder.title })}
-                          isSelected={selected.id === folder.id}
+                          isSelected={selected && selected.id === folder.id}
                         />
                       </div>
                     );
@@ -120,7 +119,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
                           id={file.id}
                           dirId={curDir?.id}
                           onClick={() => setSelected({ id: file.id, name: file.title })}
-                          isSelected={selected && selected.id === file.id}  // [TODO]
+                          isSelected={selected && selected.id === file.id} // [TODO]
                         />
                       </div>
                     );

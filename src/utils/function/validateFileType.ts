@@ -3,7 +3,7 @@ import { fileSignatures } from '../constants/file-extension-validation.constant'
 
 export const validateFileType = async (file: File, fileType?: string): Promise<boolean> => {
   if (!fileType || !(fileType in fileSignatures)) {
-    return true;
+    return false;
   }
   const reader = new FileReader();
   const result = await new Promise<boolean>((resolve) => {

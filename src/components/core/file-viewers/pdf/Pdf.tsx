@@ -3,18 +3,37 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import Iframe from '../iframe/IFrame';
 
-const Pdf: React.FC<FileViewerProps> = ({ src, style, className }) => {
+const Pdf: React.FC<FileViewerProps> = ({ file }) => {
   const [url, setUrl] = useState<string>('');
+  const [src, setSrc] = useState<string | null>(null);
   useEffect(() => {
-    const fetchData = async () => {
-      const { data } = await axios.get(src, {
-        responseType: 'blob',
-      });
-      setUrl(URL.createObjectURL(data));
+    const fetchText = async () => {
+      try {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          reader.result && setSrc(reader.result.toString());
+        };
+        reader.onerror = (err) => {};
+        reader.readAsDataURL(file);
+      } catch (error) {
+        console.error('Error reading text file:', error);
+      }
     };
-    fetchData();
+
+    fetchText();
+  }, [file]);
+  useEffect(() => {
+    if (src) {
+      const fetchData = async () => {
+        const { data } = await axios.get(src, {
+          responseType: 'blob',
+        });
+        setUrl(URL.createObjectURL(data));
+      };
+      fetchData();
+    }
   }, [src]);
-  return <Iframe src={url} style={style} className={className} isHtml={false} />;
+  return <Iframe url={url} />;
 };
 
 export default Pdf;

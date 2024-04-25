@@ -1,8 +1,14 @@
-import { copyFiles, getEntryMetadata, getListEntriesMyDrive, getSharedEntries, moveToTrash, renameFile } from '@/apis/drive/drive.api';
+import {
+  copyFiles,
+  getEntryMetadata,
+  getListEntriesMyDrive,
+  getSharedEntries,
+  moveToTrash,
+  renameFile,
+} from '@/apis/drive/drive.api';
 import { CopyFileREQ, RenameREQ } from '@/apis/drive/drive.request';
 import { EntryMetadataRES, EntryRESP } from '@/apis/drive/drive.response';
 import { MoveToTrashREQ } from '@/apis/drive/request/move-to-trash.request';
-import { useSession } from '@/store/auth/session';
 import { Path, useDrawer } from '@/store/my-drive/myDrive.store';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { fileTypeIcons } from '@/utils/constants/file-icons.constant';
@@ -116,7 +122,7 @@ export const useMoveToTrashMutation = () => {
       queryClient.invalidateQueries({ queryKey: ['mydrive-entries'] });
     },
   });
-}
+};
 
 export const useEntryMetadata = (id: string) => {
   const { drawerOpen } = useDrawer();
@@ -201,7 +207,7 @@ export type LocalEntry = {
   owner: string;
   lastModified: string;
   size: string;
-
+  fileType?: string;
   onDoubleClick?: () => void;
   onChanged?: () => void;
 };
@@ -217,10 +223,11 @@ export const transformEntries = (entries: EntryRESP[]): LocalEntry[] => {
         id: entry.id,
         extra: 'extra',
         owner: 'owner',
+        fileType: entry.mine_type,
         ownerAvt: 'https://slaydarkkkk.github.io/img/slaydark_avt.jpg',
         lastModified: entry.updated_at,
         size: entry.size.toString(),
-      };
+      } as LocalEntry;
     }
     const ext = entry.name.split('.').pop() || 'any';
     const icon = fileTypeIcons[ext] || fileTypeIcons.any;

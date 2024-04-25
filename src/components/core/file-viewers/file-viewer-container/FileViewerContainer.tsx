@@ -1,54 +1,23 @@
+import { LocalEntry } from '@/hooks/drive.hooks';
 import { getFileIcon } from '@/utils/function/validateFileType';
 import { Dialog, DialogContent, DialogTitle, Slide } from '@mui/material';
 import { TransitionProps } from '@mui/material/transitions';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import IconifyIcon from '../../Icon/IConCore';
 import ButtonCore from '../../button/ButtonCore';
 import ButtonIcon from '../../button/ButtonIcon';
 import MenuCore from '../../menu/MenuCore';
 import { MenuItemCoreProps } from '../../menu/MenuItem';
+import Viewer from './Viewer';
 
 type FileViewerContainerProps = {
   open: boolean;
-  fileName?: string;
-  fileType?: string;
+  fileInfo: LocalEntry;
   isCloseOutside?: boolean;
   closeOutside?: (data?: any) => void;
 };
-const totalFileViewerActions: Record<string, MenuItemCoreProps> = {
-  delete: {
-    icon: 'material-symbols-light:delete-outline',
-    onClick: () => {},
-    title: 'Delete',
-  },
-  print: {
-    icon: 'uit:print',
-    onClick: () => {},
-    title: 'Print',
-  },
-  fileHistory: {
-    icon: 'system-uicons:files-history',
-    onClick: () => {},
-    title: 'File history',
-  },
-  copyLink: {
-    icon: 'ic:sharp-link',
-    onClick: () => {},
-    title: 'Copy link',
-  },
-  share: {
-    icon: 'codicon:share',
-    onClick: () => {},
-    title: 'Share',
-  },
-  download: {
-    icon: 'material-symbols-light:download',
-    onClick: () => {},
-    title: 'Download',
-  },
-};
 
-const FileViewerContainer: React.FC<FileViewerContainerProps> = ({ isCloseOutside, closeOutside, open, fileName, fileType }) => {
+const FileViewerContainer: React.FC<FileViewerContainerProps> = ({ isCloseOutside, closeOutside, open, fileInfo }) => {
   const Transition = React.forwardRef(function Transition(
     props: TransitionProps & {
       children: React.ReactElement<any, any>;
@@ -87,8 +56,48 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({ isCloseOutsid
     return () => window.removeEventListener('resize', updateActions);
   }, []);
 
-  const FileIcon = getFileIcon('pdf') as React.ReactNode;
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const triggerFileInput = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+  const totalFileViewerActions: Record<string, MenuItemCoreProps> = {
+    delete: {
+      icon: 'material-symbols-light:delete-outline',
+      onClick: () => {},
+      title: 'Delete',
+    },
+    print: {
+      icon: 'uit:print',
+      onClick: () => {},
+      title: 'Print',
+    },
+    fileHistory: {
+      icon: 'system-uicons:files-history',
+      onClick: () => {},
+      title: 'File history',
+    },
+    copyLink: {
+      icon: 'ic:sharp-link',
+      onClick: () => {},
+      title: 'Copy link',
+    },
+    share: {
+      icon: 'codicon:share',
+      onClick: () => {},
+      title: 'Share',
+    },
+    download: {
+      icon: 'material-symbols-light:download',
+      onClick: () => {},
+      title: 'Download',
+    },
+  };
+
+  const [file, setFile] = useState<File | null>(null);
+  const FileIcon = getFileIcon('pdf') as React.ReactNode;
   return (
     <Dialog onClose={isCloseOutside ? closeOutside : () => {}} open={open} fullScreen TransitionComponent={Transition}>
       <DialogTitle
@@ -101,7 +110,11 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({ isCloseOutsid
         }}>
         <div className='z-10 flex w-1/3  flex-grow  items-center space-x-3'>
           <ButtonCore type='contained' title='Edit' icon={<IconifyIcon icon='basil:edit-outline' />} />
-          <div className='flex  cursor-pointer  items-center space-x-2 rounded-md p-2 hover:bg-gray-100'>
+          <div
+            className='flex  cursor-pointer  items-center space-x-2 rounded-md p-2 hover:bg-gray-100'
+            onClick={() => {
+              triggerFileInput();
+            }}>
             <IconifyIcon icon='codicon:share' fontSize={13} />
             <p className='text-sm'>Share</p>
           </div>
@@ -120,7 +133,7 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({ isCloseOutsid
         <div className='hidden flex-grow items-center justify-center md:flex'>
           <div className='flex max-h-[20px] items-center space-x-2'>
             <div>{FileIcon}</div>
-            <p className='truncate text-sm font-bold'>{fileName || 'file01.pdf'}</p>
+            <p className='truncate text-sm font-bold'>{'da' || 'file01.pdf'}</p>
           </div>
         </div>
         <div className='flex w-1/3 flex-grow flex-nowrap items-center justify-end'>
@@ -134,10 +147,23 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({ isCloseOutsid
           />
         </div>
       </DialogTitle>
-      <DialogContent>
-        <div className='mx-auto h-full max-w-7xl'>
-          <iframe className='h-full w-full' src='https://drive.google.com/file/d/1s_N6ZkksdOR5AE8q08iz4g6sr67dkA_I/view'></iframe>
-        </div>
+      <DialogContent
+        sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+        <input
+          className='hidden'
+          type='file'
+          ref={fileInputRef}
+          onChange={(event) => {
+            if (event.target.files && event.target.files[0]) {
+              const selectedFile = event.target.files[0];
+              setFile(selectedFile);
+            }
+          }}
+        />
+        {file && (
+          <Viewer file={file} fileId={fileInfo.id} fileName={fileInfo.title} fileType={file.type} rootId={fileInfo.owner} />
+        )}
+        {!file && <img src='./loader.svg' className='mx-auto h-[50px] w-[50px]' />}
       </DialogContent>
     </Dialog>
   );

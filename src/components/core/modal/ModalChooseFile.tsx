@@ -1,8 +1,10 @@
 // import { validateFileType } from '@/utils/function/validateFileType';
+import { validateFileType } from '@/utils/function/validateFileType';
 import { useState } from 'react';
 import IconifyIcon from '../Icon/IConCore';
 import ButtonContainer from '../button/ButtonContainer';
 import ButtonCore from '../button/ButtonCore';
+import ButtonIcon from '../button/ButtonIcon';
 import ModalCore from './ModalCore';
 type ModalChooseFileProps = {
   fileType?: string;
@@ -21,14 +23,12 @@ const ModalChooseFile = ({ isOpen, handleConfirm, fileIcon, fileType }: ModalCho
     }
   };
   const handleFile = async (file: File, fileType?: string) => {
-    console.log(file, fileType);
-    // if (await validateFileType(file, fileType)) {
-    //   setFile(file);
-    //   setError(null);
-    // } else {
-    //   console.log('trieu xau trai qua di');
-    //   setError('Invalid file type*');
-    // }
+    if (await validateFileType(file, fileType)) {
+      setFile(file);
+      setError(null);
+    } else {
+      setError('Invalid file type*');
+    }
   };
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -71,6 +71,13 @@ const ModalChooseFile = ({ isOpen, handleConfirm, fileIcon, fileType }: ModalCho
           {file && (
             <div className='flex items-center space-x-1'>
               <IconifyIcon icon={fileIcon!} /> <p className='statement-upper-medium '>{file.name}</p>
+              <ButtonIcon
+                icon={'bxs:edit'}
+                color='red'
+                onClick={() => {
+                  setFile(null);
+                }}
+              />
             </div>
           )}
         </div>

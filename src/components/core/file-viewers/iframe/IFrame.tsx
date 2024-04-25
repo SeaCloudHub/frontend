@@ -1,25 +1,18 @@
-import { FileViewerProps } from '@/utils/types/file-viewer-props.type';
 import React from 'react';
 
-const Iframe: React.FC<FileViewerProps> = ({ src, style, className, isHtml = false }) => {
+const Iframe: React.FC<{ url: string }> = ({ url }) => {
   return (
-    <div>
-      {!src && <img src='./loader.svg' />}
-      {src && (
+    <div className='h-full w-full'>
+      {!url && <img src='./loader.svg' />}
+      {url && (
         <iframe
           title='myFrame'
-          className={className}
           style={{
-            ...style,
+            height: '100%',
+            width: '100%',
             border: '1px solid #d6d6d6',
           }}
-          src={isHtml ? undefined : src + '#toolbar=0'}
-          srcDoc={isHtml ? src : undefined}>
-          <p>
-            It appears you don't have a PDF plugin for this browser. No biggie... you can{' '}
-            <a href={src}>click here to download the PDF file.</a>
-          </p>
-        </iframe>
+          src={url + '#toolbar=0'}></iframe>
       )}
     </div>
   );

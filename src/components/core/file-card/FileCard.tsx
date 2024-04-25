@@ -7,25 +7,18 @@ import { Info } from '@mui/icons-material';
 import { Tooltip } from '@mui/material';
 import React, { useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
-import Dropdown, { MenuItem, classNames } from '../drop-down/Dropdown';
+import { MenuItem, classNames } from '../drop-down/Dropdown';
 // import FileViewerContainer from '../file-viewers/file-viewer-container/FileViewerContainer';
+import { downloadFile } from '@/apis/drive/drive.api';
+import { useCopyMutation } from '@/hooks/drive.hooks';
 import { useDrawer } from '@/store/my-drive/myDrive.store';
-import FileViewerContainer from '../file-viewers/file-viewer-container/FileViewerContainer';
-import MovePopUp from '../pop-up/MovePopUp';
-import SharePopUp from '../pop-up/SharePopUp';
-import CustomDropdown from '../drop-down/CustomDropdown';
-import { useMutation } from '@tanstack/react-query';
-import { CopyFileREQ } from '@/apis/drive/drive.request';
-import { copyFiles, downloadFile } from '@/apis/drive/drive.api';
-import { isAxiosError } from 'axios';
-import { ApiGenericError } from '@/utils/types/api-generic-error.type';
-import { toast } from 'react-toastify';
-import { toastError } from '@/utils/toast-options/toast-options';
-import { useSession } from '@/store/auth/session';
-import { useCopyMutation, useRenameMutation } from '@/hooks/drive.hooks';
 import { useStorageStore } from '@/store/storage/storage.store';
-import RenamePopUp from '../pop-up/RenamePopUp';
+import CustomDropdown from '../drop-down/CustomDropdown';
+import FileViewerContainer from '../file-viewers/file-viewer-container/FileViewerContainer';
 import DeleteTempPopUp from '../pop-up/DeleteTempPopUp';
+import MovePopUp from '../pop-up/MovePopUp';
+import RenamePopUp from '../pop-up/RenamePopUp';
+import SharePopUp from '../pop-up/SharePopUp';
 
 type FileCardProps = {
   title: string;
@@ -36,6 +29,7 @@ type FileCardProps = {
   isSelected?: boolean;
   onChanged?: () => void;
   dirId?: string;
+  fileType?: string;
 };
 
 export const fileOperation = [
@@ -53,6 +47,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
 
   const { rootId } = useStorageStore();
   const copyMutation = useCopyMutation();
+  const [file, setFile] = useState<File | null>(null);
   // const renameMutation = useRenameMutation();
 
   const menuItems: MenuItem[][] = [
@@ -131,14 +126,17 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
       { label: 'Activity', icon: <Icon icon='mdi:graph-line-variant' />, action: () => {} },
       { label: 'Lock', icon: <Icon icon='mdi:lock-outline' />, action: () => {} },
     ],
-    [{ label: 'Move to trash', icon: <Icon icon='fa:trash-o' />,
-      action: () => {
-        setType('move to trash');
-        setIsPopUpOpen(true);
-      }
-    }],
+    [
+      {
+        label: 'Move to trash',
+        icon: <Icon icon='fa:trash-o' />,
+        action: () => {
+          setType('move to trash');
+          setIsPopUpOpen(true);
+        },
+      },
+    ],
   ];
-
   return (
     <>
       {fileViewer && (
@@ -147,8 +145,24 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
           closeOutside={() => {
             setFileViewer(false);
           }}
-          fileName={title}
-          fileType={''}
+          fileInfo={{
+            isDir: false,
+            title: '',
+            icon: '',
+            preview: '',
+            id: '',
+            extra: '',
+            owner: '',
+            lastModified: '',
+            size: '',
+            fileType: '',
+            onDoubleClick: function (): void {
+              throw new Error('Function not implemented.');
+            },
+            onChanged: function (): void {
+              throw new Error('Function not implemented.');
+            },
+          }}
         />
       )}
       <div
@@ -183,7 +197,15 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
           />
         )}
         {type === 'rename' && <RenamePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} name={title} id={id} />}
-        {type === 'move to trash' && <DeleteTempPopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} id={rootId} source_ids={[id]} />}
+        {type === 'move to trash' && (
+          <DeleteTempPopUp
+            open={isPopUpOpen}
+            handleClose={() => setIsPopUpOpen(false)}
+            title={title}
+            id={rootId}
+            source_ids={[id]}
+          />
+        )}
       </div>
     </>
   );

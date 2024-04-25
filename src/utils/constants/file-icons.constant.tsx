@@ -15,7 +15,7 @@ export const fileTypeIcons = {
   docx: <Icon icon='mdi:file-word-box' className='h-full w-full text-[#447DD7]' />,
   xlxs: <Icon icon='mdi:file-excel-box' className=' w-fulltext-green-600 h-full' />,
   txt: <Icon icon='mdi:file-text' className='h-full w-full text-[#447DD7]' />,
-  pptx: <Icon icon='mdi:file-powerpoint-box' className='h-ull w-full text-red-500' />,
+  pptx: <Icon icon='mdi:file-powerpoint-box' className='h-full w-full text-red-500' />,
   zip: <Icon icon='mdi:zip-box' className='text-textC h-full w-full' />,
   any: <Icon icon='mdi:file' className='text-textC h-full w-full' />,
 };

@@ -3,10 +3,12 @@ import React from 'react';
 import Audio from '../audio/Audio';
 import Docx from '../docx/Docx';
 import Pdf from '../pdf/Pdf';
+import Text from '../text/Text';
+import Image from '../image/Image';
 
 const Viewer: React.FC<FileViewerProps> = (props) => {
   const { fileType } = props;
-
+  console.log(fileType);
   switch (fileType) {
     case 'pdf': {
       return <Pdf {...props} />;
@@ -20,27 +22,12 @@ const Viewer: React.FC<FileViewerProps> = (props) => {
     case 'pptx': {
       return <Pdf {...props} />;
     }
-    case 'txt':
-    case 'json':
-    case 'js':
-    case 'css':
-    case 'java':
-    case 'py':
-    case 'html':
-    case 'jsx':
-    case 'ts':
-    case 'tsx':
-    case 'xml':
-    case 'md':
+    case 'text/plain': {
+      return <Text {...props} />;
+    }
     case 'log': {
       return <Pdf {...props} />;
     }
-    case 'mp3':
-    case 'mpeg':
-    case 'aac':
-    case 'wav':
-    case 'flac':
-    case 'm4a':
     case 'ogg': {
       return <Audio {...props} />;
     }
@@ -49,7 +36,9 @@ const Viewer: React.FC<FileViewerProps> = (props) => {
       return <Pdf {...props} />;
     }
     case 'jpg':
-    case 'jpeg':
+    case 'image/jpeg': {
+      return <Image {...props} />;
+    }
     case 'gif':
     case 'png': {
       return <Pdf {...props} />;
