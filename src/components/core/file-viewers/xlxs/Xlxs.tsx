@@ -1,6 +1,6 @@
 import { FileViewerProps } from '@/utils/types/file-viewer-props.type';
 
-const Xlxs: React.FC<FileViewerProps> = ({ src, style, className }) => {
+const Xlxs: React.FC<FileViewerProps> = () => {
   return <div>Xlxs</div>;
 };
 
