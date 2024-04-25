@@ -39,7 +39,7 @@ export const fileOperation = [
   { icon: <TrashIcon />, label: 'Delete file' },
 ];
 
-const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelected, onClick, dirId, onChanged }) => {
+const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelected, onClick, dirId,fileType, onChanged }) => {
   const [fileViewer, setFileViewer] = useState(false);
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
   const [type, setType] = useState<'move' | 'share' | 'rename' | 'move to trash' | null>(null);
@@ -147,15 +147,15 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
           }}
           fileInfo={{
             isDir: false,
-            title: '',
-            icon: '',
+            title: title,
+            icon: icon,
             preview: '',
-            id: '',
+            id: id,
             extra: '',
             owner: '',
             lastModified: '',
             size: '',
-            fileType: '',
+            fileType: fileType,
             onDoubleClick: function (): void {
               throw new Error('Function not implemented.');
             },

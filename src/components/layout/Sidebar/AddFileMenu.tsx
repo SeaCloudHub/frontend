@@ -1,4 +1,4 @@
-import { uploadFilesApi } from '@/apis/user/storage/create-storage.api';
+import { uploadFilesApi } from '@/apis/user/storage/storage.api';
 import IconifyIcon from '@/components/core/Icon/IConCore';
 import CustomDropdown from '@/components/core/drop-down/CustomDropdown';
 import { MenuItem } from '@/components/core/drop-down/Dropdown';

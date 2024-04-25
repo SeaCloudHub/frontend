@@ -31,17 +31,16 @@ const Viewer: React.FC<FileViewerProps> = (props) => {
     case 'ogg': {
       return <Audio {...props} />;
     }
-    case 'webm':
     case 'mp4': {
       return <Pdf {...props} />;
     }
-    case 'jpg':
-    case 'image/jpeg': {
-      return <Image {...props} />;
+    case 'image/png':{
+         console.log('image/png');
+         return <Image {...props} />;
     }
-    case 'gif':
-    case 'png': {
-      return <Pdf {...props} />;
+    case 'image/jpg' || 'image/png': {
+      console.log('image/jpg' );
+      return <Image {...props} />;
     }
     default: {
       return <Pdf {...props} />;

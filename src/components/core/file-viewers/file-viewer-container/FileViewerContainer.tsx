@@ -9,6 +9,11 @@ import ButtonIcon from '../../button/ButtonIcon';
 import MenuCore from '../../menu/MenuCore';
 import { MenuItemCoreProps } from '../../menu/MenuItem';
 import Viewer from './Viewer';
+import { downloadFileApi } from '@/apis/user/storage/storage.api';
+import { toastError } from '@/utils/toast-options/toast-options';
+import { ApiGenericError } from '@/utils/types/api-generic-error.type';
+import { isAxiosError } from 'axios';
+import { toast } from 'react-toastify';
 
 type FileViewerContainerProps = {
   open: boolean;
@@ -17,53 +22,7 @@ type FileViewerContainerProps = {
   closeOutside?: (data?: any) => void;
 };
 
-const FileViewerContainer: React.FC<FileViewerContainerProps> = ({ isCloseOutside, closeOutside, open, fileInfo }) => {
-  const Transition = React.forwardRef(function Transition(
-    props: TransitionProps & {
-      children: React.ReactElement<any, any>;
-    },
-    ref: React.Ref<unknown>,
-  ) {
-    return <Slide direction='up' ref={ref} {...props} />;
-  });
-  const [fileViewerActions, setFileViewerActions] = useState<MenuItemCoreProps[]>([]);
-  useEffect(() => {
-    function updateActions() {
-      let actions: MenuItemCoreProps[] = [
-        totalFileViewerActions['delete'],
-        totalFileViewerActions['print'],
-        totalFileViewerActions['fileHistory'],
-      ];
-      if (window.innerWidth < 640) {
-        actions.push(totalFileViewerActions['download']);
-      } else {
-        const download = totalFileViewerActions['download'];
-        actions = actions.filter((action) => action !== download);
-      }
-
-      if (window.innerWidth < 375) {
-        actions.push(totalFileViewerActions['copyLink']);
-      } else {
-        const copyLink = totalFileViewerActions['copyLink'];
-        actions = actions.filter((action) => action !== copyLink);
-      }
-
-      setFileViewerActions(actions);
-    }
-
-    updateActions();
-    window.addEventListener('resize', updateActions);
-    return () => window.removeEventListener('resize', updateActions);
-  }, []);
-
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const triggerFileInput = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
-  };
-  const totalFileViewerActions: Record<string, MenuItemCoreProps> = {
+const totalFileViewerActions: Record<string, MenuItemCoreProps> = {
     delete: {
       icon: 'material-symbols-light:delete-outline',
       onClick: () => {},
@@ -95,9 +54,74 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({ isCloseOutsid
       title: 'Download',
     },
   };
-
+const FileViewerContainer: React.FC<FileViewerContainerProps> = ({ isCloseOutside, closeOutside, open, fileInfo }) => {
+  const Transition = React.forwardRef(function Transition(
+    props: TransitionProps & {
+      children: React.ReactElement<any, any>;
+    },
+    ref: React.Ref<unknown>,
+  ) {
+    return <Slide direction='up' ref={ref} {...props} />;
+  });
+  const [fileViewerActions, setFileViewerActions] = useState<MenuItemCoreProps[]>([]);
+  const [fileIcon,setFileIcon]= useState<React.ReactNode|null>(null);
   const [file, setFile] = useState<File | null>(null);
-  const FileIcon = getFileIcon('pdf') as React.ReactNode;
+  useEffect(() => {
+    function updateActions() {
+      let actions: MenuItemCoreProps[] = [
+        totalFileViewerActions['delete'],
+        totalFileViewerActions['print'],
+        totalFileViewerActions['fileHistory'],
+      ];
+      if (window.innerWidth < 640) {
+        actions.push(totalFileViewerActions['download']);
+      } else {
+        const download = totalFileViewerActions['download'];
+        actions = actions.filter((action) => action !== download);
+      }
+
+      if (window.innerWidth < 375) {
+        actions.push(totalFileViewerActions['copyLink']);
+      } else {
+        const copyLink = totalFileViewerActions['copyLink'];
+        actions = actions.filter((action) => action !== copyLink);
+      }
+
+      setFileViewerActions(actions);
+    }
+
+    updateActions();
+    window.addEventListener('resize', updateActions);
+    return () => window.removeEventListener('resize', updateActions);
+  }, []);
+  
+  const getFileBinary = async ()=>{
+          try {
+            const res = await downloadFileApi(fileInfo.id);
+            const blob = new Blob([res.data], { type: res.headers['content-type'] });
+            const fileName = fileInfo.title || 'file';
+            const file = new File([blob], fileName, { type: blob.type });
+            setFile(file);
+          } catch (error) {
+            if (isAxiosError<ApiGenericError>(error)) {
+              toast.error(error.response?.data.message, toastError());
+            }
+          }
+  }
+
+  useEffect(() => {
+    if(fileInfo.id){
+      const fetchData = async () => {
+        if (fileInfo.id) {
+          await getFileBinary();
+        }
+      };
+    fetchData();
+     const FileIcon = getFileIcon(fileInfo.fileType) as React.ReactNode;
+     setFileIcon(FileIcon);
+    }
+  },[fileInfo])
+
   return (
     <Dialog onClose={isCloseOutside ? closeOutside : () => {}} open={open} fullScreen TransitionComponent={Transition}>
       <DialogTitle
@@ -110,11 +134,7 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({ isCloseOutsid
         }}>
         <div className='z-10 flex w-1/3  flex-grow  items-center space-x-3'>
           <ButtonCore type='contained' title='Edit' icon={<IconifyIcon icon='basil:edit-outline' />} />
-          <div
-            className='flex  cursor-pointer  items-center space-x-2 rounded-md p-2 hover:bg-gray-100'
-            onClick={() => {
-              triggerFileInput();
-            }}>
+          <div className='flex  cursor-pointer  items-center space-x-2 rounded-md p-2 hover:bg-gray-100' onClick={() => {}}>
             <IconifyIcon icon='codicon:share' fontSize={13} />
             <p className='text-sm'>Share</p>
           </div>
@@ -132,8 +152,8 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({ isCloseOutsid
         </div>
         <div className='hidden flex-grow items-center justify-center md:flex'>
           <div className='flex max-h-[20px] items-center space-x-2'>
-            <div>{FileIcon}</div>
-            <p className='truncate text-sm font-bold'>{'da' || 'file01.pdf'}</p>
+            <div>{fileIcon}</div>
+            <p className='truncate text-sm font-bold'>{fileInfo&&fileInfo.title}</p>
           </div>
         </div>
         <div className='flex w-1/3 flex-grow flex-nowrap items-center justify-end'>
@@ -149,24 +169,12 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({ isCloseOutsid
       </DialogTitle>
       <DialogContent
         sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-        <input
-          className='hidden'
-          type='file'
-          ref={fileInputRef}
-          onChange={(event) => {
-            if (event.target.files && event.target.files[0]) {
-              const selectedFile = event.target.files[0];
-              setFile(selectedFile);
-            }
-          }}
-        />
         {file && (
           <Viewer file={file} fileId={fileInfo.id} fileName={fileInfo.title} fileType={file.type} rootId={fileInfo.owner} />
         )}
-        {!file && <img src='./loader.svg' className='mx-auto h-[50px] w-[50px]' />}
+        {!file && <img src={(import.meta.env.BASE_URL + 'loader.svg') as string} className='mx-auto h-[50px] w-[50px]' />}
       </DialogContent>
     </Dialog>
   );
 };
-
 export default FileViewerContainer;

@@ -1,3 +1,4 @@
 export type GetFileBinaryREQ = {
-  file: string;
+  id:string;
 };
+
