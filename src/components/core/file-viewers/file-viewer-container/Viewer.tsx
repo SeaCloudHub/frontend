@@ -35,11 +35,12 @@ const Viewer: React.FC<FileViewerProps> = (props) => {
       return <Pdf {...props} />;
     }
     case 'image/png':{
-         console.log('image/png');
          return <Image {...props} />;
     }
-    case 'image/jpg' || 'image/png': {
-      console.log('image/jpg' );
+        case 'image/jpg':{
+         return <Image {...props} />;
+    }
+    case 'image/jpeg':{
       return <Image {...props} />;
     }
     default: {
