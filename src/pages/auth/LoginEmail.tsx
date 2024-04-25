@@ -85,11 +85,6 @@ const LoginEmail = () => {
                   error={formik.touched.email && Boolean(formik.errors.email)}
                   helperText={formik.touched.email && formik.errors.email}
                 />
-                <div className='mt-1'>
-                  <AuthLink link='/forgot-password' className='text-[#0b57d0]'>
-                    Forgot email?
-                  </AuthLink>
-                </div>
               </div>
               <div className='terms'>
                 <Typography variant='body2' color='textSecondary'>
@@ -100,9 +95,6 @@ const LoginEmail = () => {
                 </AuthLink>
               </div>
               <div className='flex items-center justify-end gap-3'>
-                <Button size='medium' variant='text' color='primary' sx={{ borderRadius: '30px' }} className='w-40'>
-                  Create account
-                </Button>
                 <Button
                   size='medium'
                   sx={{ borderRadius: '30px' }}
