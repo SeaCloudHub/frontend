@@ -65,8 +65,6 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
     };
   });
 
-  // console.log('[DriveGridView] current selected', selected);
-
   return (
     <>
       {isLoading ? (
@@ -85,23 +83,21 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
               <div className={!folderShow ? 'visible' : 'hidden'}>
                 <div className='pb-4 pt-2 text-sm font-medium'> Folders</div>
                 <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'>
-                  {folders.map((folder, index) => {
-                    return (
-                      <div key={index} className='w-auto'>
-                        <FolderCard
-                          title={folder.title}
-                          icon={folder.icon}
-                          id={folder.id}
-                          onDoubleClick={() => {
-                            handlePath([{ id: folder.id, name: folder.title }]);
-                            navigate(`${CUSTOMER_MY_DRIVE}/dir/${folder.id}`);
-                          }}
-                          onClick={() => setSelected({ id: folder.id, name: folder.title })}
-                          isSelected={selected && selected.id === folder.id}
-                        />
-                      </div>
-                    );
-                  })}
+                  {folders.map((folder, index) => (
+                    <div key={index} className='w-auto'>
+                      <FolderCard
+                        title={folder.title}
+                        icon={folder.icon}
+                        id={folder.id}
+                        onDoubleClick={() => {
+                          handlePath([{ id: folder.id, name: folder.title }]);
+                          navigate(`${CUSTOMER_MY_DRIVE}/dir/${folder.id}`);
+                        }}
+                        onClick={() => setSelected && setSelected({ id: folder.id, name: folder.title })}
+                        isSelected={selected && selected.id === folder.id}
+                      />
+                    </div>
+                  ))}
                 </div>
               </div>
             )}
@@ -109,21 +105,19 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
               <div className={!fileShow ? 'visible' : 'hidden'}>
                 <div className='pb-4 pt-2 text-sm font-medium'> Files</div>
                 <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'>
-                  {files.map((file, index) => {
-                    return (
-                      <div key={index} className='aspect-square w-auto'>
-                        <FileCard
-                          title={file.title}
-                          icon={file.icon}
-                          preview={file.preview}
-                          id={file.id}
-                          dirId={curDir?.id}
-                          onClick={() => setSelected({ id: file.id, name: file.title })}
-                          isSelected={selected && selected.id === file.id} // [TODO]
-                        />
-                      </div>
-                    );
-                  })}
+                  {files.map((file, index) => (
+                    <div key={index} className='aspect-square w-auto'>
+                      <FileCard
+                        title={file.title}
+                        icon={file.icon}
+                        preview={file.preview}
+                        id={file.id}
+                        dirId={curDir?.id}
+                        onClick={() => setSelected && setSelected({ id: file.id, name: file.title })}
+                        isSelected={selected && selected.id === file.id}
+                      />
+                    </div>
+                  ))}
                 </div>
               </div>
             )}

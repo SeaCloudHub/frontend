@@ -8,7 +8,7 @@ import { Entry } from '@/utils/types/entry.type';
 import { Path, useDrawer, useViewMode } from '@/store/my-drive/myDrive.store';
 import SidePanel from '../my-drive/side-panel/SidePanel';
 import { DriveGridView } from '../my-drive/content/DriveGridView';
-import { transformEntries } from '@/hooks/drive.hooks';
+import { transformEntries, useSharedEntry } from '@/hooks/drive.hooks';
 import { DriveListView } from '../my-drive/content/DriveListView';
 import { useSession } from '@/store/auth/session';
 import { useQuery } from '@tanstack/react-query';
@@ -234,18 +234,19 @@ const Shared = () => {
   const { drawerOpen, openDrawer, closeDrawer } = useDrawer();
   const [{ sort, order }, setSort] = useState<{ sort: string; order: string }>({ sort: 'Name', order: 'desc' });
   const { rootId } = useStorageStore();
-  const [path, setPath] = useState<Path>([{ name: 'Shared', id: rootId }]);
+  // const [path, setPath] = useState<Path>([{ name: 'Shared', id: rootId }]);
 
-  const { data, error, refetch } = useQuery({
-    queryKey: ['shared-entries', rootId],
-    queryFn: async () => await getSharedEntries({ id: path[path.length - 1].id }).then((res) => res?.data?.entries || []),
+  const { data, refetch, isLoading, parents } = useSharedEntry();
+  const [selected, setSelected] = useState<{ id: string; name: string }>({
+    id: parents[parents.length - 1].id,
+    name: parents[parents.length - 1].name,
   });
 
-  useEffect(() => {
-    refetch();
-  }, [path, refetch]);
+  // useEffect(() => {
+  //   refetch();
+  // }, [parents, refetch]);
 
-  const processedEntries: LocalEntry[] = transformEntries((data || []) as Required<Entry[]> & ListEntriesRESP['entries']);
+  // const processedEntries: LocalEntry[] = transformEntries((data || []) as Required<Entry[]> & ListEntriesRESP['entries']);
 
   return (
     <DriveLayout
@@ -253,7 +254,7 @@ const Shared = () => {
         <div className='px-4'>
           <div className='flex justify-between space-x-2 text-2xl'>
             <div className='w-full pb-[8px] pl-1 pt-[14px]'>
-              <DrivePath path={path} type='Shared' />
+              <DrivePath path={parents} type='Shared' />
             </div>
             <div className='flex items-center gap-2'>
               <SharingPageViewMode setViewMode={setViewMode} viewMode={viewMode} />
@@ -297,9 +298,17 @@ const Shared = () => {
       }
       bodyLeft={
         viewMode === 'grid' ? (
-          <DriveGridView sort={sort} order={order} setSort={setSort} entries={processedEntries} setPath={setPath} />
+          <DriveGridView
+            entries={data}
+            setPath={() => {}}
+            setSelected={setSelected}
+            selected={selected}
+            isLoading={isLoading}
+            curDir={parents[parents.length - 1]}
+          />
         ) : (
-          <DriveListView order={order} sort={sort} setSort={setSort} entries={processedEntries} />
+          // <DriveListView order={order} sort={sort} setSort={setSort} entries={processedEntries} />
+          <DriveListView entries={data} setPath={() => {}} />
         )
       }
       sidePanel={<SidePanel />}

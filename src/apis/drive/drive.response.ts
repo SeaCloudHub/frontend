@@ -40,3 +40,6 @@ export type RenameRESP = {
   id: string;
 };
 
+export type SharedEntriesRESP = EntryRESP[];
+
+export type DeleteFilesRESP = EntryRESP[];
