@@ -19,6 +19,7 @@ import DeleteTempPopUp from '../pop-up/DeleteTempPopUp';
 import MovePopUp from '../pop-up/MovePopUp';
 import RenamePopUp from '../pop-up/RenamePopUp';
 import SharePopUp from '../pop-up/SharePopUp';
+import DeletePopUp from '../pop-up/DeletePopUp';
 
 type FileCardProps = {
   title: string;
@@ -27,9 +28,9 @@ type FileCardProps = {
   id: string;
   onClick?: () => void;
   isSelected?: boolean;
-  onChanged?: () => void;
   dirId?: string;
   fileType?: string;
+  parent?: 'priority' | 'my-drive' | 'shared' | 'trash';
 };
 
 export const fileOperation = [
@@ -39,7 +40,7 @@ export const fileOperation = [
   { icon: <TrashIcon />, label: 'Delete file' },
 ];
 
-const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelected, onClick, dirId,fileType, onChanged }) => {
+const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelected, onClick, dirId,fileType, parent }) => {
   const [fileViewer, setFileViewer] = useState(false);
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
   const [type, setType] = useState<'move' | 'share' | 'rename' | 'move to trash' | null>(null);
@@ -51,7 +52,9 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
   // const renameMutation = useRenameMutation();
 
   const menuItems: MenuItem[][] = [
-    [{ label: 'Preview', icon: <Icon icon='material-symbols:visibility' />, action: () => {} }],
+    [{ label: 'Preview', icon: <Icon icon='material-symbols:visibility' />, action: () => {
+      setFileViewer(true);
+    } }],
     [
       {
         label: 'Download',
@@ -137,6 +140,27 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
       },
     ],
   ];
+
+  const menuItemsTrash: MenuItem[][] = [
+    [
+      {
+        label: 'Restore',
+        icon: <Icon icon='mdi:restore' />,
+        action: () => {
+          console.log('[FileCard] Restore ' + id);
+        },
+      },
+      {
+        label: 'Delete permanently',
+        icon: <Icon icon='fa:trash-o' />,
+        action: () => {
+          console.log('[FileCard] Delete permanently ' + id);
+          setIsPopUpOpen(true);
+        },
+      },
+    ],
+  ];
+
   return (
     <>
       {fileViewer && (
@@ -167,7 +191,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
       )}
       <div
         onDoubleClick={() => {
-          setFileViewer(true);
+          parent !== 'trash' && setFileViewer(true);
         }}
         onClick={onClick}
         className={classNames(
@@ -183,7 +207,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
           </div>
           <CustomDropdown
             button={<BsThreeDotsVertical className='h-6 w-6 rounded-full p-1 hover:bg-slate-300' />}
-            items={menuItems}
+            items={parent==='trash' ? menuItemsTrash : menuItems}
           />
         </div>
         <div className='mb-2 flex h-full w-full items-center justify-center overflow-hidden rounded-md bg-white'>{preview}</div>
@@ -206,6 +230,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
             source_ids={[id]}
           />
         )}
+        {parent==='trash' && <DeletePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} source_ids={[id]} />}
       </div>
     </>
   );

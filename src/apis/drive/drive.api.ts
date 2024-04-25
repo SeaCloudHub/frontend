@@ -1,8 +1,8 @@
 import { api } from "@/helpers/http/config.http";
-import { CopyFileREQ, ListEntriesREQ, RenameREQ, UploadFileREQ } from "./drive.request";
+import { CopyFileREQ, ListEntriesREQ, RenameREQ, UploadFileREQ, DeleteFilesREQ } from "./drive.request";
 import { BaseResponse } from "@/utils/types/api-base-response.type";
 import { MoveToTrashREQ } from "./request/move-to-trash.request";
-import { EntryMetadataRES, EntryRESP, ListEntriesRESP } from "./drive.response";
+import { DeleteFilesRESP, EntryMetadataRES, EntryRESP, ListEntriesRESP, SharedEntriesRESP } from "./drive.response";
 import { HTTP_HEADER } from "@/utils/constants/http.constant";
 
 export const getListEntriesMyDrive = async (param: ListEntriesREQ) => {
@@ -12,7 +12,19 @@ export const getListEntriesMyDrive = async (param: ListEntriesREQ) => {
   return res.data;
 };
 
-export const getSharedEntries = async (param: Pick<ListEntriesREQ, 'id'>) => {
+export const getListEntriesTrash = async (param: ListEntriesREQ) => {
+  const res = await api.get<BaseResponse<ListEntriesRESP>>(`/files/trash`, {
+    params: { cursor: param.cusor, limit: param.limit },
+  });
+  return res.data;
+};
+
+export const getSharedEntries = async () => {
+  const res = await api.get<BaseResponse<SharedEntriesRESP>>(`/files/share`);
+  return res.data;
+};
+
+export const getAccessEntries = async (param: Pick<ListEntriesREQ, 'id'>) => {
   const res = await api.get<BaseResponse<ListEntriesRESP>>(`/files/${param.id}/access`);
   return res.data;
 };
@@ -58,5 +70,10 @@ export const renameFile = async (body: RenameREQ) => {
 
 export const moveToTrash = async (body: MoveToTrashREQ) => {
   const res = await api.post<BaseResponse<EntryRESP[]>>(`/files/move/trash`, body);
+  return res.data;
+}
+
+export const deleteFiles = async (body: DeleteFilesREQ) => {
+  const res = await api.post<BaseResponse<EntryRESP[]>>(`/files/delete`, body);
   return res.data;
 }

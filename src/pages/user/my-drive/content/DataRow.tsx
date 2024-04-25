@@ -1,4 +1,4 @@
-import Dropdown from '@/components/core/drop-down/Dropdown';
+import Dropdown, { MenuItem } from '@/components/core/drop-down/Dropdown';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import React from 'react';
 import { Tooltip } from '@mui/material';
@@ -8,8 +8,9 @@ import CustomDropdown from '@/components/core/drop-down/CustomDropdown';
 import SharePopUp from '@/components/core/pop-up/SharePopUp';
 import MovePopUp from '@/components/core/pop-up/MovePopUp';
 import RenamePopUp from '@/components/core/pop-up/RenamePopUp';
+import DeletePopUp from '@/components/core/pop-up/DeletePopUp';
 
-export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModified, owner, size, onDoubleClick }) => {
+export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModified, owner, size, onDoubleClick, parent }) => {
   const setDrawerOpen = useDrawer((state) => state.openDrawer);
   const [type, setType] = React.useState<'move' | 'share' | 'rename' | null>(null);
   const [isPopUpOpen, setIsPopUpOpen] = React.useState(false);
@@ -25,7 +26,6 @@ export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModi
           console.log('rename');
           setType('rename');
           setIsPopUpOpen(true);
-          // onChanged && onChanged();
         },
       },
       {
@@ -73,6 +73,7 @@ export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModi
     ],
     [{ label: 'Move to trash', icon: <Icon icon='fa:trash-o' /> }],
   ];
+
   const folderOps = [
     [
       { label: 'Download', icon: <Icon icon='ic:outline-file-download' /> },
@@ -126,6 +127,24 @@ export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModi
     [{ label: 'Move to trash', icon: <Icon icon='fa:trash-o' /> }],
   ];
 
+  const menuItemsTrash: MenuItem[] = [
+    {
+      label: 'Restore',
+      icon: <Icon icon='mdi:restore' />,
+      action: () => {
+        console.log('[FileCard] Restore ' + id);
+      },
+    },
+    {
+      label: 'Delete permanently',
+      icon: <Icon icon='fa:trash-o' />,
+      action: () => {
+        console.log('[FileCard] Delete permanently ' + id);
+        setIsPopUpOpen(true);
+      },
+    },
+  ];
+
   // const [showTools, setShowTools] = useState(false);
   return (
     <div
@@ -153,7 +172,7 @@ export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModi
       <div className='flex shrink-0 grow-0 basis-[192px] justify-end text-sm font-medium max-[1450px]:basis-[48px]'>
         <CustomDropdown
           button={<Icon icon='ic:baseline-more-vert' className='h-7 w-7 rounded-full p-1 hover:bg-surfaceContainerLow' />}
-          items={isDir ? folderOps : fileOps}
+          items={parent === 'trash' ? [menuItemsTrash]: (isDir ? folderOps : fileOps)}
         />
       </div>
       {type === 'share' && <SharePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} />}
@@ -166,6 +185,7 @@ export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModi
         />
       )}
       {type === 'rename' && <RenamePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} name={title} id={id} />}
+      {parent === 'trash' && <DeletePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} source_ids={[id]} />}
     </div>
   );
 };
