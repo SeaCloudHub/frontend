@@ -210,11 +210,14 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
           <div className='flex max-w-[calc(100%-1.5rem)] items-center space-x-4'>
             <div className='h-6 w-6 min-w-fit'>{icon}</div>
             <Tooltip title={title}>
-              <div className='truncate text-sm font-medium'>{title}</div>
+              <div className='truncate text-sm font-medium select-none'>{title}</div>
             </Tooltip>
           </div>
           <div className='h-6 w-6 rounded-full p-1 hover:bg-slate-300'>
-            <CustomDropdown button={<BsThreeDotsVertical className='' />} items={menuItems} />
+            <CustomDropdown
+              button={<BsThreeDotsVertical className='dark:hover:text-slate-500' />}
+              items={parent==='trash' ? menuItemsTrash : menuItems}
+            />
           </div>
         </div>
         <div className='mb-2 flex h-full w-full items-center justify-center overflow-hidden rounded-md bg-white'>{preview}</div>

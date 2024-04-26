@@ -229,7 +229,7 @@ const DefaultTabPanel: React.FC = () => {
   return (
     <div className='flex flex-col items-center'>
       <img className='mb-4 object-contain' src={(import.meta.env.BASE_URL + 'guide1.png') as string} alt='Guide1' />
-      <div>Select item to see the details</div>;
+      <div>Select item to see the details</div>
     </div>
   );
 };

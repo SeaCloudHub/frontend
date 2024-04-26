@@ -43,7 +43,72 @@ function Search() {
       isStarred: false,
       isTrashed: false,
     },
-    {},
+    {
+      id: 'da',
+      fileName: 'Trieu dep tria',
+      fileExtension: 'docx',
+      fileLink: 'dasdsa',
+      folderId: 'dad',
+      folderName: 'das',
+      isFolder: false,
+      isStarred: false,
+      isTrashed: false,
+    },
+    {
+      id: 'da',
+      fileName: 'Trieu dep tria',
+      fileExtension: 'docx',
+      fileLink: 'dasdsa',
+      folderId: 'dad',
+      folderName: 'das',
+      isFolder: false,
+      isStarred: false,
+      isTrashed: false,
+    },
+    {
+      id: 'da',
+      fileName: 'Trieu dep tria',
+      fileExtension: 'docx',
+      fileLink: 'dasdsa',
+      folderId: 'dad',
+      folderName: 'das',
+      isFolder: false,
+      isStarred: false,
+      isTrashed: false,
+    },
+    {
+      id: 'da',
+      fileName: 'Trieu dep tria',
+      fileExtension: 'docx',
+      fileLink: 'dasdsa',
+      folderId: 'dad',
+      folderName: 'das',
+      isFolder: false,
+      isStarred: false,
+      isTrashed: false,
+    },
+    {
+      id: 'da',
+      fileName: 'Trieu dep tria',
+      fileExtension: 'docx',
+      fileLink: 'dasdsa',
+      folderId: 'dad',
+      folderName: 'das',
+      isFolder: false,
+      isStarred: false,
+      isTrashed: false,
+    },
+    {
+      id: 'da',
+      fileName: 'Trieu dep tria',
+      fileExtension: 'docx',
+      fileLink: 'dasdsa',
+      folderId: 'dad',
+      folderName: 'das',
+      isFolder: false,
+      isStarred: false,
+      isTrashed: false,
+    },
   ];
   const [modalOpen, setModalOpen] = useState(false);
   const searchValue = useDebounce({ delay: 260, value: keyWord });
@@ -81,7 +146,7 @@ function Search() {
         type='text'
         placeholder='Search in Drive'
         className=' dark:bg-search-bg-dark  bg-search-bg dark:text-icons-color-dark  w-full rounded-full px-2 py-[0.7rem]
-        indent-11 focus:rounded-b-none focus:rounded-t-2xl focus:bg-white 
+        indent-11 focus:rounded-b-none focus:rounded-t-2xl focus:bg-white
         focus:shadow-md focus:outline-none dark:placeholder-blue-50 dark:placeholder-opacity-60'
       />
       {onFocus && <SearchResult data={results} />}

@@ -28,7 +28,6 @@ const TextFieldCore = ({
   value,
 }: TextFieldCoreProps) => {
   return (
-    // <div className='w-full px-1'>
     <TextField
       name={name}
       disabled={disabled}
@@ -49,9 +48,7 @@ const TextFieldCore = ({
           </span>
         )
       }
-      autoComplete='off'
     />
-    // </div>
   );
 };
 

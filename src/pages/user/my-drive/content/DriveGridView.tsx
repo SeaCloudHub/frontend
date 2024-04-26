@@ -103,7 +103,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
             )}
             {files.length !== 0 && (
               <div className={!fileShow ? 'visible' : 'hidden'}>
-                <div className='pb-4 pt-2 text-sm font-medium'> Files</div>
+                <div className='pb-4 pt-2 text-sm font-medium'>Files</div>
                 <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'>
                   {files.map((file, index) => (
                     <div key={index} className='aspect-square w-auto'>

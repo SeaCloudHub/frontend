@@ -4,7 +4,6 @@ import SharingPageFilter from '../shared/sharing-page-filter/SharingPageFilter';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import ButtonCore from '@/components/core/button/ButtonCore';
 import StarredView from './stared-view/StarredView';
-import { fakeData } from '../shared/Shared';
 import DriveLayout from '@/components/layout/DriveLayout';
 import { useDrawer, useViewMode } from '@/store/my-drive/myDrive.store';
 import SidePanel from '../my-drive/side-panel/SidePanel';
@@ -39,9 +38,9 @@ const Starred = () => {
   return (
     <DriveLayout
       headerLeft={
-        <div className='px-4'>
-          <div className='flex justify-between space-x-2 text-2xl'>
-            <h2 className='py-2 text-3xl font-semibold'>Starred</h2>
+        <div className='px-5'>
+          <div className='flex justify-between space-x-2'>
+            <h2 className='text-2xl pt-[17px] pb-[20px] font-semibold'>Starred</h2>
             <div className='flex items-center gap-2'>
               <SharingPageViewMode setViewMode={setViewMode} viewMode={viewMode} />
               <Icon
@@ -57,7 +56,6 @@ const Starred = () => {
               />
             </div>
           </div>
-
           <div className='flex items-center gap-3'>
             <SharingPageFilter
               setModifiedFilterItem={setModifiedFilterItem}
@@ -68,16 +66,17 @@ const Starred = () => {
               typeFilter={typeFilterItem}
             />
             {(typeFilterItem || peopleFilterItem || modifiedFilterItem) && (
-              <ButtonCore
-                title='Clear all filters'
-                contentColor='black'
-                onClick={() => {
-                  setTypeFilterItem('');
-                  setPeopleFilterItem('');
-                  setModifiedFilterItem('');
-                }}
-                type={'text'}
-              />
+              <div className='flex h-7 items-center rounded-full px-[12px] py-[1px] hover:bg-[#ededed]'>
+                <div
+                  onClick={() => {
+                    setTypeFilterItem('');
+                    setPeopleFilterItem('');
+                    setModifiedFilterItem('');
+                  }}
+                  className='cursor-pointer text-sm font-medium'>
+                  Clear filters
+                </div>
+              </div>
             )}
           </div>
         </div>

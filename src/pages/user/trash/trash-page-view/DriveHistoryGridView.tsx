@@ -2,6 +2,7 @@ import FileCard from '@/components/core/file-card/FileCard';
 import { LocalEntry } from '@/hooks/drive.hooks';
 import React from 'react';
 import Sort from '../../my-drive/content/Sort';
+import { FormatDateStrToDDMMYYYY } from '@/utils/function/formatDate.function';
 
 export type TimeEntry = {
   time: string;
@@ -15,15 +16,10 @@ type DriveHistoryViewProps = {
   entries: LocalEntry[];
 };
 
-const FormatDateStrToYYYYMMDD = (dateStr: string): string => {
-  const date = new Date(dateStr);
-  return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-};
-
 export const LocalEntryToTimeEntry = (entries: LocalEntry[]): TimeEntry[] => {
   const timeEntries: TimeEntry[] = [];
   entries.forEach((entry) => {
-    const time = FormatDateStrToYYYYMMDD(entry.lastModified);
+    const time = FormatDateStrToDDMMYYYY(entry.lastModified);
     const timeEntry = timeEntries.find((timeEntry) => timeEntry.time === time);
     if (timeEntry) {
       timeEntry.entries.push(entry);

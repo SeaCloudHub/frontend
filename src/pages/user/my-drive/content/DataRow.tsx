@@ -9,11 +9,15 @@ import SharePopUp from '@/components/core/pop-up/SharePopUp';
 import MovePopUp from '@/components/core/pop-up/MovePopUp';
 import RenamePopUp from '@/components/core/pop-up/RenamePopUp';
 import DeletePopUp from '@/components/core/pop-up/DeletePopUp';
+import { FormatDateStrToDDMMYYYY } from '@/utils/function/formatDate.function';
+import { useNavigate } from 'react-router-dom';
+import { CUSTOMER_MY_DRIVE, CUSTOMER_PRIORITY, CUSTOMER_SHARED_DIR } from '@/utils/constants/router.constant';
 
 export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModified, owner, size, onDoubleClick, parent }) => {
   const setDrawerOpen = useDrawer((state) => state.openDrawer);
   const [type, setType] = React.useState<'move' | 'share' | 'rename' | null>(null);
   const [isPopUpOpen, setIsPopUpOpen] = React.useState(false);
+  const navigate = useNavigate();
 
   const fileOps = [
     [{ label: 'Preview', icon: <Icon icon='material-symbols:visibility' /> }],
@@ -149,15 +153,17 @@ export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModi
   return (
     <div
       className='flex h-8 cursor-pointer items-center space-x-3 border-b border-b-[#dadce0] hover:bg-[#f0f1f1]'
-      onDoubleClick={onDoubleClick}>
+      onDoubleClick={()=>{
+        if(!isDir) return;
+        parent==='shared' ? navigate(`${CUSTOMER_SHARED_DIR}/dir/${id}`) : navigate(`${CUSTOMER_MY_DRIVE}/dir/${id}`);
+      }}>
       <div className='flex shrink grow basis-[304px] items-center text-sm font-medium'>
         <div className='px-4'>
           <div className='h-6 w-6'>{icon}</div>
         </div>
         <Tooltip title={title}>
           <div
-            className='line-clamp-1 w-96 max-2xl:w-72 max-lg:w-48 max-md:w-36 max-sm:w-28 max-xs:w-20
-          '>
+            className='line-clamp-1 w-96 max-2xl:w-72 max-lg:w-48 max-md:w-36 max-sm:w-28 max-xs:w-20'>
             {title}
           </div>
         </Tooltip>
@@ -166,7 +172,7 @@ export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModi
         {owner}
       </div>
       <div className='shrink-0 grow-0 basis-[200px] text-sm font-medium max-[1450px]:basis-[144px] max-[1000px]:hidden'>
-        {lastModified}
+        {FormatDateStrToDDMMYYYY(lastModified)}
       </div>
       <div className='shrink-0 grow-0 basis-[88px] text-sm font-medium max-[1450px]:basis-[88px] max-[1160px]:hidden'>{size}</div>
       <div className='flex shrink-0 grow-0 basis-[192px] justify-end text-sm font-medium max-[1450px]:basis-[48px]'>

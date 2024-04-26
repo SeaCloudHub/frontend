@@ -10,17 +10,17 @@ const FileChip = ({ title }: { title: string }) => {
 
   return (
     <div
-      className='relative flex w-full gap-2 hover:bg-gray-200'
+      className='relative flex w-full gap-2 hover:bg-gray-200 items-center'
       onMouseEnter={() => setIsVisible(true)}
       onMouseLeave={() => setIsVisible(false)}>
       <div className='flex w-full cursor-pointer items-center gap-2 rounded-lg border border-gray-500 px-2 py-1 font-semibold'>
-        <div className='h-6 w-6'>{icon}</div>
-        <Tooltip title={title} className='font-semibold'>
-          <div className='line-clamp-1 max-w-40'>{title}</div>
+        <div className='h-5 w-5'>{icon}</div>
+        <Tooltip title={title} className='font-semibold text-sm'>
+          <div className='line-clamp-1 max-w-32'>{title}</div>
         </Tooltip>
       </div>
       <Tooltip title='View file in folder' className={`absolute ${isVisible ? 'visible' : 'hidden'} -right-8`}>
-        <Icon icon='mdi:magnify' className='h-8 w-8 cursor-pointer text-gray-500' />
+        <Icon icon='mdi:magnify' className='h-7 w-7 cursor-pointer text-gray-500' />
       </Tooltip>
     </div>
   );

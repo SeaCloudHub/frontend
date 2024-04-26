@@ -4,24 +4,23 @@ import React from 'react';
 import { loginFooter } from '../../utils/constants/login-footer.constant';
 import AuthLink from './auth-link/AuthLink';
 
-type AuthFooterProps = {
-  currentValue: string;
-  items: string[];
-  handleChange: (event: SelectChangeEvent) => void;
-};
+const items = [
+  { label: 'About', value: 'en' },
+  { label: 'Vietnamese', value: 'vi' },
+];
 
-const AuthFooter: React.FC<AuthFooterProps> = ({ currentValue, items, handleChange }) => {
+const AuthFooter = () => {
   return (
-    <div className='mx-10 mt-2 flex justify-between'>
-      <SelectCore currentValue={currentValue} items={items} handleChange={handleChange} />
-      <div className='flex gap-4'>
+    <>
+      {/* <SelectCore currentValue={currentValue} items={items} handleChange={handleChange} /> */}
+      <div className='w-full flex gap-4 justify-end mt-2'>
         {loginFooter.map((item, index) => (
           <AuthLink key={index} link={item.path} className='text-black'>
             {item.label}
           </AuthLink>
         ))}
       </div>
-    </div>
+    </>
   );
 };
 

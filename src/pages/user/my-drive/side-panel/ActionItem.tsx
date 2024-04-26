@@ -4,6 +4,7 @@ import { DataSidePanelAction } from './SidePanelAction';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import fileTypeIcons from '@/utils/constants/file-icons.constant';
 import FileChip from './FileChip';
+import { FormatDateStrToMMHHDDMMYYYY } from '@/utils/function/formatDate.function';
 
 export type ActionItemProps = {
   time: Date;
@@ -21,15 +22,15 @@ const ActionItem: React.FC<ActionItemProps> = ({ time, data }) => {
     <div className='flex gap-5' key={index}>
       <Avatar src={action.actor.avatar} sx={{ width: '30px', height: '30px' }} />
       <div>
-        <div className='text-lg font-semibold'>
+        <div className='text-sm font-semibold'>
           {action.actor.name} have {action.action} {data.length > 1 ? `${data.length} items` : 'an item'}
         </div>
-        <div className='text-sm'>{action.timeAction.toISOString()}</div>
+        <div className='text-xs'>{FormatDateStrToMMHHDDMMYYYY(action.timeAction.toISOString())}</div>
         {action.root && (
           <div className='mt-1 flex w-fit cursor-pointer items-center gap-2 rounded-lg border border-gray-500 px-2 py-1 hover:bg-gray-200'>
-            <Icon icon='mdi:folder' className='h-6 w-6 text-gray-500' />
+            <Icon icon='mdi:folder' className='h-5 w-5 text-gray-500' />
             <Tooltip title={action.root.title} className='font-semibold'>
-              <div className='line-clamp-1 max-w-40'>{action.root.title}</div>
+              <div className='line-clamp-1 max-w-40 text-sm'>{action.root.title}</div>
             </Tooltip>
           </div>
         )}

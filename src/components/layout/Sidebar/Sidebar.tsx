@@ -44,7 +44,7 @@ const Sidebar = ({ role, shrinkMode }: SidebarProps) => {
             <div className='flex w-full  flex-col '>
               <div className='flex h-16 w-full items-center justify-around gap-2 p-3 pl-6 '>
                 <img src={(import.meta.env.BASE_URL + 'logo.png') as string} alt='placeholder' className='h-9  rounded-full' />
-                <p className='h4'>SEAWEEDFS</p>
+                <p className='h4'>SEACLOUD</p>
                 <ButtonIcon
                   onClick={() => {
                     updateShrinkMode(true);

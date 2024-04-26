@@ -6,7 +6,6 @@ import SharingPageViewMode from '../shared/sharing-page-view/SharingPageViewMode
 import { Icon } from '@iconify/react/dist/iconify.js';
 import SharingPageFilter from '../shared/sharing-page-filter/SharingPageFilter';
 import ButtonCore from '@/components/core/button/ButtonCore';
-import { fakeData } from '../shared/Shared';
 import SidePanel from '../my-drive/side-panel/SidePanel';
 import TrashPageView from './trash-page-view/TrashPageView';
 import { useTrash } from '@/hooks/drive.hooks';
@@ -24,9 +23,9 @@ const Trash = () => {
   return (
     <DriveLayout
       headerLeft={
-        <div className='px-4'>
-          <div className='flex justify-between space-x-2 text-2xl'>
-            <h2 className='py-2 text-3xl font-semibold'>Trash</h2>
+        <div className='px-5'>
+          <div className='flex justify-between space-x-2'>
+            <h2 className='text-2xl pt-[17px] pb-[20px] font-semibold'>Trash</h2>
             <div className='flex items-center gap-2'>
               <SharingPageViewMode setViewMode={setViewMode} viewMode={viewMode} />
               <Icon
@@ -53,16 +52,17 @@ const Trash = () => {
               typeFilter={typeFilterItem}
             />
             {(typeFilterItem || peopleFilterItem || modifiedFilterItem) && (
-              <ButtonCore
-                title='Clear all filters'
-                contentColor='black'
-                onClick={() => {
-                  setTypeFilterItem('');
-                  setPeopleFilterItem('');
-                  setModifiedFilterItem('');
-                }}
-                type={'text'}
-              />
+              <div className='flex h-7 items-center rounded-full px-[12px] py-[1px] hover:bg-[#ededed]'>
+                <div
+                  onClick={() => {
+                    setTypeFilterItem('');
+                    setPeopleFilterItem('');
+                    setModifiedFilterItem('');
+                  }}
+                  className='cursor-pointer text-sm font-medium'>
+                  Clear filters
+                </div>
+              </div>
             )}
           </div>
         </div>

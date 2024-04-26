@@ -24,10 +24,10 @@ type SidePanelActionProps = {
 const SidePanelAction: React.FC<SidePanelActionProps> = ({ data }) => {
 
   return (
-    <div className='relative'>
+    <div className='px-2'>
       {data.map((item, index) => (
         <div key={index} className='flex flex-col'>
-          <div className={`font-semibold my-5 text-lg`}>{item.time.toDateString()}</div>
+          <div className={`font-semibold my-5 text-sm`}>{item.time.toDateString()}</div>
           <ActionItem key={index} time={item.time} data={item.data}/>
         </div>
       ))}
