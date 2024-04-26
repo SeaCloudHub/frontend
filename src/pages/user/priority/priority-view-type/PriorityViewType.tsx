@@ -13,7 +13,7 @@ const PriorityViewType: React.FC<PriorityViewTypeProps> = ({ isFileMode, setIsFi
       <Tooltip title='File view'>
         <div
           className={`flex h-[32px]  w-16 items-center justify-center rounded-l-full border border-outline py-1 pr-1
-                ${isFileMode ? 'bg-white text-black dark:bg-white dark:text-white' : 'hover:bg-surfaceContainer'}
+                ${isFileMode ? 'bg-black text-white  dark:bg-white dark:text-black' : 'hover:bg-surfaceContainer'}
               `}
           onClick={() => {
             console.log('File');
@@ -25,7 +25,7 @@ const PriorityViewType: React.FC<PriorityViewTypeProps> = ({ isFileMode, setIsFi
       </Tooltip>
       <Tooltip title='Folder View'>
         <div
-          className={`flex h-[32px] w-16 items-center justify-center rounded-r-full border border-outline py-1 pl-1 ${!isFileMode ? 'bg-black text-white dark:bg-white dark:text-white ' : ''}`}
+          className={`flex h-[32px] w-16 items-center justify-center rounded-r-full border border-outline py-1 pl-1 ${!isFileMode ? 'bg-black text-white dark:bg-white dark:text-black ' : ''}`}
           onClick={() => {
             console.log('Folder');
             isFileMode && setIsFileMode(false);
