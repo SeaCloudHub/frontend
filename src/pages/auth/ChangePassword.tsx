@@ -53,7 +53,7 @@ const ChangePassword = () => {
     <div className={`${screenMode == ScreenMode.MOBILE ? 'mx-2' : 'mx-auto'} max-w-[700px] text-gray-600 `}>
       {/* <IconifyIcon icon='logos:google' className='mx-auto h-20 w-40' /> */}
       <img
-        src='https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75'
+        src={(import.meta.env.BASE_URL + 'logo.png') as string}
         alt='placeholder'
         className='mx-auto h-[7rem] w-[7rem] rounded-full object-contain'
       />

@@ -1,6 +1,7 @@
 import React from 'react';
 import { QueryClientProvider } from './ReactQueryProvider';
 import ScreenModeProvider from './ScreenModeProvider';
+import { ThemeProvider } from './theme-provider';
 
 type ProvidersProps = {
   children: React.ReactNode;
@@ -9,7 +10,9 @@ type ProvidersProps = {
 const Providers = ({ children }: ProvidersProps) => {
   return (
     <QueryClientProvider>
-      <ScreenModeProvider>{children}</ScreenModeProvider>
+      <ThemeProvider defaultTheme='dark' storageKey='vite-ui-theme'>
+        <ScreenModeProvider>{children}</ScreenModeProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 };

@@ -1,4 +1,3 @@
-import { Box } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useScreenMode } from '../../../store/responsive/screenMode';
 import { adminSidebar, userSidebar } from '../../../utils/constants/sidebar.constant';
@@ -32,23 +31,20 @@ const Sidebar = ({ role, shrinkMode }: SidebarProps) => {
       <div className={`sidebar z-20 ${shrinkMode ? '' : 'sidebar-lg'}`}>
         <div className='flex w-full items-center justify-center'>
           {shrinkMode ? (
-            <ButtonIcon
-              icon='radix-icons:hamburger-menu'
-              size={'25px'}
-              onClick={() => {
-                updateShrinkMode(false);
-              }}
-            />
+            <div className='flex h-16 items-center'>
+              <ButtonIcon
+                icon='radix-icons:hamburger-menu'
+                size={'20px'}
+                onClick={() => {
+                  updateShrinkMode(false);
+                }}
+              />
+            </div>
           ) : (
-            <div className='flex w-full  flex-col justify-between'>
-              <div className='mt-8 flex items-center justify-around '>
-                <Box sx={{ maxWidth: 150 }} className='mx-auto'>
-                  <img
-                    src='https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75'
-                    alt='placeholder'
-                    className='h-auto w-full rounded-full'
-                  />
-                </Box>
+            <div className='flex w-full  flex-col '>
+              <div className='flex h-16 w-full items-center justify-around gap-2 p-3 pl-6 '>
+                <img src={(import.meta.env.BASE_URL + 'logo.png') as string} alt='placeholder' className='h-9  rounded-full' />
+                <p className='h4'>SEAWEEDFS</p>
                 <ButtonIcon
                   onClick={() => {
                     updateShrinkMode(true);
@@ -60,8 +56,12 @@ const Sidebar = ({ role, shrinkMode }: SidebarProps) => {
             </div>
           )}
         </div>
-        {role == Role.USER && <AddFileMenu shrinkMode={shrinkMode} />}
-        <div>
+        {role == Role.USER && (
+          <div className='w-full p-2'>
+            <AddFileMenu shrinkMode={shrinkMode} />
+          </div>
+        )}
+        <div className='w-full p-2'>
           {tabs.map((item, index) => (
             <SidebarItem
               key={index}
@@ -75,9 +75,7 @@ const Sidebar = ({ role, shrinkMode }: SidebarProps) => {
           {role === Role.USER && (
             <div className='mt-2'>
               <LinearChartBar width='100%' value={70} total={100} />
-              <p className={`text-center  text-gray-900 ${shrinkMode ? 'hidden' : ''} statement-bold`}>
-                Used 90 of 8 GB of memory
-              </p>
+              <p className={`mt-2 text-center ${shrinkMode ? 'hidden' : ''} `}> 90 of 8 GB of memory</p>
             </div>
           )}
         </div>

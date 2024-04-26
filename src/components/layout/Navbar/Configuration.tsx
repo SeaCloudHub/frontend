@@ -25,11 +25,11 @@ const helpOptions: MenuItemCoreProps[] = [
 const Configuration = () => {
   return (
     <div className='ml-7 mr-5 flex items-center '>
-      <MenuCore menuItems={helpOptions}>
-        <ButtonIcon tooltip='Help' size={'1.5rem'} icon='material-symbols:help-outline' />
+      <MenuCore mix={false} menuItems={helpOptions}>
+        <ButtonIcon tooltip='Help' size={'1.6rem'} icon='material-symbols:help-outline' />
       </MenuCore>
-      <MenuCore menuItems={settingMenu}>
-        <ButtonIcon tooltip='Setting' size={'1.5rem'} icon='uil:setting' />
+      <MenuCore mix={false} menuItems={settingMenu}>
+        <ButtonIcon tooltip='Setting' size={'1.6rem'} icon='uil:setting' />
       </MenuCore>
     </div>
   );

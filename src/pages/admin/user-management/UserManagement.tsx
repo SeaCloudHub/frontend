@@ -191,13 +191,13 @@ const UserManagement = () => {
     },
   });
   return (
-    <div ref={containerRef} className=' flex h-[calc(100vh-4.6rem)] w-full flex-col items-end space-y-5 overflow-y-auto py-2'>
+    <div ref={containerRef} className=' flex  h-full w-full flex-col items-end space-y-5 overflow-y-auto'>
       <div
         ref={filterRef}
-        className={`z-10 w-full space-y-2 ${screenMode == ScreenMode.MOBILE ? 'fixed bottom-2 left-1/4  ' : ''}`}>
+        className={`z-10 mt-2 w-full space-y-2 ${screenMode == ScreenMode.MOBILE ? 'fixed bottom-2 left-1/4  ' : ''}`}>
         {!scrollable && <UserManagementFilter />}
         <div
-          className={`${shrinkMode ? 'shrink-mode' : 'none-shrink-mode'} ${scrollable ? ' fixed  top-[4rem] mx-auto flex w-full space-x-2 bg-white py-1' : ''}`}>
+          className={`${shrinkMode ? 'shrink-mode' : 'none-shrink-mode'} ${scrollable ? ' fixed  top-[4rem] mx-auto flex w-full space-x-2  bg-white dark:bg-transparent ' : ''}`}>
           {scrollable && (
             <ButtonContainer
               color='063768'
@@ -222,7 +222,6 @@ const UserManagement = () => {
             fileType='.csv'
             isOpen={modals.find((modal) => modal.name === 'IMPORT')?.isOpen || false}
             handleConfirm={(data?: File) => {
-              console.log(data);
               data && uploadCSVMutation.mutateAsync({ file: data! });
               onCloseModalClick('IMPORT');
             }}

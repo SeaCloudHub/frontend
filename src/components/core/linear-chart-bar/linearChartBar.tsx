@@ -10,7 +10,7 @@ const LinearChartBar = ({ value, total, width, ...others }: LinearChartBarProps)
   const progress = (value / total) * 100;
   return (
     <Box width={width} sx={{ ...others }}>
-      <LinearProgress variant='determinate' value={progress} />
+      <LinearProgress variant='determinate' sx={{ height: 7, borderRadius: 5 }} value={progress} />
     </Box>
   );
 };

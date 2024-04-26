@@ -171,20 +171,21 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
         }}
         onClick={onClick}
         className={classNames(
-          'flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-xl px-2 shadow-sm',
-          isSelected ? 'bg-[#c2e7ff]' : 'bg-[#f0f4f9] hover:bg-[#dfe3e7]',
+          'flex h-full w-full cursor-pointer flex-col items-center justify-center  rounded-xl px-2 shadow-sm duration-150',
+          isSelected
+            ? 'bg-blue-500  dark:bg-blue-700'
+            : 'bg-file-bg hover:bg-blue-100 dark:bg-slate-600 dark:text-white dark:hover:bg-blue-950',
         )}>
-        <div className='flex w-full items-center justify-between px-1 py-3'>
-          <div className='flex max-w-[calc(100%-24px)] items-center space-x-4'>
+        <div className='flex w-full  items-center justify-between px-1 py-3'>
+          <div className='flex max-w-[calc(100%-1.5rem)] items-center space-x-4'>
             <div className='h-6 w-6 min-w-fit'>{icon}</div>
             <Tooltip title={title}>
               <div className='truncate text-sm font-medium'>{title}</div>
             </Tooltip>
           </div>
-          <CustomDropdown
-            button={<BsThreeDotsVertical className='h-6 w-6 rounded-full p-1 hover:bg-slate-300' />}
-            items={menuItems}
-          />
+          <div className='h-6 w-6 rounded-full p-1 hover:bg-slate-300'>
+            <CustomDropdown button={<BsThreeDotsVertical className='' />} items={menuItems} />
+          </div>
         </div>
         <div className='mb-2 flex h-full w-full items-center justify-center overflow-hidden rounded-md bg-white'>{preview}</div>
         {type === 'share' && <SharePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} />}

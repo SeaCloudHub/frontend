@@ -5,10 +5,9 @@ import ButtonOutline from '../../../components/core/button/ButtonOutline';
 import DatePickerCore from '../../../components/core/input/DatePickerCore';
 import TextInputAdornment from '../../../components/core/input/TextInputAdornment';
 import TextInputCore from '../../../components/core/input/TextInputCore';
-import SectionBorder from '../../../components/core/section-boder/SectionBoder';
 const UserManagementFilter = () => {
   return (
-    <SectionBorder title='Filter'>
+    <div className='rounded-xl  p-2 dark:bg-white'>
       <div className='flex flex-wrap items-center '>
         <div className='mx-2 '>
           <TextInputCore
@@ -31,7 +30,7 @@ const UserManagementFilter = () => {
           />
         </div>
         <div className='mx-2 mt-4 '>
-          <SectionBorder title='Last Access'>
+          <div>
             <div className='flex items-center space-x-2'>
               <div className='flex items-center '>
                 <DatePickerCore
@@ -52,10 +51,10 @@ const UserManagementFilter = () => {
                 />
               </div>
             </div>
-          </SectionBorder>
+          </div>
         </div>
         <div className='mx-2 mt-3 flex-grow'>
-          <SectionBorder title='Memory used'>
+          <div title='Memory used'>
             <div className='flex items-center'>
               <TextInputAdornment
                 onChange={(data?: string) => {
@@ -82,14 +81,14 @@ const UserManagementFilter = () => {
                 position={'end'}
               />
             </div>
-          </SectionBorder>
+          </div>
         </div>
         <div className=' space-x-2'>
           <ButtonContainer background='#02342' icon={<IconifyIcon icon={'bi:search'} />} title='Search' />
           <ButtonOutline color='blue' title='Clear' />
         </div>
       </div>
-    </SectionBorder>
+    </div>
   );
 };
 

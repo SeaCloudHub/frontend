@@ -79,10 +79,7 @@ const LoginPassword = () => {
         {loginMutation.isPending && <LinearProgress className='mx-5 translate-y-1' />}
         <form onSubmit={formik.handleSubmit} className='rounded-3xl border bg-white p-10 md:border-none'>
           <div className='logo mb-4'>
-            <img
-              className='w-[70px]  object-contain'
-              src='https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75'
-            />
+            <img className='w-[70px]  object-contain' src={(import.meta.env.BASE_URL + 'logo.png') as string} />
             <Typography variant='h3'>Welcome</Typography>
           </div>
           <div className='content flex flex-col gap-20 md:flex-row md:justify-between'>

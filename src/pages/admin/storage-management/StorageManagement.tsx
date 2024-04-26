@@ -84,7 +84,7 @@ const isFolder = (id: string[], data: StorageItem[]): string | null => {
 const StorageManagement = () => {
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
   return (
-    <div className='h-[calc(100vh-4.6rem)] w-full  overflow-y-auto   '>
+    <div className='h-full  w-full  overflow-y-auto   '>
       <div className='mb-5text-2xl font-semibold'>Storage Management</div>
       <div className='flex'>
         <StorageTree

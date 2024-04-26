@@ -65,10 +65,7 @@ const LoginEmail = () => {
             {checkEmailMutation.isPending && <LinearProgress className=' translate-y-1' />}
           </div>
           <div className=' w-[50px]'>
-            <img
-              className='w-full object-contain'
-              src='https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75'
-            />
+            <img className='w-full object-contain' src={(import.meta.env.BASE_URL + 'logo.png') as string} />
           </div>
           <div className='content gap-4 md:flex md:justify-between'>
             <div>

@@ -1,7 +1,7 @@
-import React from 'react';
 import { LocalEntry } from '@/hooks/drive.hooks';
-import Sort from '../../my-drive/content/Sort';
+import React from 'react';
 import { DataRow } from '../../my-drive/content/DataRow';
+import Sort from '../../my-drive/content/Sort';
 import { LocalEntryToTimeEntry } from './DriveHistoryGridView';
 
 type DriveHistoryListViewProps = {
@@ -23,7 +23,7 @@ const DriveHistoryListView: React.FC<DriveHistoryListViewProps> = ({ sort, order
   });
 
   return (
-    <div className='bg-white pl-5 pr-3'>
+    <div className=' pl-5 pr-3'>
       <div className='relative flex flex-col'>
         <div className='flex h-12 items-center space-x-3 border-b border-b-[#dadce0] pt-2'>
           <div className='shrink grow basis-[304px] text-sm font-medium'>Name</div>

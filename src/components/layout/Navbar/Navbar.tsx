@@ -33,11 +33,11 @@ const Navbar = ({ isShrink, phoneMode }: NavbarProps) => {
       <header className='relative flex  w-screen items-center justify-between py-2  pl-3 pr-5'>
         {phoneMode && (
           <div className='flex h-full duration-500'>
-            <ButtonIcon icon={'radix-icons:hamburger-menu'} size={'1.5rem'} />
+            <ButtonIcon icon={'radix-icons:hamburger-menu'} size={'1.4rem'} />
           </div>
         )}
         <Search />
-        <div onClick={() => {}} className='rounded-full0 ml-3 flex h-full cursor-pointer items-center overflow-hidden'>
+        <div onClick={() => {}} className='ml-3  flex h-full  cursor-pointer items-center overflow-hidden rounded-full '>
           {!phoneMode && <Configuration />}
           {identity && identity.avatar_url && (
             <img
@@ -45,7 +45,7 @@ const Navbar = ({ isShrink, phoneMode }: NavbarProps) => {
                 setShowUserInfo(true);
               }}
               src={identity.avatar_url}
-              className='h-[2.5rem] w-[2.5rem] rounded-full object-contain p-1 hover:bg-gray-100'
+              className='h-10 w-10 rounded-full border-2 border-red-300 object-contain  p-1'
               draggable={false}
               alt='avatar'
             />
@@ -55,7 +55,7 @@ const Navbar = ({ isShrink, phoneMode }: NavbarProps) => {
               onClick={() => {
                 setShowUserInfo(true);
               }}
-              className='round flex h-[2.5rem] w-[2.5rem]  items-center justify-center rounded-full'
+              className=' flex h-10 w-10 items-center justify-center rounded-full  border-2 border-red-300 '
               style={{ backgroundColor: getRandomColor() }}>
               <p className='statement-bold truncate'>
                 {getFirstCharacters(identity.first_name + ' ' + identity.last_name || '')}

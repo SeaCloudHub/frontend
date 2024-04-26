@@ -10,7 +10,7 @@ type MemoryHeaderProps = {
 
 const MemoryHeader: React.FC<MemoryHeaderProps> = ({ modifiedFilter, typeFilter, setModifiedFilter, setTypeFilter }) => {
   return (
-    <div className='flex flex-col bg-white pr-3'>
+    <div className='flex flex-col  pr-3'>
       <div className='flex'>
         <div className='w-full pb-[8px] pl-[20px] pt-[14px] text-2xl'>Storage</div>
         <div className='flex items-center pb-[6px] pl-[25px] pr-[11px] pt-[14px]'>

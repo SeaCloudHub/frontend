@@ -1,7 +1,7 @@
-import React from 'react';
+import { Path } from '@/store/my-drive/myDrive.store';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { Tooltip } from '@mui/material';
-import { Path } from '@/store/my-drive/myDrive.store';
+import React from 'react';
 
 export type SharingPageViewModeProps = {
   viewMode: string;
@@ -14,24 +14,24 @@ const SharingPageViewMode: React.FC<SharingPageViewModeProps> = ({ viewMode, set
     <div className='flex cursor-pointer items-center'>
       <Tooltip title='File view'>
         <div
-          className={`flex w-16 items-center justify-center rounded-l-full border border-outline py-1 pr-1 ${viewMode === 'list' ? 'bg-primaryContainer hover:brightness-90' : 'hover:bg-surfaceContainer'}`}
+          className={`flex h-[32px] w-16 items-center justify-center rounded-l-full border border-outline py-1 pr-1 ${viewMode === 'list' ? 'bg-black text-white dark:bg-white dark:text-black' : ''}`}
           onClick={() => {
             console.log('list');
             !(viewMode === 'list') && setViewMode('list');
           }}>
           {viewMode === 'list' && <Icon icon='ic:baseline-check' className='h-4 w-4' />}
-          <Icon icon='ic:baseline-view-headline' className='h-6 w-6' />
+          <Icon icon='ic:baseline-view-headline' className='h-5 w-5' />
         </div>
       </Tooltip>
       <Tooltip title='Grid View'>
         <div
-          className={`r flex w-16 items-center justify-center rounded-r-full border border-outline py-1 pl-1 ${!(viewMode === 'list') ? 'bg-primaryContainer hover:brightness-90' : 'hover:bg-surfaceContainer'}`}
+          className={`flex h-[32px] w-16 items-center justify-center rounded-r-full border border-outline py-1 pl-1 ${!(viewMode === 'list') ? 'bg-black text-white dark:bg-white dark:text-black' : ''}`}
           onClick={() => {
             console.log('grid');
             viewMode === 'list' && setViewMode('grid');
           }}>
           {!(viewMode === 'list') && <Icon icon='ic:baseline-check' className='h-4 w-4' />}
-          <Icon icon='mdi:view-grid-outline' className='h-6 w-6' />
+          <Icon icon='mdi:view-grid-outline' className='h-5 w-5' />
         </div>
       </Tooltip>
     </div>

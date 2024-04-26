@@ -10,15 +10,15 @@ import StorageLog from './components/StorageLog';
 
 const DashBoard = () => {
   return (
-    <div className='h-fit max-h-[calc(100vh-4.6rem)] w-full lg:flex  lg:overflow-hidden'>
-      <div className='w-full overflow-y-auto lg:max-h-screen lg:w-3/4'>
-        <div className='w-full lg:flex lg:justify-between '>
-          <div className='flex min-w-[40%] flex-col justify-between lg:mr-3'>
+    <div className='h-full w-full lg:flex  lg:overflow-hidden'>
+      <div className='w-full overflow-y-auto lg:max-h-screen lg:w-3/4 '>
+        <div className='w-ful2 mb-2 lg:flex lg:justify-between '>
+          <div className='flex min-w-[40%] flex-col justify-between space-y-2 lg:pr-2'>
             <Paper
               sx={{
                 transition: 'transform 0.3s ease-in-out',
                 '&:hover': {
-                  transform: 'scale(1.05)',
+                  transform: 'scale(1.02)',
                 },
               }}
               elevation={3}
@@ -38,7 +38,7 @@ const DashBoard = () => {
               sx={{
                 transition: 'transform 0.3s ease-in-out',
                 '&:hover': {
-                  transform: 'scale(1.05)',
+                  transform: 'scale(1.02)',
                 },
               }}>
               <IconifyIcon icon='tdesign:user-checked-1' className='h-10 w-11 min-w-max rounded-full bg-[#c2fc9c] p-2 ' />
@@ -56,7 +56,7 @@ const DashBoard = () => {
               sx={{
                 transition: 'transform 0.3s ease-in-out',
                 '&:hover': {
-                  transform: 'scale(1.05)',
+                  transform: 'scale(1.02)',
                 },
               }}>
               <IconifyIcon icon='tdesign:user-blocked' className='h-10 w-11 min-w-max rounded-full bg-red-300 p-2 ' />
@@ -82,7 +82,7 @@ const DashBoard = () => {
             />
           </AccordionCore>
         </div>
-        <AccordionCore title='Disk Space' className='mb-3'>
+        <AccordionCore title='Disk Space' className=''>
           <StorageStatistic />
           <div className='lg:flex lg:items-center'>
             <PieChartCore

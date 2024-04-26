@@ -1,10 +1,9 @@
-import DriveViewMode from './DriveViewMode';
 import { Path } from '@/store/my-drive/myDrive.store';
+import Sort from '../content/Sort';
+import DriveFilter from './DriveFilter';
+import DriveViewMode from './DriveViewMode';
 import InfoButton from './InfoButton';
 import DrivePath from './drive-path/DrivePath';
-import DriveFilter from './DriveFilter';
-import { useState } from 'react';
-import Sort from '../content/Sort';
 
 type MyDriveHeaderProps = {
   path: Path;
@@ -31,10 +30,10 @@ const MyDriveHeader: React.FC<MyDriveHeaderProps> = ({
   sort,
   order,
   setSort,
-  setSelected
+  setSelected,
 }) => {
   return (
-    <div className='flex flex-col bg-white pr-3'>
+    <div className='flex flex-col pr-3'>
       <div className='flex'>
         <div className='w-full pb-[8px] pl-1 pt-[14px]'>
           <DrivePath path={path} type={'MyDrive'} setSelected={setSelected} />

@@ -13,25 +13,27 @@ const DynamicLayout = ({ children }: PropsWithChildren) => {
   const role = useSession((state) => state.role);
 
   return (
-    <>
+    <div className='bg-content-bg dark:bg-content-bg-dark dark:text-icons-color-dark'>
       <Navbar phoneMode={screenMode == ScreenMode.MOBILE} isShrink={shrinkMode} />
       {!(screenMode == ScreenMode.MOBILE) && <Sidebar shrinkMode={shrinkMode} role={role!} />}
       {role === Role.ADMIN ? (
         <div
-          className={` ${screenMode == ScreenMode.DESKTOP ? (shrinkMode ? 'content-shrink-mode' : 'content-default-mode') : 'pt-4.6rem pl-0'}    
+          className={` ${screenMode == ScreenMode.DESKTOP ? (shrinkMode ? 'content-shrink-mode' : 'content-default-mode') : 'pt-4rem pl-0'}    
         ${screenMode == ScreenMode.MOBILE ? 'pl-0' : ''}`}>
-          {children}
+          <div className='h-[calc(100vh-4rem)]  px-2 py-2 '>
+            <div className='h-full w-full rounded-xl bg-white p-2  shadow-2xl dark:bg-dashboard-dark'>{children}</div>
+          </div>
         </div>
       ) : (
         <div
           className={classNames(
-            'h-full w-full pt-[4rem] ',
-            screenMode == ScreenMode.DESKTOP ? (shrinkMode ? 'pl-[80px]' : 'pl-[305px]') : 'pl-0',
+            'h-full w-full pt-16 ',
+            screenMode == ScreenMode.DESKTOP ? (shrinkMode ? 'pl-[76px]' : 'pl-64') : 'pl-0',
           )}>
           {children}
         </div>
       )}
-    </>
+    </div>
   );
 };
 

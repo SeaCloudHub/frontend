@@ -79,7 +79,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
           </div>
         </div>
       ) : (
-        <div ref={driveGridViewRef} className='bg-white pl-5 pr-3 pt-4'>
+        <div ref={driveGridViewRef} className=' pl-5 pr-3 pt-4'>
           <div className='relative flex flex-col space-y-2'>
             {folders.length !== 0 && (
               <div className={!folderShow ? 'visible' : 'hidden'}>

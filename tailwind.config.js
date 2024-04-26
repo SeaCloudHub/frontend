@@ -1,12 +1,15 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: ['class'],
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      fontFamily: {
+        geist: ['Geist', 'sans-serif'],
+      },
       spacing: {
         '4.6rem': '4.6rem',
       },
-
       fontSize: {
         '4em': '4em',
         '3em': '3em',
@@ -42,6 +45,14 @@ export default {
         '2xl': '1536px',
       },
       colors: {
+        'content-bg': '#F8FAFD',
+        'search-bg': '#E9EEF6',
+        'icons-color-light': '#444746',
+        'file-bg': '#F0F4F9',
+        'content-bg-dark': '#071A2B',
+        'dashboard-dark': '#031525',
+        'search-bg-dark': '#0D2136',
+        'icons-color-dark': '#95a5bd',
         primary: '#216487',
         surfaceTint: '#216487',
         onPrimary: '#FFFFFF',

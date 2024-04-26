@@ -12,15 +12,13 @@ const DriveLayout: React.FC<DriveLayoutProps> = ({ headerLeft, bodyLeft, sidePan
 
   // console.log('[DriveLayout] drawerOpen', drawerOpen);
   return (
-    <div className='h-[calc(100vh-80px)]'>
-      <div className='grid h-full grid-flow-col grid-cols-[1fr_auto] grid-rows-[auto_1fr] gap-1'>
+    <div className='h-[calc(100vh-4rem)] px-2 py-2'>
+      <div className='grid h-full w-full grid-flow-col grid-cols-[1fr_auto] grid-rows-[auto_1fr] gap-1 rounded-xl bg-white dark:bg-dashboard-dark'>
         {headerLeft}
         <div className='mb-4 overflow-hidden'>
           <div className='relative flex h-full w-full flex-col overflow-y-auto'>{bodyLeft}</div>
         </div>
-        <span className='row-span-2 mb-4'>
-          {drawerOpen && sidePanel}
-        </span>
+        <span className='row-span-2 mb-4'>{drawerOpen && sidePanel}</span>
       </div>
     </div>
   );

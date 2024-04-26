@@ -1,7 +1,7 @@
+import FileCard from '@/components/core/file-card/FileCard';
+import { LocalEntry } from '@/hooks/drive.hooks';
 import React from 'react';
 import Sort from '../../my-drive/content/Sort';
-import { LocalEntry } from '@/hooks/drive.hooks';
-import FileCard from '@/components/core/file-card/FileCard';
 
 export type TimeEntry = {
   time: string;
@@ -38,7 +38,7 @@ const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({ sort, order, se
   const timeEntries = LocalEntryToTimeEntry(entries);
 
   return (
-    <div className='bg-white pl-5 pr-3 pt-4'>
+    <div className=' pl-5 pr-3 pt-4'>
       <div className='relative flex flex-col space-y-2'>
         <div className='absolute right-4 top-3'>
           <Sort sort={sort} order={order} setSort={setSort} />

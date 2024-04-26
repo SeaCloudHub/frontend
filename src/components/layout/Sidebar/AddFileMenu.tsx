@@ -109,10 +109,10 @@ const AddFileMenu = ({ shrinkMode }: AddFileMenuProps) => {
     <>
       <CustomDropdown
         button={
-          <div className='mt-5 flex cursor-pointer items-center rounded-full px-4 py-1 text-[#063768] hover:bg-gray-400'>
-            <IconifyIcon icon={'mdi:create-new-folder-outline'} fontSize={35} />
-            {!shrinkMode && <span className='font-bold'>New</span>}
-          </div>
+          <button className='flex items-center space-x-3 rounded-full bg-white   px-4 py-2 duration-300 hover:bg-blue-300 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-900'>
+            <IconifyIcon icon={'ic:outline-add'} fontSize={shrinkMode ? '1.4rem' : '1.5rem'} />
+            {!shrinkMode && <span className='font-medium'>New</span>}
+          </button>
         }
         items={addFileMenu}
       />

@@ -7,11 +7,10 @@ type DropdownProps = {
   items: MenuItemCustom[][];
 };
 
-const CustomDropdown: React.FC<DropdownProps> = ({button, items}) => {
+const CustomDropdown: React.FC<DropdownProps> = ({ button, items }) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const handleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
+  const handleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -20,30 +19,27 @@ const CustomDropdown: React.FC<DropdownProps> = ({button, items}) => {
   };
   return (
     <>
-      <div onClick={handleClick}>{button}</div>
-      <Menu
-        id="simple-menu"
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-        >
+      <div className='w-full ' onClick={handleClick}>
+        {button}
+      </div>
+      <Menu id='simple-menu' anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
         {items.map((group, ind) => (
           <div key={ind}>
             {group.map(({ label, icon, action }) => (
-              <MenuItem key={label}
-                onClick={()=>{
+              <MenuItem
+                key={label}
+                onClick={() => {
                   action && action();
                   handleClose();
                 }}
-                sx={{minWidth: '200px'}}
-              >
+                sx={{ minWidth: '200px' }}>
                 <div className='flex items-center space-x-2'>
                   {icon}
                   <div>{label}</div>
                 </div>
               </MenuItem>
             ))}
-            {ind!==items.length-1 && <Divider /> }
+            {ind !== items.length - 1 && <Divider />}
           </div>
         ))}
       </Menu>

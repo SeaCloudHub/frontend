@@ -1,9 +1,7 @@
-import React from 'react';
 import { LocalEntry } from '@/hooks/drive.hooks';
-import { DataRow } from './DataRow';
-import { HeaderMyDriveProps } from '../MyDrive';
-import Sort from './Sort';
 import { Path } from '@/store/my-drive/myDrive.store';
+import React from 'react';
+import { DataRow } from './DataRow';
 
 type DriveListViewProps = {
   sort?: string;
@@ -31,7 +29,7 @@ export const DriveListView: React.FC<DriveListViewProps> = ({ order, setSort, so
           </div>
         </div>
       ) : (
-        <div className='bg-white pl-5 pr-3'>
+        <div className=' pl-5 pr-3'>
           <div className='relative flex flex-col'>
             <div className='flex h-12 items-center space-x-3 border-b border-b-[#dadce0] pt-2'>
               <div className='shrink grow basis-[304px] text-sm font-medium'>Name</div>
@@ -49,8 +47,7 @@ export const DriveListView: React.FC<DriveListViewProps> = ({ order, setSort, so
               </div>
             </div>
             {folders.map((entry, index) => {
-              return <DataRow key={index} {...entry}
-              onDoubleClick={() => handlePath([{ id: entry.id, name: entry.title }])} />;
+              return <DataRow key={index} {...entry} onDoubleClick={() => handlePath([{ id: entry.id, name: entry.title }])} />;
             })}
             {files.map((entry, index) => {
               return <DataRow key={index} {...entry} />;

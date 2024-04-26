@@ -13,10 +13,10 @@ import {
 
 export const userSidebar: SidebarItemType[] = [
   {
-    icon: 'material-symbols:priority-outline',
-    title: 'Priority',
+    icon: 'tabler:home',
+    title: 'Home',
     link: CUSTOMER_HOME,
-    tooltip: 'Priority',
+    tooltip: 'Home',
   },
   {
     icon: 'ri:drive-line',
