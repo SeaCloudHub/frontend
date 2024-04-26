@@ -78,7 +78,7 @@ const ResetPassword = () => {
             </div>
           </div>
         </form>
-        <AuthFooter currentValue={currentValue} handleChange={handleChange} items={['One', 'Two', 'Three']} />
+        <AuthFooter />
       </div>
     </div>
   );
