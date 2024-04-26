@@ -1,5 +1,4 @@
-import { createFolderApi } from '@/apis/user/storage/create-storage.api';
-import { useStorageStore } from '@/store/storage/storage.store';
+import { createFolderApi } from '@/apis/user/storage/storage.api';
 import { toastError } from '@/utils/toast-options/toast-options';
 import { ApiGenericError } from '@/utils/types/api-generic-error.type';
 import { useMutation, useQueryClient } from '@tanstack/react-query';

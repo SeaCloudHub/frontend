@@ -16,3 +16,8 @@ export const uploadFilesApi = async (body: UploadFileREQ) => {
   });
   return res.data;
 };
+
+export const downloadFileApi = async (id:string) => {
+  const res = await api.get<Blob>(`/files/${id}/download`, { responseType: 'blob' });
+  return res
+}

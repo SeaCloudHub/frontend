@@ -10,11 +10,11 @@ import { useStorageStore } from '@/store/storage/storage.store';
 import { uploadFiles } from '@/apis/drive/drive.api';
 import { api } from '@/helpers/http/config.http';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { uploadFilesApi } from '@/apis/user/storage/create-storage.api';
 import { isAxiosError } from 'axios';
 import { ApiGenericError } from '@/utils/types/api-generic-error.type';
 import { toast } from 'react-toastify';
 import { toastError } from '@/utils/toast-options/toast-options';
+import { uploadFilesApi } from '@/apis/user/storage/storage.api';
 
 type DrivePathMenuButtonProps = {
   dirId: string;

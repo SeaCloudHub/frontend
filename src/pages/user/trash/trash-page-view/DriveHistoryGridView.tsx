@@ -50,7 +50,7 @@ const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({ sort, order, se
               <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'>
                 {entry.entries.map((file, index) => (
                   <div key={index} className='aspect-square w-auto'>
-                    <FileCard title={file.title} icon={file.icon} preview={file.preview} id={file.id} />
+                    <FileCard title={file.title} icon={file.icon} preview={file.preview} id={file.id} parent='trash' />
                   </div>
                 ))}
               </div>

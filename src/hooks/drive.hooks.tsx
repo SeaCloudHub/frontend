@@ -1,12 +1,15 @@
 import {
   copyFiles,
+  deleteFiles,
+  getAccessEntries,
   getEntryMetadata,
   getListEntriesMyDrive,
+  getListEntriesTrash,
   getSharedEntries,
   moveToTrash,
   renameFile,
 } from '@/apis/drive/drive.api';
-import { CopyFileREQ, RenameREQ } from '@/apis/drive/drive.request';
+import { CopyFileREQ, RenameREQ, DeleteFilesREQ } from '@/apis/drive/drive.request';
 import { EntryMetadataRES, EntryRESP } from '@/apis/drive/drive.response';
 import { MoveToTrashREQ } from '@/apis/drive/request/move-to-trash.request';
 import { Path, useDrawer } from '@/store/my-drive/myDrive.store';
@@ -67,6 +70,71 @@ export const useListEntries = () => {
   return { parents: parents || [{ id, name: 'My Drive' }], data: data || [], refetch, isLoading };
 };
 
+export const useSharedEntry = () => {
+  const { dirId } = useParams();
+  const { rootId } = useStorageStore();
+  const id = dirId || rootId;
+
+  const { data: parents, error: parentsError } = useQuery({
+    queryKey: ['entry-metadata', id],
+    queryFn: () => getEntryMetadata({ id }).then((res) => res?.data),
+    staleTime: 10 * 1000,
+    select: (data): Path => {
+      if (data.parents) {
+        data.parents.sort((a, b) => a.path.localeCompare(b.path));
+
+        const path = data.parents.map((parent) =>
+          parent.id === rootId ? { id: rootId, name: 'Shared' } : { id: parent.id, name: parent.name },
+        );
+        console.log('[useSharedEntry] path', path);
+        path.push({ id: data.file.id, name: data.file.name });
+        return path;
+      }
+      return [{ id: rootId, name: 'Shared' }];
+    },
+  });
+
+  if (isAxiosError<ApiGenericError>(parentsError)) {
+    toast.error(parentsError.response?.data.message, toastError());
+  }
+
+  const { data, error, refetch, isLoading } = useQuery({
+    queryKey: ['shared-entries', id],
+    queryFn: async () => {
+      return await getSharedEntries().then((res) => res?.data || []);
+    },
+    staleTime: 10 * 1000,
+    select: transformEntries,
+  });
+
+  if (isAxiosError<ApiGenericError>(error)) {
+    toast.error(error.response?.data.message, toastError());
+  }
+
+  return { parents: parents || [{ id, name: 'Shared' }], data: data || [], refetch, isLoading };
+};
+
+export const useTrash = () => {
+  const { dirId } = useParams();
+  const { rootId } = useStorageStore();
+  const id = dirId || rootId;
+
+  const { data, error, refetch, isLoading } = useQuery({
+    queryKey: ['Trash-entries', id],
+    queryFn: async () => {
+      return await getListEntriesTrash({id, limit:100}).then((res) => res?.data?.entries || []);
+    },
+    staleTime: 10 * 1000,
+    select: transformEntries,
+  });
+
+  if (isAxiosError<ApiGenericError>(error)) {
+    toast.error(error.response?.data.message, toastError());
+  }
+
+  return { data: data || [], refetch, isLoading };
+};
+
 export const useCopyMutation = () => {
   const queryClient = useQueryClient();
 
@@ -124,6 +192,25 @@ export const useMoveToTrashMutation = () => {
   });
 };
 
+export const useDeleteMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (body: DeleteFilesREQ) => {
+      return deleteFiles(body);
+    },
+    onError: (error) => {
+      if (isAxiosError<ApiGenericError>(error)) {
+        toast.error(error.response?.data.message, toastError());
+      }
+    },
+    onSuccess: (data) => {
+      toast.success(`${data.data.length} files deleted`);
+      queryClient.invalidateQueries({ queryKey: ['Trash-entries'] });
+    },
+  });
+};
+
 export const useEntryMetadata = (id: string) => {
   const { drawerOpen } = useDrawer();
   const { data, isLoading, error } = useQuery({
@@ -145,7 +232,7 @@ export const useEntryAccess = (id: string) => {
   const { drawerOpen } = useDrawer();
   const { data, isLoading, error } = useQuery({
     queryKey: ['access', id],
-    queryFn: () => getSharedEntries({ id }).then((res) => res?.data),
+    queryFn: () => getAccessEntries({ id }).then((res) => res?.data),
     select: (data) => {
       return {
         whoHasAccess: 'N/a',
@@ -210,6 +297,7 @@ export type LocalEntry = {
   fileType?: string;
   onDoubleClick?: () => void;
   onChanged?: () => void;
+  parent?: 'priority' | 'my-drive' | 'shared' | 'trash';
 };
 
 export const transformEntries = (entries: EntryRESP[]): LocalEntry[] => {

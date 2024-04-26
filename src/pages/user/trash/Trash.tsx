@@ -9,20 +9,24 @@ import ButtonCore from '@/components/core/button/ButtonCore';
 import { fakeData } from '../shared/Shared';
 import SidePanel from '../my-drive/side-panel/SidePanel';
 import TrashPageView from './trash-page-view/TrashPageView';
+import { useTrash } from '@/hooks/drive.hooks';
 
 const Trash = () => {
   const { viewMode, setViewMode } = useViewMode();
   const [typeFilterItem, setTypeFilterItem] = useState<string>('');
   const [peopleFilterItem, setPeopleFilterItem] = useState<string>('');
   const [modifiedFilterItem, setModifiedFilterItem] = useState<string>('');
-
   const { drawerOpen, openDrawer, closeDrawer } = useDrawer();
+
+  const {data, isLoading, refetch} = useTrash();
+
+
   return (
     <DriveLayout
       headerLeft={
         <div className='px-4'>
           <div className='flex justify-between space-x-2 text-2xl'>
-            <h2 className='py-2 text-3xl font-semibold'>Shared with me</h2>
+            <h2 className='py-2 text-3xl font-semibold'>Trash</h2>
             <div className='flex items-center gap-2'>
               <SharingPageViewMode setViewMode={setViewMode} viewMode={viewMode} />
               <Icon
@@ -63,7 +67,7 @@ const Trash = () => {
           </div>
         </div>
       }
-      bodyLeft={<TrashPageView entries={[]} />}
+      bodyLeft={<TrashPageView entries={data} />}
       sidePanel={<SidePanel />}
     />
   );

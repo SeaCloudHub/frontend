@@ -44,9 +44,8 @@ const DriveHistoryListView: React.FC<DriveHistoryListViewProps> = ({ sort, order
           return (
             <div key={index}>
               <div className='border-b py-1 text-sm font-medium'>{entry.time}</div>
-
               {entry.entries.map((item, index) => {
-                return <DataRow key={index} {...item} />;
+                return <DataRow key={index} {...item} parent='trash' />;
               })}
             </div>
           );
