@@ -17,7 +17,7 @@ export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModi
           </div>
         </Tooltip>
       </div>
-      <div className='shrink-0 grow-0 basis-[140px] pl-4 text-sm font-medium max-[1450px]:basis-[140px] max-[1050px]:hidden'>
+      <div className='shrink-0 grow-0 basis-[140px] pr-4 text-sm font-medium max-[1450px]:basis-[65px] max-[1050px]:hidden'>
         {size}
       </div>
     </div>

@@ -23,7 +23,7 @@ const SharingPageFilter: React.FC<SharingPageFilterProps> = ({
   modifiedFilter,
 }) => {
   return (
-    <div className='flex gap-3'>
+    <div className='flex gap-2'>
       {/* type fillter */}
       <FilterChip
         name='Type'

@@ -58,40 +58,31 @@ const LoginEmail = () => {
     },
   });
   return (
-    <div className='flex h-screen items-center justify-center overflow-hidden bg-[#f0f4f9]'>
-      <div className='sm:my-auto sm:h-fit md:flex md:h-full md:w-full md:flex-col md:justify-between md:bg-white lg:mx-60 lg:my-auto lg:h-fit lg:bg-[#f0f4f9]'>
+    <div className='flex flex-col h-screen items-center justify-center bg-[#f0f4f9]'>
+      <div>
         <form onSubmit={formik.handleSubmit} className='relative rounded-xl border bg-white p-10 md:border-none'>
           <div className='absolute left-0 top-0 w-full px-1'>
-            {checkEmailMutation.isPending && <LinearProgress className=' translate-y-1' />}
+            {checkEmailMutation.isPending && <LinearProgress className=' translate-y-1/2' />}
           </div>
           <div className=' w-[50px]'>
             <img className='w-full object-contain' src={(import.meta.env.BASE_URL + 'logo.png') as string} />
           </div>
-          <div className='content gap-4 md:flex md:justify-between'>
+          <div className='gap-10 flex flex-col md:justify-between'>
             <div>
               <Typography variant='h3'>Sign in</Typography>
-              <h4 className='mt-3'>To continue to SeaweedFS</h4>
+              <h4 className='mt-3'>To continue to SeaCloud</h4>
             </div>
-            <div className='flex flex-col gap-5'>
-              <div className='input w-full'>
-                <TextFieldCore
-                  label='Email'
-                  name='email'
-                  value={formik.values.email}
-                  onChange={formik.handleChange}
-                  error={formik.touched.email && Boolean(formik.errors.email)}
-                  helperText={formik.touched.email && formik.errors.email}
-                />
-              </div>
-              <div className='terms'>
-                <Typography variant='body2' color='textSecondary'>
-                  Not your computer? Use Guest mode to sign in privately.
-                </Typography>
-                <AuthLink link='/terms' className='text-[#0b57d0]'>
-                  Learn more
-                </AuthLink>
-              </div>
-              <div className='flex items-center justify-end gap-3'>
+            <div className='flex flex-col gap-5 min-w-80'>
+              <TextFieldCore
+                label='Email'
+                name='email'
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                error={formik.touched.email && Boolean(formik.errors.email)}
+                helperText={formik.touched.email && formik.errors.email}
+              />
+              <div className='text-slate-500 text-sm line-clamp-2 min-w-56 max-w-72'>If you don't have an account, you wil contact with admin to get your account</div>
+              <div className='flex justify-end'>
                 <Button
                   size='medium'
                   sx={{ borderRadius: '30px' }}
@@ -106,7 +97,7 @@ const LoginEmail = () => {
             </div>
           </div>
         </form>
-        <AuthFooter currentValue={currentValue} handleChange={handleChange} items={['One', 'Two', 'Three']} />
+        <AuthFooter />
       </div>
     </div>
   );

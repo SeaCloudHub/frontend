@@ -6,7 +6,6 @@ import PriorityFilter from './priority-filter/PriorityFilter';
 import SidePanel from '../my-drive/side-panel/SidePanel';
 import PriorityView from './priority-view/PriorityView';
 import { transformEntries } from '@/hooks/drive.hooks';
-import { fakeData } from '../shared/Shared';
 import { toast } from 'react-toastify';
 import { LocalEntry } from '@/hooks/drive.hooks';
 import { Entry } from '@/utils/types/entry.type';
@@ -38,9 +37,9 @@ const Priority = () => {
     <div>
       <DriveLayout
         headerLeft={
-          <div className='px-4'>
+          <div>
             <div className='flex justify-between space-x-2 text-2xl'>
-              <div className='w-full pb-[8px] pl-1 pt-[14px]'>
+              <div className='w-full pb-[8px] pt-[14px]'>
                 <DrivePath path={path} type='Priority' />
               </div>
               <div className='flex items-center gap-2'>
@@ -57,8 +56,9 @@ const Priority = () => {
                 />
               </div>
             </div>
-
-            <PriorityFilter isFileMode={isFileMode} setIsFileMode={setIsFileMode} viewMode={viewMode} setViewMode={setViewMode} />
+            <div className='px-4'>
+              <PriorityFilter isFileMode={isFileMode} setIsFileMode={setIsFileMode} viewMode={viewMode} setViewMode={setViewMode} />
+            </div>
           </div>
         }
         bodyLeft={

@@ -323,6 +323,7 @@ export const transformEntries = (entries: EntryRESP[]): LocalEntry[] => {
     docx, txt, zip, any */
     const preview = ['jpg', 'ico', 'webp', 'png', 'jpeg', 'gif', 'jfif'].includes(ext) ? (
       <img
+        draggable={false}
         className='h-full w-full rounded-md object-cover'
         src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrHRymTob1kd-ywHzIs0ty7UhrFUcJay839nNd6tcSig&s'
       />

@@ -22,14 +22,14 @@ import AuthFooter from './AuthFooter';
 import AuthLink from './auth-link/AuthLink';
 
 const LoginPassword = () => {
-  const [currentValue, setCurrentValue] = React.useState('');
+  // const [currentValue, setCurrentValue] = React.useState('');
   const [isShowPassword, setIsShowPassword] = React.useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname;
   const { token: authenticated, role, signIn, firstLogin, identity } = useSession();
   const updateStorageStore = useStorageStore((state) => state.update);
-  const handleChange = (e: { target: { value: React.SetStateAction<string> } }) => setCurrentValue(e.target.value);
+  // const handleChange = (e: { target: { value: React.SetStateAction<string> } }) => setCurrentValue(e.target.value);
   console.log(firstLogin);
   const formik = useFormik({
     initialValues: { ...loginInitialValue, email: identity.email },
@@ -74,15 +74,15 @@ const LoginPassword = () => {
   }, [authenticated, role, firstLogin, identity]);
 
   return (
-    <div className='flex h-screen items-center justify-center overflow-hidden bg-[#f0f4f9] px-10'>
-      <div className='sm:my-auto sm:h-fit  md:flex md:h-full md:w-full md:flex-col md:justify-between md:bg-white lg:mx-48 lg:my-auto lg:h-fit lg:bg-[#f0f4f9]'>
+    <div className='flex h-screen items-center justify-center bg-[#f0f4f9] px-10'>
+      <div>
         {loginMutation.isPending && <LinearProgress className='mx-5 translate-y-1' />}
-        <form onSubmit={formik.handleSubmit} className='rounded-3xl border bg-white p-10 md:border-none'>
+        <form onSubmit={formik.handleSubmit} className='rounded-3xl bg-white p-10'>
           <div className='logo mb-4'>
             <img className='w-[70px]  object-contain' src={(import.meta.env.BASE_URL + 'logo.png') as string} />
             <Typography variant='h3'>Welcome</Typography>
           </div>
-          <div className='content flex flex-col gap-20 md:flex-row md:justify-between'>
+          <div className='flex flex-col gap-10 min-w-72'>
             <div className='min-w-60'>
               <div className='flex items-center gap-3 rounded-2xl border p-1 pr-5 ring-1 ring-black'>
                 {identity && identity.avatar_url && (
@@ -93,7 +93,6 @@ const LoginPassword = () => {
                       width: 25,
                       height: 25,
                     }}
-                    // className='w-6 h-6'
                   />
                 )}
                 {identity && !identity.avatar_url && (
@@ -108,7 +107,7 @@ const LoginPassword = () => {
                 <span className='line-clamp-1 overflow-hidden'>{identity && identity.first_name}</span>
               </div>
             </div>
-            <div className='flex flex-col gap-5'>
+            <div className='flex flex-col gap-5 min-w-56'>
               <div className='input w-full'>
                 <TextFieldCore
                   label='Enter your password'
@@ -119,20 +118,16 @@ const LoginPassword = () => {
                   error={formik.touched.password && Boolean(formik.errors.password)}
                   helperText={formik.touched.password && formik.errors.password}
                 />
-                <div className='flex -translate-x-2 items-center'>
-                  <Checkbox checked={isShowPassword} onChange={() => setIsShowPassword(!isShowPassword)} />
+                <div className='flex -translate-x-2 items-center cursor-pointer' onClick={() => setIsShowPassword(!isShowPassword)}>
+                  <Checkbox checked={isShowPassword} />
                   <span>Show password</span>
                 </div>
               </div>
-              <div className='terms'>
-                Not your computer? Use Guest mode to sign in privately.
-                <AuthLink link='/terms' className='text-[#0b57d0]'>
-                  Learn more
-                </AuthLink>
-              </div>
               <div className='flex items-center justify-end gap-3'>
-                <Button size='medium' variant='text' color='primary' sx={{ borderRadius: '30px' }} className='w-40'>
-                  Create account
+                <Button size='medium' variant='text' color='primary' sx={{ borderRadius: '30px' }} className='w-24'
+                  onClick={() => navigate(AUTH_LOGIN_EMAIL)}
+                >
+                  Back
                 </Button>
                 <Button
                   size='medium'
@@ -142,13 +137,13 @@ const LoginPassword = () => {
                   color='primary'
                   {...(loginMutation.isPending && { disabled: true })}
                   className='w-24'>
-                  Next
+                  Login
                 </Button>
               </div>
             </div>
           </div>
         </form>
-        <AuthFooter currentValue={currentValue} handleChange={handleChange} items={['One', 'Two', 'Three']} />
+        <AuthFooter />
       </div>
     </div>
   );

@@ -35,6 +35,7 @@ export const ADMIN_DASHBOARD = `${ADMIN_HOME}/dashboard`;
 export const ADMIN_STORAGE_MANAGEMENT = `${ADMIN_HOME}/storage-management`;
 //customer routes
 export const CUSTOMER_SHARED = `${CUSTOMER_HOME}/shared`;
+export const CUSTOMER_SHARED_DIR = `${CUSTOMER_HOME}/shared/dir/:dirId`;
 export const CUSTOMER_PRIORITY = `${CUSTOMER_HOME}/priority`;
 export const CUSTOMER_MY_DRIVE = `${CUSTOMER_HOME}/my-drive`;
 export const CUSTOMER_MY_DRIVE_DIR = `${CUSTOMER_HOME}/my-drive/dir/:dirId`;
@@ -62,6 +63,7 @@ export const routes = {
   customer: [
     { path: CUSTOMER_HOME, component: Priority },
     { path: CUSTOMER_SHARED, component: Shared },
+    { path: CUSTOMER_SHARED_DIR, component: Shared },
     { path: CUSTOMER_MY_DRIVE, component: MyDrive },
     { path: CUSTOMER_MY_DRIVE_DIR, component: MyDrive },
     { path: CUSTOMER_STARRED, component: Starred },
