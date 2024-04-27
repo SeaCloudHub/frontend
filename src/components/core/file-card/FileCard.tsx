@@ -31,6 +31,7 @@ type FileCardProps = {
   dirId?: string;
   fileType?: string;
   parent?: 'priority' | 'my-drive' | 'shared' | 'trash';
+  setArrSelected?: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
 export const fileOperation = [
@@ -40,7 +41,7 @@ export const fileOperation = [
   { icon: <TrashIcon />, label: 'Delete file' },
 ];
 
-const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelected, onClick, dirId, fileType, parent }) => {
+const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelected, onClick, dirId, fileType, parent, setArrSelected }) => {
   const [fileViewer, setFileViewer] = useState(false);
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
   const [type, setType] = useState<'move' | 'share' | 'rename' | 'move to trash' | null>(null);
@@ -167,6 +168,26 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
     ],
   ];
 
+  const handleCtrlClick = () => {
+    setArrSelected && setArrSelected((prev) => prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]);
+  }
+
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.ctrlKey) {
+      handleCtrlClick();
+      return;
+    }
+    onClick && onClick();
+  };
+
+  const handleDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.ctrlKey) {
+      handleCtrlClick();
+      return;
+    }
+    parent !== 'trash' && setFileViewer(true);
+  };
+
   return (
     <>
       {fileViewer && (
@@ -196,10 +217,8 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
         />
       )}
       <div
-        onDoubleClick={() => {
-          parent !== 'trash' && setFileViewer(true);
-        }}
-        onClick={onClick}
+        onClick={handleClick}
+        onDoubleClick={handleDoubleClick}
         className={classNames(
           'flex h-full w-full cursor-pointer flex-col items-center justify-center  rounded-xl px-2 shadow-sm duration-150',
           isSelected

@@ -4,6 +4,8 @@ import DriveFilter from './DriveFilter';
 import DriveViewMode from './DriveViewMode';
 import InfoButton from './InfoButton';
 import DrivePath from './drive-path/DrivePath';
+import PriorityFilter from '../../priority/priority-filter/PriorityFilter';
+import MultipleDriveHeader from './MultipleDriveHeader';
 
 type MyDriveHeaderProps = {
   path: Path;
@@ -16,7 +18,9 @@ type MyDriveHeaderProps = {
   sort: string;
   order: string;
   setSort: ({ sort, order }: { sort: string; order: string }) => void;
-  setSelected?: React.Dispatch<React.SetStateAction<{ id: string; name: string }>>;
+  // setSelected?: React.Dispatch<React.SetStateAction<{ id: string; name: string }>>;
+  arrSelected?: string[];
+  setArrSelected?: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
 const MyDriveHeader: React.FC<MyDriveHeaderProps> = ({
@@ -30,13 +34,15 @@ const MyDriveHeader: React.FC<MyDriveHeaderProps> = ({
   sort,
   order,
   setSort,
-  setSelected,
+  // setSelected,
+  setArrSelected,
+  arrSelected,
 }) => {
   return (
     <div className='flex flex-col pr-3'>
       <div className='flex'>
         <div className='w-full pb-[8px] pl-1 pt-[14px]'>
-          <DrivePath path={path} type={'MyDrive'} setSelected={setSelected} />
+          <DrivePath path={path} type={'MyDrive'} setArrSelected={setArrSelected} />
         </div>
         <div className='flex items-center pb-[6px] pl-[25px] pr-[11px] pt-[14px]'>
           <DriveViewMode />
@@ -45,32 +51,37 @@ const MyDriveHeader: React.FC<MyDriveHeaderProps> = ({
           </div>
         </div>
       </div>
-      <div className='flex items-center justify-between pl-5 pr-3'>
-        <div className='flex items-center gap-3'>
-          <DriveFilter
-            setModifiedFilter={setModifiedFilter}
-            setPeopleFilter={setPeopleFilter}
-            setTypeFilter={setTypeFilter}
-            modifiedFilter={modifiedFilter}
-            peopleFilter={peopleFilter}
-            typeFilter={typeFilter}
-          />
-          {(typeFilter || peopleFilter || modifiedFilter) && (
-            <div className='flex h-7 items-center rounded-full px-[12px] py-[1px] hover:bg-[#ededed]'>
-              <div
-                onClick={() => {
-                  setTypeFilter('');
-                  setPeopleFilter('');
-                  setModifiedFilter('');
-                }}
-                className='cursor-pointer text-sm font-medium'>
-                Clear filters
-              </div>
+      {arrSelected.length > 0 ?
+        <div className='px-4 py-1'>
+          <MultipleDriveHeader arrSelected={arrSelected} setArrSelected={setArrSelected} type='MyDrive' />
+        </div> :
+        <div className='flex items-center justify-between pl-5 pr-3'>
+            <div className='flex items-center gap-3'>
+              <DriveFilter
+                setModifiedFilter={setModifiedFilter}
+                setPeopleFilter={setPeopleFilter}
+                setTypeFilter={setTypeFilter}
+                modifiedFilter={modifiedFilter}
+                peopleFilter={peopleFilter}
+                typeFilter={typeFilter}
+              />
+              {(typeFilter || peopleFilter || modifiedFilter) && (
+                <div className='flex h-7 items-center rounded-full px-[12px] py-[1px] hover:bg-[#ededed]'>
+                  <div
+                    onClick={() => {
+                      setTypeFilter('');
+                      setPeopleFilter('');
+                      setModifiedFilter('');
+                    }}
+                    className='cursor-pointer text-sm font-medium'>
+                    Clear filters
+                  </div>
+                </div>
+              )}
             </div>
-          )}
+          <Sort sort={sort} order={order} setSort={setSort} />
         </div>
-        <Sort sort={sort} order={order} setSort={setSort} />
-      </div>
+      }
     </div>
   );
 };

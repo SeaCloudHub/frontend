@@ -12,12 +12,14 @@ type DriveGridViewProps = {
   sort?: string;
   order?: string;
   setSort?: ({ sort, order }: { sort: string; order: string }) => void;
+  arrSelected?: string[];
+  setArrSelected?: React.Dispatch<React.SetStateAction<string[]>>;
   entries: LocalEntry[];
   fileShow?: boolean;
   folderShow?: boolean;
-  setPath?: React.Dispatch<React.SetStateAction<Path>>;
-  setSelected?: React.Dispatch<React.SetStateAction<{ id: string; name: string }>>;
-  selected?: { id: string; name: string };
+  // setPath?: React.Dispatch<React.SetStateAction<Path>>;
+  // setSelected?: React.Dispatch<React.SetStateAction<{ id: string; name: string }>>;
+  // selected?: { id: string; name: string };
   isLoading?: boolean;
 };
 
@@ -25,18 +27,18 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
   entries,
   fileShow,
   folderShow,
-  setPath,
-  setSelected,
-  selected,
+  // setPath,
   isLoading,
   curDir,
+  setArrSelected,
+  arrSelected,
 }) => {
   const files = entries.filter((entry) => !entry.isDir);
   const folders = entries.filter((entry) => entry.isDir);
 
-  const handlePath = (path: Path) => {
-    setPath && setPath((prev) => [...prev, ...path]);
-  };
+  // const handlePath = (path: Path) => {
+  //   setPath && setPath((prev) => [...prev, ...path]);
+  // };
 
   const navigate = useNavigate();
 
@@ -50,12 +52,13 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
     // console.log('[DriveGridView] fileCardRefs', Array.from(fileCardRefs.current));
 
     const handleClickOutside = (event) => {
+      if(event.ctrlKey) return;
       const clickedOutsideCards =
         Array.from(fileCardRefs.current).every((card) => !card.contains(event.target)) &&
         Array.from(folderCardRefs.current).every((card) => !card.contains(event.target));
 
       if (driveGridViewRef.current && driveGridViewRef.current.contains(event.target) && clickedOutsideCards) {
-        setSelected && setSelected(curDir);
+        setArrSelected && setArrSelected([]);
       }
     };
 
@@ -63,7 +66,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  });
+  },[setArrSelected]);
 
   return (
     <>
@@ -90,11 +93,12 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
                         icon={folder.icon}
                         id={folder.id}
                         onDoubleClick={() => {
-                          handlePath([{ id: folder.id, name: folder.title }]);
+                          // handlePath([{ id: folder.id, name: folder.title }]);
                           navigate(`${CUSTOMER_MY_DRIVE}/dir/${folder.id}`);
                         }}
-                        onClick={() => setSelected && setSelected({ id: folder.id, name: folder.title })}
-                        isSelected={selected && selected.id === folder.id}
+                        onClick={() => setArrSelected && setArrSelected([folder.id])}
+                        isSelected={arrSelected?.includes(folder.id)}
+                        setArrSelected={setArrSelected}
                       />
                     </div>
                   ))}
@@ -113,8 +117,9 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
                         preview={file.preview}
                         id={file.id}
                         dirId={curDir?.id}
-                        onClick={() => setSelected && setSelected({ id: file.id, name: file.title })}
-                        isSelected={selected && selected.id === file.id}
+                        onClick={() => setArrSelected && setArrSelected([file.id])}
+                        isSelected={arrSelected?.includes(file.id)}
+                        setArrSelected={setArrSelected}
                       />
                     </div>
                   ))}

@@ -13,11 +13,12 @@ export const fileTypeIcons = {
   ico: <Icon icon='mdi:image' className='h-full w-full text-[#CA2E24]' />,
   svg: <Icon icon='mdi:image' className='h-full w-full text-[#CA2E24]' />,
   docx: <Icon icon='mdi:file-word-box' className='h-full w-full text-[#447DD7]' />,
-  xlxs: <Icon icon='mdi:file-excel-box' className=' w-fulltext-green-600 h-full' />,
+  xlxs: <Icon icon='mdi:file-excel-box' className=' w-full text-green-600 h-full' />,
   txt: <Icon icon='mdi:file-text' className='h-full w-full text-[#447DD7]' />,
   pptx: <Icon icon='mdi:file-powerpoint-box' className='h-full w-full text-red-500' />,
-  zip: <Icon icon='mdi:zip-box' className='text-textC h-full w-full' />,
-  any: <Icon icon='mdi:file' className='text-textC h-full w-full' />,
+  zip: <Icon icon='mdi:zip-box' className='text-yellow-600 h-full w-full' />,
+  csv: <Icon icon='mdi:file-csv' className='text-green-600 h-full w-full' />,
+  any: <Icon icon='mdi:file' className='text-[#447DD7] h-full w-full' />,
 };
 
 export default fileTypeIcons;

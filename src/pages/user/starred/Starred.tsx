@@ -14,12 +14,14 @@ import { toast } from 'react-toastify';
 import { Entry } from '@/utils/types/entry.type';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { ListEntriesRESP } from '@/apis/drive/drive.response';
+import MultipleDriveHeader from '../my-drive/header/MultipleDriveHeader';
 
 const Starred = () => {
   const { viewMode, setViewMode } = useViewMode();
   const [typeFilterItem, setTypeFilterItem] = useState<string>('');
   const [peopleFilterItem, setPeopleFilterItem] = useState<string>('');
   const [modifiedFilterItem, setModifiedFilterItem] = useState<string>('');
+  const [arrSelected, setArrSelected] = useState<string[]>([]);
   const { drawerOpen, openDrawer, closeDrawer } = useDrawer();
   const { rootId } = useStorageStore();
 
@@ -57,31 +59,35 @@ const Starred = () => {
             </div>
           </div>
           <div className='flex items-center gap-3'>
-            <SharingPageFilter
-              setModifiedFilterItem={setModifiedFilterItem}
-              setPeopleFilterItem={setPeopleFilterItem}
-              setTypeFilterItem={setTypeFilterItem}
-              modifiedFilter={modifiedFilterItem}
-              peopleFilter={peopleFilterItem}
-              typeFilter={typeFilterItem}
-            />
-            {(typeFilterItem || peopleFilterItem || modifiedFilterItem) && (
-              <div className='flex h-7 items-center rounded-full px-[12px] py-[1px] hover:bg-[#ededed]'>
-                <div
-                  onClick={() => {
-                    setTypeFilterItem('');
-                    setPeopleFilterItem('');
-                    setModifiedFilterItem('');
-                  }}
-                  className='cursor-pointer text-sm font-medium'>
-                  Clear filters
-                </div>
-              </div>
-            )}
+            {arrSelected.length === 0 ?
+              <>
+                <SharingPageFilter
+                  setModifiedFilterItem={setModifiedFilterItem}
+                  setPeopleFilterItem={setPeopleFilterItem}
+                  setTypeFilterItem={setTypeFilterItem}
+                  modifiedFilter={modifiedFilterItem}
+                  peopleFilter={peopleFilterItem}
+                  typeFilter={typeFilterItem}
+                />
+                {(typeFilterItem || peopleFilterItem || modifiedFilterItem) && (
+                  <div className='flex h-7 items-center rounded-full px-[12px] py-[1px] hover:bg-[#ededed]'>
+                    <div
+                      onClick={() => {
+                        setTypeFilterItem('');
+                        setPeopleFilterItem('');
+                        setModifiedFilterItem('');
+                      }}
+                      className='cursor-pointer text-sm font-medium'>
+                      Clear filters
+                    </div>
+                  </div>
+                )}
+              </> : <MultipleDriveHeader arrSelected={arrSelected} setArrSelected={setArrSelected} type='Starred' />
+            }
           </div>
         </div>
       }
-      bodyLeft={<StarredView entries={(data || []) as Required<Entry[]> & ListEntriesRESP['entries']} />}
+      bodyLeft={<StarredView entries={(data || []) as Required<Entry[]> & ListEntriesRESP['entries']} arrSelected={arrSelected} setArrSelected={setArrSelected} />}
       sidePanel={<SidePanel />}
     />
   );
