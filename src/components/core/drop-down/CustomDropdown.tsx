@@ -32,7 +32,7 @@ const CustomDropdown: React.FC<DropdownProps> = ({ button, items }) => {
                   action && action();
                   handleClose();
                 }}
-                sx={{ minWidth: '200px', py: '3px', fontSize: '14px' }}>
+                sx={{ minWidth: '250px', py: '3px' }}>
                 <div className='flex items-center space-x-2'>
                   {icon}
                   <div>{label}</div>
