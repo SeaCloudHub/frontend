@@ -287,12 +287,12 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
         onClick={handleClick}
         onDoubleClick={handleDoubleClick}
         className={classNames(
-          'flex h-8 cursor-pointer items-center space-x-3 border-b border-b-[#dadce0]',
+          'grid grid-cols-7 max-[1160px]:grid-cols-7 max-[1150px]:grid-cols-6 max-[1000px]:grid-cols-5 gap-3 border-b border-b-[#dadce0] truncate py-2 cursor-pointer',
           isSelected
             ? 'bg-[#c2e7ff]  dark:bg-blue-700'
             : 'hover:bg-[#dfe3e7] dark:bg-slate-600 dark:text-white dark:hover:bg-blue-950',
         )}>
-        <div className='flex shrink grow basis-[304px] items-center text-sm font-medium'>
+        <div className='flex col-span-4'>
           <div className='px-4'>
             <div className='h-6 w-6'>{icon}</div>
           </div>
@@ -300,7 +300,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
             <div className='truncate'>{title}</div>
           </Tooltip>
         </div>
-        <div className='shrink-0 grow-0 basis-[215px] text-sm font-medium max-[1450px]:basis-[140px] max-[1050px]:hidden'>
+        <div className='max-[1150px]:hidden'>
           <div className='flex items-center gap-x-2'>
             {owner.avatar_url ? (
               <Avatar
@@ -320,20 +320,22 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
                 </p>
               </div>
             )}
-            {owner.id === identity.id ? 'me' : owner.last_name}
+            <span className='truncate'>
+              {owner.id === identity.id ? 'me' : owner.last_name}
+            </span>
           </div>
         </div>
-        <div className='shrink-0 grow-0 basis-[200px] text-sm font-medium max-[1450px]:basis-[144px] max-[1000px]:hidden'>
+        <div className='max-[1000px]:hidden truncate'>
           {formatDate(lastModified, owner.id === identity.id ? 'me' : owner.last_name)}
         </div>
-        <div className='shrink-0 grow-0 basis-[88px] text-sm font-medium max-[1450px]:basis-[88px] max-[1160px]:hidden'>
-          {numToSize(size)}
-        </div>
-        <div className='flex shrink-0 grow-0 basis-[192px] justify-end text-sm font-medium max-[1450px]:basis-[48px]'>
-          <CustomDropdown
-            button={<Icon icon='ic:baseline-more-vert' className='h-7 w-7 rounded-full p-1 hover:bg-surfaceContainerLow' />}
-            items={parent === 'trash' ? [menuItemsTrash] : isDir ? folderMenu : fileMenu}
-          />
+        <div className='flex justify-between max-[1160px]:justify-end'>
+          <div className='max-[1160px]:hidden truncate'>{numToSize(size)}</div>
+          <div className='text-end'>
+            <CustomDropdown
+              button={<Icon icon='ic:baseline-more-vert' className='h-7 w-7 rounded-full p-1 hover:bg-surfaceContainerLow' />}
+              items={parent === 'trash' ? [menuItemsTrash] : isDir ? folderMenu : fileMenu}
+            />
+          </div>
         </div>
         {type === 'share' && <SharePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} />}
         {type === 'move' && (
