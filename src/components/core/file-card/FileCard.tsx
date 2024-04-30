@@ -213,10 +213,9 @@ const FileCard: React.FC<FileCardProps> = ({
             icon: icon,
             preview: '',
             id: id,
-            extra: '',
-            owner: '',
-            lastModified: '',
-            size: '',
+            owner: null,
+            lastModified: new Date(),
+            size: 0,
             fileType: fileType,
             onDoubleClick: function (): void {
               throw new Error('Function not implemented.');
@@ -233,8 +232,8 @@ const FileCard: React.FC<FileCardProps> = ({
         className={classNames(
           'flex h-full w-full cursor-pointer flex-col items-center justify-center  rounded-xl px-2 shadow-sm duration-150',
           isSelected
-            ? 'bg-blue-500  dark:bg-blue-700'
-            : 'bg-file-bg hover:bg-blue-100 dark:bg-slate-600 dark:text-white dark:hover:bg-blue-950',
+            ? 'bg-[#c2e7ff]  dark:bg-blue-700'
+            : 'bg-[#f0f4f9] hover:bg-[#dfe3e7] dark:bg-slate-600 dark:text-white dark:hover:bg-blue-950',
         )}>
         <div className='flex w-full  items-center justify-between px-1 py-3'>
           <div className='flex max-w-[calc(100%-1.5rem)] items-center space-x-4'>

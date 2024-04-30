@@ -22,7 +22,7 @@ type DriveHistoryViewProps = {
 export const LocalEntryToTimeEntry = (entries: LocalEntry[]): TimeEntry[] => {
   const timeEntries: TimeEntry[] = [];
   entries.forEach((entry) => {
-    const time = FormatDateStrToDDMMYYYY(entry.lastModified);
+    const time = FormatDateStrToDDMMYYYY(entry.lastModified.toString());
     const timeEntry = timeEntries.find((timeEntry) => timeEntry.time === time);
     if (timeEntry) {
       timeEntry.entries.push(entry);
@@ -87,7 +87,6 @@ const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({
                       parent='trash'
                       setArrSelected={setArrSelected}
                       isSelected={arrSelected.includes(file.id)}
-                      fileType={file.fileType}
                     />
                   </div>
                 ))}

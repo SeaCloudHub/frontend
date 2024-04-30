@@ -1,33 +1,81 @@
-import Dropdown, { MenuItem } from '@/components/core/drop-down/Dropdown';
+import Dropdown, { MenuItem, classNames } from '@/components/core/drop-down/Dropdown';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import React from 'react';
-import { Tooltip } from '@mui/material';
+import React, { Dispatch, SetStateAction, useState } from 'react';
+import { Avatar, Tooltip } from '@mui/material';
 import { useDrawer } from '@/store/my-drive/myDrive.store';
-import { LocalEntry } from '@/hooks/drive.hooks';
+import { LocalEntry, useCopyMutation } from '@/hooks/drive.hooks';
 import CustomDropdown from '@/components/core/drop-down/CustomDropdown';
 import SharePopUp from '@/components/core/pop-up/SharePopUp';
 import MovePopUp from '@/components/core/pop-up/MovePopUp';
 import RenamePopUp from '@/components/core/pop-up/RenamePopUp';
 import DeletePopUp from '@/components/core/pop-up/DeletePopUp';
-import { FormatDateStrToDDMMYYYY } from '@/utils/function/formatDate.function';
-import { useNavigate } from 'react-router-dom';
-import { CUSTOMER_MY_DRIVE, CUSTOMER_PRIORITY, CUSTOMER_SHARED_DIR } from '@/utils/constants/router.constant';
+import { FormatDateStrToDDMMYYYY, formatDate } from '@/utils/function/formatDate.function';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useSession } from '@/store/auth/session';
+import { getFirstCharacters } from '@/utils/function/getFirstCharacter';
+import { getRandomColor } from '@/utils/function/getRandomColor';
+import { numToSize } from '@/utils/function/numbertToSize';
+import FileViewerContainer from '@/components/core/file-viewers/file-viewer-container/FileViewerContainer';
+import { downloadFile } from '@/apis/drive/drive.api';
+import { CopyToClipboard } from '@/utils/function/copy.function';
+import { CUSTOMER_MY_DRIVE, CUSTOMER_MY_DRIVE_DIR, CUSTOMER_SHARED_DIR } from '@/utils/constants/router.constant';
 
-export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModified, owner, size, onDoubleClick, parent }) => {
-  const setDrawerOpen = useDrawer((state) => state.openDrawer);
-  const [type, setType] = React.useState<'move' | 'share' | 'rename' | null>(null);
+type DataRowProps = {
+  dirId?: string;
+  onClick?: () => void;
+  isSelected?: boolean;
+  setArrSelected?: React.Dispatch<React.SetStateAction<string[]>>;
+};
+
+export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
+  id,
+  isDir,
+  title,
+  icon,
+  lastModified,
+  owner,
+  size,
+  onDoubleClick,
+  parent,
+  onClick,
+  onChanged,
+  dirId,
+  fileType,
+  isSelected,
+  setArrSelected,
+}) => {
+  const [type, setType] = useState<'move' | 'share' | 'rename' | 'move to trash' | null>(null);
+  const [fileViewer, setFileViewer] = useState(false);
   const [isPopUpOpen, setIsPopUpOpen] = React.useState(false);
-  const navigate = useNavigate();
 
-  const fileOps = [
-    [{ label: 'Preview', icon: <Icon icon='material-symbols:visibility' /> }],
+  const { openDrawer } = useDrawer();
+  const { identity } = useSession();
+  const navigate = useNavigate();
+  const copyMutation = useCopyMutation();
+  const url = useLocation();
+
+  const fileMenu: MenuItem[][] = [
     [
-      { label: 'Download', icon: <Icon icon='ic:outline-file-download' /> },
+      {
+        label: 'Preview',
+        icon: <Icon icon='material-symbols:visibility' />,
+        action: () => {
+          setFileViewer(true);
+        },
+      },
+    ],
+    [
+      {
+        label: 'Download',
+        icon: <Icon icon='ic:outline-file-download' />,
+        action: () => {
+          downloadFile({ id, name: title });
+        },
+      },
       {
         label: 'Rename',
         icon: <Icon icon='ic:round-drive-file-rename-outline' />,
         action: () => {
-          console.log('rename');
           setType('rename');
           setIsPopUpOpen(true);
         },
@@ -35,10 +83,20 @@ export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModi
       {
         label: 'Make a copy',
         icon: <Icon icon='material-symbols:content-copy-outline' />,
+        action: () => {
+          copyMutation.mutate({ ids: [id], to: dirId });
+        },
       },
     ],
     [
-      { label: 'Copy link', icon: <Icon icon='material-symbols:link' /> },
+      {
+        label: 'Copy link',
+        icon: <Icon icon='material-symbols:link' />,
+        action: (text: string) => {
+          // console.log('[FileCard] Copy link ' + window.location.origin + location.pathname + `/${id}`);  //[TODO]
+          CopyToClipboard(text);
+        },
+      },
       {
         label: 'Share',
         icon: <Icon icon='lucide:user-plus' />,
@@ -53,6 +111,7 @@ export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModi
         label: 'Move',
         icon: <Icon icon='mdi:folder-move-outline' />,
         action: () => {
+          console.log('[FileCard] Move ' + id);
           setType('move');
           setIsPopUpOpen(true);
         },
@@ -60,25 +119,39 @@ export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModi
       {
         label: 'Add shortcut',
         icon: <Icon icon='material-symbols:add-to-drive' />,
+        action: () => {},
       },
       {
         label: 'Add to starred',
         icon: <Icon icon='material-symbols:star-outline' />,
+        action: () => {},
       },
     ],
     [
       {
         label: 'Detail',
         icon: <Icon icon='mdi:information-outline' />,
-        action: () => setDrawerOpen(id),
+        action: () => {
+          console.log('[FileCard] detail ' + id);
+          openDrawer(id);
+        },
       },
-      { label: 'Activity', icon: <Icon icon='mdi:graph-line-variant' /> },
-      { label: 'Lock', icon: <Icon icon='mdi:lock-outline' /> },
+      { label: 'Activity', icon: <Icon icon='mdi:graph-line-variant' />, action: () => {} },
+      { label: 'Lock', icon: <Icon icon='mdi:lock-outline' />, action: () => {} },
     ],
-    [{ label: 'Move to trash', icon: <Icon icon='fa:trash-o' /> }],
+    [
+      {
+        label: 'Move to trash',
+        icon: <Icon icon='fa:trash-o' />,
+        action: () => {
+          setType('move to trash');
+          setIsPopUpOpen(true);
+        },
+      },
+    ],
   ];
 
-  const folderOps = [
+  const folderMenu = [
     [
       { label: 'Download', icon: <Icon icon='ic:outline-file-download' /> },
       {
@@ -91,7 +164,13 @@ export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModi
       },
     ],
     [
-      { label: 'Copy link', icon: <Icon icon='material-symbols:link' /> },
+      {
+        label: 'Copy link',
+        icon: <Icon icon='material-symbols:link' />,
+        action: () => {
+          CopyToClipboard(window.location.origin + CUSTOMER_MY_DRIVE + `/dir/${id}`);
+        },
+      },
       {
         label: 'Share',
         icon: <Icon icon='lucide:user-plus' />,
@@ -124,7 +203,7 @@ export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModi
       {
         label: 'Detail',
         icon: <Icon icon='mdi:information-outline' />,
-        action: () => setDrawerOpen(id),
+        action: () => openDrawer(id),
       },
       { label: 'Activity', icon: <Icon icon='mdi:graph-line-variant' /> },
     ],
@@ -149,46 +228,127 @@ export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModi
     },
   ];
 
-  // const [showTools, setShowTools] = useState(false);
+  const handleCtrlClick = () => {
+    setArrSelected && setArrSelected((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
+  };
+
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.ctrlKey) {
+      handleCtrlClick();
+      return;
+    }
+    onClick && onClick();
+  };
+
+  const handleDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.ctrlKey) {
+      handleCtrlClick();
+      return;
+    }
+    if (isDir) {
+      setArrSelected && setArrSelected([]);
+      if (parent === 'shared') {
+        navigate(`${CUSTOMER_SHARED_DIR}/dir/${id}`);
+      }
+      onDoubleClick && onDoubleClick();
+    } else {
+      parent !== 'trash' && setFileViewer(true);
+    }
+  };
+
   return (
-    <div
-      className='grid cursor-pointer grid-cols-7 gap-3 truncate  border-b border-b-[#dadce0] py-2 hover:bg-slate-800 max-[1160px]:grid-cols-7 max-[1150px]:grid-cols-6 max-[1000px]:grid-cols-5'
-      onDoubleClick={() => {
-        if (!isDir) return;
-        parent === 'shared' ? navigate(`${CUSTOMER_SHARED_DIR}/dir/${id}`) : navigate(`${CUSTOMER_MY_DRIVE}/dir/${id}`);
-      }}>
-      <div className='col-span-4 flex'>
-        <div className='px-4'>
-          <div className='h-6 w-6'>{icon}</div>
-        </div>
-        <Tooltip title={title}>
-          <div className='truncate'>{title}</div>
-        </Tooltip>
-      </div>
-      <div className='max-[1150px]:hidden'>{owner}</div>
-      <div className='max-[1000px]:hidden'>{FormatDateStrToDDMMYYYY(lastModified)}</div>
-      <div className='flex justify-between max-[1160px]:justify-end'>
-        <div className='truncate max-[1160px]:hidden'>{size}</div>
-        <div className='text-end'>
-          <CustomDropdown
-            button={<Icon icon='ic:baseline-more-vert' className='h-7 w-7 rounded-full p-1 hover:bg-surfaceContainerLow' />}
-            items={parent === 'trash' ? [menuItemsTrash] : isDir ? folderOps : fileOps}
-          />
-        </div>
-      </div>
-      {type === 'share' && <SharePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} />}
-      {type === 'move' && (
-        <MovePopUp
-          open={isPopUpOpen}
-          handleClose={() => setIsPopUpOpen(false)}
-          title={title}
-          location={'adfasdfasdf asdfasdfasdf asdfasdf'}
+    <>
+      {fileViewer && (
+        <FileViewerContainer
+          open={fileViewer}
+          closeOutside={() => {
+            setFileViewer(false);
+          }}
+          fileInfo={{
+            isDir: false,
+            title: title,
+            icon: icon,
+            preview: '',
+            id: id,
+            owner: null,
+            lastModified: new Date(),
+            size: 0,
+            fileType: fileType,
+            onDoubleClick: function (): void {
+              throw new Error('Function not implemented.');
+            },
+            onChanged: function (): void {
+              throw new Error('Function not implemented.');
+            },
+          }}
         />
       )}
-      {type === 'rename' && <RenamePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} name={title} id={id} />}
-      {parent === 'trash' && (
-        <DeletePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} source_ids={[id]} />
-      )}
-    </div>
+      <div
+        onClick={handleClick}
+        onDoubleClick={handleDoubleClick}
+        className={classNames(
+          'flex h-8 cursor-pointer items-center space-x-3 border-b border-b-[#dadce0]',
+          isSelected
+            ? 'bg-[#c2e7ff]  dark:bg-blue-700'
+            : 'hover:bg-[#dfe3e7] dark:bg-slate-600 dark:text-white dark:hover:bg-blue-950',
+        )}>
+        <div className='flex shrink grow basis-[304px] items-center text-sm font-medium'>
+          <div className='px-4'>
+            <div className='h-6 w-6'>{icon}</div>
+          </div>
+          <Tooltip title={title}>
+            <div className='truncate'>{title}</div>
+          </Tooltip>
+        </div>
+        <div className='shrink-0 grow-0 basis-[215px] text-sm font-medium max-[1450px]:basis-[140px] max-[1050px]:hidden'>
+          <div className='flex items-center gap-x-2'>
+            {owner.avatar_url ? (
+              <Avatar
+                alt={owner.last_name}
+                src={owner.avatar_url || 'https://picsum.photos/200/300'}
+                sx={{
+                  width: 16,
+                  height: 16,
+                }}
+              />
+            ) : (
+              <div
+                className='round flex h-[16px] w-[16px] items-center justify-center rounded-full'
+                style={{ backgroundColor: getRandomColor() }}>
+                <p className='statement-bold truncate'>
+                  {getFirstCharacters(identity.first_name + ' ' + identity.last_name || '')}
+                </p>
+              </div>
+            )}
+            {owner.id === identity.id ? 'me' : owner.last_name}
+          </div>
+        </div>
+        <div className='shrink-0 grow-0 basis-[200px] text-sm font-medium max-[1450px]:basis-[144px] max-[1000px]:hidden'>
+          {formatDate(lastModified, owner.id === identity.id ? 'me' : owner.last_name)}
+        </div>
+        <div className='shrink-0 grow-0 basis-[88px] text-sm font-medium max-[1450px]:basis-[88px] max-[1160px]:hidden'>
+          {numToSize(size)}
+        </div>
+        <div className='flex shrink-0 grow-0 basis-[192px] justify-end text-sm font-medium max-[1450px]:basis-[48px]'>
+          <CustomDropdown
+            button={<Icon icon='ic:baseline-more-vert' className='h-7 w-7 rounded-full p-1 hover:bg-surfaceContainerLow' />}
+            items={parent === 'trash' ? [menuItemsTrash] : isDir ? folderMenu : fileMenu}
+          />
+        </div>
+        {type === 'share' && <SharePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} />}
+        {type === 'move' && (
+          <MovePopUp
+            open={isPopUpOpen}
+            handleClose={() => setIsPopUpOpen(false)}
+            title={title}
+            location={'adfasdfasdf asdfasdfasdf asdfasdf'}
+          />
+        )}
+        {type === 'rename' && <RenamePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} name={title} id={id} />}
+        {parent === 'trash' && (
+          <DeletePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} source_ids={[id]} />
+        )}
+      </div>
+    </>
   );
 };

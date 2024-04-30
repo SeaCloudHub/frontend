@@ -1,9 +1,11 @@
+import { IdentityRESP } from '@/apis/auth/response/auth.sign-in.response';
 import {
   copyFiles,
   deleteFiles,
   getAccessEntries,
   getEntryMetadata,
   getListEntriesMyDrive,
+  getListEntriesPageMyDrive,
   getListEntriesTrash,
   getSharedEntries,
   moveToTrash,
@@ -55,7 +57,7 @@ export const useListEntries = () => {
   const { data, error, refetch, isLoading } = useQuery({
     queryKey: ['mydrive-entries', id],
     queryFn: async () => {
-      return (await getListEntriesMyDrive({ id, limit: 100 }).then((res) => res?.data?.entries || [])).filter(
+      return (await getListEntriesPageMyDrive({ id, limit: 100 }).then((res) => res?.data?.entries || [])).filter(
         (e) => !e.name.includes('.trash'),
       );
     },
@@ -290,11 +292,11 @@ export type LocalEntry = {
   icon: React.ReactNode;
   preview: React.ReactNode;
   id: string;
-  extra: string;
-  owner: string;
-  lastModified: string;
-  size: string;
+  owner: IdentityRESP;
+  lastModified: Date;
+  size: number;
   fileType?: string;
+
   onDoubleClick?: () => void;
   onChanged?: () => void;
   parent?: 'priority' | 'my-drive' | 'shared' | 'trash';
@@ -309,12 +311,10 @@ export const transformEntries = (entries: EntryRESP[]): LocalEntry[] => {
         icon: <Icon icon='ic:baseline-folder' className='object-cover-full h-full w-full dark:text-yellow-600' />,
         preview: <Icon icon='ic:baseline-folder' className='h-full w-full dark:text-yellow-600' />,
         id: entry.id,
-        extra: 'extra',
-        owner: 'owner',
+        owner: entry.owner,
         fileType: entry.mine_type,
-        ownerAvt: 'https://slaydarkkkk.github.io/img/slaydark_avt.jpg',
-        lastModified: entry.updated_at,
-        size: entry.size.toString(),
+        lastModified: new Date(entry.updated_at),
+        size: entry.size,
       } as LocalEntry;
     }
     const ext = entry.name.split('.').pop() || 'any';
@@ -336,11 +336,9 @@ export const transformEntries = (entries: EntryRESP[]): LocalEntry[] => {
       icon: icon,
       preview: preview,
       id: entry.id,
-      extra: 'extra',
-      owner: 'owner',
-      ownerAvt: 'https://slaydarkkkk.github.io/img/slaydark_avt.jpg',
-      lastModified: entry.updated_at,
-      size: entry.size.toString(),
-    };
+      owner: entry.owner,
+      lastModified: new Date(entry.updated_at),
+      size: entry.size,
+    } as LocalEntry;
   });
 };

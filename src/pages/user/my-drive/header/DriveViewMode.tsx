@@ -19,7 +19,7 @@ const DriveViewMode: React.FC = () => {
             </div>
           </Tooltip>
           <Tooltip title='Grid View'>
-            <div className='flex h-[32px] items-center justify-center rounded-r-full border border-outline bg-black py-1 pl-[10px] pr-[10px] text-white hover:brightness-90 dark:bg-white dark:text-black'>
+            <div className='flex h-[32px] items-center justify-center rounded-r-full border border-outline bg-[#c2e7ff] py-1 pl-[10px] pr-[10px] hover:brightness-90 dark:bg-white dark:text-black'>
               <Icon icon='ic:baseline-check' className='h-5 w-5' />
               <Icon icon='mdi:view-grid-outline' className='h-5 w-5' />
             </div>
@@ -28,7 +28,7 @@ const DriveViewMode: React.FC = () => {
       ) : (
         <div className='flex cursor-pointer items-center'>
           <Tooltip title='List View'>
-            <div className='flex h-[32px] items-center justify-center rounded-l-full border border-r-0 border-[#7e817f] bg-black py-1 pl-[10px] pr-[10px] text-white hover:brightness-90 dark:bg-white dark:text-black'>
+            <div className='flex h-[32px] items-center justify-center rounded-l-full border border-r-0 border-[#7e817f] bg-[#c2e7ff] py-1 pl-[10px] pr-[10px] hover:brightness-90 dark:bg-white dark:text-black'>
               <Icon icon='ic:baseline-check' className='h-5 w-5' />
               <Icon icon='tdesign:view-list' className='h-5 w-5' />
             </div>

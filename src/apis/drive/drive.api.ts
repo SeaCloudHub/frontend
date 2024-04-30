@@ -1,13 +1,27 @@
 import { api } from '@/helpers/http/config.http';
-import { CopyFileREQ, ListEntriesREQ, RenameREQ, UploadFileREQ, DeleteFilesREQ } from './drive.request';
+import { CopyFileREQ, ListEntriesREQ, RenameREQ, UploadFileREQ, DeleteFilesREQ, ListEntriesPageREQ } from './drive.request';
 import { BaseResponse } from '@/utils/types/api-base-response.type';
 import { MoveToTrashREQ } from './request/move-to-trash.request';
-import { DeleteFilesRESP, EntryMetadataRES, EntryRESP, ListEntriesRESP, SharedEntriesRESP } from './drive.response';
+import {
+  DeleteFilesRESP,
+  EntryMetadataRES,
+  EntryRESP,
+  ListEntriesPageRESP,
+  ListEntriesRESP,
+  SharedEntriesRESP,
+} from './drive.response';
 import { HTTP_HEADER } from '@/utils/constants/http.constant';
 
 export const getListEntriesMyDrive = async (param: ListEntriesREQ) => {
   const res = await api.get<BaseResponse<ListEntriesRESP>>(`/files/${param.id}`, {
     params: { cursor: param.cusor, limit: param.limit },
+  });
+  return res.data;
+};
+
+export const getListEntriesPageMyDrive = async (param: ListEntriesPageREQ) => {
+  const res = await api.get<BaseResponse<ListEntriesPageRESP>>(`/files/${param.id}/page`, {
+    params: { page: param.page, limit: param.limit },
   });
   return res.data;
 };

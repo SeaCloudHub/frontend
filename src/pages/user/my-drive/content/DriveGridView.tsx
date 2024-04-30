@@ -4,7 +4,7 @@ import { LocalEntry } from '@/hooks/drive.hooks';
 import { Path, useDrawer } from '@/store/my-drive/myDrive.store';
 import { CUSTOMER_MY_DRIVE } from '@/utils/constants/router.constant';
 import { LinearProgress } from '@mui/material';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 type DriveGridViewProps = {
@@ -35,10 +35,6 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
 }) => {
   const files = entries.filter((entry) => !entry.isDir);
   const folders = entries.filter((entry) => entry.isDir);
-
-  // const handlePath = (path: Path) => {
-  //   setPath && setPath((prev) => [...prev, ...path]);
-  // };
 
   const navigate = useNavigate();
   const { drawerOpen } = useDrawer();

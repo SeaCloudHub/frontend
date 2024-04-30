@@ -9,6 +9,12 @@ export type ListEntriesREQ = {
   limit?: number;
 };
 
+export type ListEntriesPageREQ = {
+  id: string;
+  limit?: number;
+  page?: number;
+};
+
 export type UploadFileREQ = {
   files: File[];
   id: string;

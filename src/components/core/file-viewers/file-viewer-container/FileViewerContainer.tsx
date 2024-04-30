@@ -169,9 +169,7 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({ isCloseOutsid
       </DialogTitle>
       <DialogContent
         sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-        {file && (
-          <Viewer file={file} fileId={fileInfo.id} fileName={fileInfo.title} fileType={file.type} rootId={fileInfo.owner} />
-        )}
+        {file && <Viewer file={file} fileId={fileInfo.id} fileName={fileInfo.title} fileType={file.type} />}
         {!file && <img src={(import.meta.env.BASE_URL + 'loader.svg') as string} className='mx-auto h-[50px] w-[50px]' />}
       </DialogContent>
     </Dialog>

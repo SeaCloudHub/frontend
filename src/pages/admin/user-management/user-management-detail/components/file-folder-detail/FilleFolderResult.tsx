@@ -7,6 +7,7 @@ import { LocalEntry } from '@/hooks/drive.hooks';
 import { fileOperations } from '../../../../../../utils/constants/dopdown.constant';
 import { fakeEntries } from '../../../../../../utils/dumps/entries';
 import { Entry } from '../../../../../../utils/types/entry.type';
+import { formatDate } from '@/utils/function/formatDate.function';
 
 type FileFolderResultProps = {
   name?: string;
@@ -20,19 +21,22 @@ const _entryToMyEntry = (entries: Entry[]): LocalEntry[] => {
       return {
         isDir: true,
         title: entry.name,
-        icon: <Icon icon='ic:baseline-folder' className='object-cover-full h-full w-full' />,
-        preview: <Icon icon='ic:baseline-folder' className='h-full w-full' />,
-        id: entry.md5,
-        extra: 'extra',
-        owner: 'ownerssssssssssssssssssssssssssssss',
-        lastModified: 'lastModified',
-        size: 'size',
-      };
+        icon: <Icon icon='ic:baseline-folder' className='object-cover-full h-full w-full dark:text-yellow-600' />,
+        preview: <Icon icon='ic:baseline-folder' className='h-full w-full dark:text-yellow-600' />,
+        id: entry.id,
+        owner: null,
+        fileType: '',
+        lastModified: new Date(entry.updated_at),
+        size: entry.size,
+      } as LocalEntry;
     }
     const ext = entry.name.split('.').pop() || 'any';
     const icon = fileTypeIcons[ext] || fileTypeIcons.any;
+    /* Suport mp4, mp3, pdf, jpg, jpeg, png, jfif, gif, webp, ico, svg,
+    docx, txt, zip, any */
     const preview = ['jpg', 'ico', 'webp', 'png', 'jpeg', 'gif', 'jfif'].includes(ext) ? (
       <img
+        draggable={false}
         className='h-full w-full rounded-md object-cover'
         src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrHRymTob1kd-ywHzIs0ty7UhrFUcJay839nNd6tcSig&s'
       />
@@ -44,12 +48,11 @@ const _entryToMyEntry = (entries: Entry[]): LocalEntry[] => {
       title: entry.name,
       icon: icon,
       preview: preview,
-      id: entry.md5,
-      extra: 'extra',
-      owner: 'owner',
-      lastModified: 'lastModified',
-      size: 'size',
-    };
+      id: entry.id,
+      owner: null,
+      lastModified: new Date(entry.updated_at),
+      size: entry.size,
+    } as LocalEntry;
   });
 };
 
@@ -109,8 +112,8 @@ const FileFolderResult = ({ name, type, fileType }: FileFolderResultProps) => {
             </div>
             {!responsive && (
               <div className='flex w-[50%] items-center justify-end'>
-                <p className='w-1/3 truncate'>{item.owner}</p>
-                <p className='w-1/3 truncate'>{item.lastModified}</p>
+                <p className='w-1/3 truncate'>{item.owner && ''}</p>
+                <p className='w-1/3 truncate'>{formatDate(item.lastModified, '')}</p>
                 <p className='w-1/3  truncate pr-4 text-end'>{item.size}</p>
               </div>
             )}
