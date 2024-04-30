@@ -10,15 +10,24 @@ type StarredPageViewProps = {
   entries: EntryRESP[];
   arrSelected: string[];
   setArrSelected: Dispatch<SetStateAction<string[]>>;
+  isLoading?: boolean;
 };
 
-const StarredView: React.FC<StarredPageViewProps> = ({ entries, arrSelected, setArrSelected }) => {
+const StarredView: React.FC<StarredPageViewProps> = ({ entries, arrSelected, setArrSelected, isLoading }) => {
   const { viewMode } = useViewMode();
   const processedEntries = transformEntries(entries);
   const [{ sort, order }, setSort] = useState<{ sort: string; order: string }>({ sort: 'Name', order: 'desc' });
 
   return viewMode === 'grid' ? (
-    <DriveGridView sort={sort} order={order} setSort={setSort} entries={processedEntries} arrSelected={arrSelected} setArrSelected={setArrSelected}/>
+    <DriveGridView
+      sort={sort}
+      order={order}
+      setSort={setSort}
+      entries={processedEntries}
+      arrSelected={arrSelected}
+      setArrSelected={setArrSelected}
+      isLoading={isLoading}
+    />
   ) : (
     <DriveListView order={order} sort={sort} setSort={setSort} entries={processedEntries} />
   );

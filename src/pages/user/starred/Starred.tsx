@@ -25,7 +25,7 @@ const Starred = () => {
   const { drawerOpen, openDrawer, closeDrawer } = useDrawer();
   const { rootId } = useStorageStore();
 
-  const { data, error, refetch } = useQuery({
+  const { data, error, refetch, isLoading } = useQuery({
     queryKey: ['starred-entries', rootId],
     queryFn: async () =>
       (await getListEntriesMyDrive({ id: rootId }).then((res) => res?.data?.entries || [])).filter(
@@ -87,7 +87,14 @@ const Starred = () => {
           </div>
         </div>
       }
-      bodyLeft={<StarredView entries={(data || []) as Required<Entry[]> & ListEntriesRESP['entries']} arrSelected={arrSelected} setArrSelected={setArrSelected} />}
+      bodyLeft={
+        <StarredView
+          entries={(data || []) as Required<Entry[]> & ListEntriesRESP['entries']}
+          arrSelected={arrSelected}
+          setArrSelected={setArrSelected}
+          isLoading={isLoading}
+        />
+      }
       sidePanel={<SidePanel />}
     />
   );
