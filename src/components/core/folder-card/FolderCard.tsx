@@ -110,7 +110,7 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick,
       <div className='flex max-w-[calc(100%-1.5rem)] items-center space-x-4'>
         <div className='h-6 w-6 min-w-fit'>{icon}</div>
         <Tooltip title={title}>
-          <div className='truncate text-sm font-medium select-none'>{title}</div>
+          <div className='select-none truncate text-sm font-medium'>{title}</div>
         </Tooltip>
       </div>
       <div className='h-6 w-6 rounded-full p-1 hover:bg-slate-300 dark:hover:text-slate-500'>

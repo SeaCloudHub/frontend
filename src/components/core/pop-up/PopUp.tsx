@@ -9,7 +9,7 @@ type PopUpProps = {
 
 const PopUp: React.FC<PopUpProps> = ({ open, handleClose, children }) => {
   return (
-    <Dialog open={open} onClose={handleClose} onDoubleClick={(e)=>e.stopPropagation()}>
+    <Dialog open={open} onClose={handleClose} onDoubleClick={(e) => e.stopPropagation()}>
       {children}
     </Dialog>
   );

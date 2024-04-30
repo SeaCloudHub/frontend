@@ -1,4 +1,4 @@
-import { IdentityRESP } from "../auth/response/auth.sign-in.response";
+import { IdentityRESP } from '../auth/response/auth.sign-in.response';
 
 export type EntryRESP = {
   id: string;
@@ -28,12 +28,12 @@ export type ParentRES = {
   name: string;
   path: string;
   full_path: string;
-}
+};
 
 export type EntryMetadataRES = {
   file: EntryRESP;
   parents: ParentRES[];
-}
+};
 
 export type RenameRESP = {
   full_path: string;

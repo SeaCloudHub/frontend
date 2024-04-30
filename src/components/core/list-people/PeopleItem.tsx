@@ -9,35 +9,26 @@ export type PeopleItemProps = {
   setValue: (value: string) => void;
 };
 
-const PeopleItem: React.FC<PeopleItemProps> = ({
-  name,
-  email,
-  avatar,
-  value,
-  setValue,
-}) => {
+const PeopleItem: React.FC<PeopleItemProps> = ({ name, email, avatar, value, setValue }) => {
   return (
-    <ListItem alignItems="center" className='hover:bg-gray-100'>
+    <ListItem alignItems='center' className='hover:bg-gray-100'>
       <ListItemAvatar>
-        <Avatar alt={name} src={avatar||'https://picsum.photos/200/300'} />
+        <Avatar alt={name} src={avatar || 'https://picsum.photos/200/300'} />
       </ListItemAvatar>
       <ListItemText
         primary={name}
         secondary={
           <React.Fragment>
-            <Typography
-              sx={{ display: 'inline' }}
-              component="span"
-              variant="body2"
-              color="gray"
-            >
+            <Typography sx={{ display: 'inline' }} component='span' variant='body2' color='gray'>
               {email}
             </Typography>
           </React.Fragment>
         }
       />
-      <Select variant='outlined' sx={{
-        '& fieldset': {
+      <Select
+        variant='outlined'
+        sx={{
+          '& fieldset': {
             border: 'none',
           },
           '& .MuiSelect-select': {
@@ -49,9 +40,9 @@ const PeopleItem: React.FC<PeopleItemProps> = ({
         }}
         value={value}
         onChange={(e) => setValue(e.target.value)}>
-          <MenuItem value='Viewer'>Viewer</MenuItem>
-          <MenuItem value='Editor'>Editor</MenuItem>
-          <MenuItem value='Owner'>Owner</MenuItem>
+        <MenuItem value='Viewer'>Viewer</MenuItem>
+        <MenuItem value='Editor'>Editor</MenuItem>
+        <MenuItem value='Owner'>Owner</MenuItem>
       </Select>
     </ListItem>
   );

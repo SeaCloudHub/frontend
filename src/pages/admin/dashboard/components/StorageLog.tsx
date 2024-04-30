@@ -31,7 +31,7 @@ const StorageLog = () => {
     { date: '2023-12-23', user: 'Minnas', action: 'Rename', file: 'storage.pdf' },
   ];
   return (
-    <AccordionCore title='Storage Log' className='mb-3 '>
+    <AccordionCore title='Storage Log' className='mb-5 '>
       <div className='max-h-[400px] overflow-y-auto px-2 text-[14px]'>
         {logs.map((item, index) => (
           <div className='flex space-x-2' key={index}>

@@ -24,9 +24,9 @@ const FilterChip: React.FC<FilterChipProps> = ({ name, options, action, value })
     <CustomDropdown
       button={
         value === '' ? (
-          <div className='border-1 flex justify-between h-[30px] cursor-pointer items-center space-x-2 rounded-lg border border-outline px-4 py-1 text-sm font-medium hover:bg-surfaceContainer active:bg-surfaceDim'>
+          <div className='border-1 flex h-[30px] cursor-pointer items-center justify-between space-x-2 rounded-lg border border-outline px-4 py-1 text-sm font-medium hover:bg-surfaceContainer active:bg-surfaceDim'>
             <span className='line-clamp-1'>{name}</span>
-            <Icon icon='mdi:caret-down'/>
+            <Icon icon='mdi:caret-down' />
           </div>
         ) : (
           <div className='flex h-[30px]'>
@@ -34,7 +34,7 @@ const FilterChip: React.FC<FilterChipProps> = ({ name, options, action, value })
               <Tooltip title={value}>
                 <span className='line-clamp-1'>{value}</span>
               </Tooltip>
-              <Icon icon='mdi:caret-down'/>
+              <Icon icon='mdi:caret-down' />
             </div>
             <div
               onClick={(e) => {

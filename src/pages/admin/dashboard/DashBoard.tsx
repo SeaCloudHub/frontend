@@ -7,106 +7,66 @@ import StorageStatistic from '../shared/StorageStatistic';
 import DashBoardRate from './components/DashBoardRate';
 import RecentlyAddedUsers from './components/RecentlyAddedUsers';
 import StorageLog from './components/StorageLog';
+import { Card } from 'antd';
+import DashboardCard from './components/DashboardCard';
 
 const DashBoard = () => {
   return (
     <div className='h-full w-full lg:flex  lg:overflow-hidden'>
       <div className='w-full overflow-y-auto lg:max-h-screen lg:w-3/4 '>
-        <div className='w-ful2 mb-2 lg:flex lg:justify-between '>
-          <div className='flex min-w-[40%] flex-col justify-between space-y-2 lg:pr-2'>
-            <Paper
-              sx={{
-                transition: 'transform 0.3s ease-in-out',
-                '&:hover': {
-                  transform: 'scale(1.02)',
-                },
-              }}
-              elevation={3}
-              className='flex h-24 items-center px-3 '>
-              <IconifyIcon icon='mi:users' className='h-10 w-11 min-w-max rounded-full bg-[#fdd7be] p-2 ' />
-              <div className='w-full pl-5'>
-                <div className='flex min-w-max items-center justify-between text-xl font-bold text-gray-700'>
-                  <div>{300}</div>
-                  <DashBoardRate type='Increase' pecentage={1.05} />
-                </div>
-                <div className='test-sm '>Total users</div>
-              </div>
-            </Paper>
-            <Paper
-              elevation={3}
-              className='flex h-24 items-center px-3'
-              sx={{
-                transition: 'transform 0.3s ease-in-out',
-                '&:hover': {
-                  transform: 'scale(1.02)',
-                },
-              }}>
-              <IconifyIcon icon='tdesign:user-checked-1' className='h-10 w-11 min-w-max rounded-full bg-[#c2fc9c] p-2 ' />
-              <div className='w-full pl-5'>
-                <div className='flex min-w-max items-center justify-between text-xl font-bold '>
-                  <div>{300}</div>
-                  <DashBoardRate type='Decrease' pecentage={1.05} />
-                </div>
-                <div className='test-sm '>Active users</div>
-              </div>
-            </Paper>
-            <Paper
-              elevation={3}
-              className='flex h-24 items-center px-3'
-              sx={{
-                transition: 'transform 0.3s ease-in-out',
-                '&:hover': {
-                  transform: 'scale(1.02)',
-                },
-              }}>
-              <IconifyIcon icon='tdesign:user-blocked' className='h-10 w-11 min-w-max rounded-full bg-red-300 p-2 ' />
-              <div className='w-full pl-5'>
-                <div className='flex min-w-max items-center justify-between text-xl font-bold '>
-                  <div>{300}</div>
-                  <DashBoardRate type='Neutral' pecentage={1.05} />
-                </div>
-                <div className='test-sm '>Blocked users</div>
-              </div>
-            </Paper>
+        <div className='flex w-full flex-col'>
+          <div className='max-w-pc  w-full'>
+            <div className='m-5 flex gap-6'>
+              <DashboardCard data={{ name: 'Total users', percentage: 1.05, value: 300 }} />
+              <DashboardCard data={{ name: 'Active users', percentage: -1.05, value: 260 }} />
+              <DashboardCard data={{ name: 'Blocked users', percentage: 0, value: 40 }} />
+            </div>
           </div>
-          <AccordionCore className='w-full' title='Visited users'>
-            <LineChartCore
-              data={[
-                { name: 0, value: 80 },
-                { name: 1, value: 10 },
-                { name: 1.4, value: 20 },
-                { name: 2, value: 20 },
-              ]}
-              color='blue'
-              sizing={{ height: 350 }}
-            />
-          </AccordionCore>
+          <div className='flex w-full flex-col gap-6'>
+            <Card className='m-5'>
+              <LineChartCore
+                data={[
+                  {
+                    name: 'Visited users',
+                    data: [10, 20, 70, 50, 20, 80, 35, 60, 70, 100, 110, 120],
+                  },
+                  {
+                    name: 'Active users',
+                    data: [14, 45, 23, 45, 67, 23, 45, 67, 23, 45, 67, 23],
+                  },
+                ]}
+                categories={['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']}
+                title='User Activity'
+              />
+            </Card>
+          </div>
         </div>
-        <AccordionCore title='Disk Space' className=''>
-          <StorageStatistic />
-          <div className='lg:flex lg:items-center'>
-            <PieChartCore
-              data={[
-                { value: 10, label: 'Used', color: '#e33f42' },
-                { value: 20, label: 'Free', color: '#63a537' },
-              ]}
-              sizing={{ height: 350 }}
-              outerRadius={120}
-            />
-            <PieChartCore
-              data={[
-                { value: 10, label: 'Document', color: '#e33f42' },
-                { value: 20, label: 'Iamge', color: '#63a537' },
-                { value: 10, label: 'zip', color: '#e33f42' },
-                { value: 20, label: 'Another', color: '#63a537' },
-              ]}
-              sizing={{ height: 350 }}
-              outerRadius={120}
-            />
+        <div className='flex w-full flex-col'>
+          <div className='w-full sm:p-2'>
+            <StorageStatistic />
           </div>
-        </AccordionCore>
+          <div className='w-full sm:p-2'>
+            <div className='mx-5 flex gap-6 rounded-lg border border-gray-50 bg-white'>
+              <PieChartCore
+                data={[
+                  { value: 10, label: 'Used' },
+                  { value: 20, label: 'Free' },
+                ]}
+              />
+
+              <PieChartCore
+                data={[
+                  { value: 10, label: 'Document' },
+                  { value: 20, label: 'Iamge' },
+                  { value: 10, label: 'zip' },
+                  { value: 20, label: 'Another' },
+                ]}
+              />
+            </div>
+          </div>
+        </div>
       </div>
-      <div className='h-12 bg-green-300 lg:w-1/4 '>
+      <div className='mx-5 h-12 bg-green-300 lg:w-1/4'>
         <RecentlyAddedUsers />
         <StorageLog />
       </div>

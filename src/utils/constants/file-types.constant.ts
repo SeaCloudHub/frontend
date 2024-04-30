@@ -16,4 +16,4 @@ export const fileTypes = {
   pptx: 'Powerpoint',
   zip: 'Compressed Archive',
   any: 'Unknown Type',
-}
+};

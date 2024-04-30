@@ -34,13 +34,13 @@ const Viewer: React.FC<FileViewerProps> = (props) => {
     case 'mp4': {
       return <Pdf {...props} />;
     }
-    case 'image/png':{
-         return <Image {...props} />;
+    case 'image/png': {
+      return <Image {...props} />;
     }
-        case 'image/jpg':{
-         return <Image {...props} />;
+    case 'image/jpg': {
+      return <Image {...props} />;
     }
-    case 'image/jpeg':{
+    case 'image/jpeg': {
       return <Image {...props} />;
     }
     default: {

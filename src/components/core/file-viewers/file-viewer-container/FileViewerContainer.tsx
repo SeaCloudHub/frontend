@@ -23,37 +23,37 @@ type FileViewerContainerProps = {
 };
 
 const totalFileViewerActions: Record<string, MenuItemCoreProps> = {
-    delete: {
-      icon: 'material-symbols-light:delete-outline',
-      onClick: () => {},
-      title: 'Delete',
-    },
-    print: {
-      icon: 'uit:print',
-      onClick: () => {},
-      title: 'Print',
-    },
-    fileHistory: {
-      icon: 'system-uicons:files-history',
-      onClick: () => {},
-      title: 'File history',
-    },
-    copyLink: {
-      icon: 'ic:sharp-link',
-      onClick: () => {},
-      title: 'Copy link',
-    },
-    share: {
-      icon: 'codicon:share',
-      onClick: () => {},
-      title: 'Share',
-    },
-    download: {
-      icon: 'material-symbols-light:download',
-      onClick: () => {},
-      title: 'Download',
-    },
-  };
+  delete: {
+    icon: 'material-symbols-light:delete-outline',
+    onClick: () => {},
+    title: 'Delete',
+  },
+  print: {
+    icon: 'uit:print',
+    onClick: () => {},
+    title: 'Print',
+  },
+  fileHistory: {
+    icon: 'system-uicons:files-history',
+    onClick: () => {},
+    title: 'File history',
+  },
+  copyLink: {
+    icon: 'ic:sharp-link',
+    onClick: () => {},
+    title: 'Copy link',
+  },
+  share: {
+    icon: 'codicon:share',
+    onClick: () => {},
+    title: 'Share',
+  },
+  download: {
+    icon: 'material-symbols-light:download',
+    onClick: () => {},
+    title: 'Download',
+  },
+};
 const FileViewerContainer: React.FC<FileViewerContainerProps> = ({ isCloseOutside, closeOutside, open, fileInfo }) => {
   const Transition = React.forwardRef(function Transition(
     props: TransitionProps & {
@@ -64,7 +64,7 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({ isCloseOutsid
     return <Slide direction='up' ref={ref} {...props} />;
   });
   const [fileViewerActions, setFileViewerActions] = useState<MenuItemCoreProps[]>([]);
-  const [fileIcon,setFileIcon]= useState<React.ReactNode|null>(null);
+  const [fileIcon, setFileIcon] = useState<React.ReactNode | null>(null);
   const [file, setFile] = useState<File | null>(null);
   useEffect(() => {
     function updateActions() {
@@ -94,33 +94,33 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({ isCloseOutsid
     window.addEventListener('resize', updateActions);
     return () => window.removeEventListener('resize', updateActions);
   }, []);
-  
-  const getFileBinary = async ()=>{
-          try {
-            const res = await downloadFileApi(fileInfo.id);
-            const blob = new Blob([res.data], { type: res.headers['content-type'] });
-            const fileName = fileInfo.title || 'file';
-            const file = new File([blob], fileName, { type: blob.type });
-            setFile(file);
-          } catch (error) {
-            if (isAxiosError<ApiGenericError>(error)) {
-              toast.error(error.response?.data.message, toastError());
-            }
-          }
-  }
+
+  const getFileBinary = async () => {
+    try {
+      const res = await downloadFileApi(fileInfo.id);
+      const blob = new Blob([res.data], { type: res.headers['content-type'] });
+      const fileName = fileInfo.title || 'file';
+      const file = new File([blob], fileName, { type: blob.type });
+      setFile(file);
+    } catch (error) {
+      if (isAxiosError<ApiGenericError>(error)) {
+        toast.error(error.response?.data.message, toastError());
+      }
+    }
+  };
 
   useEffect(() => {
-    if(fileInfo.id){
+    if (fileInfo.id) {
       const fetchData = async () => {
         if (fileInfo.id) {
           await getFileBinary();
         }
       };
-    fetchData();
-     const FileIcon = getFileIcon(fileInfo.fileType) as React.ReactNode;
-     setFileIcon(FileIcon);
+      fetchData();
+      const FileIcon = getFileIcon(fileInfo.fileType) as React.ReactNode;
+      setFileIcon(FileIcon);
     }
-  },[fileInfo])
+  }, [fileInfo]);
 
   return (
     <Dialog onClose={isCloseOutside ? closeOutside : () => {}} open={open} fullScreen TransitionComponent={Transition}>
@@ -153,7 +153,7 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({ isCloseOutsid
         <div className='hidden flex-grow items-center justify-center md:flex'>
           <div className='flex max-h-[20px] items-center space-x-2'>
             <div>{fileIcon}</div>
-            <p className='truncate text-sm font-bold'>{fileInfo&&fileInfo.title}</p>
+            <p className='truncate text-sm font-bold'>{fileInfo && fileInfo.title}</p>
           </div>
         </div>
         <div className='flex w-1/3 flex-grow flex-nowrap items-center justify-end'>

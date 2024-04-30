@@ -19,9 +19,7 @@ const CustomDropdown: React.FC<DropdownProps> = ({ button, items }) => {
   };
   return (
     <>
-      <div onClick={handleClick}>
-        {button}
-      </div>
+      <div onClick={handleClick}>{button}</div>
       <Menu id='simple-menu' anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
         {items.map((group, ind) => (
           <div key={ind}>

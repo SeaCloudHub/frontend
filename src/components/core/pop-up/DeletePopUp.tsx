@@ -10,7 +10,7 @@ type DeletePopUpProps = {
   source_ids: string[];
 };
 
-const DeletePopUp: React.FC<DeletePopUpProps> = ({open, handleClose, title, source_ids}) => {
+const DeletePopUp: React.FC<DeletePopUpProps> = ({ open, handleClose, title, source_ids }) => {
   const deleteMutation = useDeleteMutation();
 
   return (
@@ -26,9 +26,10 @@ const DeletePopUp: React.FC<DeletePopUpProps> = ({open, handleClose, title, sour
             color: 'white',
             '&:hover': {
               backgroundColor: '#063768',
-            }
-          }}
-        >Delete</Button>
+            },
+          }}>
+          Delete
+        </Button>
       </DialogActions>
     </PopUp>
   );

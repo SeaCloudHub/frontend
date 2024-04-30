@@ -51,7 +51,8 @@ const Navbar = ({ isShrink, phoneMode }: NavbarProps) => {
             />
           )}
           {identity && !identity.avatar_url && (
-            <div onClick={() => setShowUserInfo(true)}
+            <div
+              onClick={() => setShowUserInfo(true)}
               className=' flex h-10 w-10 items-center justify-center rounded-full  border-2 border-red-300 '
               style={{ backgroundColor: getRandomColor() }}>
               <p className='statement-bold truncate'>

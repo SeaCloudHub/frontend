@@ -14,9 +14,7 @@ type RenamePopUpProps = {
   handleClose: () => void;
 };
 
-const RenamePopUp: React.FC<RenamePopUpProps> = ({
-  open, handleClose, name, id
-}) => {
+const RenamePopUp: React.FC<RenamePopUpProps> = ({ open, handleClose, name, id }) => {
   const renameMutation = useRenameMutation();
 
   const formik = useFormik({
@@ -34,7 +32,6 @@ const RenamePopUp: React.FC<RenamePopUpProps> = ({
       formik.resetForm();
     },
   });
-
 
   return (
     <PopUp open={open} handleClose={handleClose}>
@@ -55,13 +52,17 @@ const RenamePopUp: React.FC<RenamePopUpProps> = ({
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button type='submit' sx={{
-            backgroundColor: '#063799',
-            color: 'white',
-            '&:hover': {
-              backgroundColor: '#063768',
-            }
-          }}>Save</Button>
+          <Button
+            type='submit'
+            sx={{
+              backgroundColor: '#063799',
+              color: 'white',
+              '&:hover': {
+                backgroundColor: '#063768',
+              },
+            }}>
+            Save
+          </Button>
         </DialogActions>
       </form>
     </PopUp>

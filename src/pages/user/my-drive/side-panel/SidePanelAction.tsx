@@ -1,4 +1,3 @@
-
 import { Avatar } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import ActionItem from './ActionItem';
@@ -14,7 +13,7 @@ type SidePanelActionProps = {
     data: {
       action: string;
       timeAction: Date;
-      actor: {name: string; avatar: string};
+      actor: { name: string; avatar: string };
       root?: DataSidePanelAction;
       entry: DataSidePanelAction[];
     }[];
@@ -22,13 +21,12 @@ type SidePanelActionProps = {
 };
 
 const SidePanelAction: React.FC<SidePanelActionProps> = ({ data }) => {
-
   return (
     <div className='px-2'>
       {data.map((item, index) => (
         <div key={index} className='flex flex-col'>
-          <div className={`font-semibold my-5 text-sm`}>{item.time.toDateString()}</div>
-          <ActionItem key={index} time={item.time} data={item.data}/>
+          <div className={`my-5 text-sm font-semibold`}>{item.time.toDateString()}</div>
+          <ActionItem key={index} time={item.time} data={item.data} />
         </div>
       ))}
     </div>

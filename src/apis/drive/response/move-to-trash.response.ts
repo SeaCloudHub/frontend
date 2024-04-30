@@ -1,3 +1,3 @@
-import { EntryRESP } from "../drive.response";
+import { EntryRESP } from '../drive.response';
 
-export type MoveToTrashRESP =  EntryRESP[];
+export type MoveToTrashRESP = EntryRESP[];

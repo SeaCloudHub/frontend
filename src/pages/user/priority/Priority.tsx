@@ -57,7 +57,12 @@ const Priority = () => {
               </div>
             </div>
             <div className='px-4'>
-              <PriorityFilter isFileMode={isFileMode} setIsFileMode={setIsFileMode} viewMode={viewMode} setViewMode={setViewMode} />
+              <PriorityFilter
+                isFileMode={isFileMode}
+                setIsFileMode={setIsFileMode}
+                viewMode={viewMode}
+                setViewMode={setViewMode}
+              />
             </div>
           </div>
         }

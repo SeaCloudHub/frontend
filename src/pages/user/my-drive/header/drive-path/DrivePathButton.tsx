@@ -26,7 +26,7 @@ const DrivePathButton: React.FC<DrivePathButtonProps> = ({ id, name, setSelected
       default:
         return `${CUSTOMER_MY_DRIVE}`;
     }
-  }
+  };
 
   return (
     <div
