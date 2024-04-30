@@ -3,6 +3,7 @@ import { LocalEntry } from '@/hooks/drive.hooks';
 import React, { Dispatch, SetStateAction, useEffect, useRef } from 'react';
 import Sort from '../../my-drive/content/Sort';
 import { FormatDateStrToDDMMYYYY } from '@/utils/function/formatDate.function';
+import { useDrawer } from '@/store/my-drive/myDrive.store';
 
 export type TimeEntry = {
   time: string;
@@ -37,6 +38,7 @@ const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({ sort, order, se
   const driveGridViewRef = useRef(null);
   const fileCardRefs = useRef<NodeListOf<Element>>(null);
   const folderCardRefs = useRef<NodeListOf<Element>>(null);
+  const {drawerOpen} = useDrawer();
 
   useEffect(() => {
     fileCardRefs.current = document.querySelectorAll('.file-card');
@@ -67,10 +69,18 @@ const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({ sort, order, se
           <div key={index}>
             <div className='pb-4 pt-2 text-sm font-medium'>{entry.time}</div>
             {entry.entries.length !== 0 && (
-              <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'>
+              <div className={`grid gap-4 ${drawerOpen? 'xl:grid-cols-3' : 'sm:grid-cols-2 xl:grid-cols-5'}`}>
                 {entry.entries.map((file, index) => (
                   <div key={index} className='aspect-square w-auto'>
-                    <FileCard title={file.title} icon={file.icon} preview={file.preview} id={file.id} parent='trash' setArrSelected={setArrSelected} isSelected={arrSelected.includes(file.id)} />
+                    <FileCard
+                      title={file.title}
+                      icon={file.icon}
+                      preview={file.preview}
+                      id={file.id} parent='trash'
+                      setArrSelected={setArrSelected}
+                      isSelected={arrSelected.includes(file.id)}
+                      fileType={file.fileType}
+                    />
                   </div>
                 ))}
               </div>
