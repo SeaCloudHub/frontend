@@ -15,10 +15,7 @@ import MenuCore from '../../../components/core/menu/MenuCore';
 import { MenuItemCoreProps } from '../../../components/core/menu/MenuItem';
 import ModalAddUser from '../../../components/core/modal/ModalAddUser';
 import ModalChooseFile from '../../../components/core/modal/ModalChooseFile';
-import PaginationCore from '../../../components/core/pagination/PaginationCore';
-import TablePagination from '../../../components/core/table/TablePagination';
 import { useScreenMode } from '../../../store/responsive/screenMode';
-import { userInfoColumns } from '../../../utils/constants/userInfo-column.constant';
 import { ScreenMode } from '../../../utils/enums/screen-mode.enum';
 import { getFirstCharacters } from '../../../utils/function/getFirstCharacter';
 import { getRandomColor } from '../../../utils/function/getRandomColor';
@@ -27,7 +24,9 @@ import { ApiGenericError } from '../../../utils/types/api-generic-error.type';
 import { PagingState, initialPagingState } from '../../../utils/types/paging-stage.type';
 import './UserManagement.css';
 import UserManagementFilter from './UserManagementFilter';
-import UserInfoPhoneMode from './user-management-phone/UserInfoPhoneMode';
+import { Button, Card, Dropdown, Menu, Pagination, Table } from 'antd';
+import { BlockOutlined, DeleteOutline, EditOutlined, SettingsApplications, ViewDayOutlined } from '@mui/icons-material';
+import { render } from 'react-dom';
 
 type ModalState = {
   isOpen: boolean;
@@ -37,24 +36,7 @@ const initModalsState: ModalState[] = [
   { isOpen: false, name: 'MANUAL' },
   { isOpen: false, name: 'IMPORT' },
 ];
-const renderCell: Record<string, (rowData: UserManagementInfoDto) => React.ReactNode> = {
-  usedMemory: (rowData: UserManagementInfoDto) => (
-    <LinearChartBar value={rowData['usedMemory'] as number} total={rowData['totalMemory'] as number} width='100%' />
-  ),
-  name: (rowData: UserManagementInfoDto) => (
-    <div className='flex items-center space-x-5'>
-      {rowData.avatar && <img className='h-[50px] w-[50px] rounded-full object-contain' src={rowData['avatar'] as string} />}
-      {!rowData.avatar && (
-        <div
-          className='round flex h-[50px] w-[50px] items-center justify-center rounded-full'
-          style={{ backgroundColor: getRandomColor() }}>
-          <p className='statement-bold truncate'>{getFirstCharacters(rowData.name || '')}</p>
-        </div>
-      )}
-      <p className='statement-medium'>{rowData['name'] as string}</p>
-    </div>
-  ),
-};
+
 const UserManagement = () => {
   const [modals, changeModalsState] = useState<ModalState[]>(initModalsState);
   const [paging, setPaging] = useState<PagingState>(initialPagingState);
@@ -127,6 +109,7 @@ const UserManagement = () => {
       }
     }
     if (data) {
+      console.log(`Set paging:: ${JSON.stringify(data.paging)}`);
       setPaging(data.paging);
     }
   }, [error, data]);
@@ -190,23 +173,110 @@ const UserManagement = () => {
       toast.success('Create user successfully', toastSuccess());
     },
   });
+
+  const handlePageChange = (page: number) => {
+    setPaging((prev) => ({ ...prev, page: page }));
+  };
+
+  const columns = [
+    {
+      title: 'STT',
+      dataIndex: 'userId',
+      key: 'userId',
+      render: (userId: string, record: UserManagementInfoDto, index: number) => {
+        return <p className='statement-medium'>{index + 1}</p>;
+      },
+    },
+    {
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name',
+      render: (name: string, record: UserManagementInfoDto) => {
+        return (
+          <div className='flex items-center space-x-5'>
+            {record.avatar && <img className='h-[50px] w-[50px] rounded-full object-contain' src={record.avatar} />}
+            {!record.avatar && (
+              <div
+                className='round flex h-[50px] w-[50px] items-center justify-center rounded-full'
+                style={{ backgroundColor: getRandomColor() }}>
+                <p className='statement-bold truncate'>{getFirstCharacters(name)}</p>
+              </div>
+            )}
+            <p className='statement-medium'>{name}</p>
+          </div>
+        );
+      },
+    },
+    {
+      title: 'Memory Detail',
+      dataIndex: 'usedMemory',
+      key: 'usedMemory',
+      render: (usedMemory: number, record: UserManagementInfoDto) => (
+        <LinearChartBar value={usedMemory} total={record['totalMemory'] as number} width='100%' />
+      ),
+    },
+    {
+      title: 'Last Access',
+      dataIndex: 'lastAccess',
+      key: 'lastAccess',
+    },
+    {
+      title: 'Actions',
+      dataIndex: 'userId',
+      key: 'actions',
+      render: (userId: string) => {
+        return (
+          <Dropdown
+            trigger={['click']}
+            overlay={
+              <Menu>
+                <Menu.Item icon={<ViewDayOutlined />} onClick={() => navigate(userId)}>
+                  View
+                </Menu.Item>
+                <Menu.Item icon={<EditOutlined />} onClick={() => {}}>
+                  Edit
+                </Menu.Item>
+                <Menu.Item icon={<DeleteOutline />} onClick={() => {}}>
+                  Delete
+                </Menu.Item>
+                <Menu.Item icon={<BlockOutlined />} onClick={() => {}}>
+                  Block
+                </Menu.Item>
+              </Menu>
+            }
+            placement='bottomLeft'>
+            <Button type='dashed' icon={<SettingsApplications />}>
+              Actions
+            </Button>
+          </Dropdown>
+        );
+      },
+    },
+  ];
+
   return (
-    <div ref={containerRef} className=' flex  h-full w-full flex-col items-end space-y-5 overflow-y-auto'>
+    <div ref={containerRef} className='flex h-full w-full flex-col space-y-5 overflow-y-auto'>
       <div
         ref={filterRef}
         className={`z-10 mt-2 w-full space-y-2 ${screenMode == ScreenMode.MOBILE ? 'fixed bottom-2 left-1/4  ' : ''}`}>
-        {!scrollable && <UserManagementFilter />}
+        {!scrollable && (
+          <div className='mx-5'>
+            <UserManagementFilter />
+          </div>
+        )}
         <div
-          className={`${shrinkMode ? 'shrink-mode' : 'none-shrink-mode'} ${scrollable ? ' fixed  top-[4rem] mx-auto flex w-full space-x-2  bg-white dark:bg-transparent ' : ''}`}>
+          className={`${shrinkMode ? 'shrink-mode' : 'none-shrink-mode'} ${scrollable ? ' fixed  top-[4rem] mx-auto flex w-full space-x-2  bg-white dark:bg-transparent ' : ''} mx-5`}>
           {scrollable && (
-            <ButtonContainer
-              color='063768'
-              onClick={onFilterClick}
-              tooltip={'Filter'}
-              title='Filter'
-              background='#063768'
-              icon={<IconifyIcon icon={'ant-design:filter-twotone'} />}
-            />
+            <div className='mx-5'>
+              <ButtonContainer
+                color='063768'
+                onClick={onFilterClick}
+                tooltip={'Filter'}
+                title='Filter'
+                background='#063768'
+                icon={<IconifyIcon icon={'ant-design:filter-twotone'} />}
+              />
+            </div>
           )}
           <MenuCore menuItems={addUserOptions}>
             <ButtonContainer
@@ -238,61 +308,29 @@ const UserManagement = () => {
           />
         </div>
       </div>
-      {screenMode == ScreenMode.MOBILE && data && (
-        <div className='flex w-full flex-col items-center space-y-3'>
-          {data.identitiesDto &&
-            data.identitiesDto.map((item, index) => (
-              <UserInfoPhoneMode
-                avatar={item.avatar}
-                key={index}
-                lastAccess={item.lastAccess}
-                usedMemory={item.usedMemory}
-                userId={item.userId}
-                name={item.name}
-              />
-            ))}
-          <PaginationCore currentPage={paging.page} onPageChange={() => {}} totalPage={paging.totalPage} size='small' />
-        </div>
-      )}
-      {!(screenMode == ScreenMode.MOBILE) && data && (
-        <>
-          <div className='w-full'>
-            <TablePagination
-              paging={paging}
-              renderCell={renderCell}
-              action
-              Element={
-                <MenuCore
-                  menuItems={[
-                    { onClick: () => {}, title: 'Detail', icon: 'ep:view' },
-                    { onClick: () => {}, title: 'Edit', icon: 'tabler:edit' },
-                    {
-                      onClick: () => {},
-                      title: 'Delete',
-                      icon: 'ion:trash-sharp',
-                    },
-                    {
-                      onClick: () => {},
-                      title: 'Block',
-                      icon: 'ic:round-block',
-                    },
-                  ]}
-                />
-              }
-              columns={userInfoColumns}
-              onPageChange={(page: number) => {
-                if (page !== paging.page) {
-                  setPaging((prev) => ({ ...prev, page: page }));
-                }
-              }}
-              data={data.identitiesDto}
-              onClick={(user: UserManagementInfoDto) => {
-                navigate(user.userId!);
-              }}
+
+      <Card className='mx-5' loading={data == null}>
+        {data && (
+          <>
+            <Table
+              dataSource={data.identitiesDto}
+              columns={columns}
+              bordered={true}
+              pagination={false}
+              rowKey={(record) => record.userId}
             />
-          </div>
-        </>
-      )}
+
+            <Pagination
+              current={data.paging.page}
+              pageSize={data.paging.size}
+              total={data.paging.count}
+              onChange={handlePageChange}
+              style={{ marginTop: 16, textAlign: 'right' }}
+              className='bg-white '
+            />
+          </>
+        )}
+      </Card>
     </div>
   );
 };
