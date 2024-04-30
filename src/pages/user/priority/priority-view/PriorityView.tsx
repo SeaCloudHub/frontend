@@ -16,7 +16,16 @@ type PriorityViewProps = {
   arrSelected?: string[];
 };
 
-const PriorityView: React.FC<PriorityViewProps> = ({ entries, sort, order, setSort, isFileMode, setPath, arrSelected, setArrSelected }) => {
+const PriorityView: React.FC<PriorityViewProps> = ({
+  entries,
+  sort,
+  order,
+  setSort,
+  isFileMode,
+  setPath,
+  arrSelected,
+  setArrSelected,
+}) => {
   const { viewMode } = useViewMode();
   const localEntries = isFileMode ? entries.filter((entry) => !entry.isDir) : entries.filter((entry) => entry.isDir);
 

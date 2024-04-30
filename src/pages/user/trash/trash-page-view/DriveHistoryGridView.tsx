@@ -22,7 +22,7 @@ type DriveHistoryViewProps = {
 export const LocalEntryToTimeEntry = (entries: LocalEntry[]): TimeEntry[] => {
   const timeEntries: TimeEntry[] = [];
   entries.forEach((entry) => {
-    const time = FormatDateStrToDDMMYYYY(entry.lastModified);
+    const time = FormatDateStrToDDMMYYYY(entry.lastModified.toString());
     const timeEntry = timeEntries.find((timeEntry) => timeEntry.time === time);
     if (timeEntry) {
       timeEntry.entries.push(entry);
@@ -33,19 +33,26 @@ export const LocalEntryToTimeEntry = (entries: LocalEntry[]): TimeEntry[] => {
   return timeEntries;
 };
 
-const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({ sort, order, setSort, entries, setArrSelected, arrSelected }) => {
+const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({
+  sort,
+  order,
+  setSort,
+  entries,
+  setArrSelected,
+  arrSelected,
+}) => {
   const timeEntries = LocalEntryToTimeEntry(entries);
   const driveGridViewRef = useRef(null);
   const fileCardRefs = useRef<NodeListOf<Element>>(null);
   const folderCardRefs = useRef<NodeListOf<Element>>(null);
-  const {drawerOpen} = useDrawer();
+  const { drawerOpen } = useDrawer();
 
   useEffect(() => {
     fileCardRefs.current = document.querySelectorAll('.file-card');
     folderCardRefs.current = document.querySelectorAll('.folder-card');
 
     const handleClickOutside = (event) => {
-      if(event.ctrlKey) return;
+      if (event.ctrlKey) return;
       const clickedOutsideCards =
         Array.from(fileCardRefs.current).every((card) => !card.contains(event.target)) &&
         Array.from(folderCardRefs.current).every((card) => !card.contains(event.target));
@@ -57,7 +64,7 @@ const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({ sort, order, se
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  },[setArrSelected]);
+  }, [setArrSelected]);
 
   return (
     <div className=' pl-5 pr-3 pt-4' ref={driveGridViewRef}>
@@ -69,17 +76,17 @@ const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({ sort, order, se
           <div key={index}>
             <div className='pb-4 pt-2 text-sm font-medium'>{entry.time}</div>
             {entry.entries.length !== 0 && (
-              <div className={`grid gap-4 ${drawerOpen? 'xl:grid-cols-3' : 'sm:grid-cols-2 xl:grid-cols-5'}`}>
+              <div className={`grid gap-4 ${drawerOpen ? 'xl:grid-cols-3' : 'sm:grid-cols-2 xl:grid-cols-5'}`}>
                 {entry.entries.map((file, index) => (
                   <div key={index} className='aspect-square w-auto'>
                     <FileCard
                       title={file.title}
                       icon={file.icon}
                       preview={file.preview}
-                      id={file.id} parent='trash'
+                      id={file.id}
+                      parent='trash'
                       setArrSelected={setArrSelected}
                       isSelected={arrSelected.includes(file.id)}
-                      fileType={file.fileType}
                     />
                   </div>
                 ))}

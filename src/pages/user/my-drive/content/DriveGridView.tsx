@@ -4,7 +4,7 @@ import { LocalEntry } from '@/hooks/drive.hooks';
 import { Path, useDrawer } from '@/store/my-drive/myDrive.store';
 import { CUSTOMER_MY_DRIVE } from '@/utils/constants/router.constant';
 import { LinearProgress } from '@mui/material';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 type DriveGridViewProps = {
@@ -36,12 +36,8 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
   const files = entries.filter((entry) => !entry.isDir);
   const folders = entries.filter((entry) => entry.isDir);
 
-  // const handlePath = (path: Path) => {
-  //   setPath && setPath((prev) => [...prev, ...path]);
-  // };
-
   const navigate = useNavigate();
-  const {drawerOpen} = useDrawer();
+  const { drawerOpen } = useDrawer();
   console.log('[DriveGridView] drawerOpen', drawerOpen);
 
   const driveGridViewRef = useRef(null);
@@ -54,7 +50,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
     // console.log('[DriveGridView] fileCardRefs', Array.from(fileCardRefs.current));
 
     const handleClickOutside = (event) => {
-      if(event.ctrlKey) return;
+      if (event.ctrlKey) return;
       const clickedOutsideCards =
         Array.from(fileCardRefs.current).every((card) => !card.contains(event.target)) &&
         Array.from(folderCardRefs.current).every((card) => !card.contains(event.target));
@@ -68,7 +64,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  },[setArrSelected]);
+  }, [setArrSelected]);
 
   return (
     <>
@@ -87,7 +83,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
             {folders.length !== 0 && (
               <div className={!folderShow ? 'visible' : 'hidden'}>
                 <div className='pb-4 pt-2 text-sm font-medium'> Folders</div>
-                <div className={`grid gap-4 grid-cols-1 ${drawerOpen? 'xl:grid-cols-3' : 'sm:grid-cols-2 xl:grid-cols-5'}`}>
+                <div className={`grid grid-cols-1 gap-4 ${drawerOpen ? 'xl:grid-cols-3' : 'sm:grid-cols-2 xl:grid-cols-5'}`}>
                   {folders.map((folder, index) => (
                     <div key={index} className='w-auto'>
                       <FolderCard
@@ -110,7 +106,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
             {files.length !== 0 && (
               <div className={!fileShow ? 'visible' : 'hidden'}>
                 <div className='pb-4 pt-2 text-sm font-medium'>Files</div>
-                <div className={`grid gap-4 ${drawerOpen? 'xl:grid-cols-3' : 'sm:grid-cols-2 xl:grid-cols-5'}`}>
+                <div className={`grid gap-4 ${drawerOpen ? 'xl:grid-cols-3' : 'sm:grid-cols-2 xl:grid-cols-5'}`}>
                   {files.map((file, index) => (
                     <div key={index} className='aspect-square w-auto'>
                       <FileCard

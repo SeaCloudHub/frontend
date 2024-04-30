@@ -40,7 +40,7 @@ const Priority = () => {
         headerLeft={
           <div>
             <div className='flex justify-between space-x-2 text-2xl'>
-              <div className='w-full pt-[17px] pb-[20px] pl-5'>Welcome to SeaCloud</div>
+              <div className='w-full pb-[20px] pl-5 pt-[17px]'>Welcome to SeaCloud</div>
               <div className='flex items-center gap-2'>
                 <Icon
                   icon='mdi:information-outline'
@@ -56,10 +56,16 @@ const Priority = () => {
               </div>
             </div>
             <div className='px-4'>
-              {arrSelected.length === 0 ?
-                <PriorityFilter isFileMode={isFileMode} setIsFileMode={setIsFileMode} viewMode={viewMode} setViewMode={setViewMode} /> :
-                <MultipleDriveHeader arrSelected={arrSelected} setArrSelected={setArrSelected} type='Priority'/>
-              }
+              {arrSelected.length === 0 ? (
+                <PriorityFilter
+                  isFileMode={isFileMode}
+                  setIsFileMode={setIsFileMode}
+                  viewMode={viewMode}
+                  setViewMode={setViewMode}
+                />
+              ) : (
+                <MultipleDriveHeader arrSelected={arrSelected} setArrSelected={setArrSelected} type='Priority' />
+              )}
             </div>
           </div>
         }

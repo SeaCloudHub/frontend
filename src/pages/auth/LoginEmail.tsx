@@ -58,7 +58,7 @@ const LoginEmail = () => {
     },
   });
   return (
-    <div className='flex flex-col h-screen items-center justify-center bg-[#f0f4f9]'>
+    <div className='flex h-screen flex-col items-center justify-center bg-[#f0f4f9]'>
       <div>
         <form onSubmit={formik.handleSubmit} className='relative rounded-xl border bg-white p-10 md:border-none'>
           <div className='absolute left-0 top-0 w-full px-1'>
@@ -67,12 +67,12 @@ const LoginEmail = () => {
           <div className=' w-[50px]'>
             <img className='w-full object-contain' src={(import.meta.env.BASE_URL + 'logo.png') as string} />
           </div>
-          <div className='gap-10 flex flex-col md:justify-between'>
+          <div className='flex flex-col gap-10 md:justify-between'>
             <div>
               <Typography variant='h3'>Sign in</Typography>
               <h4 className='mt-3'>To continue to SeaCloud</h4>
             </div>
-            <div className='flex flex-col gap-5 min-w-80'>
+            <div className='flex min-w-80 flex-col gap-5'>
               <TextFieldCore
                 label='Email'
                 name='email'
@@ -81,7 +81,9 @@ const LoginEmail = () => {
                 error={formik.touched.email && Boolean(formik.errors.email)}
                 helperText={formik.touched.email && formik.errors.email}
               />
-              <div className='text-slate-500 text-sm line-clamp-2 min-w-56 max-w-72'>If you don't have an account, you wil contact with admin to get your account</div>
+              <div className='line-clamp-2 min-w-56 max-w-72 text-sm text-slate-500'>
+                If you don't have an account, you wil contact with admin to get your account
+              </div>
               <div className='flex justify-end'>
                 <Button
                   size='medium'

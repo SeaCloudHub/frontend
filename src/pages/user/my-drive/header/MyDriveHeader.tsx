@@ -51,37 +51,38 @@ const MyDriveHeader: React.FC<MyDriveHeaderProps> = ({
           </div>
         </div>
       </div>
-      {arrSelected.length > 0 ?
+      {arrSelected.length > 0 ? (
         <div className='px-4 py-1'>
           <MultipleDriveHeader arrSelected={arrSelected} setArrSelected={setArrSelected} type='MyDrive' />
-        </div> :
+        </div>
+      ) : (
         <div className='flex items-center justify-between pl-5 pr-3'>
-            <div className='flex items-center gap-3'>
-              <DriveFilter
-                setModifiedFilter={setModifiedFilter}
-                setPeopleFilter={setPeopleFilter}
-                setTypeFilter={setTypeFilter}
-                modifiedFilter={modifiedFilter}
-                peopleFilter={peopleFilter}
-                typeFilter={typeFilter}
-              />
-              {(typeFilter || peopleFilter || modifiedFilter) && (
-                <div className='flex h-7 items-center rounded-full px-[12px] py-[1px] hover:bg-[#ededed]'>
-                  <div
-                    onClick={() => {
-                      setTypeFilter('');
-                      setPeopleFilter('');
-                      setModifiedFilter('');
-                    }}
-                    className='cursor-pointer text-sm font-medium'>
-                    Clear filters
-                  </div>
+          <div className='flex items-center gap-3'>
+            <DriveFilter
+              setModifiedFilter={setModifiedFilter}
+              setPeopleFilter={setPeopleFilter}
+              setTypeFilter={setTypeFilter}
+              modifiedFilter={modifiedFilter}
+              peopleFilter={peopleFilter}
+              typeFilter={typeFilter}
+            />
+            {(typeFilter || peopleFilter || modifiedFilter) && (
+              <div className='flex h-7 items-center rounded-full px-[12px] py-[1px] hover:bg-[#ededed]'>
+                <div
+                  onClick={() => {
+                    setTypeFilter('');
+                    setPeopleFilter('');
+                    setModifiedFilter('');
+                  }}
+                  className='cursor-pointer text-sm font-medium'>
+                  Clear filters
                 </div>
-              )}
-            </div>
+              </div>
+            )}
+          </div>
           <Sort sort={sort} order={order} setSort={setSort} />
         </div>
-      }
+      )}
     </div>
   );
 };

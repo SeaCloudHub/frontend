@@ -10,7 +10,7 @@ type ProvidersProps = {
 const Providers = ({ children }: ProvidersProps) => {
   return (
     <QueryClientProvider>
-      <ThemeProvider defaultTheme='dark' storageKey='vite-ui-theme'>
+      <ThemeProvider defaultTheme='system' storageKey='vite-ui-theme'>
         <ScreenModeProvider>{children}</ScreenModeProvider>
       </ThemeProvider>
     </QueryClientProvider>

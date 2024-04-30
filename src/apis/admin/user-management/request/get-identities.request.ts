@@ -1,4 +1,4 @@
 export type GetIdentitiesREQ = {
-  limit: number ;
+  limit: number;
   page: number;
 };

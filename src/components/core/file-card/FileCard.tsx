@@ -41,7 +41,18 @@ export const fileOperation = [
   { icon: <TrashIcon />, label: 'Delete file' },
 ];
 
-const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelected, onClick, dirId, fileType, parent, setArrSelected }) => {
+const FileCard: React.FC<FileCardProps> = ({
+  title,
+  icon,
+  preview,
+  id,
+  isSelected,
+  onClick,
+  dirId,
+  fileType,
+  parent,
+  setArrSelected,
+}) => {
   const [fileViewer, setFileViewer] = useState(false);
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
   const [type, setType] = useState<'move' | 'share' | 'rename' | 'move to trash' | null>(null);
@@ -169,8 +180,8 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
   ];
 
   const handleCtrlClick = () => {
-    setArrSelected && setArrSelected((prev) => prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]);
-  }
+    setArrSelected && setArrSelected((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
+  };
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.ctrlKey) {
@@ -202,10 +213,9 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
             icon: icon,
             preview: '',
             id: id,
-            extra: '',
-            owner: '',
-            lastModified: '',
-            size: '',
+            owner: null,
+            lastModified: new Date(),
+            size: 0,
             fileType: fileType,
             onDoubleClick: function (): void {
               throw new Error('Function not implemented.');
@@ -222,20 +232,20 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
         className={classNames(
           'flex h-full w-full cursor-pointer flex-col items-center justify-center  rounded-xl px-2 shadow-sm duration-150',
           isSelected
-            ? 'bg-blue-500  dark:bg-blue-700'
-            : 'bg-file-bg hover:bg-blue-100 dark:bg-slate-600 dark:text-white dark:hover:bg-blue-950',
+            ? 'bg-[#c2e7ff]  dark:bg-blue-700'
+            : 'bg-[#f0f4f9] hover:bg-[#dfe3e7] dark:bg-slate-600 dark:text-white dark:hover:bg-blue-950',
         )}>
         <div className='flex w-full  items-center justify-between px-1 py-3'>
           <div className='flex max-w-[calc(100%-1.5rem)] items-center space-x-4'>
             <div className='h-6 w-6 min-w-fit'>{icon}</div>
             <Tooltip title={title}>
-              <div className='truncate text-sm font-medium select-none'>{title}</div>
+              <div className='select-none truncate text-sm font-medium'>{title}</div>
             </Tooltip>
           </div>
           <div className='h-6 w-6 rounded-full p-1 hover:bg-slate-300'>
             <CustomDropdown
               button={<BsThreeDotsVertical className='dark:hover:text-slate-500' />}
-              items={parent==='trash' ? menuItemsTrash : menuItems}
+              items={parent === 'trash' ? menuItemsTrash : menuItems}
             />
           </div>
         </div>

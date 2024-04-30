@@ -61,7 +61,7 @@ const Shared = () => {
           </div>
 
           <div className='flex items-center gap-3 px-5'>
-            {arrSelected.length === 0 ?
+            {arrSelected.length === 0 ? (
               <>
                 <SharingPageFilter
                   setModifiedFilterItem={setModifiedFilterItem}
@@ -84,8 +84,10 @@ const Shared = () => {
                     </div>
                   </div>
                 )}
-              </> : <MultipleDriveHeader arrSelected={arrSelected} setArrSelected={setArrSelected} type='SharedWithMe'/>
-            }
+              </>
+            ) : (
+              <MultipleDriveHeader arrSelected={arrSelected} setArrSelected={setArrSelected} type='SharedWithMe' />
+            )}
           </div>
         </div>
       }

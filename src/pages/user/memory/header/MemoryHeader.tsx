@@ -12,7 +12,7 @@ const MemoryHeader: React.FC<MemoryHeaderProps> = ({ modifiedFilter, typeFilter,
   return (
     <div className='flex flex-col  pr-3'>
       <div className='flex justify-between'>
-        <div className='text-2xl pt-[17px] pl-[20px] pb-[20px] font-semibold'>Memory</div>
+        <div className='pb-[20px] pl-[20px] pt-[17px] text-2xl font-semibold'>Memory</div>
         <div className='flex items-center pb-[6px] pl-[25px] pr-[11px] pt-[14px]'>
           <div className='mx-1 my-0.5'>
             <InfoButton />

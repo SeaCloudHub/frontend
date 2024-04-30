@@ -82,7 +82,7 @@ const LoginPassword = () => {
             <img className='w-[70px]  object-contain' src={(import.meta.env.BASE_URL + 'logo.png') as string} />
             <Typography variant='h3'>Welcome</Typography>
           </div>
-          <div className='flex flex-col gap-10 min-w-72'>
+          <div className='flex min-w-72 flex-col gap-10'>
             <div className='min-w-60'>
               <div className='flex items-center gap-3 rounded-2xl border p-1 pr-5 ring-1 ring-black'>
                 {identity && identity.avatar_url && (
@@ -107,7 +107,7 @@ const LoginPassword = () => {
                 <span className='line-clamp-1 overflow-hidden'>{identity && identity.first_name}</span>
               </div>
             </div>
-            <div className='flex flex-col gap-5 min-w-56'>
+            <div className='flex min-w-56 flex-col gap-5'>
               <div className='input w-full'>
                 <TextFieldCore
                   label='Enter your password'
@@ -118,15 +118,21 @@ const LoginPassword = () => {
                   error={formik.touched.password && Boolean(formik.errors.password)}
                   helperText={formik.touched.password && formik.errors.password}
                 />
-                <div className='flex -translate-x-2 items-center cursor-pointer' onClick={() => setIsShowPassword(!isShowPassword)}>
+                <div
+                  className='flex -translate-x-2 cursor-pointer items-center'
+                  onClick={() => setIsShowPassword(!isShowPassword)}>
                   <Checkbox checked={isShowPassword} />
                   <span>Show password</span>
                 </div>
               </div>
               <div className='flex items-center justify-end gap-3'>
-                <Button size='medium' variant='text' color='primary' sx={{ borderRadius: '30px' }} className='w-24'
-                  onClick={() => navigate(AUTH_LOGIN_EMAIL)}
-                >
+                <Button
+                  size='medium'
+                  variant='text'
+                  color='primary'
+                  sx={{ borderRadius: '30px' }}
+                  className='w-24'
+                  onClick={() => navigate(AUTH_LOGIN_EMAIL)}>
                   Back
                 </Button>
                 <Button

@@ -10,12 +10,12 @@ const FileChip = ({ title }: { title: string }) => {
 
   return (
     <div
-      className='relative flex w-full gap-2 hover:bg-gray-200 items-center'
+      className='relative flex w-full items-center gap-2 hover:bg-gray-200'
       onMouseEnter={() => setIsVisible(true)}
       onMouseLeave={() => setIsVisible(false)}>
       <div className='flex w-full cursor-pointer items-center gap-2 rounded-lg border border-gray-500 px-2 py-1 font-semibold'>
         <div className='h-5 w-5'>{icon}</div>
-        <Tooltip title={title} className='font-semibold text-sm'>
+        <Tooltip title={title} className='text-sm font-semibold'>
           <div className='line-clamp-1 max-w-32'>{title}</div>
         </Tooltip>
       </div>

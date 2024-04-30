@@ -1,4 +1,3 @@
-
 import DriveLayout from '@/components/layout/DriveLayout';
 import { useDrawer, useViewMode } from '@/store/my-drive/myDrive.store';
 import { useState } from 'react';
@@ -19,15 +18,14 @@ const Trash = () => {
   const [arrSelected, setArrSelected] = useState<string[]>([]);
   const { drawerOpen, openDrawer, closeDrawer } = useDrawer();
 
-  const {data, isLoading, refetch} = useTrash();
-
+  const { data, isLoading, refetch } = useTrash();
 
   return (
     <DriveLayout
       headerLeft={
         <div className='px-5'>
           <div className='flex justify-between space-x-2'>
-            <h2 className='text-2xl pt-[17px] pb-[20px] font-semibold'>Trash</h2>
+            <h2 className='pb-[20px] pt-[17px] text-2xl font-semibold'>Trash</h2>
             <div className='flex items-center gap-2'>
               <SharingPageViewMode setViewMode={setViewMode} viewMode={viewMode} />
               <Icon
@@ -45,7 +43,7 @@ const Trash = () => {
           </div>
 
           <div className='flex items-center gap-3'>
-          {arrSelected.length === 0 ?
+            {arrSelected.length === 0 ? (
               <>
                 <SharingPageFilter
                   setModifiedFilterItem={setModifiedFilterItem}
@@ -68,8 +66,10 @@ const Trash = () => {
                     </div>
                   </div>
                 )}
-              </> : <MultipleDriveHeader arrSelected={arrSelected} setArrSelected={setArrSelected} type='Trash'/>
-            }
+              </>
+            ) : (
+              <MultipleDriveHeader arrSelected={arrSelected} setArrSelected={setArrSelected} type='Trash' />
+            )}
           </div>
         </div>
       }

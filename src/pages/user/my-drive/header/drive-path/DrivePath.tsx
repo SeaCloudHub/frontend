@@ -48,7 +48,12 @@ const DrivePath: React.FC<DrivePathProps> = ({ path, type, setArrSelected }) => 
           left={false}
         />
         <Icon icon='ic:baseline-keyboard-arrow-right' className='h-6 w-6' />
-        <DrivePathButton id={path[path.length - 2].id} name={path[path.length - 2].name} type={type} setArrSelected={setArrSelected} />
+        <DrivePathButton
+          id={path[path.length - 2].id}
+          name={path[path.length - 2].name}
+          type={type}
+          setArrSelected={setArrSelected}
+        />
         <Icon icon='ic:baseline-keyboard-arrow-right' className='h-6 w-6' />
         <DrivePathMenuButton dirName={path[path.length - 1].name} dirId={path[path.length - 1].id} type={type} />
       </div>

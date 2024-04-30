@@ -25,10 +25,10 @@ const DriveHistoryListView: React.FC<DriveHistoryListViewProps> = ({ sort, order
   return (
     <div className=' pl-5 pr-3'>
       <div className='relative flex flex-col'>
-        <div className='grid grid-cols-7 max-[1160px]:grid-cols-6 gap-3 border-b border-b-[#dadce0] pt-2'>
+        <div className='grid grid-cols-7 gap-3 border-b border-b-[#dadce0] pt-2 max-[1160px]:grid-cols-6'>
           <div className='col-span-4 font-medium'>Name</div>
           <div className='font-medium max-[1150px]:hidden'>Owner</div>
-          <div className='font-medium max-[1000px]:hidden truncate'>Last Modified</div>
+          <div className='truncate font-medium max-[1000px]:hidden'>Last Modified</div>
           <div className='font-medium max-[1160px]:hidden'>File Size</div>
         </div>
         {timeEntries.map((entry, index) => {

@@ -77,7 +77,6 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ dirId, dirNam
     }
   };
 
-
   const rootMenuItems: MenuItem[][] = [
     [
       {
