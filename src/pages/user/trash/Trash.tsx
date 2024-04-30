@@ -8,12 +8,14 @@ import ButtonCore from '@/components/core/button/ButtonCore';
 import SidePanel from '../my-drive/side-panel/SidePanel';
 import TrashPageView from './trash-page-view/TrashPageView';
 import { useTrash } from '@/hooks/drive.hooks';
+import MultipleDriveHeader from '../my-drive/header/MultipleDriveHeader';
 
 const Trash = () => {
   const { viewMode, setViewMode } = useViewMode();
   const [typeFilterItem, setTypeFilterItem] = useState<string>('');
   const [peopleFilterItem, setPeopleFilterItem] = useState<string>('');
   const [modifiedFilterItem, setModifiedFilterItem] = useState<string>('');
+  const [arrSelected, setArrSelected] = useState<string[]>([]);
   const { drawerOpen, openDrawer, closeDrawer } = useDrawer();
 
   const { data, isLoading, refetch } = useTrash();
@@ -41,31 +43,37 @@ const Trash = () => {
           </div>
 
           <div className='flex items-center gap-3'>
-            <SharingPageFilter
-              setModifiedFilterItem={setModifiedFilterItem}
-              setPeopleFilterItem={setPeopleFilterItem}
-              setTypeFilterItem={setTypeFilterItem}
-              modifiedFilter={modifiedFilterItem}
-              peopleFilter={peopleFilterItem}
-              typeFilter={typeFilterItem}
-            />
-            {(typeFilterItem || peopleFilterItem || modifiedFilterItem) && (
-              <div className='flex h-7 items-center rounded-full px-[12px] py-[1px] hover:bg-[#ededed]'>
-                <div
-                  onClick={() => {
-                    setTypeFilterItem('');
-                    setPeopleFilterItem('');
-                    setModifiedFilterItem('');
-                  }}
-                  className='cursor-pointer text-sm font-medium'>
-                  Clear filters
-                </div>
-              </div>
+            {arrSelected.length === 0 ? (
+              <>
+                <SharingPageFilter
+                  setModifiedFilterItem={setModifiedFilterItem}
+                  setPeopleFilterItem={setPeopleFilterItem}
+                  setTypeFilterItem={setTypeFilterItem}
+                  modifiedFilter={modifiedFilterItem}
+                  peopleFilter={peopleFilterItem}
+                  typeFilter={typeFilterItem}
+                />
+                {(typeFilterItem || peopleFilterItem || modifiedFilterItem) && (
+                  <div className='flex h-7 items-center rounded-full px-[12px] py-[1px] hover:bg-[#ededed]'>
+                    <div
+                      onClick={() => {
+                        setTypeFilterItem('');
+                        setPeopleFilterItem('');
+                        setModifiedFilterItem('');
+                      }}
+                      className='cursor-pointer text-sm font-medium'>
+                      Clear filters
+                    </div>
+                  </div>
+                )}
+              </>
+            ) : (
+              <MultipleDriveHeader arrSelected={arrSelected} setArrSelected={setArrSelected} type='Trash' />
             )}
           </div>
         </div>
       }
-      bodyLeft={<TrashPageView entries={data} />}
+      bodyLeft={<TrashPageView entries={data} arrSelected={arrSelected} setArrSelected={setArrSelected} />}
       sidePanel={<SidePanel />}
     />
   );

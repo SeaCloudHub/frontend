@@ -29,29 +29,20 @@ export const DriveListView: React.FC<DriveListViewProps> = ({ order, setSort, so
           </div>
         </div>
       ) : (
-        <div className=' pl-5 pr-3'>
+        <div className='pl-5 pr-3'>
           <div className='relative flex flex-col'>
-            <div className='flex h-12 items-center space-x-3 border-b border-b-[#dadce0] pt-2'>
-              <div className='shrink grow basis-[304px] text-sm font-medium'>Name</div>
-              <div className='shrink-0 grow-0 basis-[215px] text-sm font-medium max-[1450px]:basis-[140px] max-[1050px]:hidden'>
-                Owner
-              </div>
-              <div className='shrink-0 grow-0 basis-[200px] text-sm font-medium max-[1450px]:basis-[144px] max-[1000px]:hidden'>
-                Last modified
-              </div>
-              <div className='shrink-0 grow-0 basis-[88px] text-sm font-medium max-[1450px]:basis-[88px] max-[1160px]:hidden'>
-                File size
-              </div>
-              <div className='flex shrink-0 grow-0 basis-[192px] justify-end text-sm font-medium max-[1450px]:basis-[48px]'>
-                {/* <Sort sort={sort} order={order} setSort={setSort} /> */}
-              </div>
+            <div className='grid grid-cols-7 gap-3 border-b border-b-[#dadce0] pt-2 max-[1160px]:grid-cols-6'>
+              <div className='col-span-4 font-medium'>Name</div>
+              <div className='font-medium max-[1150px]:hidden'>Owner</div>
+              <div className='truncate font-medium max-[1000px]:hidden'>Last Modified</div>
+              <div className='font-medium max-[1160px]:hidden'>File Size</div>
             </div>
-            {folders.map((entry, index) => {
-              return <DataRow key={index} {...entry} onDoubleClick={() => handlePath([{ id: entry.id, name: entry.title }])} />;
-            })}
-            {files.map((entry, index) => {
-              return <DataRow key={index} {...entry} />;
-            })}
+            {folders.map((entry, index) => (
+              <DataRow key={index} {...entry} onDoubleClick={() => handlePath([{ id: entry.id, name: entry.title }])} />
+            ))}
+            {files.map((entry, index) => (
+              <DataRow key={index} {...entry} />
+            ))}
           </div>
         </div>
       )}

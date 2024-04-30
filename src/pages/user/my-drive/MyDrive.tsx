@@ -30,13 +30,16 @@ const MyDrive = () => {
   const [typeFilter, setTypeFilter] = useState<string>('');
   const [peopleFilter, setPeopleFilter] = useState<string>('');
   const [modifiedFilter, setModifiedFilter] = useState<string>('');
+  const [arrSelected, setArrSelected] = useState<string[]>([]);
 
   const viewMode = useViewMode((state) => state.viewMode);
   const { parents, data, refetch, isLoading } = useListEntries();
   const [selected, setSelected] = useState<{ id: string; name: string }>({
     id: parents[parents.length - 1].id,
     name: parents[parents.length - 1].name,
-  }); // select cur dir by default
+  });
+
+  console.log(arrSelected);
 
   // console.log('[MyDrive] parents', parents);
   // console.log('[MyDrive] selected', selected);
@@ -51,28 +54,38 @@ const MyDrive = () => {
           peopleFilter={peopleFilter}
           sort={sort}
           order={order}
+          // arrSelected={arrSelected}
+          // setArrSelected={setArrSelected}
           setTypeFilter={setTypeFilter}
           setModifiedFilter={setModifiedFilter}
           setPeopleFilter={setPeopleFilter}
           setSort={setSort}
-          setSelected={setSelected}
+          setArrSelected={setArrSelected}
+          arrSelected={arrSelected}
         />
       }
       bodyLeft={
         viewMode === 'grid' ? (
           <DriveGridView
             entries={data}
-            setPath={() => {}}
-            setSelected={setSelected}
-            selected={selected}
+            // setPath={() => {}}
+            // setSelected={setSelected}
+            // selected={selected}
             isLoading={isLoading}
             curDir={parents[parents.length - 1]}
+            arrSelected={arrSelected}
+            setArrSelected={setArrSelected}
           />
         ) : (
           <DriveListView entries={data} setPath={() => {}} />
         )
       }
-      sidePanel={<SidePanel id={selected.id} title={selected.id === rootId ? 'My Drive' : selected.name} />}
+      sidePanel={
+        <SidePanel
+          id={arrSelected.length === 0 ? rootId : arrSelected.length === 1 ? arrSelected[0] : ''}
+          title={arrSelected.length === 0 ? 'My Drive' : selected.name}
+        />
+      }
     />
   );
 };

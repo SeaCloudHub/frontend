@@ -6,12 +6,13 @@ import { useNavigate } from 'react-router-dom';
 type DrivePathButtonProps = {
   id: string;
   name: string;
-  setSelected?: React.Dispatch<React.SetStateAction<{ id: string; name: string }>>;
+  // setSelected?: React.Dispatch<React.SetStateAction<{ id: string; name: string }>>;
+  setArrSelected?: React.Dispatch<React.SetStateAction<string[]>>;
   type?: 'MyDrive' | 'Shared' | 'Starred' | 'Trash' | 'Priority';
 };
 
 // button of drive path
-const DrivePathButton: React.FC<DrivePathButtonProps> = ({ id, name, setSelected, type }) => {
+const DrivePathButton: React.FC<DrivePathButtonProps> = ({ id, name, type, setArrSelected }) => {
   const navigate = useNavigate();
   const { rootId } = useStorageStore();
 
@@ -33,7 +34,8 @@ const DrivePathButton: React.FC<DrivePathButtonProps> = ({ id, name, setSelected
       className='my-0.5 flex h-9 cursor-pointer items-center rounded-full py-1 pl-4 pr-3 hover:bg-[#ededed]'
       onClick={() => {
         id === rootId ? navigate(navigateLink(type)) : navigate(`${CUSTOMER_MY_DRIVE}/dir/${id}`);
-        setSelected && setSelected({ id, name });
+        // setSelected && setSelected({ id, name });
+        setArrSelected && setArrSelected([]);
       }}>
       <div className='pb-1 text-2xl'>{name}</div>
     </div>

@@ -37,12 +37,17 @@ export default {
       screens: {
         xs: '375px',
         sm: '640px',
+        sm_o: '304px',
         smL: '700px',
         md: '768px',
+        md_o: '432px',
         mdL: '850px',
         lg: '1024px',
+        lg_o: '688px',
         xl: '1280px',
+        xl_o: '944px',
         '2xl': '1536px',
+        '2xl_o': '1100px',
       },
       colors: {
         'content-bg': '#F8FAFD',
