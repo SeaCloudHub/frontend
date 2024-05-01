@@ -33,7 +33,7 @@ const Pdf: React.FC<FileViewerProps> = ({ file }) => {
       fetchData();
     }
   }, [src]);
-  return <Iframe url={url} />;
+  return <Iframe url={url} isHtml={false} />;
 };
 
 export default Pdf;

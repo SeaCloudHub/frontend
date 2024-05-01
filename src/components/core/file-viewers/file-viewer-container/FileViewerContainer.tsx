@@ -1,19 +1,18 @@
+import { downloadFileApi } from '@/apis/user/storage/storage.api';
 import { LocalEntry } from '@/hooks/drive.hooks';
 import { getFileIcon } from '@/utils/function/validateFileType';
-import { Dialog, DialogContent, DialogTitle, Slide } from '@mui/material';
-import { TransitionProps } from '@mui/material/transitions';
-import React, { useEffect, useRef, useState } from 'react';
+import { toastError } from '@/utils/toast-options/toast-options';
+import { ApiGenericError } from '@/utils/types/api-generic-error.type';
+import { Dialog, DialogContent, DialogTitle } from '@mui/material';
+import { isAxiosError } from 'axios';
+import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import IconifyIcon from '../../Icon/IConCore';
 import ButtonCore from '../../button/ButtonCore';
 import ButtonIcon from '../../button/ButtonIcon';
 import MenuCore from '../../menu/MenuCore';
 import { MenuItemCoreProps } from '../../menu/MenuItem';
 import Viewer from './Viewer';
-import { downloadFileApi } from '@/apis/user/storage/storage.api';
-import { toastError } from '@/utils/toast-options/toast-options';
-import { ApiGenericError } from '@/utils/types/api-generic-error.type';
-import { isAxiosError } from 'axios';
-import { toast } from 'react-toastify';
 
 type FileViewerContainerProps = {
   open: boolean;
@@ -23,48 +22,40 @@ type FileViewerContainerProps = {
 };
 
 const totalFileViewerActions: Record<string, MenuItemCoreProps> = {
-    delete: {
-      icon: 'material-symbols-light:delete-outline',
-      onClick: () => {},
-      title: 'Delete',
-    },
-    print: {
-      icon: 'uit:print',
-      onClick: () => {},
-      title: 'Print',
-    },
-    fileHistory: {
-      icon: 'system-uicons:files-history',
-      onClick: () => {},
-      title: 'File history',
-    },
-    copyLink: {
-      icon: 'ic:sharp-link',
-      onClick: () => {},
-      title: 'Copy link',
-    },
-    share: {
-      icon: 'codicon:share',
-      onClick: () => {},
-      title: 'Share',
-    },
-    download: {
-      icon: 'material-symbols-light:download',
-      onClick: () => {},
-      title: 'Download',
-    },
-  };
+  delete: {
+    icon: 'material-symbols-light:delete-outline',
+    onClick: () => {},
+    title: 'Delete',
+  },
+  print: {
+    icon: 'uit:print',
+    onClick: () => {},
+    title: 'Print',
+  },
+  fileHistory: {
+    icon: 'system-uicons:files-history',
+    onClick: () => {},
+    title: 'File history',
+  },
+  copyLink: {
+    icon: 'ic:sharp-link',
+    onClick: () => {},
+    title: 'Copy link',
+  },
+  share: {
+    icon: 'codicon:share',
+    onClick: () => {},
+    title: 'Share',
+  },
+  download: {
+    icon: 'material-symbols-light:download',
+    onClick: () => {},
+    title: 'Download',
+  },
+};
 const FileViewerContainer: React.FC<FileViewerContainerProps> = ({ isCloseOutside, closeOutside, open, fileInfo }) => {
-  const Transition = React.forwardRef(function Transition(
-    props: TransitionProps & {
-      children: React.ReactElement<any, any>;
-    },
-    ref: React.Ref<unknown>,
-  ) {
-    return <Slide direction='up' ref={ref} {...props} />;
-  });
   const [fileViewerActions, setFileViewerActions] = useState<MenuItemCoreProps[]>([]);
-  const [fileIcon,setFileIcon]= useState<React.ReactNode|null>(null);
+  const [fileIcon, setFileIcon] = useState<React.ReactNode | null>(null);
   const [file, setFile] = useState<File | null>(null);
   useEffect(() => {
     function updateActions() {
@@ -94,36 +85,37 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({ isCloseOutsid
     window.addEventListener('resize', updateActions);
     return () => window.removeEventListener('resize', updateActions);
   }, []);
-  
-  const getFileBinary = async ()=>{
-          try {
-            const res = await downloadFileApi(fileInfo.id);
-            const blob = new Blob([res.data], { type: res.headers['content-type'] });
-            const fileName = fileInfo.title || 'file';
-            const file = new File([blob], fileName, { type: blob.type });
-            setFile(file);
-          } catch (error) {
-            if (isAxiosError<ApiGenericError>(error)) {
-              toast.error(error.response?.data.message, toastError());
-            }
-          }
-  }
+
+  const getFileBinary = async () => {
+    try {
+      const res = await downloadFileApi(fileInfo.id);
+      const blob = new Blob([res.data], { type: res.headers['content-type'] });
+      const fileName = fileInfo.title || 'file';
+      const file = new File([blob], fileName, { type: blob.type });
+      setFile(file);
+    } catch (error) {
+      if (isAxiosError<ApiGenericError>(error)) {
+        toast.error(error.response?.data.message, toastError());
+      }
+    }
+  };
 
   useEffect(() => {
-    if(fileInfo.id){
+    if (fileInfo.id) {
       const fetchData = async () => {
         if (fileInfo.id) {
           await getFileBinary();
         }
       };
-    fetchData();
-     const FileIcon = getFileIcon(fileInfo.fileType) as React.ReactNode;
-     setFileIcon(FileIcon);
+      fetchData();
+      const FileIcon = getFileIcon(fileInfo.fileType) as React.ReactNode;
+      setFileIcon(FileIcon);
     }
-  },[fileInfo])
+  }, [fileInfo]);
 
+  console.log(fileInfo);
   return (
-    <Dialog onClose={isCloseOutside ? closeOutside : () => {}} open={open} fullScreen TransitionComponent={Transition}>
+    <Dialog onClose={isCloseOutside ? closeOutside : () => {}} open={open} fullScreen>
       <DialogTitle
         className='md:text-md flex h-[54px] items-center justify-between border-b  py-0'
         sx={{
@@ -153,7 +145,7 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({ isCloseOutsid
         <div className='hidden flex-grow items-center justify-center md:flex'>
           <div className='flex max-h-[20px] items-center space-x-2'>
             <div>{fileIcon}</div>
-            <p className='truncate text-sm font-bold'>{fileInfo&&fileInfo.title}</p>
+            <p className='truncate text-sm font-bold'>{fileInfo && fileInfo.title}</p>
           </div>
         </div>
         <div className='flex w-1/3 flex-grow flex-nowrap items-center justify-end'>
