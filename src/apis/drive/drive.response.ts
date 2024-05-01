@@ -1,4 +1,4 @@
-import { IdentityRESP } from "../auth/response/auth.sign-in.response";
+import { IdentityRESP } from '../auth/response/auth.sign-in.response';
 
 export type EntryRESP = {
   id: string;
@@ -23,17 +23,22 @@ export type ListEntriesRESP = {
   cursor: string;
 };
 
+export type ListEntriesPageRESP = {
+  entries: EntryRESP[];
+  pagination: PaginationRES;
+};
+
 export type ParentRES = {
   id: string;
   name: string;
   path: string;
   full_path: string;
-}
+};
 
 export type EntryMetadataRES = {
   file: EntryRESP;
   parents: ParentRES[];
-}
+};
 
 export type RenameRESP = {
   full_path: string;
@@ -43,3 +48,14 @@ export type RenameRESP = {
 export type SharedEntriesRESP = EntryRESP[];
 
 export type DeleteFilesRESP = EntryRESP[];
+
+export type PaginationRES = {
+  total_items: number;
+  total_pages: number;
+  current_page: number;
+  next_page: number;
+  previous_page: number;
+  first_page: number;
+  last_page: number;
+  limit: number;
+};

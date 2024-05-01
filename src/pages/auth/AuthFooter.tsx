@@ -13,7 +13,7 @@ const AuthFooter = () => {
   return (
     <>
       {/* <SelectCore currentValue={currentValue} items={items} handleChange={handleChange} /> */}
-      <div className='w-full flex gap-4 justify-end mt-2'>
+      <div className='mt-2 flex w-full justify-end gap-4'>
         {loginFooter.map((item, index) => (
           <AuthLink key={index} link={item.path} className='text-black'>
             {item.label}

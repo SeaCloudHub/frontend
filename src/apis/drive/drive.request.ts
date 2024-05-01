@@ -1,4 +1,3 @@
-
 export type CopyFileREQ = {
   ids: string[];
   to: string;
@@ -10,9 +9,15 @@ export type ListEntriesREQ = {
   limit?: number;
 };
 
+export type ListEntriesPageREQ = {
+  id: string;
+  limit?: number;
+  page?: number;
+};
+
 export type UploadFileREQ = {
-  files: File[],
-  id: string
+  files: File[];
+  id: string;
 };
 
 export type RenameREQ = {

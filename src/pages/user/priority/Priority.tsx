@@ -15,6 +15,7 @@ import { getListEntriesMyDrive } from '@/apis/drive/drive.api';
 import { useStorageStore } from '@/store/storage/storage.store';
 import DrivePath from '../my-drive/header/drive-path/DrivePath';
 import { ListEntriesRESP } from '@/apis/drive/drive.response';
+import MultipleDriveHeader from '../my-drive/header/MultipleDriveHeader';
 
 const Priority = () => {
   const { viewMode, setViewMode } = useViewMode();
@@ -22,6 +23,7 @@ const Priority = () => {
   const { drawerOpen, openDrawer, closeDrawer } = useDrawer();
   const { rootId } = useStorageStore();
   const [path, setPath] = useState<Path>([{ name: 'Priority', id: rootId }]);
+  const [arrSelected, setArrSelected] = useState<string[]>([]);
 
   const { data, error, refetch } = useQuery({
     queryKey: ['priority-entries', path[path.length - 1].id],
@@ -32,16 +34,13 @@ const Priority = () => {
   });
   const entries: LocalEntry[] = transformEntries((data || []) as Required<Entry[]> & ListEntriesRESP['entries']);
 
-  // const entries = remoteToLocalEntries(fakeData);
   return (
     <div>
       <DriveLayout
         headerLeft={
           <div>
             <div className='flex justify-between space-x-2 text-2xl'>
-              <div className='w-full pb-[8px] pt-[14px]'>
-                <DrivePath path={path} type='Priority' />
-              </div>
+              <div className='w-full pb-[20px] pl-5 pt-[17px]'>Welcome to SeaCloud</div>
               <div className='flex items-center gap-2'>
                 <Icon
                   icon='mdi:information-outline'
@@ -57,7 +56,16 @@ const Priority = () => {
               </div>
             </div>
             <div className='px-4'>
-              <PriorityFilter isFileMode={isFileMode} setIsFileMode={setIsFileMode} viewMode={viewMode} setViewMode={setViewMode} />
+              {arrSelected.length === 0 ? (
+                <PriorityFilter
+                  isFileMode={isFileMode}
+                  setIsFileMode={setIsFileMode}
+                  viewMode={viewMode}
+                  setViewMode={setViewMode}
+                />
+              ) : (
+                <MultipleDriveHeader arrSelected={arrSelected} setArrSelected={setArrSelected} type='Priority' />
+              )}
             </div>
           </div>
         }
@@ -68,7 +76,8 @@ const Priority = () => {
             sort={''}
             order={''}
             setSort={({ sort, order }) => console.log(sort, order)}
-            setPath={setPath}
+            arrSelected={arrSelected}
+            setArrSelected={setArrSelected}
           />
         }
         sidePanel={<SidePanel />}

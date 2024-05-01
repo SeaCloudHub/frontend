@@ -2,11 +2,11 @@ import IconifyIcon from '../../../../components/core/Icon/IConCore';
 import React from 'react';
 
 type DashboardRateProps = {
-  type: 'Increase' | 'Decrease' | 'Neutral';
   pecentage: number;
 };
 
-const DashBoardRate: React.FC<DashboardRateProps> = ({ type, pecentage }) => {
+const DashBoardRate: React.FC<DashboardRateProps> = ({ pecentage }) => {
+  const type = pecentage > 0 ? 'Increase' : pecentage < 0 ? 'Decrease' : 'Neutral';
   return (
     <div
       className={`flex text-sm ${
@@ -16,7 +16,7 @@ const DashBoardRate: React.FC<DashboardRateProps> = ({ type, pecentage }) => {
         <IconifyIcon icon={`vaadin:caret-${type === 'Increase' ? 'up' : 'down'}`} className='h-3 w-3 translate-y-2 text-sm' />
       )}
       <span>
-        {type === 'Increase' ? '+' : type === 'Decrease' ? '-' : ''} {pecentage}%
+        {type === 'Increase' ? '+' : type === 'Decrease' ? '' : ''} {pecentage}%
       </span>
     </div>
   );

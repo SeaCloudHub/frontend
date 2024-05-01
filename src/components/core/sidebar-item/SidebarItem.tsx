@@ -23,7 +23,7 @@ const SidebarItem = ({ icon, title, link, shrink, tooltip }: SidebarItemProps) =
     <>
       <div
         onClick={onClick}
-        className={` sidebar-item ${shrink ? '' : 'sidebar-item-lg'} ${link === pathName.pathname || isMyDriveActive() ? 'sidebar-item-active' : ''}`}>
+        className={` sidebar-item ${shrink ? '' : 'sidebar-item-lg'} ${link === pathName.pathname || isMyDriveActive() ? 'sidebar-item-active' : ''} my-5`}>
         <IconifyIcon fontSize={shrink ? '1.4rem' : '1.5rem'} icon={icon} />
         <p className={` ${shrink ? 'hidden' : 'block'} `}>{title}</p>
       </div>

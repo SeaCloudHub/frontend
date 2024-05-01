@@ -18,6 +18,7 @@ import { toast } from 'react-toastify';
 import DrivePath from '../my-drive/header/drive-path/DrivePath';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { ListEntriesRESP } from '@/apis/drive/drive.response';
+import MultipleDriveHeader from '../my-drive/header/MultipleDriveHeader';
 
 const Shared = () => {
   const { viewMode, setViewMode } = useViewMode();
@@ -26,6 +27,7 @@ const Shared = () => {
   const [modifiedFilterItem, setModifiedFilterItem] = useState<string>('');
   const { drawerOpen, openDrawer, closeDrawer } = useDrawer();
   const [{ sort, order }, setSort] = useState<{ sort: string; order: string }>({ sort: 'Name', order: 'desc' });
+  const [arrSelected, setArrSelected] = useState<string[]>([]);
   const { rootId } = useStorageStore();
 
   const { data, refetch, isLoading, parents } = useSharedEntry();
@@ -59,26 +61,32 @@ const Shared = () => {
           </div>
 
           <div className='flex items-center gap-3 px-5'>
-            <SharingPageFilter
-              setModifiedFilterItem={setModifiedFilterItem}
-              setPeopleFilterItem={setPeopleFilterItem}
-              setTypeFilterItem={setTypeFilterItem}
-              modifiedFilter={modifiedFilterItem}
-              peopleFilter={peopleFilterItem}
-              typeFilter={typeFilterItem}
-            />
-            {(typeFilterItem || peopleFilterItem || modifiedFilterItem) && (
-              <div className='flex h-7 items-center rounded-full px-[12px] py-[1px] hover:bg-[#ededed]'>
-                <div
-                  onClick={() => {
-                    setTypeFilterItem('');
-                    setPeopleFilterItem('');
-                    setModifiedFilterItem('');
-                  }}
-                  className='cursor-pointer text-sm font-medium'>
-                  Clear filters
-                </div>
-              </div>
+            {arrSelected.length === 0 ? (
+              <>
+                <SharingPageFilter
+                  setModifiedFilterItem={setModifiedFilterItem}
+                  setPeopleFilterItem={setPeopleFilterItem}
+                  setTypeFilterItem={setTypeFilterItem}
+                  modifiedFilter={modifiedFilterItem}
+                  peopleFilter={peopleFilterItem}
+                  typeFilter={typeFilterItem}
+                />
+                {(typeFilterItem || peopleFilterItem || modifiedFilterItem) && (
+                  <div className='flex h-7 items-center rounded-full px-[12px] py-[1px] hover:bg-[#ededed]'>
+                    <div
+                      onClick={() => {
+                        setTypeFilterItem('');
+                        setPeopleFilterItem('');
+                        setModifiedFilterItem('');
+                      }}
+                      className='cursor-pointer text-sm font-medium'>
+                      Clear filters
+                    </div>
+                  </div>
+                )}
+              </>
+            ) : (
+              <MultipleDriveHeader arrSelected={arrSelected} setArrSelected={setArrSelected} type='SharedWithMe' />
             )}
           </div>
         </div>
@@ -87,11 +95,13 @@ const Shared = () => {
         viewMode === 'grid' ? (
           <DriveGridView
             entries={data}
-            setPath={() => {}}
-            setSelected={setSelected}
-            selected={selected}
+            // setPath={() => {}}
+            // setSelected={setSelected}
+            // selected={selected}
             isLoading={isLoading}
             curDir={parents[parents.length - 1]}
+            arrSelected={arrSelected}
+            setArrSelected={setArrSelected}
           />
         ) : (
           // <DriveListView order={order} sort={sort} setSort={setSort} entries={processedEntries} />

@@ -19,9 +19,7 @@ const CustomDropdown: React.FC<DropdownProps> = ({ button, items }) => {
   };
   return (
     <>
-      <div onClick={handleClick}>
-        {button}
-      </div>
+      <div onClick={handleClick}>{button}</div>
       <Menu id='simple-menu' anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
         {items.map((group, ind) => (
           <div key={ind}>
@@ -32,7 +30,7 @@ const CustomDropdown: React.FC<DropdownProps> = ({ button, items }) => {
                   action && action();
                   handleClose();
                 }}
-                sx={{ minWidth: '200px', py: '3px', fontSize: '14px' }}>
+                sx={{ minWidth: '250px', py: '3px' }}>
                 <div className='flex items-center space-x-2'>
                   {icon}
                   <div>{label}</div>

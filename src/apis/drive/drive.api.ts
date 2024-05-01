@@ -1,13 +1,27 @@
-import { api } from "@/helpers/http/config.http";
-import { CopyFileREQ, ListEntriesREQ, RenameREQ, UploadFileREQ, DeleteFilesREQ } from "./drive.request";
-import { BaseResponse } from "@/utils/types/api-base-response.type";
-import { MoveToTrashREQ } from "./request/move-to-trash.request";
-import { DeleteFilesRESP, EntryMetadataRES, EntryRESP, ListEntriesRESP, SharedEntriesRESP } from "./drive.response";
-import { HTTP_HEADER } from "@/utils/constants/http.constant";
+import { api } from '@/helpers/http/config.http';
+import { CopyFileREQ, ListEntriesREQ, RenameREQ, UploadFileREQ, DeleteFilesREQ, ListEntriesPageREQ } from './drive.request';
+import { BaseResponse } from '@/utils/types/api-base-response.type';
+import { MoveToTrashREQ } from './request/move-to-trash.request';
+import {
+  DeleteFilesRESP,
+  EntryMetadataRES,
+  EntryRESP,
+  ListEntriesPageRESP,
+  ListEntriesRESP,
+  SharedEntriesRESP,
+} from './drive.response';
+import { HTTP_HEADER } from '@/utils/constants/http.constant';
 
 export const getListEntriesMyDrive = async (param: ListEntriesREQ) => {
   const res = await api.get<BaseResponse<ListEntriesRESP>>(`/files/${param.id}`, {
     params: { cursor: param.cusor, limit: param.limit },
+  });
+  return res.data;
+};
+
+export const getListEntriesPageMyDrive = async (param: ListEntriesPageREQ) => {
+  const res = await api.get<BaseResponse<ListEntriesPageRESP>>(`/files/${param.id}/page`, {
+    params: { page: param.page, limit: param.limit },
   });
   return res.data;
 };
@@ -38,42 +52,43 @@ export const getEntryMetadata = async (param: Pick<ListEntriesREQ, 'id'>) => {
   // console.log('[getEntryMetadata] param', `/files/${param.id}/metadata`)
   const res = await api.get<BaseResponse<EntryMetadataRES>>(`/files/${param.id}/metadata`);
   return res.data;
-}
+};
 
-export const downloadFile = async (param: {id: string, name?: string}) => {
+export const downloadFile = async (param: { id: string; name?: string }) => {
   const res = await api.get(`/files/${param.id}/download`, { responseType: 'blob' });
   const url = window.URL.createObjectURL(new Blob([res.data]));
   const link = document.createElement('a');
   link.href = url;
-  link.setAttribute('download', param.name||param.id);
+  link.setAttribute('download', param.name || param.id);
   document.body.appendChild(link);
   link.click();
-}
+};
 
-export const uploadFiles = async (body: UploadFileREQ) => { // TODO: doesnt work
-  const formData = new FormData()
+export const uploadFiles = async (body: UploadFileREQ) => {
+  // TODO: doesnt work
+  const formData = new FormData();
   for (const key in body) {
-    console.log("[uploadFiles] key", key, body[key])
+    console.log('[uploadFiles] key', key, body[key]);
     formData.append(key, body[key]);
   }
   const res = await api.post<BaseResponse<EntryRESP[]>>('/files', formData, {
-    headers : HTTP_HEADER.FORM_DATA,
+    headers: HTTP_HEADER.FORM_DATA,
   });
-  console.log('[uploadFiles] res', res)
+  console.log('[uploadFiles] res', res);
   return res.data;
-}
+};
 
 export const renameFile = async (body: RenameREQ) => {
   const res = await api.patch<BaseResponse<EntryRESP>>(`/files/rename`, body);
   return res.data;
-}
+};
 
 export const moveToTrash = async (body: MoveToTrashREQ) => {
   const res = await api.post<BaseResponse<EntryRESP[]>>(`/files/move/trash`, body);
   return res.data;
-}
+};
 
 export const deleteFiles = async (body: DeleteFilesREQ) => {
   const res = await api.post<BaseResponse<EntryRESP[]>>(`/files/delete`, body);
   return res.data;
-}
+};

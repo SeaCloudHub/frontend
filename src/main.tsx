@@ -11,8 +11,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
     <Providers>
       {/* <React.StrictMode> */}
-        <ToastContainer />
-        <App />
+      <ToastContainer />
+      <App />
       {/* </React.StrictMode> */}
     </Providers>
   </BrowserRouter>,
