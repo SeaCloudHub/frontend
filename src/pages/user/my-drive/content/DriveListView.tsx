@@ -31,6 +31,7 @@ export const DriveListView: React.FC<DriveListViewProps> = ({
 
   const navigate = useNavigate();
   const driveGridViewRef = useRef(null);
+  console.log(curDir);
 
   useEffect(() => {
     const DataRows = document.querySelectorAll('.data-row');

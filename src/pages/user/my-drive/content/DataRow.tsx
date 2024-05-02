@@ -19,6 +19,7 @@ import FileViewerContainer from '@/components/core/file-viewers/file-viewer-cont
 import { downloadFile } from '@/apis/drive/drive.api';
 import { CopyToClipboard } from '@/utils/function/copy.function';
 import { CUSTOMER_MY_DRIVE, CUSTOMER_MY_DRIVE_DIR, CUSTOMER_SHARED_DIR } from '@/utils/constants/router.constant';
+import DeleteTempPopUp from '@/components/core/pop-up/DeleteTempPopUp';
 
 type DataRowProps = {
   dirId?: string;
@@ -349,6 +350,15 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
         {type === 'rename' && <RenamePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} name={title} id={id} />}
         {parent === 'trash' && (
           <DeletePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} source_ids={[id]} />
+        )}
+        {type === 'move to trash' && (
+          <DeleteTempPopUp
+            open={isPopUpOpen}
+            handleClose={() => setIsPopUpOpen(false)}
+            title={title}
+            id={dirId}
+            source_ids={[id]}
+          />
         )}
       </div>
     </>
