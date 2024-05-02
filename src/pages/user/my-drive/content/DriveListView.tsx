@@ -49,32 +49,28 @@ export const DriveListView: React.FC<DriveListViewProps> = ({
               <div className='truncate font-medium max-[1000px]:hidden'>Last Modified</div>
               <div className='font-medium max-[1160px]:hidden'>File Size</div>
             </div>
-            {folders.map((entry, index) => {
-              return (
-                <DataRow
-                  key={index}
-                  {...entry}
-                  onDoubleClick={() => {
-                    navigate(`${CUSTOMER_MY_DRIVE}/dir/${entry.id}`);
-                  }}
-                  onClick={() => setArrSelected && setArrSelected([entry.id])}
-                  isSelected={arrSelected?.includes(entry.id)}
-                  setArrSelected={setArrSelected}
-                />
-              );
-            })}
-            {files.map((entry, index) => {
-              return (
-                <DataRow
-                  key={index}
-                  {...entry}
-                  dirId={curDir?.id}
-                  onClick={() => setArrSelected && setArrSelected([entry.id])}
-                  isSelected={arrSelected?.includes(entry.id)}
-                  setArrSelected={setArrSelected}
-                />
-              );
-            })}
+            {folders.map((entry, index) => (
+              <DataRow
+                key={index}
+                {...entry}
+                onDoubleClick={() => {
+                  navigate(`${CUSTOMER_MY_DRIVE}/dir/${entry.id}`);
+                }}
+                onClick={() => setArrSelected && setArrSelected([entry.id])}
+                isSelected={arrSelected?.includes(entry.id)}
+                setArrSelected={setArrSelected}
+              />
+            ))}
+            {files.map((entry, index) => (
+              <DataRow
+                key={index}
+                {...entry}
+                dirId={curDir?.id}
+                onClick={() => setArrSelected && setArrSelected([entry.id])}
+                isSelected={arrSelected?.includes(entry.id)}
+                setArrSelected={setArrSelected}
+              />
+            ))}
           </div>
         </div>
       )}
