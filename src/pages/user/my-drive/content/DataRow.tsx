@@ -287,7 +287,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
         onClick={handleClick}
         onDoubleClick={handleDoubleClick}
         className={classNames(
-          'grid grid-cols-7 max-[1160px]:grid-cols-7 max-[1150px]:grid-cols-6 max-[1000px]:grid-cols-5 gap-3 border-b border-b-[#dadce0] truncate py-2 cursor-pointer',
+          'data-row grid grid-cols-7 max-[1160px]:grid-cols-7 max-[1150px]:grid-cols-6 max-[1000px]:grid-cols-5 gap-3 border-b border-b-[#dadce0] truncate py-2 cursor-pointer',
           isSelected
             ? 'bg-[#c2e7ff]  dark:bg-blue-700'
             : 'hover:bg-[#dfe3e7] dark:bg-slate-600 dark:text-white dark:hover:bg-blue-950',
