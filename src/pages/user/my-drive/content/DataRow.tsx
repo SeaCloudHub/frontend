@@ -302,18 +302,18 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
         </div>
         <div className='max-[1150px]:hidden'>
           <div className='flex items-center gap-x-2'>
-            {owner.avatar_url ? (
+            {owner?.avatar_url ? (
               <Avatar
                 alt={owner.last_name}
                 src={owner.avatar_url || 'https://picsum.photos/200/300'}
                 sx={{
-                  width: 16,
-                  height: 16,
+                  width: 30,
+                  height: 30,
                 }}
               />
             ) : (
               <div
-                className='round flex h-[16px] w-[16px] items-center justify-center rounded-full'
+                className='round flex h-[30px] w-[30px] items-center justify-center rounded-full'
                 style={{ backgroundColor: getRandomColor() }}>
                 <p className='statement-bold truncate'>
                   {getFirstCharacters(identity.first_name + ' ' + identity.last_name || '')}
@@ -321,12 +321,12 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
               </div>
             )}
             <span className='truncate'>
-              {owner.id === identity.id ? 'me' : owner.last_name}
+              {owner?.id === identity.id ? 'me' : owner?.last_name}
             </span>
           </div>
         </div>
         <div className='max-[1000px]:hidden truncate'>
-          {formatDate(lastModified, owner.id === identity.id ? 'me' : owner.last_name)}
+          {formatDate(lastModified, owner?.id === identity.id ? 'me' : owner?.last_name)}
         </div>
         <div className='flex justify-between max-[1160px]:justify-end'>
           <div className='max-[1160px]:hidden truncate'>{numToSize(size)}</div>

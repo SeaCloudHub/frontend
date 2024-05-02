@@ -230,7 +230,7 @@ const FileCard: React.FC<FileCardProps> = ({
         onClick={handleClick}
         onDoubleClick={handleDoubleClick}
         className={classNames(
-          'flex h-full w-full cursor-pointer flex-col items-center justify-center  rounded-xl px-2 shadow-sm duration-150',
+          'file-card flex h-full w-full cursor-pointer flex-col items-center justify-center  rounded-xl px-2 shadow-sm duration-150',
           isSelected
             ? 'bg-[#c2e7ff]  dark:bg-blue-700'
             : 'bg-[#f0f4f9] hover:bg-[#dfe3e7] dark:bg-slate-600 dark:text-white dark:hover:bg-blue-950',

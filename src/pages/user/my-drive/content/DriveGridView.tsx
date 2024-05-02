@@ -47,6 +47,11 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
   useEffect(() => {
     fileCardRefs.current = document.querySelectorAll('.file-card');
     folderCardRefs.current = document.querySelectorAll('.folder-card');
+
+    console.log('[DriveGridView] fileCardRefs', Array.from(fileCardRefs.current));
+    console.log('[DriveGridView] folderCardRefs', Array.from(folderCardRefs.current));
+
+
     // console.log('[DriveGridView] fileCardRefs', Array.from(fileCardRefs.current));
 
     const handleClickOutside = (event) => {
@@ -54,6 +59,8 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
       const clickedOutsideCards =
         Array.from(fileCardRefs.current).every((card) => !card.contains(event.target)) &&
         Array.from(folderCardRefs.current).every((card) => !card.contains(event.target));
+
+      console.log('[DriveGridView] clickedOutsideCards', clickedOutsideCards);
 
       if (driveGridViewRef.current && driveGridViewRef.current.contains(event.target) && clickedOutsideCards) {
         setArrSelected && setArrSelected([]);
@@ -64,7 +71,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [setArrSelected]);
+  }, [arrSelected, setArrSelected]);
 
   return (
     <>

@@ -20,7 +20,10 @@ const DeletePopUp: React.FC<DeletePopUpProps> = ({ open, handleClose, title, sou
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
         <Button
-          onClick={() => deleteMutation.mutate({ source_ids })}
+          onClick={() => {
+            handleClose();
+            deleteMutation.mutate({ source_ids })
+          }}
           sx={{
             backgroundColor: '#063799',
             color: 'white',
