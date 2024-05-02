@@ -95,7 +95,6 @@ const Shared = () => {
         viewMode === 'grid' ? (
           <DriveGridView
             entries={data}
-            // setPath={() => {}}
             // setSelected={setSelected}
             // selected={selected}
             isLoading={isLoading}
@@ -104,8 +103,13 @@ const Shared = () => {
             setArrSelected={setArrSelected}
           />
         ) : (
-          // <DriveListView order={order} sort={sort} setSort={setSort} entries={processedEntries} />
-          <DriveListView entries={data} setPath={() => {}} />
+          <DriveListView
+            entries={data}
+            curDir={parents[parents.length - 1]}
+            arrSelected={arrSelected}
+            setArrSelected={setArrSelected}
+            isLoading={isLoading}
+          />
         )
       }
       sidePanel={<SidePanel />}

@@ -38,7 +38,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
 
   const navigate = useNavigate();
   const { drawerOpen } = useDrawer();
-  console.log('[DriveGridView] drawerOpen', drawerOpen);
+  // console.log('[DriveGridView] drawerOpen', drawerOpen);
 
   const driveGridViewRef = useRef(null);
   const fileCardRefs = useRef<NodeListOf<Element>>(null);
