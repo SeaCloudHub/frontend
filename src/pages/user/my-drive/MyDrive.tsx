@@ -41,7 +41,7 @@ const MyDrive = () => {
     name: parents[parents.length - 1].name,
   });
 
-  // console.log('[MyDrive] arrSelected', arrSelected);
+  console.log('[MyDrive] arrSelected', arrSelected);
   // console.log('[MyDrive] copiedIds', copiedIds);
 
   const copyMutation = useCopyMutation();

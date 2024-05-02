@@ -125,7 +125,7 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick,
   return (
     <div
       className={classNames(
-        'flex w-full cursor-pointer items-center justify-between rounded-xl px-3 py-3 shadow-sm',
+        'folder-card flex w-full cursor-pointer items-center justify-between rounded-xl px-3 py-3 shadow-sm',
         isSelected
           ? 'bg-[#c2e7ff] dark:bg-blue-700 dark:text-white'
           : 'bg-[#f0f4f9] hover:bg-[#dfe3e7] dark:bg-slate-600 dark:text-white dark:hover:bg-blue-950',
