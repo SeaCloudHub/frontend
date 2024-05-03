@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { DefaultizedPieValueType, PieChart, pieArcLabelClasses } from '@mui/x-charts';
+import { Spin } from 'antd';
 import { ApexOptions } from 'apexcharts';
-import { ChevronDownIcon } from '@heroicons/react/16/solid';
+import React, { useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import Show from '../condition/Show';
-import { Spin } from 'antd';
 
 type PieChartLabelData = {
   value: number;
@@ -80,7 +78,7 @@ const PieChartCore: React.FC<PieChartProps> = ({ data, isLoading, isFetching }) 
   }, [data]);
 
   return (
-    <div id='chart' className='m-5  w-full'>
+    <div id='chart' className='m-2'>
       <Show when={(chartData?.length === 0 || !chartData) && !isLoading && !isFetching}>
         <div className='flex h-full  items-center justify-center'>
           <p className='text-gray-500'>No Data</p>
@@ -89,59 +87,56 @@ const PieChartCore: React.FC<PieChartProps> = ({ data, isLoading, isFetching }) 
 
       <Show when={isLoading || isFetching}>
         <div className='flex h-full  w-full items-center justify-center'>
-          <Spin size='large' />
+          <Spin size='default' />
         </div>
       </Show>
 
       <Show when={!isLoading && !isFetching && !!chartData && chartData?.length > 0}>
-        <div>
-          <div className='relative flex justify-center'>
-            <ReactApexChart
-              options={options}
-              series={chartData?.map((item) => item.value)}
-              type={options?.chart?.type}
-              height={250}
-              width={300}
-            />
-          </div>
-          <div className='max-xlg:mt-4 flex h-fit w-full flex-col'>
-            <table className='w-full px-4 shadow-md'>
-              <tbody>
-                {chartData.slice(0, totalList).map((item, index) => (
-                  <tr key={index} className='w-full bg-white '>
-                    <td className='w-2/5 text-base font-medium text-[#535E76] max-sm:max-w-[50px] max-sm:break-words sm:px-4 sm:py-[15px]'>
-                      {item.label}
-                    </td>
-                    <td className='w-1/5 text-sm font-semibold text-gray-900 max-sm:text-center sm:px-4 sm:py-[15px]'>
-                      {item.value}
-                    </td>
-                    <td className='w-2/5 py-[15px] text-right sm:px-4'>
-                      <div className='flex w-full items-center justify-start gap-1'>
-                        <p className='w-[50%] text-start text-xs font-medium text-gray-500'>
-                          {(
-                            (item.value / chartData.map((item) => item.value).reduce((acc, curr) => acc + curr, 0)) *
-                            100
-                          ).toFixed(1)}
-                          %
-                        </p>
-                        <div className='h-2 w-full rounded-sm bg-gray-200 dark:bg-gray-700'>
-                          <div
-                            className={`h-2 rounded-sm`}
-                            style={{
-                              width: `${
-                                (item.value / chartData.map((item) => item.value).reduce((acc, curr) => acc + curr, 0)) * 100
-                              }%`,
-                              backgroundColor: `${LIST_COLOR_CHART[index % LIST_COLOR_CHART.length]}`,
-                            }}
-                          />
-                        </div>
+        <div className=' flex w-full justify-center'>
+          <ReactApexChart
+            options={options}
+            series={chartData?.map((item) => item.value)}
+            type={options?.chart?.type}
+            height={250}
+            width={300}
+          />
+        </div>
+        <div className='max-xlg:mt-4 flex h-fit w-full flex-col'>
+          <table className='w-full px-4 shadow-md'>
+            <tbody>
+              {chartData.slice(0, totalList).map((item, index) => (
+                <tr key={index} className='w-full bg-white '>
+                  <td className='w-2/5 text-base font-medium text-[#535E76] max-sm:max-w-[50px] max-sm:break-words sm:px-4 sm:py-[15px]'>
+                    {item.label}
+                  </td>
+                  <td className='w-1/5 text-sm font-semibold text-gray-900 max-sm:text-center sm:px-4 sm:py-[15px]'>
+                    {item.value}
+                  </td>
+                  <td className='w-2/5 py-[15px] text-right sm:px-4'>
+                    <div className='flex w-full items-center justify-start gap-1'>
+                      <p className='w-[50%] text-start text-xs font-medium text-gray-500'>
+                        {((item.value / chartData.map((item) => item.value).reduce((acc, curr) => acc + curr, 0)) * 100).toFixed(
+                          1,
+                        )}
+                        %
+                      </p>
+                      <div className='h-2 w-full rounded-sm bg-gray-200 dark:bg-gray-700'>
+                        <div
+                          className={`h-2 rounded-sm`}
+                          style={{
+                            width: `${
+                              (item.value / chartData.map((item) => item.value).reduce((acc, curr) => acc + curr, 0)) * 100
+                            }%`,
+                            backgroundColor: `${LIST_COLOR_CHART[index % LIST_COLOR_CHART.length]}`,
+                          }}
+                        />
                       </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </Show>
     </div>

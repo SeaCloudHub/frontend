@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import DropdownCore from '../../../../../../components/core/input/DropdownCore';
 import TextInputCore from '../../../../../../components/core/input/TextInputCore';
-import SectionBorder from '../../../../../../components/core/section-boder/SectionBoder';
 import { fileTypes, storageTypes } from '../../../../../../utils/constants/dopdown.constant';
 import { StrorageType } from '../../../../../../utils/enums/dropdown.enum';
 import { isEnumValue } from '../../../../../../utils/function/checkValidEnum';
@@ -17,7 +16,7 @@ const FileFolderFilter = () => {
   const [fileType, setFileType] = useState(fileTypes[0].value);
   return (
     <div className='py-3'>
-      <SectionBorder title='Storage Filter'>
+      <div className='rounded-xl  p-2 dark:bg-white'>
         <div className='flex flex-wrap  space-y-2'>
           <TextInputCore className='mr-2' onChange={() => {}} label='Name' placeholder='name' />
           <DropdownCore
@@ -34,7 +33,7 @@ const FileFolderFilter = () => {
           )}
         </div>
         <FilleFolderResult />
-      </SectionBorder>
+      </div>
     </div>
   );
 };

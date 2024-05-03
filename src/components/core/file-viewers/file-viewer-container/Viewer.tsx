@@ -8,6 +8,7 @@ import Text from '../text/Text';
 
 const Viewer: React.FC<FileViewerProps> = (props) => {
   const { fileType } = props;
+  console.log(fileType);
   switch (fileType) {
     case 'pdf': {
       return <Pdf {...props} />;
@@ -21,17 +22,8 @@ const Viewer: React.FC<FileViewerProps> = (props) => {
     case 'pptx': {
       return <Pdf {...props} />;
     }
-    case 'text/plain': {
+    case 'text/plain; charset=utf-8': {
       return <Text {...props} />;
-    }
-    case 'log': {
-      return <Pdf {...props} />;
-    }
-    case 'ogg': {
-      return <Audio {...props} />;
-    }
-    case 'mp4': {
-      return <Pdf {...props} />;
     }
     case 'image/png': {
       return <Image {...props} />;

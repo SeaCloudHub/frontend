@@ -1,13 +1,13 @@
+import { LocalEntry } from '@/hooks/drive.hooks';
+import { formatDate } from '@/utils/function/formatDate.function';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import fileTypeIcons from '../../../../../../utils/constants/file-icons.constant';
 import DropdownCore from '../../../../../../components/core/input/DropdownCore';
 import Order from '../../../../../../components/core/order/Order';
 import { useScreenHook } from '../../../../../../hooks/useScreenHook';
-import { LocalEntry } from '@/hooks/drive.hooks';
 import { fileOperations } from '../../../../../../utils/constants/dopdown.constant';
+import fileTypeIcons from '../../../../../../utils/constants/file-icons.constant';
 import { fakeEntries } from '../../../../../../utils/dumps/entries';
 import { Entry } from '../../../../../../utils/types/entry.type';
-import { formatDate } from '@/utils/function/formatDate.function';
 
 type FileFolderResultProps = {
   name?: string;
@@ -65,7 +65,7 @@ const FileFolderResult = ({ name, type, fileType }: FileFolderResultProps) => {
   };
 
   return (
-    <div className='h-[600px] w-full overflow-y-auto overflow-x-hidden'>
+    <div className='h-[600px] w-full overflow-y-auto overflow-x-hidden text-black'>
       <>
         <div className='flex w-full items-center border-b py-1'>
           <div className=' flex w-[50%]  items-center space-x-2'>

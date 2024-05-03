@@ -3,5 +3,5 @@
 }
 
 .none-shrink-mode {
-  @apply left-[16rem+2px];
+  @apply left-[16.4rem];
 }

@@ -1,8 +1,8 @@
 import * as Yup from 'yup';
 
 export const addUserSchema = Yup.object({
-  first_name: Yup.string().required('First Name is required').min(5, 'First Name must be at least 5 characters long'),
-  last_name: Yup.string().required('Last Name is required').min(5, 'Last Name must be at least 5 characters long'),
+  first_name: Yup.string().required('First Name is required'),
+  last_name: Yup.string().required('Last Name is required'),
   email: Yup.string().required('Email is required').email('Invalid email format'),
   password: Yup.string()
     .matches(

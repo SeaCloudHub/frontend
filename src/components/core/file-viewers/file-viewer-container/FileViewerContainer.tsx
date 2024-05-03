@@ -113,7 +113,6 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({ isCloseOutsid
     }
   }, [fileInfo]);
 
-  console.log(fileInfo);
   return (
     <Dialog onClose={isCloseOutside ? closeOutside : () => {}} open={open} fullScreen>
       <DialogTitle
