@@ -38,7 +38,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
 
   const navigate = useNavigate();
   const { drawerOpen } = useDrawer();
-  console.log('[DriveGridView] drawerOpen', drawerOpen);
+  // console.log('[DriveGridView] drawerOpen', drawerOpen);
 
   const driveGridViewRef = useRef(null);
   const fileCardRefs = useRef<NodeListOf<Element>>(null);
@@ -47,7 +47,6 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
   useEffect(() => {
     fileCardRefs.current = document.querySelectorAll('.file-card');
     folderCardRefs.current = document.querySelectorAll('.folder-card');
-    // console.log('[DriveGridView] fileCardRefs', Array.from(fileCardRefs.current));
 
     const handleClickOutside = (event) => {
       if (event.ctrlKey) return;
@@ -64,7 +63,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [setArrSelected]);
+  }, [arrSelected, setArrSelected]);
 
   return (
     <>
