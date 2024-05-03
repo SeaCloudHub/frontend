@@ -14,7 +14,7 @@ type DashboardStatisticUserProps = HTMLAttributes<HTMLDivElement> & {
   isFetching?: boolean;
 };
 
-export default function DashboardCard({ data, isLoading, isFetching, sx }: DashboardStatisticUserProps) {
+export default function DashboardCard({ data, isLoading, isFetching }: DashboardStatisticUserProps) {
   return (
     <Show when={!isLoading && !isFetching}>
       <Paper

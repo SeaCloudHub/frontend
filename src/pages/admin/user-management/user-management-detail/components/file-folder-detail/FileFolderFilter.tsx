@@ -20,7 +20,7 @@ const FileFolderFilter = () => {
         <div className='flex flex-wrap  space-y-2'>
           <TextInputCore className='mr-2' onChange={() => {}} label='Name' placeholder='name' />
           <DropdownCore
-            className='mr-2'
+            className='mr-3'
             onChange={(value) => {
               setType(value!);
             }}

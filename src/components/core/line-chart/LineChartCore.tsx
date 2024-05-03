@@ -82,12 +82,12 @@ const LineChartCore: React.FC<LineChartCoreProps> = ({ data, categories, title }
 
   return (
     <div className='flex h-fit w-full flex-col gap-2 rounded-xl px-5 py-3 lg:p-8'>
-      <p className='text-[20px] font-bold leading-[30px] text-gray-900 lg:text-3xl'>{title}</p>
+      <p className='text-[20px] font-bold leading-[30px] lg:text-3xl'>{title}</p>
       <div className='h-full min-h-[402px] w-full'>
         {!!data && data?.length > 0 ? (
           <Chart options={areaChartOptions} series={data} type='area' height={'100%'} />
         ) : (
-          <div className='flex h-full items-center justify-center text-gray-400'>No data</div>
+          <div className='flex h-full items-center justify-center'>No data</div>
         )}
       </div>
     </div>

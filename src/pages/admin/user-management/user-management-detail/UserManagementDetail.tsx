@@ -23,7 +23,7 @@ const UserManagementDetail = () => {
     }
   }, []);
   return (
-    <div className='h-full w-full overflow-y-auto overflow-x-hidden'>
+    <div className='h-full w-full overflow-x-hidden overflow-y-auto'>
       <div
         ref={divRef}
         className={`fixed ${screenMode != ScreenMode.DESKTOP ? 'left-0' : shrinkMode ? 'left-[76px]' : ' left-[16rem]'}  top-[4rem] z-20  flex w-full items-center space-x-1  bg-white px-3  py-1 dark:bg-content-bg-dark `}>
@@ -37,7 +37,7 @@ const UserManagementDetail = () => {
         <IconifyIcon fontSize={15} icon={'material-symbols:arrow-forward-ios-rounded'} />
         <p className='statement-upper-medium'>Hung Phi Vo</p>
       </div>
-      <div className={`${flex ? 'flex h-full w-full items-start space-x-2 overflow-hidden' : ''} pt-[28px]`}>
+      <div className={`${flex ? ' flex h-full w-full items-start space-x-2' : ' overflow-y-auto'} pt-[28px]`}>
         {/* <!--section --> */}
         <div className={`${flex ? 'w-1/4' : ''} border-2`}>
           <div className='flex  flex-col space-y-2 border-b-2 p-4'>
@@ -68,7 +68,7 @@ const UserManagementDetail = () => {
           </div>
         </div>
         {/* <!--section --> */}
-        <div className={`flex  flex-col space-y-4 overflow-y-auto ${flex ? 'w-3/4 ' : ''}`}>
+        <div className={`flex  h-full flex-col space-y-4 overflow-y-auto pb-2 ${flex ? 'w-3/4 ' : ''}`}>
           <div className='w-full space-y-2 border p-3  shadow-md'>
             <p className='statement-medium h4 '>Personal Dropbox space of Hung Vo Phi</p>
             <StorageStatistic />
@@ -76,7 +76,7 @@ const UserManagementDetail = () => {
           <div className='z-0 w-full space-y-2 p-3 shadow-md'>
             <ButtonContainer title='Modify memory' icon={<IconifyIcon icon={'tabler:edit'} />} />
           </div>
-          <div className='rounded-xl border pl-3 shadow-xl dark:bg-white'>
+          <div className='rounded-xl border pl-3 mr-2 shadow-xl dark:bg-white'>
             <FileFolderFilter />
             {/* <FileSection />
             <FolderSection /> */}
