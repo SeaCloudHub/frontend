@@ -26,6 +26,7 @@ import CustomDropdown from '../drop-down/CustomDropdown';
 import ButtonSuccess from '../button/ButtonSuccess';
 import CustomSelect from '../drop-down/CustomSelect';
 import { Textarea } from '@mui/joy';
+import { useTheme } from '@/providers/theme-provider';
 
 type SharePopUpProps = {
   open: boolean;
@@ -67,6 +68,7 @@ const SharePopUp: React.FC<SharePopUpProps> = ({ open, handleClose, title }) => 
   const [typeShare, setTypeShare] = React.useState('Viewer');
   const [typeView, setTypeView] = React.useState(fakelistPeople.map((item) => item.type));
   const [isPublic, setIsPublic] = React.useState(false);
+  const {theme} = useTheme();
 
   return (
     <PopUp open={open} handleClose={handleClose}>
@@ -91,6 +93,9 @@ const SharePopUp: React.FC<SharePopUpProps> = ({ open, handleClose, title }) => 
                 },
                 '& .MuiOutlinedInput-notchedOutline': {
                   borderColor: 'rgba(255, 255, 255, 0.25)',
+                },
+                '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
+                  borderColor: 'rgba(255, 255, 255, 0.5)',
                 },
                 '& .MuiAutocomplete-inputRoot:hover': {
                   borderColor: 'rgba(255, 255, 255, 0.4)',
@@ -149,15 +154,19 @@ const SharePopUp: React.FC<SharePopUpProps> = ({ open, handleClose, title }) => 
         </div>
         {values.length > 0 ?
           <div>
-            <TextareaAutosize placeholder='Add a message' minRows={10} maxRows={10} style={{
-              backgroundColor: '#031525',
-              border: '1px solid rgba(255, 255, 255, 0.25)',
-              borderRadius: '5px',
-              color: 'white',
-              width: '100%',
-              resize: 'none',
-              marginTop: '10px',
-            }}/>
+            <TextareaAutosize placeholder='Add a message' minRows={10} maxRows={10}
+              style={{
+                border: `1px solid ${theme === 'dark' ? '#1E293B' : '#CBD5E1'}`,
+                borderRadius: '5px',
+                color: theme === 'dark' ? 'white' : '#031525',
+                width: '100%',
+                resize: 'none',
+                marginTop: '10px',
+                backgroundColor: theme === 'dark' ? '#031525' : 'white',
+                paddingLeft: '10px',
+                paddingRight: '10px',
+              }}
+            />
           </div> :
           <div>
             <div className='my-2'>
