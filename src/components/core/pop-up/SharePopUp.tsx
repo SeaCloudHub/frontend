@@ -155,15 +155,18 @@ const SharePopUp: React.FC<SharePopUpProps> = ({ open, handleClose, title }) => 
         {values.length > 0 ?
           <div>
             <TextareaAutosize placeholder='Add a message' minRows={10} maxRows={10}
-            style={{
-              border: `1px solid ${theme === 'dark' ? '#1E293B' : 'white'}`,
-              borderRadius: '5px',
-              color: 'white',
-              width: '100%',
-              resize: 'none',
-              marginTop: '10px',
-              backgroundColor: theme === 'dark' ? '#031525' : 'white',
-            }}/>
+              style={{
+                border: `1px solid ${theme === 'dark' ? '#1E293B' : '#CBD5E1'}`,
+                borderRadius: '5px',
+                color: theme === 'dark' ? 'white' : '#031525',
+                width: '100%',
+                resize: 'none',
+                marginTop: '10px',
+                backgroundColor: theme === 'dark' ? '#031525' : 'white',
+                paddingLeft: '10px',
+                paddingRight: '10px',
+              }}
+            />
           </div> :
           <div>
             <div className='my-2'>
