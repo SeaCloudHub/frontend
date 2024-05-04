@@ -1,7 +1,7 @@
 import { IdentityRESP } from '@/apis/auth/response/auth.sign-in.response';
 import {
   copyFiles,
-  deleteFiles,
+  deleteEntries,
   getAccessEntries,
   getEntryMetadata,
   getListEntriesMyDrive,
@@ -9,9 +9,10 @@ import {
   getListEntriesTrash,
   getSharedEntries,
   moveToTrash,
-  renameFile,
+  renameEntry,
+  restoreEntries,
 } from '@/apis/drive/drive.api';
-import { CopyFileREQ, RenameREQ, DeleteFilesREQ } from '@/apis/drive/drive.request';
+import { CopyFileREQ, RenameREQ, DeleteEntriesREQ, RestoreEntriesREQ } from '@/apis/drive/drive.request';
 import { EntryMetadataRES, EntryRESP } from '@/apis/drive/drive.response';
 import { MoveToTrashREQ } from '@/apis/drive/request/move-to-trash.request';
 import { Path, useDrawer } from '@/store/my-drive/myDrive.store';
@@ -70,6 +71,29 @@ export const useListEntries = () => {
   }
 
   return { parents: parents || [{ id, name: 'My Drive' }], data: data || [], refetch, isLoading };
+};
+
+export const usePriorityEntries = () => {
+  const { dirId } = useParams();
+  const { rootId } = useStorageStore();
+  const id = dirId || rootId;
+
+  const { data, error, refetch, isLoading } = useQuery({
+    queryKey: ['priority-entries', id],
+    queryFn: async () => {
+      return (await getListEntriesPageMyDrive({ id, limit: 100 }).then((res) => res?.data?.entries || [])).filter(
+        (e) => !e.name.includes('.trash'),
+      );
+    },
+    staleTime: 10 * 1000,
+    select: transformEntries,
+  });
+
+  if (isAxiosError<ApiGenericError>(error)) {
+    toast.error(error.response?.data.message, toastError());
+  }
+
+  return { data: data || [], refetch, isLoading };
 };
 
 export const useSharedEntry = () => {
@@ -152,6 +176,7 @@ export const useCopyMutation = () => {
     onSuccess: (data) => {
       toast.success('Created ' + (data.data.length > 1 ? `${data.data.length} files` : `${data.data[0].name}`));
       queryClient.invalidateQueries({ queryKey: ['mydrive-entries'] });
+      queryClient.invalidateQueries({ queryKey: ['priority-entries'] });
     },
   });
 };
@@ -161,7 +186,7 @@ export const useRenameMutation = () => {
 
   return useMutation({
     mutationFn: (body: RenameREQ) => {
-      return renameFile(body);
+      return renameEntry(body);
     },
     onError: (error) => {
       if (isAxiosError<ApiGenericError>(error)) {
@@ -171,6 +196,7 @@ export const useRenameMutation = () => {
     onSuccess: (data) => {
       toast.success(`Renamed to ${data.data.name}`);
       queryClient.invalidateQueries({ queryKey: ['mydrive-entries'] });
+      queryClient.invalidateQueries({ queryKey: ['priority-entries'] });
     },
   });
 };
@@ -190,6 +216,7 @@ export const useMoveToTrashMutation = () => {
     onSuccess: (data) => {
       toast.success(`${data.data.length} files moved to trash`);
       queryClient.invalidateQueries({ queryKey: ['mydrive-entries'] });
+      queryClient.invalidateQueries({ queryKey: ['priority-entries'] });
     },
   });
 };
@@ -198,8 +225,8 @@ export const useDeleteMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (body: DeleteFilesREQ) => {
-      return deleteFiles(body);
+    mutationFn: (body: DeleteEntriesREQ) => {
+      return deleteEntries(body);
     },
     onError: (error) => {
       if (isAxiosError<ApiGenericError>(error)) {
@@ -212,6 +239,25 @@ export const useDeleteMutation = () => {
     },
   });
 };
+
+export const useRestoreEntriesMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (body: RestoreEntriesREQ) => {
+      return restoreEntries(body);
+    },
+    onError: (error) => {
+      if (isAxiosError<ApiGenericError>(error)) {
+        toast.error(error.response?.data.message, toastError());
+      }
+    },
+    onSuccess: (data) => {
+      toast.success('files restored');
+      queryClient.invalidateQueries({ queryKey: ['Trash-entries'] });
+    },
+  });
+}
 
 export const useEntryMetadata = (id: string) => {
   const { drawerOpen } = useDrawer();

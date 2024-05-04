@@ -1,7 +1,7 @@
 import FileCard from '@/components/core/file-card/FileCard';
 import FolderCard from '@/components/core/folder-card/FolderCard';
 import { LocalEntry } from '@/hooks/drive.hooks';
-import { Path, useDrawer } from '@/store/my-drive/myDrive.store';
+import { Path, useDrawer, useSelected } from '@/store/my-drive/myDrive.store';
 import { CUSTOMER_MY_DRIVE } from '@/utils/constants/router.constant';
 import { LinearProgress } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
@@ -12,8 +12,8 @@ type DriveGridViewProps = {
   sort?: string;
   order?: string;
   setSort?: ({ sort, order }: { sort: string; order: string }) => void;
-  arrSelected?: string[];
-  setArrSelected?: React.Dispatch<React.SetStateAction<string[]>>;
+  // arrSelected: string[];
+  // setArrSelected: React.Dispatch<React.SetStateAction<string[]>>;
   entries: LocalEntry[];
   fileShow?: boolean;
   folderShow?: boolean;
@@ -30,32 +30,29 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
   // setPath,
   isLoading,
   curDir,
-  setArrSelected,
-  arrSelected,
+  // setArrSelected,
+  // arrSelected,
 }) => {
   const files = entries.filter((entry) => !entry.isDir);
   const folders = entries.filter((entry) => entry.isDir);
 
   const navigate = useNavigate();
   const { drawerOpen } = useDrawer();
-  // console.log('[DriveGridView] drawerOpen', drawerOpen);
+  const { setArrSelected, arrSelected } = useSelected();
 
   const driveGridViewRef = useRef(null);
-  const fileCardRefs = useRef<NodeListOf<Element>>(null);
-  const folderCardRefs = useRef<NodeListOf<Element>>(null);
-
   useEffect(() => {
-    fileCardRefs.current = document.querySelectorAll('.file-card');
-    folderCardRefs.current = document.querySelectorAll('.folder-card');
+    const fileCardRefs = document.querySelectorAll('.file-card');
+    const folderCardRefs = document.querySelectorAll('.folder-card');
 
     const handleClickOutside = (event) => {
       if (event.ctrlKey) return;
       const clickedOutsideCards =
-        Array.from(fileCardRefs.current).every((card) => !card.contains(event.target)) &&
-        Array.from(folderCardRefs.current).every((card) => !card.contains(event.target));
+        Array.from(fileCardRefs).every((card) => !card.contains(event.target)) &&
+        Array.from(folderCardRefs).every((card) => !card.contains(event.target));
 
       if (driveGridViewRef.current && driveGridViewRef.current.contains(event.target) && clickedOutsideCards) {
-        setArrSelected && setArrSelected([]);
+        setArrSelected([]);
       }
     };
 
@@ -89,13 +86,9 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
                         title={folder.title}
                         icon={folder.icon}
                         id={folder.id}
-                        onDoubleClick={() => {
-                          // handlePath([{ id: folder.id, name: folder.title }]);
-                          navigate(`${CUSTOMER_MY_DRIVE}/dir/${folder.id}`);
-                        }}
-                        onClick={() => setArrSelected && setArrSelected([folder.id])}
+                        onDoubleClick={() => navigate(`${CUSTOMER_MY_DRIVE}/dir/${folder.id}`)}
+                        onClick={() => setArrSelected([folder.id])}
                         isSelected={arrSelected?.includes(folder.id)}
-                        setArrSelected={setArrSelected}
                       />
                     </div>
                   ))}
@@ -107,16 +100,15 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
                 <div className='pb-4 pt-2 text-sm font-medium'>Files</div>
                 <div className={`grid gap-4 ${drawerOpen ? 'xl:grid-cols-3' : 'sm:grid-cols-2 xl:grid-cols-5'}`}>
                   {files.map((file, index) => (
-                    <div key={index} className='aspect-square w-auto'>
+                    <div key={index} className='aspect-square '>
                       <FileCard
+                        isDir={file.isDir}
                         title={file.title}
                         icon={file.icon}
                         preview={file.preview}
                         id={file.id}
                         dirId={curDir?.id}
-                        onClick={() => setArrSelected && setArrSelected([file.id])}
                         isSelected={arrSelected?.includes(file.id)}
-                        setArrSelected={setArrSelected}
                         fileType={file.fileType}
                       />
                     </div>

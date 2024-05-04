@@ -8,11 +8,13 @@ import { EntryRESP } from '@/apis/drive/drive.response';
 
 type TrashPageViewProps = {
   entries: LocalEntry[];
-  arrSelected: string[];
-  setArrSelected: (arrSelected: string[]) => void;
+  // arrSelected?: string[];
+  // setArrSelected?: (arrSelected: string[]) => void;
 };
 
-const TrashPageView: React.FC<TrashPageViewProps> = ({ entries, arrSelected, setArrSelected }) => {
+const TrashPageView: React.FC<TrashPageViewProps> = ({ entries,
+  // arrSelected, setArrSelected
+ }) => {
   const { viewMode } = useViewMode();
   const [{ sort, order }, setSort] = useState<{ sort: string; order: string }>({ sort: 'Name', order: 'desc' });
 
@@ -22,11 +24,14 @@ const TrashPageView: React.FC<TrashPageViewProps> = ({ entries, arrSelected, set
       order={order}
       setSort={setSort}
       entries={entries}
-      arrSelected={arrSelected}
-      setArrSelected={setArrSelected}
     />
   ) : (
-    <DriveHistoryListView order={order} sort={sort} setSort={setSort} entries={entries} />
+    <DriveHistoryListView
+      order={order}
+      sort={sort}
+      setSort={setSort}
+      entries={entries}
+    />
   );
 };
 

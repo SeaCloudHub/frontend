@@ -24,12 +24,16 @@ const StarredView: React.FC<StarredPageViewProps> = ({ entries, arrSelected, set
       order={order}
       setSort={setSort}
       entries={processedEntries}
-      arrSelected={arrSelected}
-      setArrSelected={setArrSelected}
       isLoading={isLoading}
     />
   ) : (
-    <DriveListView order={order} sort={sort} setSort={setSort} entries={processedEntries} arrSelected={arrSelected} setArrSelected={setArrSelected}/>
+    <DriveListView
+      order={order}
+      sort={sort}
+      setSort={setSort}
+      entries={processedEntries}
+      isLoading={isLoading}
+    />
   );
 };
 

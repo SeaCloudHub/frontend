@@ -5,7 +5,7 @@ import DriveLayout from '@/components/layout/DriveLayout';
 import ButtonCore from '@/components/core/button/ButtonCore';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { Entry } from '@/utils/types/entry.type';
-import { Path, useDrawer, useViewMode } from '@/store/my-drive/myDrive.store';
+import { Path, useDrawer, useSelected, useViewMode } from '@/store/my-drive/myDrive.store';
 import SidePanel from '../my-drive/side-panel/SidePanel';
 import { DriveGridView } from '../my-drive/content/DriveGridView';
 import { transformEntries, useSharedEntry } from '@/hooks/drive.hooks';
@@ -26,15 +26,11 @@ const Shared = () => {
   const [peopleFilterItem, setPeopleFilterItem] = useState<string>('');
   const [modifiedFilterItem, setModifiedFilterItem] = useState<string>('');
   const { drawerOpen, openDrawer, closeDrawer } = useDrawer();
-  const [{ sort, order }, setSort] = useState<{ sort: string; order: string }>({ sort: 'Name', order: 'desc' });
-  const [arrSelected, setArrSelected] = useState<string[]>([]);
+  // const [{ sort, order }, setSort] = useState<{ sort: string; order: string }>({ sort: 'Name', order: 'desc' });
+  const { arrSelected } = useSelected();
   const { rootId } = useStorageStore();
 
-  const { data, refetch, isLoading, parents } = useSharedEntry();
-  const [selected, setSelected] = useState<{ id: string; name: string }>({
-    id: parents[parents.length - 1].id,
-    name: parents[parents.length - 1].name,
-  });
+  const { data, isLoading, parents } = useSharedEntry();
 
   return (
     <DriveLayout
@@ -86,7 +82,9 @@ const Shared = () => {
                 )}
               </>
             ) : (
-              <MultipleDriveHeader arrSelected={arrSelected} setArrSelected={setArrSelected} type='SharedWithMe' />
+              <MultipleDriveHeader parent='SharedWithMe' dirId={
+                arrSelected.length === 1 ? arrSelected[0] : ''
+              } />
             )}
           </div>
         </div>
@@ -95,24 +93,24 @@ const Shared = () => {
         viewMode === 'grid' ? (
           <DriveGridView
             entries={data}
-            // setSelected={setSelected}
-            // selected={selected}
             isLoading={isLoading}
             curDir={parents[parents.length - 1]}
-            arrSelected={arrSelected}
-            setArrSelected={setArrSelected}
           />
         ) : (
           <DriveListView
             entries={data}
             curDir={parents[parents.length - 1]}
-            arrSelected={arrSelected}
-            setArrSelected={setArrSelected}
             isLoading={isLoading}
           />
         )
       }
-      sidePanel={<SidePanel />}
+      sidePanel={
+        <SidePanel
+          id={arrSelected.length === 0 ? rootId : arrSelected.length === 1 ? arrSelected[0] : ''}
+          title={arrSelected.length === 0 ? 'Shared' :
+            data.find((item) => item.id === arrSelected[arrSelected.length - 1])?.title || ''}
+        />
+      }
     />
   );
 };

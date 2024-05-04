@@ -1,4 +1,4 @@
-import { Path } from '@/store/my-drive/myDrive.store';
+import { Path, useSelected } from '@/store/my-drive/myDrive.store';
 import Sort from '../content/Sort';
 import DriveFilter from './DriveFilter';
 import DriveViewMode from './DriveViewMode';
@@ -18,9 +18,6 @@ type MyDriveHeaderProps = {
   sort: string;
   order: string;
   setSort: ({ sort, order }: { sort: string; order: string }) => void;
-  // setSelected?: React.Dispatch<React.SetStateAction<{ id: string; name: string }>>;
-  arrSelected?: string[];
-  setArrSelected?: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
 const MyDriveHeader: React.FC<MyDriveHeaderProps> = ({
@@ -34,15 +31,14 @@ const MyDriveHeader: React.FC<MyDriveHeaderProps> = ({
   sort,
   order,
   setSort,
-  // setSelected,
-  setArrSelected,
-  arrSelected,
 }) => {
+  const {arrSelected} = useSelected();
+
   return (
     <div className='flex flex-col pr-3'>
       <div className='flex'>
         <div className='w-full pb-[8px] pl-1 pt-[14px]'>
-          <DrivePath path={path} type={'MyDrive'} setArrSelected={setArrSelected} />
+          <DrivePath path={path} type={'MyDrive'}/>
         </div>
         <div className='flex items-center pb-[6px] pl-[25px] pr-[11px] pt-[14px]'>
           <DriveViewMode />
@@ -53,7 +49,7 @@ const MyDriveHeader: React.FC<MyDriveHeaderProps> = ({
       </div>
       {arrSelected.length > 0 ? (
         <div className='px-4 py-1'>
-          <MultipleDriveHeader arrSelected={arrSelected} setArrSelected={setArrSelected} type='MyDrive' />
+          <MultipleDriveHeader parent='MyDrive' dirId={path[path.length-1].id} />
         </div>
       ) : (
         <div className='flex items-center justify-between pl-5 pr-3'>

@@ -32,7 +32,7 @@ html {
 
 @layer components {
   .sidebar {
-    @apply fixed left-0 top-0 flex 
+    @apply fixed left-0 top-0 flex
          h-screen w-[76px] flex-col items-center  overflow-y-auto  overflow-x-hidden;
   }
   .sidebar-lg {

@@ -18,15 +18,13 @@ const TrashPageFilter: React.FC<TrashPageFilterProps> = ({
   modifiedFilter,
 }) => {
   return (
-    <div className='flex gap-3'>
-      type fillter
+    <div className='flex gap-2'>
       <FilterChip
         name='Type'
         options={typeFilterItems.map((item) => ({ label: item.label, icon: <Icon icon={item.icon} /> }))}
         action={(value) => setTypeFilterItem(value)}
         value={typeFilter}
       />
-      {/* modified filter */}
       <FilterChip
         name='Modified'
         options={modifiedFilterItems}

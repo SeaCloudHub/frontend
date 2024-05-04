@@ -11,7 +11,7 @@ export type PeopleItemProps = {
 
 const PeopleItem: React.FC<PeopleItemProps> = ({ name, email, avatar, value, setValue }) => {
   return (
-    <ListItem alignItems='center' className='hover:bg-gray-100'>
+    <ListItem alignItems='center' className='hover:bg-gray-100 dark:hover:bg-blue-950 cursor-pointer'>
       <ListItemAvatar>
         <Avatar alt={name} src={avatar || 'https://picsum.photos/200/300'} />
       </ListItemAvatar>
@@ -26,17 +26,30 @@ const PeopleItem: React.FC<PeopleItemProps> = ({ name, email, avatar, value, set
         }
       />
       <Select
-        variant='outlined'
         sx={{
-          '& fieldset': {
-            border: 'none',
-          },
           '& .MuiSelect-select': {
             padding: '10px',
           },
           '&:hover': {
             backgroundColor: '#f3f4f6',
           },
+          '.dark &': {
+            backgroundColor: '#031525',
+            color: 'white',
+
+            '& .MuiOutlinedInput-notchedOutline': {
+              borderColor: 'rgba(255, 255, 255, 0.25)',
+            },
+            '& .MuiOutlinedInput-root.Mui-focused fieldset': {
+              borderColor: 'rgba(255, 255, 255, 0.5)',
+            },
+            '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+              borderColor: 'rgba(255, 255, 255, 0.5)',
+            },
+            '& .MuiSelect-icon': {
+              color: 'white',
+            }
+          }
         }}
         value={value}
         onChange={(e) => setValue(e.target.value)}>

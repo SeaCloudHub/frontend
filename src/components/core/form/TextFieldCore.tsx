@@ -13,6 +13,7 @@ type TextFieldCoreProps = {
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   error?: boolean | undefined;
   helperText?: React.ReactNode;
+  sx?: any;
 };
 
 const TextFieldCore = ({
@@ -26,9 +27,11 @@ const TextFieldCore = ({
   disabled,
   type,
   value,
+  sx,
 }: TextFieldCoreProps) => {
   return (
     <TextField
+      autoComplete='off'
       name={name}
       disabled={disabled}
       type={type}
@@ -43,11 +46,21 @@ const TextFieldCore = ({
       helperText={
         helperText && (
           <span className='flex -translate-x-3 items-center gap-1'>
-            {error && <Error color='error' sx={{ width: '15px', height: '15px' }} />}
+            {error && <Error
+              sx={{
+                width: '15px',
+                height: '15px',
+                color: 'red',
+                '.dark &': {
+                  color: '#F87171',
+                },
+              }}
+            />}
             <span>{helperText}</span>
           </span>
         )
       }
+      sx={sx}
     />
   );
 };
