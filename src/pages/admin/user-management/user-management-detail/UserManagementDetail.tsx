@@ -3,15 +3,12 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import IconifyIcon from '../../../../components/core/Icon/IConCore';
 import ButtonContainer from '../../../../components/core/button/ButtonContainer';
-import SectionBorder from '../../../../components/core/section-boder/SectionBoder';
 import { useScreenHook } from '../../../../hooks/useScreenHook';
 import { useScreenMode } from '../../../../store/responsive/screenMode';
 import { ADMIN_USER_MANAGEMENT } from '../../../../utils/constants/router.constant';
 import StorageStatistic from '../../shared/StorageStatistic';
 import UserDetailAction from './components/action/UserDetailAction';
 import FileFolderFilter from './components/file-folder-detail/FileFolderFilter';
-import FileSection from './components/file-folder-detail/FileSection';
-import FolderSection from './components/file-folder-detail/FolderSection';
 
 const UserManagementDetail = () => {
   const navigate = useNavigate();
@@ -26,27 +23,25 @@ const UserManagementDetail = () => {
     }
   }, []);
   return (
-    <>
+    <div className='h-full w-full overflow-x-hidden overflow-y-auto'>
       <div
         ref={divRef}
-        className={`fixed ${screenMode != ScreenMode.DESKTOP ? 'left-0' : shrinkMode ? 'left-[77px]' : 'left-[302px]'}  top-[4rem] z-20  flex w-full items-center space-x-1 border-b-2 bg-white px-3 py-1`}>
+        className={`fixed ${screenMode != ScreenMode.DESKTOP ? 'left-0' : shrinkMode ? 'left-[76px]' : ' left-[16rem]'}  top-[4rem] z-20  flex w-full items-center space-x-1  bg-white px-3  py-1 dark:bg-content-bg-dark `}>
         <p
           onClick={() => {
             navigate(ADMIN_USER_MANAGEMENT);
           }}
-          className='statement-upper-medium cursor-pointer text-gray-700'>
+          className='statement-upper-medium cursor-pointer'>
           Users
         </p>
         <IconifyIcon fontSize={15} icon={'material-symbols:arrow-forward-ios-rounded'} />
         <p className='statement-upper-medium'>Hung Phi Vo</p>
       </div>
-      <div
-        style={{ maxHeight: flex ? `calc(100vh - 4rem - 28px)` : 'none' }}
-        className={`${flex ? 'flex w-full items-start space-x-2 overflow-hidden' : ''} pt-[28px]`}>
+      <div className={`${flex ? ' flex h-full w-full items-start space-x-2' : ' overflow-y-auto'} pt-[28px]`}>
         {/* <!--section --> */}
         <div className={`${flex ? 'w-1/4' : ''} border-2`}>
           <div className='flex  flex-col space-y-2 border-b-2 p-4'>
-            <p className='flex bg-[#eee] p-1'>ADMIN</p>
+            <p className='flex bg-[#eee] p-1 dark:bg-blue-200 dark:text-black'>ADMIN</p>
             <div className='flex items-start  space-x-3'>
               <img
                 className='w-[70px] rounded-full object-contain'
@@ -63,10 +58,6 @@ const UserManagementDetail = () => {
               </div>
             </div>
           </div>
-          <div className='flex flex-col space-y-2 border-b-2 p-3'>
-            <p>Organizational unit</p>
-            <p className='statement-bold'>SeaCloud</p>
-          </div>
           <div className='flex flex-col border-b-2 p-3'>
             <UserDetailAction title='RESET PASSWORD' />
             <UserDetailAction title='UPDATE USER' />
@@ -77,24 +68,22 @@ const UserManagementDetail = () => {
           </div>
         </div>
         {/* <!--section --> */}
-        <div
-          style={{ maxHeight: flex ? `calc(100vh - 4rem - 28px)` : 'none' }}
-          className={`flex  flex-col space-y-4 overflow-y-auto ${flex ? 'w-3/4 ' : ''}`}>
-          <div className='w-full space-y-2 p-3  shadow-md'>
+        <div className={`flex  h-full flex-col space-y-4 overflow-y-auto pb-2 ${flex ? 'w-3/4 ' : ''}`}>
+          <div className='w-full space-y-2 border p-3  shadow-md'>
             <p className='statement-medium h4 '>Personal Dropbox space of Hung Vo Phi</p>
             <StorageStatistic />
           </div>
           <div className='z-0 w-full space-y-2 p-3 shadow-md'>
             <ButtonContainer title='Modify memory' icon={<IconifyIcon icon={'tabler:edit'} />} />
           </div>
-          <SectionBorder title='Memory details'>
+          <div className='rounded-xl border pl-3 mr-2 shadow-xl dark:bg-white'>
             <FileFolderFilter />
-            <FileSection />
-            <FolderSection />
-          </SectionBorder>
+            {/* <FileSection />
+            <FolderSection /> */}
+          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -1,5 +1,7 @@
 import { paginationRESPToDto } from '@/apis/shared/shared.service';
+import { BlockOutlined, DeleteOutline, EditOutlined, SettingsApplications, ViewDayOutlined } from '@mui/icons-material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { Button, Card, Dropdown, Menu, Pagination, Table } from 'antd';
 import { isAxiosError } from 'axios';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -24,9 +26,6 @@ import { ApiGenericError } from '../../../utils/types/api-generic-error.type';
 import { PagingState, initialPagingState } from '../../../utils/types/paging-stage.type';
 import './UserManagement.css';
 import UserManagementFilter from './UserManagementFilter';
-import { Button, Card, Dropdown, Menu, Pagination, Table } from 'antd';
-import { BlockOutlined, DeleteOutline, EditOutlined, SettingsApplications, ViewDayOutlined } from '@mui/icons-material';
-import { render } from 'react-dom';
 
 type ModalState = {
   isOpen: boolean;
@@ -265,7 +264,7 @@ const UserManagement = () => {
           </div>
         )}
         <div
-          className={`${shrinkMode ? 'shrink-mode' : 'none-shrink-mode'} ${scrollable ? ' fixed  top-[4rem] mx-auto flex w-full space-x-2  bg-white dark:bg-transparent ' : ''} mx-5`}>
+          className={`${shrinkMode ? 'shrink-mode' : 'none-shrink-mode'} ${scrollable ? ' fixed  top-[4.3rem] mx-auto flex w-full  bg-white dark:bg-transparent ' : ''} mx-5`}>
           {scrollable && (
             <div className='mx-5'>
               <ButtonContainer
@@ -313,6 +312,7 @@ const UserManagement = () => {
         {data && (
           <>
             <Table
+             
               dataSource={data.identitiesDto}
               columns={columns}
               bordered={true}

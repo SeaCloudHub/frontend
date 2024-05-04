@@ -14,6 +14,7 @@ type DropdownCoreProps = {
   placeholder?: string;
   height?: string;
   minWidth?: string;
+  mix?: boolean;
 };
 
 const DropdownCore = ({
@@ -26,6 +27,7 @@ const DropdownCore = ({
   className,
   height,
   minWidth,
+  mix,
 }: DropdownCoreProps) => {
   const [inputValue, setInputValue] = useState(isDefault ? options[0].value : undefined);
   const onChangeConverter = (event: SelectChangeEvent) => {
@@ -35,9 +37,9 @@ const DropdownCore = ({
   return (
     <div
       className={`${className}  w-auto ${
-        label && ` flex items-center whitespace-nowrap text-base font-semibold leading-[25.6px] !text-[#535353]`
+        label && ` flex items-center whitespace-nowrap text-base font-semibold space leading-[25.6px]`
       }`}>
-      {label}
+     <p className='text-black mr-2'> {label}</p>
       <Select
         sx={{
           height: height ?? '35px',
@@ -57,7 +59,7 @@ const DropdownCore = ({
             )}
             {!option.preIcon && (
               <div className='flex items-center space-x-3'>
-                <p className='w-[26px]'></p>
+                {mix && <p className='w-[26px]'></p>}
                 {option.label}
               </div>
             )}

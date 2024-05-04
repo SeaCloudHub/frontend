@@ -1,29 +1,67 @@
+import { userStatisticApi } from '@/apis/admin/dashboard/dashboard-api';
 import LineChartCore from '@/components/core/line-chart/LineChartCore';
-import { Paper } from '@mui/material';
-import IconifyIcon from '../../../components/core/Icon/IConCore';
-import AccordionCore from '../../../components/core/accordion/AccordionCore';
+import { Paper, Skeleton } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import PieChartCore from '../../../components/core/pie-chart/PieChart';
-import StorageStatistic from '../shared/StorageStatistic';
-import DashBoardRate from './components/DashBoardRate';
-import RecentlyAddedUsers from './components/RecentlyAddedUsers';
-import StorageLog from './components/StorageLog';
-import { Card } from 'antd';
 import DashboardCard from './components/DashboardCard';
+import StorageLog from './components/StorageLog';
+
+const UserStatisticHook = () => {
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { data, error, isLoading } = useQuery({
+    queryKey: ['user-statistic'],
+    queryFn: () => userStatisticApi(),
+    staleTime: 0,
+  });
+
+  return { data, isLoading, errorMessage };
+};
+
+const DashBoardSkeleton = () => {
+  return (
+    <Paper
+      sx={{
+        transition: 'transform 0.3s ease-in-out',
+      }}
+      elevation={3}
+      className='flex h-fit w-full justify-center rounded-lg border border-gray-50 px-6 py-5  shadow-lg'>
+      <Skeleton variant='circular' width={45} height={40} />
+      <div className='w-full pl-5'>
+        <div className='flex min-w-max items-center justify-between text-xl font-bold text-gray-700'>
+          <Skeleton variant='text' width={50} />
+          <Skeleton variant='text' width={50} />
+        </div>
+        <Skeleton variant='text' width={100} />
+      </div>
+    </Paper>
+  );
+};
 
 const DashBoard = () => {
+  const { data: userStatisticData, errorMessage: userStatisticError, isLoading: userStatisticLoading } = UserStatisticHook();
   return (
-    <div className='h-full w-full lg:flex  lg:overflow-hidden'>
-      <div className='w-full overflow-y-auto lg:max-h-screen lg:w-3/4 '>
+    <div className='h-full w-full  space-y-2 overflow-y-auto overflow-x-hidden  lg:flex lg:space-y-0'>
+      <div className='w-full overflow-y-auto lg:h-full  lg:w-3/4 '>
         <div className='flex w-full flex-col'>
-          <div className='max-w-pc  w-full'>
-            <div className='m-5 flex gap-6'>
-              <DashboardCard data={{ name: 'Total users', percentage: 1.05, value: 300 }} />
-              <DashboardCard data={{ name: 'Active users', percentage: -1.05, value: 260 }} />
-              <DashboardCard data={{ name: 'Blocked users', percentage: 0, value: 40 }} />
-            </div>
+          <div className='grid-col-1 grid w-full gap-6 px-1  lg:grid-cols-3'>
+            {userStatisticData && (
+              <>
+                <DashboardCard data={{ name: 'Total users', percentage: 1.05, value: userStatisticData.total_users }} />
+                <DashboardCard data={{ name: 'Blocked users', percentage: 0, value: userStatisticData.blocked_users }} />
+                <DashboardCard data={{ name: 'Active users', percentage: -1.05, value: userStatisticData.active_users }} />
+              </>
+            )}
+            {userStatisticLoading && (
+              <>
+                <DashBoardSkeleton />
+                <DashBoardSkeleton />
+                <DashBoardSkeleton />
+              </>
+            )}
           </div>
           <div className='flex w-full flex-col gap-6'>
-            <Card className='m-5'>
+            <div className='mx-1 my-4  rounded-lg border shadow-lg'>
               <LineChartCore
                 data={[
                   {
@@ -38,36 +76,30 @@ const DashBoard = () => {
                 categories={['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']}
                 title='User Activity'
               />
-            </Card>
-          </div>
-        </div>
-        <div className='flex w-full flex-col'>
-          <div className='w-full sm:p-2'>
-            <StorageStatistic />
-          </div>
-          <div className='w-full sm:p-2'>
-            <div className='mx-5 flex gap-6 rounded-lg border border-gray-50 bg-white'>
-              <PieChartCore
-                data={[
-                  { value: 10, label: 'Used' },
-                  { value: 20, label: 'Free' },
-                ]}
-              />
-
-              <PieChartCore
-                data={[
-                  { value: 10, label: 'Document' },
-                  { value: 20, label: 'Iamge' },
-                  { value: 10, label: 'zip' },
-                  { value: 20, label: 'Another' },
-                ]}
-              />
             </div>
           </div>
         </div>
+        <div className='flex w-full flex-col'>
+          <div className='mx-1 mb-4 flex-wrap  rounded-lg border shadow-xl  dark:border-gray-50 lg:flex lg:justify-center  '>
+            <PieChartCore
+              data={[
+                { value: 10, label: 'Used' },
+                { value: 20, label: 'Free' },
+              ]}
+            />
+            <PieChartCore
+              data={[
+                { value: 10, label: 'Document' },
+                { value: 20, label: 'Iamge' },
+                { value: 10, label: 'zip' },
+                { value: 20, label: 'Another' },
+              ]}
+            />
+          </div>
+        </div>
       </div>
-      <div className='mx-5 h-12 bg-green-300 lg:w-1/4'>
-        <RecentlyAddedUsers />
+      <div className=' ml-1 h-12 lg:w-1/4'>
+        {/* <RecentlyAddedUsers /> */}
         <StorageLog />
       </div>
     </div>

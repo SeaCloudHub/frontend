@@ -126,14 +126,14 @@ function Search() {
     <div className='relative max-w-2xl flex-1 ' onFocus={() => setOnFocus(true)}>
       <span
         onClick={() => {}}
-        className=' absolute left-2 top-[5px] h-9 w-9 cursor-pointer rounded-full p-2 hover:bg-gray-100 dark:text-white hover:dark:bg-black '>
+        className=' absolute left-2 top-[5px] h-9 w-9 cursor-pointer rounded-full p-2 hover:bg-gray-100 dark:text-white hover:dark:bg-slate-800'>
         <AiOutlineSearch className='stroke-textC h-full w-full' stroke='2' />
       </span>
       <span
         onClick={() => {
           setModalOpen(true);
         }}
-        className='absolute  right-2  top-[5px] flex h-9 w-9 cursor-pointer items-center justify-center rounded-full p-2 dark:hover:bg-black  '>
+        className='absolute  right-2  top-[5px] flex h-9 w-9 cursor-pointer items-center justify-center rounded-full p-2 hover:dark:bg-slate-800  '>
         <svg width='24' height='24' viewBox='0 0 24 24' focusable='false'>
           <path
             fill={fill}
@@ -144,9 +144,9 @@ function Search() {
         onBlur={() => setOnFocus(false)}
         onChange={(e) => setKeyWord(e.target.value)}
         type='text'
-        placeholder='Search in Drive'
+        placeholder='Search file'
         className=' w-full  rounded-full bg-search-bg  px-2 py-[0.7rem] indent-11 focus:rounded-b-none
-        focus:rounded-t-2xl focus:bg-white focus:shadow-md focus:outline-none
+        focus:rounded-t-2xl focus:bg-white  focus:shadow-md focus:outline-none
         dark:bg-search-bg-dark dark:text-icons-color-dark dark:placeholder-blue-50 dark:placeholder-opacity-60'
       />
       {onFocus && <SearchResult data={results} />}

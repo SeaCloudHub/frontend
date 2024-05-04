@@ -28,7 +28,7 @@ function UserInfo({ onClose }: UserInfoProps) {
   return (
     <div
       ref={modalRef}
-      className='bg-darkC2 z-100 relative z-10 flex max-w-[250px] flex-col items-center justify-center space-y-3 rounded-2xl bg-white px-5 py-3 text-sm font-medium shadow-md shadow-[#b4bebb]'>
+      className='bg-darkC2 z-100 relative z-10 flex max-w-[250px] flex-col items-center justify-center space-y-3 rounded-2xl bg-white px-5 py-3 text-sm font-medium shadow-md shadow-[#b4bebb] dark:bg-dashboard-dark dark:text-white'>
       <button onClick={onClose} className='bg-darkC2 hover:bg-dark absolute right-3 top-3 rounded-full p-1'>
         <AiOutlineClose className='h-5 w-5 rounded-full stroke-2' />
       </button>
@@ -58,14 +58,14 @@ function UserInfo({ onClose }: UserInfoProps) {
         <button
           disabled={isLogout}
           onClick={onSignOutClick}
-          className='tablet:w-44 hover:bg-darkC flex w-36 items-center justify-center space-x-2 rounded-full bg-white py-3  hover:bg-gray-200'>
+          className='tablet:w-44 hover:bg-darkC flex w-36 items-center justify-center space-x-2 rounded-full bg-white py-3  dark:text-black hover:bg-gray-200'>
           <PiSignOutBold className='h-6 w-6' />
           <span>Sign out</span>
         </button>
       </div>
       <div className=' flex  h-10 items-center space-x-2  text-xs '>
-        <span className='cursor-pointer rounded-full px-3 py-2 hover:bg-blue-100'>Privacy policy</span>
-        <span className='-mt-[3px] '> . </span> <span className='rounded-full px-3 py-2 hover:bg-blue-100'>Terms of service</span>
+        <span className='cursor-pointer text-center rounded-full px-3 py-2 hover:bg-blue-100 hover:dark:text-black'>Privacy policy</span>
+        <span className='-mt-[3px] '> . </span> <span className='rounded-full px-3 py-2 text-center hover:bg-blue-100 hover:dark:text-black'>Terms of service</span>
       </div>
       {isLogout && <LinearProgress className=' w-full translate-y-1' />}
     </div>

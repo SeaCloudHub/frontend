@@ -8,7 +8,7 @@ const SearchResult = ({ data }: SearchResult) => {
   return (
     <div
       className='border-textC shadow-darkC absolute z-10 max-h-64 w-full overflow-x-hidden
-      rounded-b-2xl border-t-[1.5px] bg-white pt-2 shadow-md'>
+      rounded-b-2xl border-t-[1.5px] bg-white pt-2 shadow-md dark:bg-search-bg-dark'>
       <div className='border-b  py-3'>
         {!data || (data.length < 1 && <div className='pl-5 text-sm text-gray-500'>No result match your search.</div>)}
         {data &&
