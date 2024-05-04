@@ -34,10 +34,6 @@ const Priority = () => {
   //     ),
   // });
   const {data, isLoading, refetch} = usePriorityEntries();
-  const { setTheme} = useTheme();
-  useEffect(() => {
-    setTheme('light');
-  }, [setTheme]);
 
   // const entries: LocalEntry[] = transformEntries((data || []) as Required<Entry[]> & ListEntriesRESP['entries']);
 
