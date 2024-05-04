@@ -13,6 +13,7 @@ type TextFieldCoreProps = {
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   error?: boolean | undefined;
   helperText?: React.ReactNode;
+  sx?: any;
 };
 
 const TextFieldCore = ({
@@ -26,6 +27,7 @@ const TextFieldCore = ({
   disabled,
   type,
   value,
+  sx,
 }: TextFieldCoreProps) => {
   return (
     <TextField
@@ -58,45 +60,7 @@ const TextFieldCore = ({
           </span>
         )
       }
-      sx={{
-        '.dark &': {
-          backgroundColor: '#031525',
-          color: 'white',
-          '& .MuiInputLabel-root': {
-            color: 'white',
-          },
-          '& .MuiOutlinedInput-root.Mui-disabled .MuiOutlinedInput-notchedOutline': {
-            borderColor: '#64748B',
-          },
-          '& .MuiFormHelperText-root': {
-            color: '#64748B',
-          },
-          '& .MuiOutlinedInput-notchedOutline': {
-            borderColor: 'rgba(255, 255, 255, 0.25)',
-          },
-          '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
-            borderColor: 'rgba(255, 255, 255, 0.5)',
-          },
-          '& .MuiOutlinedInput-root.Mui-focused fieldset': {
-            borderColor: 'rgba(255, 255, 255, 0.5)',
-          },
-          '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-            borderColor: 'rgba(255, 255, 255, 0.5)',
-          },
-          '& .MuiFormLabel-root': {
-            color: 'white',
-          },
-          '& .MuiInputBase-input': {
-            color: 'white',
-          },
-          '& .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline': {
-            borderColor: '#F87171',
-          },
-          '& .MuiFormHelperText-root.Mui-error': {
-            color: '#F87171',
-          },
-        },
-      }}
+      sx={sx}
     />
   );
 };
