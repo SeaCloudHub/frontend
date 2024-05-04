@@ -16,6 +16,7 @@ import { useStorageStore } from '@/store/storage/storage.store';
 import DrivePath from '../my-drive/header/drive-path/DrivePath';
 import { ListEntriesRESP } from '@/apis/drive/drive.response';
 import MultipleDriveHeader from '../my-drive/header/MultipleDriveHeader';
+import { useTheme } from '@/providers/theme-provider';
 
 const Priority = () => {
   const { viewMode, setViewMode } = useViewMode();
@@ -33,6 +34,10 @@ const Priority = () => {
   //     ),
   // });
   const {data, isLoading, refetch} = usePriorityEntries();
+  const { setTheme} = useTheme();
+  useEffect(() => {
+    setTheme('light');
+  }, [setTheme]);
 
   // const entries: LocalEntry[] = transformEntries((data || []) as Required<Entry[]> & ListEntriesRESP['entries']);
 

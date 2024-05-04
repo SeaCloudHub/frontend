@@ -8,6 +8,7 @@ import SidePanel from '@/pages/user/my-drive/side-panel/SidePanel';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { useCopyMutation, useListEntries } from '@/hooks/drive.hooks';
 import { toast } from 'react-toastify';
+import { useTheme } from '@/providers/theme-provider';
 
 export type LocalEntry = {
   isDir: boolean;
@@ -40,6 +41,7 @@ const MyDrive = () => {
     id: parents[parents.length - 1].id,
     name: parents[parents.length - 1].name,
   });
+
 
   console.log('[MyDrive] data', data);
 
