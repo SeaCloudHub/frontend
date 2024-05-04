@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import DriveLayout from '@/components/layout/DriveLayout';
-import { Path, useViewMode } from '@/store/my-drive/myDrive.store';
+import { Path, useSelected, useViewMode } from '@/store/my-drive/myDrive.store';
 import MyDriveHeader from './header/MyDriveHeader';
 import { DriveGridView } from './content/DriveGridView';
 import { DriveListView } from './content/DriveListView';
@@ -31,18 +31,17 @@ const MyDrive = () => {
   const [typeFilter, setTypeFilter] = useState<string>('');
   const [peopleFilter, setPeopleFilter] = useState<string>('');
   const [modifiedFilter, setModifiedFilter] = useState<string>('');
-  const [arrSelected, setArrSelected] = useState<string[]>([]);
+  const { arrSelected, setArrSelected } = useSelected();
   const [copiedIds, setCopiedIds] = useState<string[]>([]);
 
   const viewMode = useViewMode((state) => state.viewMode);
-  const { parents, data, refetch, isLoading } = useListEntries();
+  const {parents, data, refetch, isLoading } = useListEntries();
   const [selected, setSelected] = useState<{ id: string; name: string }>({
     id: parents[parents.length - 1].id,
     name: parents[parents.length - 1].name,
   });
 
-  // console.log('[MyDrive] arrSelected', arrSelected);
-  // console.log('[MyDrive] copiedIds', copiedIds);
+  console.log('[MyDrive] data', data);
 
   const copyMutation = useCopyMutation();
 
@@ -74,14 +73,10 @@ const MyDrive = () => {
           peopleFilter={peopleFilter}
           sort={sort}
           order={order}
-          // arrSelected={arrSelected}
-          // setArrSelected={setArrSelected}
           setTypeFilter={setTypeFilter}
           setModifiedFilter={setModifiedFilter}
           setPeopleFilter={setPeopleFilter}
           setSort={setSort}
-          setArrSelected={setArrSelected}
-          arrSelected={arrSelected}
         />
       }
       bodyLeft={
@@ -90,16 +85,12 @@ const MyDrive = () => {
             entries={data}
             isLoading={isLoading}
             curDir={parents[parents.length - 1]}
-            arrSelected={arrSelected}
-            setArrSelected={setArrSelected}
           />
         ) : (
           <DriveListView
             entries={data}
             isLoading={isLoading}
             curDir={parents[parents.length - 1]}
-            arrSelected={arrSelected}
-            setArrSelected={setArrSelected}
           />
         )
       }

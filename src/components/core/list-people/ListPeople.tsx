@@ -17,7 +17,7 @@ type ListPeopleProps = {
 
 const ListPeople: React.FC<ListPeopleProps> = ({ items, state, setState, height }) => {
   return (
-    <List sx={{ bgcolor: 'background.paper', height: height || '200px' }} className='overflow-y-auto'>
+    <List sx={{ height: height || '200px' }} className='overflow-y-auto'>
       {items.map((item, index) => (
         <PeopleItem
           key={index}

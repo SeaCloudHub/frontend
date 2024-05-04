@@ -1,9 +1,8 @@
 import { api } from '@/helpers/http/config.http';
-import { CopyFileREQ, ListEntriesREQ, RenameREQ, UploadFileREQ, DeleteFilesREQ, ListEntriesPageREQ } from './drive.request';
+import { CopyFileREQ, ListEntriesREQ, RenameREQ, UploadFileREQ, DeleteEntriesREQ, ListEntriesPageREQ, RestoreEntriesREQ } from './drive.request';
 import { BaseResponse } from '@/utils/types/api-base-response.type';
 import { MoveToTrashREQ } from './request/move-to-trash.request';
 import {
-  DeleteFilesRESP,
   EntryMetadataRES,
   EntryRESP,
   ListEntriesPageRESP,
@@ -25,6 +24,13 @@ export const getListEntriesPageMyDrive = async (param: ListEntriesPageREQ) => {
   });
   return res.data;
 };
+
+// export const getListEntriesPriority = async (param: ListEntriesREQ) => {
+//   const res = await api.get<BaseResponse<ListEntriesRESP>>(`/files/priority`, {
+//     params: { cursor: param.cusor, limit: param.limit },
+//   });
+//   return res.data;
+// }
 
 export const getListEntriesTrash = async (param: ListEntriesREQ) => {
   const res = await api.get<BaseResponse<ListEntriesRESP>>(`/files/trash`, {
@@ -78,7 +84,7 @@ export const uploadFiles = async (body: UploadFileREQ) => {
   return res.data;
 };
 
-export const renameFile = async (body: RenameREQ) => {
+export const renameEntry = async (body: RenameREQ) => {
   const res = await api.patch<BaseResponse<EntryRESP>>(`/files/rename`, body);
   return res.data;
 };
@@ -88,7 +94,12 @@ export const moveToTrash = async (body: MoveToTrashREQ) => {
   return res.data;
 };
 
-export const deleteFiles = async (body: DeleteFilesREQ) => {
+export const deleteEntries = async (body: DeleteEntriesREQ) => {
   const res = await api.post<BaseResponse<EntryRESP[]>>(`/files/delete`, body);
   return res.data;
 };
+
+export const restoreEntries = async (body: RestoreEntriesREQ) => {
+  const res = await api.post<BaseResponse<EntryRESP[]>>(`/files/restore`, body);
+  return res.data;
+}

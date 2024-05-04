@@ -106,7 +106,7 @@ const SidePanel: React.FC<SidePanelProps> = ({ id, title }) => {
                 {({ selected }) => (
                   <div
                     className={classNames(
-                      'flex grow justify-center active:bg-[#c7d8f4]',
+                      'flex grow justify-center active:bg-[#c7d8f4] dark:hover:bg-blue-950',
                       selected ? 'hover:bg-[#f5f8fd] ' : 'hover:bg-[#f5f8fd]',
                     )}>
                     <div

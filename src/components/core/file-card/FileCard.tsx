@@ -1,18 +1,14 @@
 import { PencilIcon, ShareIcon, TrashIcon } from '@heroicons/react/16/solid';
-// import { MusicalNoteIcon, PhotoIcon } from '@heroicons/react/24/outline';
-// import { DocumentTextIcon } from '@heroicons/react/24/outline';
 import { CopyToClipboard } from '@/utils/function/copy.function';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { Info } from '@mui/icons-material';
 import { Tooltip } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { MenuItem, classNames } from '../drop-down/Dropdown';
-// import FileViewerContainer from '../file-viewers/file-viewer-container/FileViewerContainer';
 import { downloadFile } from '@/apis/drive/drive.api';
-import { useCopyMutation } from '@/hooks/drive.hooks';
-import { useDrawer } from '@/store/my-drive/myDrive.store';
-import { useStorageStore } from '@/store/storage/storage.store';
+import { useCopyMutation, useRestoreEntriesMutation } from '@/hooks/drive.hooks';
+import { useDrawer, useSelected } from '@/store/my-drive/myDrive.store';
 import CustomDropdown from '../drop-down/CustomDropdown';
 import FileViewerContainer from '../file-viewers/file-viewer-container/FileViewerContainer';
 import DeletePopUp from '../pop-up/DeletePopUp';
@@ -26,15 +22,14 @@ type FileCardProps = {
   icon?: React.ReactNode;
   preview?: React.ReactNode;
   id: string;
-  onClick?: () => void;
   isSelected?: boolean;
   dirId?: string;
   fileType?: string;
   parent?: 'priority' | 'my-drive' | 'shared' | 'trash';
-  setArrSelected?: React.Dispatch<React.SetStateAction<string[]>>;
+  isDir: boolean;
 };
 
-export const fileOperation = [
+export const FileOperation = [
   { icon: <Info />, label: 'FIle infomation' },
   { icon: <PencilIcon />, label: 'Rename file' },
   { icon: <ShareIcon />, label: 'Share file' },
@@ -47,21 +42,20 @@ const FileCard: React.FC<FileCardProps> = ({
   preview,
   id,
   isSelected,
-  onClick,
   dirId,
   fileType,
   parent,
-  setArrSelected,
+  isDir,
 }) => {
   const [fileViewer, setFileViewer] = useState(false);
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
   const [type, setType] = useState<'move' | 'share' | 'rename' | 'move to trash' | null>(null);
   const openDrawer = useDrawer((state) => state.openDrawer);
+  const [result, setResult] = useState(false);
 
-  // const { rootId } = useStorageStore();
   const copyMutation = useCopyMutation();
-  const [file, setFile] = useState<File | null>(null);
-  // const renameMutation = useRenameMutation();
+  const restoreMutation = useRestoreEntriesMutation();
+  const { setArrSelected, arrSelected } = useSelected();
 
   const menuItems: MenuItem[][] = [
     [
@@ -165,14 +159,14 @@ const FileCard: React.FC<FileCardProps> = ({
         label: 'Restore',
         icon: <Icon icon='mdi:restore' />,
         action: () => {
-          console.log('[FileCard] Restore ' + id);
+          setResult(true);
+          restoreMutation.mutate({ source_ids: [id] });
         },
       },
       {
         label: 'Delete permanently',
         icon: <Icon icon='fa:trash-o' />,
         action: () => {
-          console.log('[FileCard] Delete permanently ' + id);
           setIsPopUpOpen(true);
         },
       },
@@ -180,7 +174,7 @@ const FileCard: React.FC<FileCardProps> = ({
   ];
 
   const handleCtrlClick = () => {
-    setArrSelected && setArrSelected((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
+    setArrSelected(arrSelected.includes(id) ? arrSelected.filter((item) => item !== id) : [...arrSelected, id]);
   };
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -188,7 +182,7 @@ const FileCard: React.FC<FileCardProps> = ({
       handleCtrlClick();
       return;
     }
-    onClick && onClick();
+    setArrSelected([id]);
   };
 
   const handleDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -196,8 +190,16 @@ const FileCard: React.FC<FileCardProps> = ({
       handleCtrlClick();
       return;
     }
-    parent !== 'trash' && setFileViewer(true);
+    console.log(isDir);
+    !isDir && setFileViewer(true);
   };
+
+  useEffect(() => {
+    if (result) {
+      setResult(false);
+      setArrSelected([]);
+    }
+  }, [result, setArrSelected]);
 
   return (
     <>
@@ -230,26 +232,26 @@ const FileCard: React.FC<FileCardProps> = ({
         onClick={handleClick}
         onDoubleClick={handleDoubleClick}
         className={classNames(
-          'file-card flex h-full w-full cursor-pointer flex-col items-center justify-center  rounded-xl px-2 shadow-sm duration-150',
+          'file-card flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-xl px-2 shadow-sm duration-150',
           isSelected
-            ? 'bg-[#c2e7ff]  dark:bg-blue-700'
+            ? 'bg-[#c2e7ff] dark:bg-blue-900 dark:text-white'
             : 'bg-[#f0f4f9] hover:bg-[#dfe3e7] dark:bg-slate-600 dark:text-white dark:hover:bg-blue-950',
         )}>
-        <div className='flex w-full  items-center justify-between px-1 py-3'>
+        <div className='flex w-full items-center justify-between px-1 py-3'>
           <div className='flex max-w-[calc(100%-1.5rem)] items-center space-x-4'>
             <div className='h-6 w-6 min-w-fit'>{icon}</div>
             <Tooltip title={title}>
               <div className='select-none truncate text-sm font-medium'>{title}</div>
             </Tooltip>
           </div>
-          <div className='h-6 w-6 rounded-full p-1 hover:bg-slate-300'>
+          <div className='h-6 w-6 rounded-full p-1 hover:bg-slate-300 dark:hover:bg-slate-800'>
             <CustomDropdown
               button={<BsThreeDotsVertical className='dark:hover:text-slate-500' />}
               items={parent === 'trash' ? menuItemsTrash : menuItems}
             />
           </div>
         </div>
-        <div className='mb-2 flex h-full w-full items-center justify-center overflow-hidden rounded-md bg-white'>{preview}</div>
+        <div className='mb-2 flex h-full w-full items-center justify-center overflow-hidden rounded-md bg-white dark:bg-slate-500'>{preview}</div>
         {type === 'share' && <SharePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} />}
         {type === 'move' && (
           <MovePopUp
@@ -267,10 +269,17 @@ const FileCard: React.FC<FileCardProps> = ({
             title={title}
             id={dirId}
             source_ids={[id]}
+            setResult={setResult}
           />
         )}
         {parent === 'trash' && (
-          <DeletePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} source_ids={[id]} />
+          <DeletePopUp
+            open={isPopUpOpen}
+            handleClose={() => setIsPopUpOpen(false)}
+            setResult={setResult}
+            title={title}
+            source_ids={[id]}
+          />
         )}
       </div>
     </>

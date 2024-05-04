@@ -1,9 +1,9 @@
 import Dropdown, { MenuItem, classNames } from '@/components/core/drop-down/Dropdown';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Avatar, Tooltip } from '@mui/material';
-import { useDrawer } from '@/store/my-drive/myDrive.store';
-import { LocalEntry, useCopyMutation } from '@/hooks/drive.hooks';
+import { useDrawer, useSelected } from '@/store/my-drive/myDrive.store';
+import { LocalEntry, useCopyMutation, useRestoreEntriesMutation } from '@/hooks/drive.hooks';
 import CustomDropdown from '@/components/core/drop-down/CustomDropdown';
 import SharePopUp from '@/components/core/pop-up/SharePopUp';
 import MovePopUp from '@/components/core/pop-up/MovePopUp';
@@ -18,14 +18,12 @@ import { numToSize } from '@/utils/function/numbertToSize';
 import FileViewerContainer from '@/components/core/file-viewers/file-viewer-container/FileViewerContainer';
 import { downloadFile } from '@/apis/drive/drive.api';
 import { CopyToClipboard } from '@/utils/function/copy.function';
-import { CUSTOMER_MY_DRIVE, CUSTOMER_MY_DRIVE_DIR, CUSTOMER_SHARED_DIR } from '@/utils/constants/router.constant';
+import { CUSTOMER_MY_DRIVE, CUSTOMER_SHARED_DIR } from '@/utils/constants/router.constant';
 import DeleteTempPopUp from '@/components/core/pop-up/DeleteTempPopUp';
 
 type DataRowProps = {
   dirId?: string;
-  onClick?: () => void;
   isSelected?: boolean;
-  setArrSelected?: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
 export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
@@ -38,22 +36,23 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
   size,
   onDoubleClick,
   parent,
-  onClick,
   onChanged,
   dirId,
   fileType,
   isSelected,
-  setArrSelected,
 }) => {
   const [type, setType] = useState<'move' | 'share' | 'rename' | 'move to trash' | null>(null);
   const [fileViewer, setFileViewer] = useState(false);
   const [isPopUpOpen, setIsPopUpOpen] = React.useState(false);
+  const [result, setResult] = useState(false);
 
   const { openDrawer } = useDrawer();
   const { identity } = useSession();
   const navigate = useNavigate();
   const copyMutation = useCopyMutation();
+  const restoreMutation = useRestoreEntriesMutation();
   const url = useLocation();
+  const { setArrSelected, arrSelected } = useSelected();
 
   const fileMenu: MenuItem[][] = [
     [
@@ -217,6 +216,8 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
       icon: <Icon icon='mdi:restore' />,
       action: () => {
         console.log('[FileCard] Restore ' + id);
+        setResult(true);
+        restoreMutation.mutate({ source_ids: [id]});
       },
     },
     {
@@ -230,7 +231,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
   ];
 
   const handleCtrlClick = () => {
-    setArrSelected && setArrSelected((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
+    setArrSelected(arrSelected.includes(id) ? arrSelected.filter((item) => item !== id) : [...arrSelected, id]);
   };
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -238,7 +239,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
       handleCtrlClick();
       return;
     }
-    onClick && onClick();
+    setArrSelected([id]);
   };
 
   const handleDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -256,6 +257,13 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
       parent !== 'trash' && setFileViewer(true);
     }
   };
+
+  useEffect(() => {
+    if (result) {
+      setResult(false);
+      setArrSelected([]);
+    }
+  }, [result, setArrSelected]);
 
   return (
     <>
@@ -290,7 +298,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
         className={classNames(
           'data-row grid grid-cols-7 max-[1160px]:grid-cols-7 max-[1150px]:grid-cols-6 max-[1000px]:grid-cols-5 gap-3 border-b border-b-[#dadce0] truncate py-2 cursor-pointer',
           isSelected
-            ? 'bg-[#c2e7ff]  dark:bg-blue-700'
+            ? 'bg-[#c2e7ff]  dark:bg-blue-900'
             : 'hover:bg-[#dfe3e7] dark:bg-slate-600 dark:text-white dark:hover:bg-blue-950',
         )}>
         <div className='flex col-span-4'>
@@ -349,7 +357,13 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
         )}
         {type === 'rename' && <RenamePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} name={title} id={id} />}
         {parent === 'trash' && (
-          <DeletePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} source_ids={[id]} />
+          <DeletePopUp
+            open={isPopUpOpen}
+            handleClose={() => setIsPopUpOpen(false)}
+            title={title}
+            source_ids={[id]}
+            setResult={setResult}
+          />
         )}
         {type === 'move to trash' && (
           <DeleteTempPopUp
@@ -358,6 +372,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
             title={title}
             id={dirId}
             source_ids={[id]}
+            setResult={setResult}
           />
         )}
       </div>

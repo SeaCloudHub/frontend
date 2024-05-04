@@ -1,10 +1,10 @@
 import { RenameREQ } from '@/apis/drive/drive.request';
-import { useDrawer } from '@/store/my-drive/myDrive.store';
+import { useDrawer, useSelected } from '@/store/my-drive/myDrive.store';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { CopyToClipboard } from '@/utils/function/copy.function';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { Tooltip } from '@mui/material';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import CustomDropdown from '../drop-down/CustomDropdown';
 import { MenuItem, classNames } from '../drop-down/Dropdown';
@@ -20,14 +20,18 @@ interface FolderCardProps {
   onDoubleClick?: () => void;
   onClick?: () => void;
   isSelected?: boolean;
-  setArrSelected?: Dispatch<SetStateAction<string[]>>;
+  // setArrSelected?: Dispatch<SetStateAction<string[]>>;
 }
 
-const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick, onClick, isSelected, setArrSelected }) => {
+const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick, onClick, isSelected,
+  // setArrSelected
+}) => {
   const setDrawerOpen = useDrawer((state) => state.openDrawer);
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
   const [type, setType] = useState<'move' | 'share' | 'rename' | 'move to trash' | null>();
   const { rootId } = useStorageStore();
+  const {arrSelected, setArrSelected} = useSelected();
+  const [result, setResult] = useState(false);
 
   const folderOps: MenuItem[][] = [
     [
@@ -98,10 +102,17 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick,
     ],
   ];
 
-  // ctrl + click to select multiple files
+  useEffect(() => {
+    if (result) {
+      setArrSelected([]);
+      setResult(false);
+    }
+  }, [result, setArrSelected]);
+
   const handleCtrlClick = () => {
     if (setArrSelected) {
-      setArrSelected((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
+      // setArrSelected((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
+      setArrSelected(arrSelected.includes(id) ? arrSelected.filter((item) => item !== id) : [...arrSelected, id]);
     }
   };
 
@@ -118,7 +129,7 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick,
       handleCtrlClick();
       return;
     }
-    setArrSelected && setArrSelected([]);
+    setArrSelected([]);
     onDoubleClick && onDoubleClick();
   };
 
@@ -127,7 +138,7 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick,
       className={classNames(
         'folder-card flex w-full cursor-pointer items-center justify-between rounded-xl px-3 py-3 shadow-sm',
         isSelected
-          ? 'bg-[#c2e7ff] dark:bg-blue-700 dark:text-white'
+          ? 'bg-[#c2e7ff] dark:bg-blue-900 dark:text-white'
           : 'bg-[#f0f4f9] hover:bg-[#dfe3e7] dark:bg-slate-600 dark:text-white dark:hover:bg-blue-950',
       )}
       onDoubleClick={handleDoubleClick}
@@ -138,7 +149,7 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick,
           <div className='select-none truncate text-sm font-medium'>{title}</div>
         </Tooltip>
       </div>
-      <div className='h-6 w-6 rounded-full p-1 hover:bg-slate-300 dark:hover:text-slate-500'>
+      <div className='h-6 w-6 rounded-full p-1 hover:bg-slate-300 dark:hover:bg-slate-800'>
         <CustomDropdown button={<BsThreeDotsVertical />} items={folderOps} />
       </div>
 
@@ -154,6 +165,7 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick,
           title={title}
           id={rootId}
           source_ids={[id]}
+          setResult={setResult}
         />
       )}
     </div>

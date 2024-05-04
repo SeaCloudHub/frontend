@@ -32,3 +32,13 @@ export const useViewMode = create<ViewModeState>((set) => ({
   viewMode: 'grid',
   setViewMode: (mode: string) => set({ viewMode: mode }),
 }));
+
+export type ArrSelectedState = {
+  arrSelected: string[];
+  setArrSelected: (arrSelected: string[]) => void;
+};
+
+export const useSelected = create<ArrSelectedState>((set) => ({
+  arrSelected: [],
+  setArrSelected: (arrSelected: string[]) => set({ arrSelected }),
+}));

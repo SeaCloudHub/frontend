@@ -2,37 +2,37 @@ import React from 'react';
 import PopUp from './PopUp';
 import { Button, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { useDeleteMutation } from '@/hooks/drive.hooks';
+import ButtonSuccess from '../button/ButtonSuccess';
+import ButtonCancel from '../button/ButtonCancel';
 
 type DeletePopUpProps = {
   open: boolean;
   handleClose: () => void;
   title: string;
   source_ids: string[];
+  setResult: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const DeletePopUp: React.FC<DeletePopUpProps> = ({ open, handleClose, title, source_ids }) => {
+const DeletePopUp: React.FC<DeletePopUpProps> = ({ open, handleClose, title, source_ids, setResult }) => {
   const deleteMutation = useDeleteMutation();
-
   return (
     <PopUp open={open} handleClose={handleClose}>
       <DialogTitle>Delete permanently?</DialogTitle>
-      <DialogContent>"{title}" will be deleted permanently and cannot be recovered.</DialogContent>
+      {title
+        ? <DialogContent>"{title}" will be deleted permanently and cannot be recovered.</DialogContent>
+        : <DialogContent>{source_ids.length} items will be deleted permanently and cannot be recovered.</DialogContent>
+      }
       <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
-        <Button
+        <ButtonCancel onClick={handleClose}> Cancel </ButtonCancel>
+        <ButtonSuccess
           onClick={() => {
             handleClose();
-            deleteMutation.mutate({ source_ids })
+            setResult(true);
+            deleteMutation.mutate({ source_ids });
           }}
-          sx={{
-            backgroundColor: '#063799',
-            color: 'white',
-            '&:hover': {
-              backgroundColor: '#063768',
-            },
-          }}>
+          type={'button'}>
           Delete
-        </Button>
+        </ButtonSuccess>
       </DialogActions>
     </PopUp>
   );

@@ -3,6 +3,7 @@ import PopUp from './PopUp';
 import { Tab } from '@headlessui/react';
 import { Button, Chip, DialogActions, Stack, Tooltip } from '@mui/material';
 import { Icon } from '@iconify/react/dist/iconify.js';
+import ButtonSuccess from '../button/ButtonSuccess';
 
 type MovePopUpProps = {
   open: boolean;
@@ -49,7 +50,13 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
                 }
                 label={location}
                 variant='outlined'
-                sx={{ p: 1 }}
+                sx={{
+                  p: 1,
+                  '.dark &': {
+                    borderColor: '#F8FAFC',
+                    color: '#F8FAFC',
+                  },
+                 }}
               />
             </Stack>
           </div>
@@ -62,7 +69,7 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
                   <Tab className='flex focus:outline-none' key={index}>
                     {({ selected }) => (
                       <div
-                        className={`flex grow justify-center active:bg-[#c7d8f4] ${selected ? 'hover:bg-[#f5f8fd] ' : 'hover:bg-[#f5f8fd]'}`}>
+                        className={`flex grow justify-center active:bg-[#c7d8f4] dark:hover:bg-blue-950 ${selected ? 'hover:bg-[#f5f8fd] ' : 'hover:bg-[#f5f8fd]'}`}>
                         <div
                           className={`w-14 min-w-max py-3 text-sm font-medium ${selected ? 'border-b-[3px] border-[#0B57D0] text-[#4f86dd]' : ''}`}>
                           {item}
@@ -77,7 +84,7 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
                   {fakeFolder.map((item, index) => (
                     <div
                       key={index}
-                      className='flex cursor-pointer items-center gap-3 hover:bg-gray-100'
+                      className='flex cursor-pointer items-center gap-3 hover:bg-gray-100 dark:hover:bg-blue-950'
                       onDoubleClick={() => setStackFolder([...stackFolder, item.title])}>
                       <Icon icon='mdi:folder-multiple-outline' className='text-xl' />
                       <span>{item.title}</span>
@@ -92,7 +99,7 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
             <div className='flex items-center gap-1'>
               <Icon
                 icon='octicon:arrow-left-16'
-                className='h-6 w-6 cursor-pointer rounded-full text-xl hover:bg-gray-200'
+                className='h-6 w-6 cursor-pointer rounded-full text-xl hover:bg-gray-200 dark:hover:bg-blue-950'
                 onClick={() => setStackFolder(stackFolder.slice(0, stackFolder.length - 1))}
               />
               <span>{stackFolder[stackFolder.length - 1]}</span>
@@ -101,7 +108,7 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
               {fakeFolder.map((item, index) => (
                 <div
                   key={index}
-                  className='flex cursor-pointer items-center gap-3 hover:bg-gray-100'
+                  className='flex cursor-pointer items-center gap-3 hover:bg-gray-100 dark:hover:bg-blue-950'
                   onDoubleClick={() => setStackFolder([...stackFolder, item.title])}>
                   <Icon icon='mdi:folder-multiple-outline' className='text-xl' />
                   <span>{item.title}</span>
@@ -120,17 +127,12 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
           <Button onClick={handleClose} color='primary'>
             Cancel
           </Button>
-          <Button
+          <ButtonSuccess
             onClick={handleClose}
             variant='contained'
-            sx={{
-              backgroundColor: '#0B57D0',
-              '&:hover': {
-                backgroundColor: '#0B5A9',
-              },
-            }}>
+            type={'button'}>
             Move
-          </Button>
+          </ButtonSuccess>
         </DialogActions>
       </div>
     </PopUp>

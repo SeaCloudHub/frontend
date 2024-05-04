@@ -1,18 +1,29 @@
-import { LocalEntry } from '@/hooks/drive.hooks';
-import React from 'react';
+import { LocalEntry, useRestoreEntriesMutation } from '@/hooks/drive.hooks';
+import React, { useEffect, useRef } from 'react';
 import { DataRow } from '../../my-drive/content/DataRow';
 import Sort from '../../my-drive/content/Sort';
 import { LocalEntryToTimeEntry } from './DriveHistoryGridView';
+import { useSelected } from '@/store/my-drive/myDrive.store';
 
 type DriveHistoryListViewProps = {
   sort: string;
   order: string;
   setSort: ({ sort, order }: { sort: string; order: string }) => void;
   entries: LocalEntry[];
+  // arrSelected?: string[];
+  // setArrSelected?: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
-const DriveHistoryListView: React.FC<DriveHistoryListViewProps> = ({ sort, order, setSort, entries }) => {
+const DriveHistoryListView: React.FC<DriveHistoryListViewProps> = ({
+  sort,
+  order,
+  setSort,
+  entries,
+  // arrSelected,
+  // setArrSelected,
+}) => {
   const timeEntries = LocalEntryToTimeEntry(entries);
+  const { setArrSelected, arrSelected } = useSelected();
 
   timeEntries.sort((a, b) => {
     if (sort === 'Name') {
@@ -22,8 +33,28 @@ const DriveHistoryListView: React.FC<DriveHistoryListViewProps> = ({ sort, order
     }
   });
 
+  const driveListViewRef = useRef(null);
+
+  useEffect(() => {
+    const DataRows = document.querySelectorAll('.data-row');
+
+    const handleClickOutside = (event) => {
+      if (event.ctrlKey) return;
+      const clickedOutsideRows = Array.from(DataRows).every((row) => !row.contains(event.target))
+
+      if (driveListViewRef.current && driveListViewRef.current.contains(event.target) && clickedOutsideRows) {
+        setArrSelected && setArrSelected([]);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [arrSelected, setArrSelected]);
+
   return (
-    <div className=' pl-5 pr-3'>
+    <div className=' pl-5 pr-3' ref={driveListViewRef}>
       <div className='relative flex flex-col'>
         <div className='grid grid-cols-7 gap-3 border-b border-b-[#dadce0] pt-2 max-[1160px]:grid-cols-6'>
           <div className='col-span-4 font-medium'>Name</div>
@@ -36,7 +67,16 @@ const DriveHistoryListView: React.FC<DriveHistoryListViewProps> = ({ sort, order
             <div key={index}>
               <div className='border-b py-1 font-medium'>{entry.time}</div>
               {entry.entries.map((item, index) => {
-                return <DataRow key={index} {...item} parent='trash' />;
+                return (
+                  <DataRow
+                    key={index}
+                    {...item}
+                    parent='trash'
+                    // onClick={() => setArrSelected && setArrSelected([item.id])}
+                    isSelected={arrSelected?.includes(item.id)}
+                    // setArrSelected={setArrSelected}
+                  />
+                )
               })}
             </div>
           );

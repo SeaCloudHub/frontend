@@ -1,5 +1,5 @@
 import { LocalEntry } from '@/hooks/drive.hooks';
-import { Path } from '@/store/my-drive/myDrive.store';
+import { Path, useSelected } from '@/store/my-drive/myDrive.store';
 import React, { useEffect, useRef } from 'react';
 import { DataRow } from './DataRow';
 import { useNavigate } from 'react-router-dom';
@@ -9,12 +9,12 @@ type DriveListViewProps = {
   sort?: string;
   order?: string;
   setSort?: ({ sort, order }: { sort: string; order: string }) => void;
-  setPath?: React.Dispatch<React.SetStateAction<Path>>;
+  // setPath?: React.Dispatch<React.SetStateAction<Path>>;
   entries: LocalEntry[];
   isLoading?: boolean;
   curDir?: { id: string; name: string };
-  arrSelected?: string[];
-  setArrSelected?: React.Dispatch<React.SetStateAction<string[]>>;
+  // arrSelected?: string[];
+  // setArrSelected?: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
 export const DriveListView: React.FC<DriveListViewProps> = ({
@@ -22,16 +22,16 @@ export const DriveListView: React.FC<DriveListViewProps> = ({
   setSort,
   sort,
   entries,
-  arrSelected,
-  setArrSelected,
+  // arrSelected,
+  // setArrSelected,
   curDir,
 }) => {
   const files = entries.filter((entry) => !entry.isDir);
   const folders = entries.filter((entry) => entry.isDir);
 
   const navigate = useNavigate();
-  const driveGridViewRef = useRef(null);
-  console.log(curDir);
+  const { setArrSelected, arrSelected } = useSelected();
+  const driveListViewRef = useRef(null);
 
   useEffect(() => {
     const DataRows = document.querySelectorAll('.data-row');
@@ -40,8 +40,8 @@ export const DriveListView: React.FC<DriveListViewProps> = ({
       if (event.ctrlKey) return;
       const clickedOutsideRows = Array.from(DataRows).every((row) => !row.contains(event.target))
 
-      if (driveGridViewRef.current && driveGridViewRef.current.contains(event.target) && clickedOutsideRows) {
-        setArrSelected && setArrSelected([]);
+      if (driveListViewRef.current && driveListViewRef.current.contains(event.target) && clickedOutsideRows) {
+        setArrSelected([]);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -61,7 +61,7 @@ export const DriveListView: React.FC<DriveListViewProps> = ({
           </div>
         </div>
       ) : (
-        <div className='pl-5 pr-3' ref={driveGridViewRef}>
+        <div className='pl-5 pr-3' ref={driveListViewRef}>
           <div className='relative flex flex-col'>
             <div className='grid grid-cols-7 gap-3 border-b border-b-[#dadce0] pt-2 max-[1160px]:grid-cols-6'>
               <div className='col-span-4 font-medium'>Name</div>
@@ -76,9 +76,9 @@ export const DriveListView: React.FC<DriveListViewProps> = ({
                 onDoubleClick={() => {
                   navigate(`${CUSTOMER_MY_DRIVE}/dir/${entry.id}`);
                 }}
-                onClick={() => setArrSelected && setArrSelected([entry.id])}
+                // onClick={() => setArrSelected && setArrSelected([entry.id])}
                 isSelected={arrSelected?.includes(entry.id)}
-                setArrSelected={setArrSelected}
+                // setArrSelected={setArrSelected}
               />
             ))}
             {files.map((entry, index) => (
@@ -86,9 +86,9 @@ export const DriveListView: React.FC<DriveListViewProps> = ({
                 key={index}
                 {...entry}
                 dirId={curDir?.id}
-                onClick={() => setArrSelected && setArrSelected([entry.id])}
+                // onClick={() => setArrSelected && setArrSelected([entry.id])}
                 isSelected={arrSelected?.includes(entry.id)}
-                setArrSelected={setArrSelected}
+                // setArrSelected={setArrSelected}
               />
             ))}
           </div>

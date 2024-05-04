@@ -84,7 +84,7 @@ const Starred = () => {
                 )}
               </>
             ) : (
-              <MultipleDriveHeader arrSelected={arrSelected} setArrSelected={setArrSelected} type='Starred' />
+              <MultipleDriveHeader parent='Starred' dirId={rootId} />
             )}
           </div>
         </div>
@@ -97,7 +97,13 @@ const Starred = () => {
           isLoading={isLoading}
         />
       }
-      sidePanel={<SidePanel />}
+      sidePanel={
+        <SidePanel
+          id={arrSelected.length === 0 ? rootId : arrSelected.length === 1 ? arrSelected[0] : ''}
+          title={arrSelected.length === 0 ? 'Starred' :
+            data.find((item) => item.id === arrSelected[arrSelected.length - 1])?.name || ''}
+        />
+      }
     />
   );
 };

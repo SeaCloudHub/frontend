@@ -25,6 +25,10 @@ export type RenameREQ = {
   name: string;
 };
 
-export type DeleteFilesREQ = {
+export type DeleteEntriesREQ = {
+  source_ids: string[];
+};
+
+export type RestoreEntriesREQ = {
   source_ids: string[];
 };

@@ -1,7 +1,7 @@
 import { Icon } from '@iconify/react/dist/iconify.js';
 import DrivePathButton from './DrivePathButton';
 import DrivePathMenuButton from './DrivePathMenuButton';
-import { Path } from '@/store/my-drive/myDrive.store';
+import { Path, useSelected } from '@/store/my-drive/myDrive.store';
 import Dropdown, { MenuItem } from '@/components/core/drop-down/Dropdown';
 import { useNavigate } from 'react-router-dom';
 import { CUSTOMER_MY_DRIVE } from '@/utils/constants/router.constant';
@@ -12,12 +12,14 @@ type DrivePathProps = {
   path: Path;
   type?: 'MyDrive' | 'Shared' | 'Starred' | 'Trash' | 'Priority';
   // setSelected?: React.Dispatch<React.SetStateAction<{ id: string; name: string }>>;
-  setArrSelected?: React.Dispatch<React.SetStateAction<string[]>>;
+  // setArrSelected?: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
-const DrivePath: React.FC<DrivePathProps> = ({ path, type, setArrSelected }) => {
+const DrivePath: React.FC<DrivePathProps> = ({ path, type }) => {
   const navigate = useNavigate();
   const { rootId } = useStorageStore();
+  const {setArrSelected} = useSelected();
+
   if (path.length > 3) {
     const restDirs = path.slice(0, path.length - 2);
     const driveMenuItems: MenuItem[][] = [
@@ -28,8 +30,7 @@ const DrivePath: React.FC<DrivePathProps> = ({ path, type, setArrSelected }) => 
           action: () => {
             console.log('[DrivePath] newPath: ', newPath);
             d.id === rootId ? navigate(`${CUSTOMER_MY_DRIVE}`) : navigate(`${CUSTOMER_MY_DRIVE}/dir/${d.id}`);
-            // setSelected && setSelected({ id: d.id, name: d.name });
-            setArrSelected && setArrSelected([d.id]);
+            setArrSelected([d.id]);
           },
           icon: <Icon icon='ic:baseline-folder' />,
         };

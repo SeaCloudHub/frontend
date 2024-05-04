@@ -6,6 +6,8 @@ import { useFormik } from 'formik';
 import { useRenameMutation } from '@/hooks/drive.hooks';
 import * as Yup from 'yup';
 import TextFieldCore from '../form/TextFieldCore';
+import ButtonSuccess from '../button/ButtonSuccess';
+import ButtonCancel from '../button/ButtonCancel';
 
 type RenamePopUpProps = {
   open: boolean;
@@ -28,9 +30,6 @@ const RenamePopUp: React.FC<RenamePopUpProps> = ({ open, handleClose, name, id }
       renameMutation.mutate({ id, name: values.name });
       handleClose();
     },
-    onReset: () => {
-      formik.resetForm();
-    },
   });
 
   return (
@@ -51,18 +50,8 @@ const RenamePopUp: React.FC<RenamePopUpProps> = ({ open, handleClose, name, id }
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button
-            type='submit'
-            sx={{
-              backgroundColor: '#063799',
-              color: 'white',
-              '&:hover': {
-                backgroundColor: '#063768',
-              },
-            }}>
-            Save
-          </Button>
+          <ButtonCancel onClick={handleClose}>Cancel</ButtonCancel>
+          <ButtonSuccess type='submit'> Save </ButtonSuccess>
         </DialogActions>
       </form>
     </PopUp>

@@ -11,6 +11,7 @@ const CustomDropdown: React.FC<DropdownProps> = ({ button, items }) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    event.preventDefault();
     setAnchorEl(event.currentTarget);
   };
 
@@ -20,7 +21,16 @@ const CustomDropdown: React.FC<DropdownProps> = ({ button, items }) => {
   return (
     <>
       <div onClick={handleClick}>{button}</div>
-      <Menu id='simple-menu' anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
+      <Menu id='simple-menu' anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}
+        sx={{
+          '.dark &': {
+            '.MuiPaper-root': {
+              backgroundColor: '#1E293B',
+              color: 'white',
+            },
+          },
+        }}
+      >
         {items.map((group, ind) => (
           <div key={ind}>
             {group.map(({ label, icon, action }) => (
@@ -30,14 +40,27 @@ const CustomDropdown: React.FC<DropdownProps> = ({ button, items }) => {
                   action && action();
                   handleClose();
                 }}
-                sx={{ minWidth: '250px', py: '3px' }}>
+                sx={{
+                  minWidth: '250px',
+                  py: '3px',
+                  '.dark &': {
+                    '&:hover': {
+                      backgroundColor: 'rgb(23 37 84)',
+                    },
+                  },
+                 }}>
                 <div className='flex items-center space-x-2'>
                   {icon}
                   <div>{label}</div>
                 </div>
               </MenuItem>
             ))}
-            {ind !== items.length - 1 && <Divider />}
+            {ind !== items.length - 1 &&
+              <Divider sx={{
+                '.dark &': {
+                  backgroundColor: '#64748B',
+                },
+              }} />}
           </div>
         ))}
       </Menu>
