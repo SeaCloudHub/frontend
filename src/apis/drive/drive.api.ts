@@ -32,8 +32,13 @@ export const getListEntriesPageMyDrive = async (param: ListEntriesPageREQ) => {
 //   return res.data;
 // }
 
+export const getListEntriesPageStarred = async () => {
+  const res = await api.get<BaseResponse<EntryRESP[]>>(`/files/starred`);
+  return res.data;
+}
+
 export const getListEntriesTrash = async (param: ListEntriesREQ) => {
-  const res = await api.get<BaseResponse<ListEntriesRESP>>(`/files/trash`, {
+  const res = await api.get<BaseResponse<ListEntriesRESP>>(`/files/starred`, {
     params: { cursor: param.cusor, limit: param.limit },
   });
   return res.data;
@@ -101,5 +106,15 @@ export const deleteEntries = async (body: DeleteEntriesREQ) => {
 
 export const restoreEntries = async (body: RestoreEntriesREQ) => {
   const res = await api.post<BaseResponse<EntryRESP[]>>(`/files/restore`, body);
+  return res.data;
+}
+
+export const starEntry = async (param: Pick<ListEntriesREQ, 'id'>) => {
+  const res = await api.patch<BaseResponse<EntryRESP>>(`/files/${param.id}/star`);
+  return res.data;
+}
+
+export const unstarEntry = async (param: Pick<ListEntriesREQ, 'id'>) => {
+  const res = await api.patch<BaseResponse<EntryRESP>>(`/files/${param.id}/unstar`);
   return res.data;
 }

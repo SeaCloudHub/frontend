@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { MenuItem, classNames } from '../drop-down/Dropdown';
 import { downloadFile } from '@/apis/drive/drive.api';
-import { useCopyMutation, useRestoreEntriesMutation } from '@/hooks/drive.hooks';
+import { useCopyMutation, useRestoreEntriesMutation, useStarEntryMutation, useUnstarEntryMutation } from '@/hooks/drive.hooks';
 import { useDrawer, useSelected } from '@/store/my-drive/myDrive.store';
 import CustomDropdown from '../drop-down/CustomDropdown';
 import FileViewerContainer from '../file-viewers/file-viewer-container/FileViewerContainer';
@@ -25,7 +25,7 @@ type FileCardProps = {
   isSelected?: boolean;
   dirId?: string;
   fileType?: string;
-  parent?: 'priority' | 'my-drive' | 'shared' | 'trash';
+  parent?: 'priority' | 'my-drive' | 'shared' | 'trash' | 'starred';
   isDir: boolean;
 };
 
@@ -55,6 +55,8 @@ const FileCard: React.FC<FileCardProps> = ({
 
   const copyMutation = useCopyMutation();
   const restoreMutation = useRestoreEntriesMutation();
+  const starEntryMutation = useStarEntryMutation();
+  const unstarEntryMutation = useUnstarEntryMutation();
   const { setArrSelected, arrSelected } = useSelected();
 
   const menuItems: MenuItem[][] = [
@@ -124,9 +126,11 @@ const FileCard: React.FC<FileCardProps> = ({
         action: () => {},
       },
       {
-        label: 'Add to starred',
-        icon: <Icon icon='material-symbols:star-outline' />,
-        action: () => {},
+        label: parent !== 'starred' ? 'Add to starred' : 'Remove from starred',
+        icon: parent !== 'starred' ? <Icon icon='material-symbols:star-outline' /> : <Icon icon='mdi:star-off-outline' />,
+        action: () => {
+          parent !== 'starred' ? starEntryMutation.mutate({ id }) : unstarEntryMutation.mutate({ id });
+        },
       },
     ],
     [
@@ -219,12 +223,12 @@ const FileCard: React.FC<FileCardProps> = ({
             lastModified: new Date(),
             size: 0,
             fileType: fileType,
-            onDoubleClick: function (): void {
-              throw new Error('Function not implemented.');
-            },
-            onChanged: function (): void {
-              throw new Error('Function not implemented.');
-            },
+            // onDoubleClick: function (): void {
+            //   throw new Error('Function not implemented.');
+            // },
+            // onChanged: function (): void {
+            //   throw new Error('Function not implemented.');
+            // },
           }}
         />
       )}
