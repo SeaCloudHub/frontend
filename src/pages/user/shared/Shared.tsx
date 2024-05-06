@@ -8,7 +8,7 @@ import { Entry } from '@/utils/types/entry.type';
 import { Path, useDrawer, useSelected, useViewMode } from '@/store/my-drive/myDrive.store';
 import SidePanel from '../my-drive/side-panel/SidePanel';
 import { DriveGridView } from '../my-drive/content/DriveGridView';
-import { transformEntries, useSharedEntry } from '@/hooks/drive.hooks';
+import { transformEntries, useListEntries, useSharedEntry } from '@/hooks/drive.hooks';
 import { DriveListView } from '../my-drive/content/DriveListView';
 import { useSession } from '@/store/auth/session';
 import { useQuery } from '@tanstack/react-query';

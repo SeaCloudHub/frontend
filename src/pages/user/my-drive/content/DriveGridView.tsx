@@ -21,6 +21,7 @@ type DriveGridViewProps = {
   // setSelected?: React.Dispatch<React.SetStateAction<{ id: string; name: string }>>;
   // selected?: { id: string; name: string };
   isLoading?: boolean;
+  parent?: 'priority' | 'my-drive' | 'shared' | 'trash' | 'starred';
 };
 
 export const DriveGridView: React.FC<DriveGridViewProps> = ({
@@ -30,6 +31,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
   // setPath,
   isLoading,
   curDir,
+  parent,
   // setArrSelected,
   // arrSelected,
 }) => {
@@ -89,6 +91,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
                         onDoubleClick={() => navigate(`${CUSTOMER_MY_DRIVE}/dir/${folder.id}`)}
                         onClick={() => setArrSelected([folder.id])}
                         isSelected={arrSelected?.includes(folder.id)}
+                        parent={parent}
                       />
                     </div>
                   ))}
@@ -110,6 +113,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
                         dirId={curDir?.id}
                         isSelected={arrSelected?.includes(file.id)}
                         fileType={file.fileType}
+                        parent={parent}
                       />
                     </div>
                   ))}

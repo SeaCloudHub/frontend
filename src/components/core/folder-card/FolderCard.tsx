@@ -12,6 +12,7 @@ import DeleteTempPopUp from '../pop-up/DeleteTempPopUp';
 import MovePopUp from '../pop-up/MovePopUp';
 import RenamePopUp from '../pop-up/RenamePopUp';
 import SharePopUp from '../pop-up/SharePopUp';
+import { useStarEntryMutation, useUnstarEntryMutation } from '@/hooks/drive.hooks';
 
 interface FolderCardProps {
   title: string;
@@ -20,10 +21,11 @@ interface FolderCardProps {
   onDoubleClick?: () => void;
   onClick?: () => void;
   isSelected?: boolean;
+  parent?: 'priority' | 'my-drive' | 'shared' | 'trash' | 'starred';
   // setArrSelected?: Dispatch<SetStateAction<string[]>>;
 }
 
-const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick, onClick, isSelected,
+const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick, onClick, isSelected, parent,
   // setArrSelected
 }) => {
   const setDrawerOpen = useDrawer((state) => state.openDrawer);
@@ -32,6 +34,8 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick,
   const { rootId } = useStorageStore();
   const {arrSelected, setArrSelected} = useSelected();
   const [result, setResult] = useState(false);
+  const starEntryMutation = useStarEntryMutation();
+  const unstarEntryMutation = useUnstarEntryMutation();
 
   const folderOps: MenuItem[][] = [
     [
@@ -77,9 +81,11 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick,
         action: () => {},
       },
       {
-        label: 'Add to starred',
-        icon: <Icon icon='material-symbols:star-outline' />,
-        action: () => {},
+        label: parent !== 'starred' ? 'Add to starred' : 'Remove from starred',
+        icon: parent !== 'starred' ? <Icon icon='material-symbols:star-outline' /> : <Icon icon='mdi:star-off-outline' />,
+        action: () => {
+          parent !== 'starred' ? starEntryMutation.mutate({ id }) : unstarEntryMutation.mutate({ id });
+        },
       },
     ],
     [

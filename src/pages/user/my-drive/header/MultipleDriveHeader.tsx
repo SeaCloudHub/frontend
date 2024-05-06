@@ -69,6 +69,7 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dirId,
             icon='mdi:folder-move'
             className={`h-8 w-8 rounded-full p-1 ${parent === 'SharedWithMe' ? 'brightness-75' : 'cursor-pointer hover:bg-gray-300'}`}
             onClick={() => {
+              if (parent === 'SharedWithMe') return;
               setType('move');
               setIsOpened(true);
             }}

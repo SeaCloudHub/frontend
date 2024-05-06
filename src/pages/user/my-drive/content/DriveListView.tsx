@@ -15,6 +15,7 @@ type DriveListViewProps = {
   curDir?: { id: string; name: string };
   // arrSelected?: string[];
   // setArrSelected?: React.Dispatch<React.SetStateAction<string[]>>;
+  parent?: 'priority' | 'my-drive' | 'shared' | 'trash' | 'starred';
 };
 
 export const DriveListView: React.FC<DriveListViewProps> = ({
@@ -25,6 +26,7 @@ export const DriveListView: React.FC<DriveListViewProps> = ({
   // arrSelected,
   // setArrSelected,
   curDir,
+  parent,
 }) => {
   const files = entries.filter((entry) => !entry.isDir);
   const folders = entries.filter((entry) => entry.isDir);
@@ -76,9 +78,8 @@ export const DriveListView: React.FC<DriveListViewProps> = ({
                 onDoubleClick={() => {
                   navigate(`${CUSTOMER_MY_DRIVE}/dir/${entry.id}`);
                 }}
-                // onClick={() => setArrSelected && setArrSelected([entry.id])}
                 isSelected={arrSelected?.includes(entry.id)}
-                // setArrSelected={setArrSelected}
+                parent={parent}
               />
             ))}
             {files.map((entry, index) => (
@@ -88,6 +89,7 @@ export const DriveListView: React.FC<DriveListViewProps> = ({
                 dirId={curDir?.id}
                 // onClick={() => setArrSelected && setArrSelected([entry.id])}
                 isSelected={arrSelected?.includes(entry.id)}
+                parent={parent}
                 // setArrSelected={setArrSelected}
               />
             ))}
