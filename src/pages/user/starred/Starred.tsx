@@ -15,6 +15,7 @@ import { Entry } from '@/utils/types/entry.type';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { ListEntriesRESP } from '@/apis/drive/drive.response';
 import MultipleDriveHeader from '../my-drive/header/MultipleDriveHeader';
+import { useStarred } from '@/hooks/drive.hooks';
 
 const Starred = () => {
   const { viewMode, setViewMode } = useViewMode();
@@ -25,17 +26,16 @@ const Starred = () => {
   const { drawerOpen, openDrawer, closeDrawer } = useDrawer();
   const { rootId } = useStorageStore();
 
-  const { data, error, refetch, isLoading } = useQuery({
-    queryKey: ['starred-entries', rootId],
-    queryFn: async () =>
-      (await getListEntriesMyDrive({ id: rootId }).then((res) => res?.data?.entries || [])).filter(
-        (e) => !e.name.includes('.trash'),
-      ),
-  });
+  // const { data, error, refetch, isLoading } = useQuery({
+  //   queryKey: ['starred-entries', rootId],
+  //   queryFn: async () =>
+  //     (await getListEntriesMyDrive({ id: rootId }).then((res) => res?.data?.entries || [])).filter(
+  //       (e) => !e.name.includes('.trash'),
+  //     ),
+  // });
 
-  useEffect(() => {
-    error && toast.error('Failed to fetch entries');
-  }, [error]);
+  const {data, isLoading} =  useStarred();
+  console.log('[Starred] data', data);
 
   return (
     <DriveLayout
@@ -91,7 +91,7 @@ const Starred = () => {
       }
       bodyLeft={
         <StarredView
-          entries={(data || []) as Required<Entry[]> & ListEntriesRESP['entries']}
+          entries={data}
           arrSelected={arrSelected}
           setArrSelected={setArrSelected}
           isLoading={isLoading}
@@ -101,7 +101,7 @@ const Starred = () => {
         <SidePanel
           id={arrSelected.length === 0 ? rootId : arrSelected.length === 1 ? arrSelected[0] : ''}
           title={arrSelected.length === 0 ? 'Starred' :
-            data.find((item) => item.id === arrSelected[arrSelected.length - 1])?.name || ''}
+            data.find((item) => item.id === arrSelected[arrSelected.length - 1])?.title || ''}
         />
       }
     />

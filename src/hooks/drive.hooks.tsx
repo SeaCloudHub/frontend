@@ -6,13 +6,16 @@ import {
   getEntryMetadata,
   getListEntriesMyDrive,
   getListEntriesPageMyDrive,
+  getListEntriesPageStarred,
   getListEntriesTrash,
   getSharedEntries,
   moveToTrash,
   renameEntry,
   restoreEntries,
+  starEntry,
+  unstarEntry,
 } from '@/apis/drive/drive.api';
-import { CopyFileREQ, RenameREQ, DeleteEntriesREQ, RestoreEntriesREQ } from '@/apis/drive/drive.request';
+import { CopyFileREQ, RenameREQ, DeleteEntriesREQ, RestoreEntriesREQ, ListEntriesPageREQ } from '@/apis/drive/drive.request';
 import { EntryMetadataRES, EntryRESP } from '@/apis/drive/drive.response';
 import { MoveToTrashREQ } from '@/apis/drive/request/move-to-trash.request';
 import { Path, useDrawer } from '@/store/my-drive/myDrive.store';
@@ -240,6 +243,69 @@ export const useDeleteMutation = () => {
   });
 };
 
+export const useStarred = () => {
+  const { dirId } = useParams();
+  const { rootId } = useStorageStore();
+  const id = dirId || rootId;
+
+  const { data, error, refetch, isLoading } = useQuery({
+    queryKey: ['starred-entries', id],
+    queryFn: async () => {
+      return (await getListEntriesPageStarred().then((res) => res?.data || []));
+    },
+    staleTime: 10 * 1000,
+    select: transformEntries,
+  });
+
+  if (isAxiosError<ApiGenericError>(error)) {
+    toast.error(error.response?.data.message, toastError());
+  }
+
+  return { data: data || [], refetch, isLoading };
+}
+
+export const useStarEntryMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (param: Pick<ListEntriesPageREQ, 'id'>) => {
+      return starEntry(param);
+    },
+    onError: (error) => {
+      if (isAxiosError<ApiGenericError>(error)) {
+        toast.error(error.response?.data.message, toastError());
+      }
+    },
+    onSuccess: (data) => {
+      toast.success(`Files starred`);
+      queryClient.invalidateQueries({ queryKey: ['starred-entries'] });
+      queryClient.invalidateQueries({ queryKey: ['mydrive-entries'] });
+      queryClient.invalidateQueries({ queryKey: ['priority-entries'] });
+    },
+  });
+}
+
+export const useUnstarEntryMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (param: Pick<ListEntriesPageREQ, 'id'>) => {
+      return unstarEntry(param);
+    },
+    onError: (error) => {
+      if (isAxiosError<ApiGenericError>(error)) {
+        toast.error(error.response?.data.message, toastError());
+      }
+    },
+    onSuccess: (data) => {
+      toast.success(`Files unstarred`);
+      queryClient.invalidateQueries({ queryKey: ['starred-entries'] });
+      queryClient.invalidateQueries({ queryKey: ['mydrive-entries'] });
+      queryClient.invalidateQueries({ queryKey: ['priority-entries'] });
+    },
+  });
+}
+
 export const useRestoreEntriesMutation = () => {
   const queryClient = useQueryClient();
 
@@ -343,9 +409,9 @@ export type LocalEntry = {
   size: number;
   fileType?: string;
 
-  onDoubleClick?: () => void;
-  onChanged?: () => void;
-  parent?: 'priority' | 'my-drive' | 'shared' | 'trash';
+  // onDoubleClick?: () => void;
+  // onChanged?: () => void;
+  // parent?: 'priority' | 'my-drive' | 'shared' | 'trash';
 };
 
 export const transformEntries = (entries: EntryRESP[]): LocalEntry[] => {

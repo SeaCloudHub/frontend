@@ -3,7 +3,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Avatar, Tooltip } from '@mui/material';
 import { useDrawer, useSelected } from '@/store/my-drive/myDrive.store';
-import { LocalEntry, useCopyMutation, useRestoreEntriesMutation } from '@/hooks/drive.hooks';
+import { LocalEntry, useCopyMutation, useRestoreEntriesMutation, useStarEntryMutation, useUnstarEntryMutation } from '@/hooks/drive.hooks';
 import CustomDropdown from '@/components/core/drop-down/CustomDropdown';
 import SharePopUp from '@/components/core/pop-up/SharePopUp';
 import MovePopUp from '@/components/core/pop-up/MovePopUp';
@@ -24,6 +24,9 @@ import DeleteTempPopUp from '@/components/core/pop-up/DeleteTempPopUp';
 type DataRowProps = {
   dirId?: string;
   isSelected?: boolean;
+  onDoubleClick?: () => void;
+  onChanged?: () => void;
+  parent?: 'priority' | 'my-drive' | 'shared' | 'trash' | 'starred';
 };
 
 export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
@@ -53,8 +56,11 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
   const restoreMutation = useRestoreEntriesMutation();
   const url = useLocation();
   const { setArrSelected, arrSelected } = useSelected();
+  const starEntryMutation = useStarEntryMutation();
+  const unstarEntryMutation = useUnstarEntryMutation();
 
-  const fileMenu: MenuItem[][] = [
+  const entryMenu: MenuItem[][] = [
+    !isDir && (
     [
       {
         label: 'Preview',
@@ -63,7 +69,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
           setFileViewer(true);
         },
       },
-    ],
+    ]),
     [
       {
         label: 'Download',
@@ -80,6 +86,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
           setIsPopUpOpen(true);
         },
       },
+      !isDir &&
       {
         label: 'Make a copy',
         icon: <Icon icon='material-symbols:content-copy-outline' />,
@@ -93,7 +100,6 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
         label: 'Copy link',
         icon: <Icon icon='material-symbols:link' />,
         action: (text: string) => {
-          // console.log('[FileCard] Copy link ' + window.location.origin + location.pathname + `/${id}`);  //[TODO]
           CopyToClipboard(text);
         },
       },
@@ -122,22 +128,21 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
         action: () => {},
       },
       {
-        label: 'Add to starred',
-        icon: <Icon icon='material-symbols:star-outline' />,
-        action: () => {},
+        label: parent !== 'starred' ? 'Add to starred' : 'Remove from starred',
+        icon: parent !== 'starred' ? <Icon icon='material-symbols:star-outline' /> : <Icon icon='mdi:star-off-outline' />,
+        action: () => {
+          parent !== 'starred' ? starEntryMutation.mutate({ id }) : unstarEntryMutation.mutate({ id });
+        },
       },
     ],
     [
       {
         label: 'Detail',
         icon: <Icon icon='mdi:information-outline' />,
-        action: () => {
-          console.log('[FileCard] detail ' + id);
-          openDrawer(id);
-        },
+        action: () => openDrawer(id),
       },
       { label: 'Activity', icon: <Icon icon='mdi:graph-line-variant' />, action: () => {} },
-      { label: 'Lock', icon: <Icon icon='mdi:lock-outline' />, action: () => {} },
+      !isDir && { label: 'Lock', icon: <Icon icon='mdi:lock-outline' />, action: () => {} },
     ],
     [
       {
@@ -151,64 +156,75 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
     ],
   ];
 
-  const folderMenu = [
-    [
-      { label: 'Download', icon: <Icon icon='ic:outline-file-download' /> },
-      {
-        label: 'Rename',
-        icon: <Icon icon='ic:round-drive-file-rename-outline' />,
-        action: () => {
-          setType('rename');
-          setIsPopUpOpen(true);
-        },
-      },
-    ],
-    [
-      {
-        label: 'Copy link',
-        icon: <Icon icon='material-symbols:link' />,
-        action: () => {
-          CopyToClipboard(window.location.origin + CUSTOMER_MY_DRIVE + `/dir/${id}`);
-        },
-      },
-      {
-        label: 'Share',
-        icon: <Icon icon='lucide:user-plus' />,
-        action: () => {
-          setType('share');
-          setIsPopUpOpen(true);
-        },
-      },
-    ],
-    [
-      {
-        label: 'Move',
-        icon: <Icon icon='mdi:folder-move-outline' />,
-        action: () => {
-          console.log('[FileCard] add shortcut ' + id);
-          setType('move');
-          setIsPopUpOpen(true);
-        },
-      },
-      {
-        label: 'Add shortcut',
-        icon: <Icon icon='material-symbols:add-to-drive' />,
-      },
-      {
-        label: 'Add to starred',
-        icon: <Icon icon='material-symbols:star-outline' />,
-      },
-    ],
-    [
-      {
-        label: 'Detail',
-        icon: <Icon icon='mdi:information-outline' />,
-        action: () => openDrawer(id),
-      },
-      { label: 'Activity', icon: <Icon icon='mdi:graph-line-variant' /> },
-    ],
-    [{ label: 'Move to trash', icon: <Icon icon='fa:trash-o' /> }],
-  ];
+  // const folderMenu = [
+  //   [
+  //     { label: 'Download', icon: <Icon icon='ic:outline-file-download' /> },
+  //     {
+  //       label: 'Rename',
+  //       icon: <Icon icon='ic:round-drive-file-rename-outline' />,
+  //       action: () => {
+  //         setType('rename');
+  //         setIsPopUpOpen(true);
+  //       },
+  //     },
+  //   ],
+  //   [
+  //     {
+  //       label: 'Copy link',
+  //       icon: <Icon icon='material-symbols:link' />,
+  //       action: () => {
+  //         CopyToClipboard(window.location.origin + CUSTOMER_MY_DRIVE + `/dir/${id}`);
+  //       },
+  //     },
+  //     {
+  //       label: 'Share',
+  //       icon: <Icon icon='lucide:user-plus' />,
+  //       action: () => {
+  //         setType('share');
+  //         setIsPopUpOpen(true);
+  //       },
+  //     },
+  //   ],
+  //   [
+  //     {
+  //       label: 'Move',
+  //       icon: <Icon icon='mdi:folder-move-outline' />,
+  //       action: () => {
+  //         setType('move');
+  //         setIsPopUpOpen(true);
+  //       },
+  //     },
+  //     {
+  //       label: 'Add shortcut',
+  //       icon: <Icon icon='material-symbols:add-to-drive' />,
+  //     },
+  //     {
+  //       label: parent !== 'starred' ? 'Add to starred' : 'Remove from starred',
+  //       icon: parent !== 'starred' ? <Icon icon='material-symbols:star-outline' /> : <Icon icon='mdi:star-off-outline' />,
+  //       action: () => {
+  //         parent !== 'starred' ? starEntryMutation.mutate({ id }) : unstarEntryMutation.mutate({ id });
+  //       },
+  //     },
+  //   ],
+  //   [
+  //     {
+  //       label: 'Detail',
+  //       icon: <Icon icon='mdi:information-outline' />,
+  //       action: () => openDrawer(id),
+  //     },
+  //     { label: 'Activity', icon: <Icon icon='mdi:graph-line-variant' /> },
+  //   ],
+  //   [
+  //     {
+  //       label: 'Move to trash',
+  //       icon: <Icon icon='fa:trash-o' />,
+  //       action: () => {
+  //         setType('move to trash');
+  //         setIsPopUpOpen(true);
+  //       },
+  //     },
+  //   ],
+  // ];
 
   const menuItemsTrash: MenuItem[] = [
     {
@@ -283,12 +299,12 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
             lastModified: new Date(),
             size: 0,
             fileType: fileType,
-            onDoubleClick: function (): void {
-              throw new Error('Function not implemented.');
-            },
-            onChanged: function (): void {
-              throw new Error('Function not implemented.');
-            },
+            // onDoubleClick: function (): void {
+            //   throw new Error('Function not implemented.');
+            // },
+            // onChanged: function (): void {
+            //   throw new Error('Function not implemented.');
+            // },
           }}
         />
       )}
@@ -342,7 +358,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
           <div className='text-end'>
             <CustomDropdown
               button={<Icon icon='ic:baseline-more-vert' className='h-7 w-7 rounded-full p-1 hover:bg-surfaceContainerLow' />}
-              items={parent === 'trash' ? [menuItemsTrash] : isDir ? folderMenu : fileMenu}
+              items={parent === 'trash' ? [menuItemsTrash] : entryMenu}
             />
           </div>
         </div>
