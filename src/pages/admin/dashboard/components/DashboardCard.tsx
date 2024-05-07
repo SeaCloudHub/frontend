@@ -23,12 +23,16 @@ export default function DashboardCard({ data, isLoading, isFetching }: Dashboard
           '&:hover': {
             transform: 'scale(1.02)',
           },
+          '.dark &': {
+            color: 'white',
+            background: '#071A2B',
+          },
         }}
         elevation={3}
-        className='w-full flex h-fit justify-center rounded-lg border border-gray-50 px-6 py-5  shadow-lg'>
+        className='flex h-fit w-full justify-center rounded-lg border border-gray-50 px-6 py-5  shadow-lg'>
         <IconifyIcon icon='mi:users' className='h-10 w-11 min-w-max rounded-full bg-[#fdd7be] p-2 ' />
         <div className='w-full pl-5'>
-          <div className='flex min-w-max items-center justify-between text-xl font-bold text-gray-700'>
+          <div className='flex min-w-max items-center justify-between text-xl font-bold  '>
             <div>{data.value}</div>
             <DashBoardRate pecentage={data.percentage} />
           </div>

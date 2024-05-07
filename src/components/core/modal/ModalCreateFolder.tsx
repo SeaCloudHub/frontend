@@ -48,14 +48,17 @@ const ModalCreateFolder = ({ isOpen, handleConfirm, dirId }: ModalCreateFolderPr
         <h3 className='statement-bold text-2xl'>New folder</h3>
         <div className='mt-6  gap-5'>
           <input
-            className='border-textC outline-textC2 w-full rounded-md border py-2 indent-5'
+            className='border-textC outline-textC2 w-full rounded-md border py-2 indent-5 dark:bg-black'
             type='text'
             placeholder='Untitled folder'
             value={folderName}
             onChange={onInputChange}
           />
           <div className=' text-textC2 mt-4 flex w-full justify-end space-x-5 pr-3 font-medium'>
-            <button type='button' onClick={() => handleConfirm(false)} className='rounded-full px-3 py-2 hover:bg-blue-100'>
+            <button
+              type='button'
+              onClick={() => handleConfirm(false)}
+              className='rounded-full px-3 py-2  hover:bg-blue-100 hover:dark:bg-black'>
               Cancel
             </button>
             <button
@@ -64,7 +67,7 @@ const ModalCreateFolder = ({ isOpen, handleConfirm, dirId }: ModalCreateFolderPr
                 handleConfirm(true);
                 queryClient.invalidateQueries({ queryKey: ['mydrive-entries'] });
               }}
-              className='rounded-full px-3 py-2 hover:bg-blue-100'>
+              className='rounded-full px-3 py-2 hover:bg-blue-100 hover:dark:bg-black'>
               Create
             </button>
           </div>

@@ -95,7 +95,7 @@ const ModalSearchAdvanced: React.FC<ModalSearchAdvancedProps> = ({ isOpen, handl
   const onResetFilter = () => {};
   return (
     <ModalCore open={isOpen} width={'45%'} closeOutside={handleConfirm}>
-      <div className='relative justify-center md:p-2'>
+      <div className='relative justify-center md:p-3'>
         <div className='flex w-full justify-end'>
           <ButtonIcon
             icon='ic:round-close'

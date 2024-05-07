@@ -65,7 +65,7 @@ const FileFolderResult = ({ name, type, fileType }: FileFolderResultProps) => {
   };
 
   return (
-    <div className='h-[600px] w-full overflow-y-auto overflow-x-hidden text-black'>
+    <div className='h-[600px] w-full overflow-y-auto overflow-x-hidden '>
       <>
         <div className='flex w-full items-center border-b py-1'>
           <div className=' flex w-[50%]  items-center space-x-2'>

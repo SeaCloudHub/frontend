@@ -76,7 +76,7 @@ const UserManagementDetail = () => {
           <div className='z-0 w-full space-y-2 p-3 shadow-md'>
             <ButtonContainer title='Modify memory' icon={<IconifyIcon icon={'tabler:edit'} />} />
           </div>
-          <div className='rounded-xl border pl-3 mr-2 shadow-xl dark:bg-white'>
+          <div className='rounded-xl border pl-3 mr-2 shadow-xl dark:bg-[#031525] dark:text-white'>
             <FileFolderFilter />
             {/* <FileSection />
             <FolderSection /> */}

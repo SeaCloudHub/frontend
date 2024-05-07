@@ -16,7 +16,7 @@ const FileFolderFilter = () => {
   const [fileType, setFileType] = useState(fileTypes[0].value);
   return (
     <div className='py-3'>
-      <div className='rounded-xl  p-2 dark:bg-white'>
+      <div className='rounded-xl  p-2 dark:bg-[#031525] dark:text-white'>
         <div className='flex flex-wrap  space-y-2'>
           <TextInputCore className='mr-2' onChange={() => {}} label='Name' placeholder='name' />
           <DropdownCore

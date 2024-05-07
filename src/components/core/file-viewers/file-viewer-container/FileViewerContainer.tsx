@@ -116,8 +116,9 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({ isCloseOutsid
   return (
     <Dialog onClose={isCloseOutside ? closeOutside : () => {}} open={open} fullScreen>
       <DialogTitle
-        className='md:text-md flex h-[54px] items-center justify-between border-b  py-0'
+        className='md:text-md flex h-[54px] items-center justify-between border-b  bg-content-bg py-0  dark:bg-content-bg-dark dark:text-icons-color-dark'
         sx={{
+          backgroundColor: 'black',
           fontFamily: 'bold',
           fontSize: { sm: '16px', xs: '12px' },
           paddingX: { sm: '10px', xs: '2px' },
@@ -159,9 +160,17 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({ isCloseOutsid
         </div>
       </DialogTitle>
       <DialogContent
-        sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+        className='bg-content-bg  dark:bg-content-bg-dark dark:text-icons-color-dark'
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: '100%',
+          backgroundColor: 'black',
+        }}>
         {file && <Viewer file={file} fileId={fileInfo.id} fileName={fileInfo.title} fileType={file.type} />}
-        {!file && <img src={(import.meta.env.BASE_URL + 'loader.svg') as string} className='mx-auto h-[50px] w-[50px]' />}
+        {!file && <img src={(import.meta.env.BASE_URL + 'loader.svg') as string} className='mx-auto  h-[50px] w-[50px]' />}
       </DialogContent>
     </Dialog>
   );

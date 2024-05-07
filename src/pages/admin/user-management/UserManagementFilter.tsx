@@ -7,7 +7,7 @@ import TextInputAdornment from '../../../components/core/input/TextInputAdornmen
 import TextInputCore from '../../../components/core/input/TextInputCore';
 const UserManagementFilter = () => {
   return (
-    <div className='rounded-xl  p-2 dark:bg-white'>
+    <div className='rounded-xl  p-2 dark:bg-black'>
       <div className='flex flex-wrap items-center '>
         <div className='mx-2 '>
           <TextInputCore

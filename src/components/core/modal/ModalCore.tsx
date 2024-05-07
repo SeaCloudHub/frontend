@@ -30,6 +30,10 @@ const ModalCore = ({ width, children, open, isCloseOutside = true, closeOutside 
             padding: '10px',
             maxWidth: 1000,
             outline: 'none',
+            '.dark &': {
+              backgroundColor: '#031525',
+              color: 'white',
+            },
             bgcolor: 'background.paper',
             borderRadius: screenMode == ScreenMode.MOBILE ? '0px' : '12px',
             boxShadow: 24,
