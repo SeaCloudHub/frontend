@@ -12,26 +12,17 @@ type TrashPageViewProps = {
   // setArrSelected?: (arrSelected: string[]) => void;
 };
 
-const TrashPageView: React.FC<TrashPageViewProps> = ({ entries,
+const TrashPageView: React.FC<TrashPageViewProps> = ({
+  entries,
   // arrSelected, setArrSelected
- }) => {
+}) => {
   const { viewMode } = useViewMode();
   const [{ sort, order }, setSort] = useState<{ sort: string; order: string }>({ sort: 'Name', order: 'desc' });
 
   return viewMode === 'grid' ? (
-    <DriveHistoryGridView
-      sort={sort}
-      order={order}
-      setSort={setSort}
-      entries={entries}
-    />
+    <DriveHistoryGridView sort={sort} order={order} setSort={setSort} entries={entries} />
   ) : (
-    <DriveHistoryListView
-      order={order}
-      sort={sort}
-      setSort={setSort}
-      entries={entries}
-    />
+    <DriveHistoryListView order={order} sort={sort} setSort={setSort} entries={entries} />
   );
 };
 

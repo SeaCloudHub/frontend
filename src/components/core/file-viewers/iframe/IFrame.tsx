@@ -17,7 +17,7 @@ const Iframe: React.FC<IFrameProps> = ({ url, isHtml }) => {
             width: '100%',
             border: '1px solid #d6d6d6',
           }}
-          src={isHtml ? undefined: url + '#toolbar=0'}></iframe>
+          src={isHtml ? undefined : url + '#toolbar=0'}></iframe>
       )}
     </div>
   );

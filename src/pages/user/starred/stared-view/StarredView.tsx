@@ -18,23 +18,9 @@ const StarredView: React.FC<StarredPageViewProps> = ({ entries, arrSelected, set
   const [{ sort, order }, setSort] = useState<{ sort: string; order: string }>({ sort: 'Name', order: 'desc' });
 
   return viewMode === 'grid' ? (
-    <DriveGridView
-      sort={sort}
-      order={order}
-      setSort={setSort}
-      entries={entries}
-      isLoading={isLoading}
-      parent = 'starred'
-    />
+    <DriveGridView sort={sort} order={order} setSort={setSort} entries={entries} isLoading={isLoading} parent='starred' />
   ) : (
-    <DriveListView
-      order={order}
-      sort={sort}
-      setSort={setSort}
-      entries={entries}
-      isLoading={isLoading}
-      parent = 'starred'
-    />
+    <DriveListView order={order} sort={sort} setSort={setSort} entries={entries} isLoading={isLoading} parent='starred' />
   );
 };
 

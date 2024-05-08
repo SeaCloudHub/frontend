@@ -82,33 +82,26 @@ const Shared = () => {
                 )}
               </>
             ) : (
-              <MultipleDriveHeader parent='SharedWithMe' dirId={
-                arrSelected.length === 1 ? arrSelected[0] : ''
-              } />
+              <MultipleDriveHeader parent='SharedWithMe' dirId={arrSelected.length === 1 ? arrSelected[0] : ''} />
             )}
           </div>
         </div>
       }
       bodyLeft={
         viewMode === 'grid' ? (
-          <DriveGridView
-            entries={data}
-            isLoading={isLoading}
-            curDir={parents[parents.length - 1]}
-          />
+          <DriveGridView entries={data} isLoading={isLoading} curDir={parents[parents.length - 1]} />
         ) : (
-          <DriveListView
-            entries={data}
-            curDir={parents[parents.length - 1]}
-            isLoading={isLoading}
-          />
+          <DriveListView entries={data} curDir={parents[parents.length - 1]} isLoading={isLoading} />
         )
       }
       sidePanel={
         <SidePanel
           id={arrSelected.length === 0 ? rootId : arrSelected.length === 1 ? arrSelected[0] : ''}
-          title={arrSelected.length === 0 ? 'Shared' :
-            data.find((item) => item.id === arrSelected[arrSelected.length - 1])?.title || ''}
+          title={
+            arrSelected.length === 0
+              ? 'Shared'
+              : data.find((item) => item.id === arrSelected[arrSelected.length - 1])?.title || ''
+          }
         />
       }
     />

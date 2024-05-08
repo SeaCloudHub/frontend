@@ -38,7 +38,7 @@ const Docx: React.FC<FileViewerProps> = ({ file }) => {
     };
     fetchData();
   }, [src]);
-  return <Iframe url={html} isHtml={true}/>
+  return <Iframe url={html} isHtml={true} />;
 };
 
 export default Docx;

@@ -25,14 +25,21 @@ interface FolderCardProps {
   // setArrSelected?: Dispatch<SetStateAction<string[]>>;
 }
 
-const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick, onClick, isSelected, parent,
+const FolderCard: React.FC<FolderCardProps> = ({
+  title,
+  icon,
+  id,
+  onDoubleClick,
+  onClick,
+  isSelected,
+  parent,
   // setArrSelected
 }) => {
   const setDrawerOpen = useDrawer((state) => state.openDrawer);
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
   const [type, setType] = useState<'move' | 'share' | 'rename' | 'move to trash' | null>();
   const { rootId } = useStorageStore();
-  const {arrSelected, setArrSelected} = useSelected();
+  const { arrSelected, setArrSelected } = useSelected();
   const [result, setResult] = useState(false);
   const starEntryMutation = useStarEntryMutation();
   const unstarEntryMutation = useUnstarEntryMutation();

@@ -33,7 +33,7 @@ const Priority = () => {
   //       (e) => !e.name.includes('.trash'),
   //     ),
   // });
-  const {data, isLoading, refetch} = usePriorityEntries();
+  const { data, isLoading, refetch } = usePriorityEntries();
 
   // const entries: LocalEntry[] = transformEntries((data || []) as Required<Entry[]> & ListEntriesRESP['entries']);
 
@@ -84,8 +84,11 @@ const Priority = () => {
         sidePanel={
           <SidePanel
             id={arrSelected.length === 0 ? rootId : arrSelected.length === 1 ? arrSelected[0] : ''}
-            title={arrSelected.length === 0 ? 'Priority' :
-              data.find((item) => item.id === arrSelected[arrSelected.length - 1])?.title || ''}
+            title={
+              arrSelected.length === 0
+                ? 'Priority'
+                : data.find((item) => item.id === arrSelected[arrSelected.length - 1])?.title || ''
+            }
           />
         }
       />

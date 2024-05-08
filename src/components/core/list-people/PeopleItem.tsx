@@ -11,7 +11,7 @@ export type PeopleItemProps = {
 
 const PeopleItem: React.FC<PeopleItemProps> = ({ name, email, avatar, value, setValue }) => {
   return (
-    <ListItem alignItems='center' className='hover:bg-gray-100 dark:hover:bg-blue-950 cursor-pointer'>
+    <ListItem alignItems='center' className='cursor-pointer hover:bg-gray-100 dark:hover:bg-blue-950'>
       <ListItemAvatar>
         <Avatar alt={name} src={avatar || 'https://picsum.photos/200/300'} />
       </ListItemAvatar>
@@ -48,8 +48,8 @@ const PeopleItem: React.FC<PeopleItemProps> = ({ name, email, avatar, value, set
             },
             '& .MuiSelect-icon': {
               color: 'white',
-            }
-          }
+            },
+          },
         }}
         value={value}
         onChange={(e) => setValue(e.target.value)}>

@@ -13,11 +13,16 @@ type TrashPageHeaderProps = {
   setModifiedFilterItem: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const TrashPageHeader: React.FC<TrashPageHeaderProps> = ({modifiedFilterItem, setModifiedFilterItem, setTypeFilterItem, typeFilterItem}) => {
+const TrashPageHeader: React.FC<TrashPageHeaderProps> = ({
+  modifiedFilterItem,
+  setModifiedFilterItem,
+  setTypeFilterItem,
+  typeFilterItem,
+}) => {
   const { drawerOpen, openDrawer, closeDrawer } = useDrawer();
-  const {setViewMode, viewMode} = useViewMode();
-  const {arrSelected, setArrSelected} = useSelected();
-  const {rootId} = useStorageStore();
+  const { setViewMode, viewMode } = useViewMode();
+  const { arrSelected, setArrSelected } = useSelected();
+  const { rootId } = useStorageStore();
   console.log('[TrashPageHeader] arrSelected', arrSelected);
 
   return (

@@ -4,7 +4,6 @@ import {
   deleteEntries,
   getAccessEntries,
   getEntryMetadata,
-  getListEntriesMyDrive,
   getListEntriesPageMyDrive,
   getListEntriesPageStarred,
   getListEntriesTrash,
@@ -18,7 +17,9 @@ import {
 import { CopyFileREQ, RenameREQ, DeleteEntriesREQ, RestoreEntriesREQ, ListEntriesPageREQ } from '@/apis/drive/drive.request';
 import { EntryMetadataRES, EntryRESP } from '@/apis/drive/drive.response';
 import { MoveToTrashREQ } from '@/apis/drive/request/move-to-trash.request';
+import { downloadFileApi, uploadFilesApi } from '@/apis/user/storage/storage.api';
 import { Path, useDrawer } from '@/store/my-drive/myDrive.store';
+import { useProgressIndicator } from '@/store/storage/progressIndicator.store';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { fileTypeIcons } from '@/utils/constants/file-icons.constant';
 import { fileTypes } from '@/utils/constants/file-types.constant';
@@ -323,11 +324,11 @@ export const useRestoreEntriesMutation = () => {
       queryClient.invalidateQueries({ queryKey: ['Trash-entries'] });
     },
   });
-}
+};
 
 export const useEntryMetadata = (id: string) => {
   const { drawerOpen } = useDrawer();
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, isFetching } = useQuery({
     queryKey: ['entry-metadata', id],
     queryFn: () => getEntryMetadata({ id }).then((res) => res?.data),
     staleTime: 10 * 1000,
@@ -339,7 +340,7 @@ export const useEntryMetadata = (id: string) => {
     toast.error(error.response?.data.message, toastError());
   }
 
-  return { data, isLoading };
+  return { data, isLoading, isFetching };
 };
 
 export const useEntryAccess = (id: string) => {
@@ -361,6 +362,23 @@ export const useEntryAccess = (id: string) => {
   }
 
   return { data, isLoading };
+};
+
+export const useUploadMutation = () => {
+  const setFileNames = useProgressIndicator((state) => state.setFileNames);
+  return useMutation({
+    mutationFn: (body: { files: File[]; id: string }) => {
+      return uploadFilesApi(body);
+    },
+    onError: (error) => {
+      if (isAxiosError<ApiGenericError>(error)) {
+        toast.error(error.response?.data.message, toastError());
+      }
+    },
+    onSuccess: (data) => {
+      setFileNames(data.data.map((item) => item.name));
+    },
+  });
 };
 
 const transformMetadata = (data: EntryMetadataRES) => {
@@ -394,6 +412,7 @@ const transformMetadata = (data: EntryMetadataRES) => {
       created: new Date(data.file.created_at),
       download_perm: 'N/a',
       size: data.file.size,
+      mime_type: data.file.mime_type,
     };
   }
 };
@@ -424,32 +443,22 @@ export const transformEntries = (entries: EntryRESP[]): LocalEntry[] => {
         preview: <Icon icon='ic:baseline-folder' className='h-full w-full dark:text-yellow-600' />,
         id: entry.id,
         owner: entry.owner,
-        fileType: entry.mine_type,
+        fileType: entry.mime_type,
         lastModified: new Date(entry.updated_at),
         size: entry.size,
       } as LocalEntry;
     }
     const ext = entry.name.split('.').pop() || 'any';
     const icon = fileTypeIcons[ext] || fileTypeIcons.any;
-    /* Suport mp4, mp3, pdf, jpg, jpeg, png, jfif, gif, webp, ico, svg,
-    docx, txt, zip, any */
-    const preview = ['jpg', 'ico', 'webp', 'png', 'jpeg', 'gif', 'jfif'].includes(ext) ? (
-      <img
-        draggable={false}
-        className='h-full w-full rounded-md object-cover'
-        src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrHRymTob1kd-ywHzIs0ty7UhrFUcJay839nNd6tcSig&s'
-      />
-    ) : (
-      <div className='h-16 w-16'>{icon}</div>
-    );
     return {
       isDir: false,
       title: entry.name,
       icon: icon,
-      preview: preview,
+      preview: <div className='h-16 w-16'>{icon}</div>,
       id: entry.id,
       owner: entry.owner,
       lastModified: new Date(entry.updated_at),
+      fileType: entry.mime_type,
       size: entry.size,
     } as LocalEntry;
   });

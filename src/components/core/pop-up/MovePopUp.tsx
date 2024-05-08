@@ -56,7 +56,7 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
                     borderColor: '#F8FAFC',
                     color: '#F8FAFC',
                   },
-                 }}
+                }}
               />
             </Stack>
           </div>
@@ -127,10 +127,7 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
           <Button onClick={handleClose} color='primary'>
             Cancel
           </Button>
-          <ButtonSuccess
-            onClick={handleClose}
-            variant='contained'
-            type={'button'}>
+          <ButtonSuccess onClick={handleClose} variant='contained' type={'button'}>
             Move
           </ButtonSuccess>
         </DialogActions>

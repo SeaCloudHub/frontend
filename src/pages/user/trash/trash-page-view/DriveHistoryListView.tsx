@@ -40,7 +40,7 @@ const DriveHistoryListView: React.FC<DriveHistoryListViewProps> = ({
 
     const handleClickOutside = (event) => {
       if (event.ctrlKey) return;
-      const clickedOutsideRows = Array.from(DataRows).every((row) => !row.contains(event.target))
+      const clickedOutsideRows = Array.from(DataRows).every((row) => !row.contains(event.target));
 
       if (driveListViewRef.current && driveListViewRef.current.contains(event.target) && clickedOutsideRows) {
         setArrSelected && setArrSelected([]);
@@ -76,7 +76,7 @@ const DriveHistoryListView: React.FC<DriveHistoryListViewProps> = ({
                     isSelected={arrSelected?.includes(item.id)}
                     // setArrSelected={setArrSelected}
                   />
-                )
+                );
               })}
             </div>
           );

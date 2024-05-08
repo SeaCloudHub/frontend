@@ -58,14 +58,17 @@ function UserInfo({ onClose }: UserInfoProps) {
         <button
           disabled={isLogout}
           onClick={onSignOutClick}
-          className='tablet:w-44 hover:bg-darkC flex w-36 items-center justify-center space-x-2 rounded-full bg-white py-3  dark:text-black hover:bg-gray-200'>
+          className='tablet:w-44 hover:bg-darkC flex w-36 items-center justify-center space-x-2 rounded-full bg-white py-3  hover:bg-gray-200 dark:text-black'>
           <PiSignOutBold className='h-6 w-6' />
           <span>Sign out</span>
         </button>
       </div>
       <div className=' flex  h-10 items-center space-x-2  text-xs '>
-        <span className='cursor-pointer text-center rounded-full px-3 py-2 hover:bg-blue-100 hover:dark:text-black'>Privacy policy</span>
-        <span className='-mt-[3px] '> . </span> <span className='rounded-full px-3 py-2 text-center hover:bg-blue-100 hover:dark:text-black'>Terms of service</span>
+        <span className='cursor-pointer rounded-full px-3 py-2 text-center hover:bg-blue-100 hover:dark:text-black'>
+          Privacy policy
+        </span>
+        <span className='-mt-[3px] '> . </span>{' '}
+        <span className='rounded-full px-3 py-2 text-center hover:bg-blue-100 hover:dark:text-black'>Terms of service</span>
       </div>
       {isLogout && <LinearProgress className=' w-full translate-y-1' />}
     </div>

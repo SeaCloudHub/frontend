@@ -40,7 +40,7 @@ export const DriveListView: React.FC<DriveListViewProps> = ({
 
     const handleClickOutside = (event) => {
       if (event.ctrlKey) return;
-      const clickedOutsideRows = Array.from(DataRows).every((row) => !row.contains(event.target))
+      const clickedOutsideRows = Array.from(DataRows).every((row) => !row.contains(event.target));
 
       if (driveListViewRef.current && driveListViewRef.current.contains(event.target) && clickedOutsideRows) {
         setArrSelected([]);

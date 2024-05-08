@@ -18,7 +18,7 @@ type DrivePathProps = {
 const DrivePath: React.FC<DrivePathProps> = ({ path, type }) => {
   const navigate = useNavigate();
   const { rootId } = useStorageStore();
-  const {setArrSelected} = useSelected();
+  const { setArrSelected } = useSelected();
 
   if (path.length > 3) {
     const restDirs = path.slice(0, path.length - 2);

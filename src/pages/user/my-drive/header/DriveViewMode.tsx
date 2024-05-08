@@ -6,8 +6,8 @@ import { Tooltip } from '@mui/material';
 const DriveViewMode: React.FC = () => {
   const { viewMode, setViewMode } = useViewMode();
 
-  const {setTheme} = useTheme();
-  setTheme('dark')
+  const { setTheme } = useTheme();
+  setTheme('dark');
 
   return (
     <div>

@@ -6,16 +6,18 @@ import { ClassNames } from '@emotion/react';
 
 type CustomSelectProps = {
   value: unknown;
-  onChange:  (event: SelectChangeEvent<unknown>, child: React.ReactNode) => void
+  onChange: (event: SelectChangeEvent<unknown>, child: React.ReactNode) => void;
   children: React.ReactNode;
   //sx maybe class or style
   sx?: any;
   variant?: 'standard' | 'outlined' | 'filled';
 };
 
-const CustomSelect: React.FC<CustomSelectProps> = ({onChange, value, children, sx}) => {
+const CustomSelect: React.FC<CustomSelectProps> = ({ onChange, value, children, sx }) => {
   return (
-    <Select value={value} onChange={onChange}
+    <Select
+      value={value}
+      onChange={onChange}
       inputProps={{
         MenuProps: {
           MenuListProps: {
@@ -26,7 +28,7 @@ const CustomSelect: React.FC<CustomSelectProps> = ({onChange, value, children, s
               },
             },
           },
-        }
+        },
       }}
       sx={{
         ...sx,
@@ -43,8 +45,7 @@ const CustomSelect: React.FC<CustomSelectProps> = ({onChange, value, children, s
             borderColor: 'rgba(255, 255, 255, 0.5)',
           },
         },
-      }}
-    >
+      }}>
       {children}
     </Select>
   );

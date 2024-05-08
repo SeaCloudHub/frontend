@@ -28,7 +28,7 @@ const PriorityView: React.FC<PriorityViewProps> = ({
   // setArrSelected,
 }) => {
   const { viewMode } = useViewMode();
-  const {rootId} = useStorageStore();
+  const { rootId } = useStorageStore();
   const localEntries = isFileMode ? entries.filter((entry) => !entry.isDir) : entries.filter((entry) => entry.isDir);
 
   console.log('PriorityView', localEntries);

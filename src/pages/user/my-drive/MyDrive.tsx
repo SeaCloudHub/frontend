@@ -36,12 +36,11 @@ const MyDrive = () => {
   const [copiedIds, setCopiedIds] = useState<string[]>([]);
 
   const viewMode = useViewMode((state) => state.viewMode);
-  const {parents, data, refetch, isLoading } = useListEntries();
+  const { parents, data, refetch, isLoading } = useListEntries();
   const [selected, setSelected] = useState<{ id: string; name: string }>({
     id: parents[parents.length - 1].id,
     name: parents[parents.length - 1].name,
   });
-
 
   console.log('[MyDrive] data', data);
 
@@ -83,17 +82,9 @@ const MyDrive = () => {
       }
       bodyLeft={
         viewMode === 'grid' ? (
-          <DriveGridView
-            entries={data}
-            isLoading={isLoading}
-            curDir={parents[parents.length - 1]}
-          />
+          <DriveGridView entries={data} isLoading={isLoading} curDir={parents[parents.length - 1]} />
         ) : (
-          <DriveListView
-            entries={data}
-            isLoading={isLoading}
-            curDir={parents[parents.length - 1]}
-          />
+          <DriveListView entries={data} isLoading={isLoading} curDir={parents[parents.length - 1]} />
         )
       }
       sidePanel={
