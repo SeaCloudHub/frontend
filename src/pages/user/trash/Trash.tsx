@@ -34,7 +34,10 @@ const Trash = () => {
           typeFilterItem={typeFilterItem}
         />
       }
-      bodyLeft={<TrashPageView entries={data} />}
+      bodyLeft={<TrashPageView entries={data} dir={{
+        id: rootId,
+        name: 'Trash'
+      }} />}
       sidePanel={
         <SidePanel
           id={arrSelected.length === 0 ? rootId : arrSelected.length === 1 ? arrSelected[0] : ''}

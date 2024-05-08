@@ -10,8 +10,7 @@ type DriveHistoryListViewProps = {
   order: string;
   setSort: ({ sort, order }: { sort: string; order: string }) => void;
   entries: LocalEntry[];
-  // arrSelected?: string[];
-  // setArrSelected?: React.Dispatch<React.SetStateAction<string[]>>;
+  dir: { id: string; name: string };
 };
 
 const DriveHistoryListView: React.FC<DriveHistoryListViewProps> = ({
@@ -19,8 +18,7 @@ const DriveHistoryListView: React.FC<DriveHistoryListViewProps> = ({
   order,
   setSort,
   entries,
-  // arrSelected,
-  // setArrSelected,
+  dir,
 }) => {
   const timeEntries = LocalEntryToTimeEntry(entries);
   const { setArrSelected, arrSelected } = useSelected();
@@ -70,11 +68,10 @@ const DriveHistoryListView: React.FC<DriveHistoryListViewProps> = ({
                 return (
                   <DataRow
                     key={index}
+                    dir={dir}
                     {...item}
                     parent='trash'
-                    // onClick={() => setArrSelected && setArrSelected([item.id])}
                     isSelected={arrSelected?.includes(item.id)}
-                    // setArrSelected={setArrSelected}
                   />
                 );
               })}

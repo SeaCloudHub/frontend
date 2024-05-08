@@ -29,7 +29,8 @@ type FileCardProps = {
   preview?: React.ReactNode;
   id: string;
   isSelected?: boolean;
-  dirId?: string;
+  // dirId?: string;
+  dir?: { id: string; name: string };
   fileType?: string;
   parent?: 'priority' | 'my-drive' | 'shared' | 'trash' | 'starred';
   isDir: boolean;
@@ -42,7 +43,17 @@ export const FileOperation = [
   { icon: <TrashIcon />, label: 'Delete file' },
 ];
 
-const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelected, dirId, fileType, parent, isDir }) => {
+const FileCard: React.FC<FileCardProps> = ({
+  title,
+  icon,
+  preview,
+  id,
+  isSelected,
+  dir,
+  fileType,
+  parent,
+  isDir,
+}) => {
   const [fileViewer, setFileViewer] = useState(false);
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
   const [type, setType] = useState<'move' | 'share' | 'rename' | 'move to trash' | null>(null);
@@ -86,7 +97,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
         label: 'Make a copy',
         icon: <Icon icon='material-symbols:content-copy-outline' />,
         action: () => {
-          copyMutation.mutate({ ids: [id], to: dirId });
+          copyMutation.mutate({ ids: [id], to: dir.id });
         },
       },
     ],
@@ -276,7 +287,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
             open={isPopUpOpen}
             handleClose={() => setIsPopUpOpen(false)}
             title={title}
-            location={'adfasdfasdf asdfasdfasdf asdfasdf'}
+            location={dir}
           />
         )}
         {type === 'rename' && <RenamePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} name={title} id={id} />}
@@ -285,7 +296,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
             open={isPopUpOpen}
             handleClose={() => setIsPopUpOpen(false)}
             title={title}
-            id={dirId}
+            id={dir.id}
             source_ids={[id]}
             setResult={setResult}
           />

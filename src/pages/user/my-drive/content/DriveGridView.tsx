@@ -28,8 +28,6 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
   isLoading,
   curDir,
   parent,
-  // setArrSelected,
-  // arrSelected,
 }) => {
   const files = entries.filter((entry) => !entry.isDir);
   const folders = entries.filter((entry) => entry.isDir);
@@ -88,6 +86,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
                         onClick={() => setArrSelected([folder.id])}
                         isSelected={arrSelected?.includes(folder.id)}
                         parent={parent}
+                        dir={curDir}
                       />
                     </div>
                   ))}
@@ -106,7 +105,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
                         icon={file.icon}
                         preview={file.preview}
                         id={file.id}
-                        dirId={curDir?.id}
+                        dir={curDir}
                         isSelected={arrSelected?.includes(file.id)}
                         fileType={file.fileType}
                         parent={parent}

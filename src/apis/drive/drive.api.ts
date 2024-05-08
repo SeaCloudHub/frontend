@@ -13,7 +13,7 @@ import { MoveToTrashREQ } from './request/move-to-trash.request';
 import { EntryMetadataRES, EntryRESP, ListEntriesPageRESP, ListEntriesRESP, SharedEntriesRESP } from './drive.response';
 import { HTTP_HEADER } from '@/utils/constants/http.constant';
 
-export const getListEntriesMyDrive = async (param: ListEntriesREQ) => {
+export const getListEntries = async (param: ListEntriesREQ) => {
   const res = await api.get<BaseResponse<ListEntriesRESP>>(`/files/${param.id}`, {
     params: { cursor: param.cusor, limit: param.limit },
   });
@@ -118,5 +118,10 @@ export const starEntry = async (param: Pick<ListEntriesREQ, 'id'>) => {
 
 export const unstarEntry = async (param: Pick<ListEntriesREQ, 'id'>) => {
   const res = await api.patch<BaseResponse<EntryRESP>>(`/files/${param.id}/unstar`);
+  return res.data;
+}
+
+export const moveEntries = async (body: Required<{id: string, to: string}>&RestoreEntriesREQ) => {
+  const res = await api.post<BaseResponse<EntryRESP[]>>(`/files/move`, body);
   return res.data;
 }

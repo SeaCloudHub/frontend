@@ -67,7 +67,7 @@ const TrashPageHeader: React.FC<TrashPageHeaderProps> = ({
             )}
           </>
         ) : (
-          <MultipleDriveHeader parent='Trash' dirId={rootId} />
+          <MultipleDriveHeader parent='Trash' dir={{id: rootId, name: 'Trash'}}/>
         )}
       </div>
     </div>

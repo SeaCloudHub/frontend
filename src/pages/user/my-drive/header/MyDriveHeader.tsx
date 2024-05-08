@@ -49,7 +49,7 @@ const MyDriveHeader: React.FC<MyDriveHeaderProps> = ({
       </div>
       {arrSelected.length > 0 ? (
         <div className='px-4 py-1'>
-          <MultipleDriveHeader parent='MyDrive' dirId={path[path.length - 1].id} />
+          <MultipleDriveHeader parent='MyDrive' dir={path[path.length-1]} />
         </div>
       ) : (
         <div className='flex items-center justify-between pl-5 pr-3'>

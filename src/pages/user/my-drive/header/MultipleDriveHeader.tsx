@@ -12,16 +12,10 @@ import React, { useEffect, useState } from 'react';
 
 type MultipleDriveHeaderProps = {
   parent: 'MyDrive' | 'Priority' | 'SharedWithMe' | 'Starred' | 'Trash' | null;
-  // arrSelected: string[];
-  // setArrSelected: (value: string[]) => void;
-  dirId: string;
+  dir: { id: string; name: string };
 };
 
-const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({
-  dirId,
-  // arrSelected, setArrSelected,
-  parent,
-}) => {
+const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }) => {
   const deleteMutation = useDeleteMutation();
   const restoreMutation = useRestoreEntriesMutation();
   const [isOpened, setIsOpened] = useState(false);
@@ -99,7 +93,7 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({
           open={isOpened}
           handleClose={() => setIsOpened(false)}
           title={`${arrSelected.length} items`}
-          location={'adfasdfasdf asdfasdfasdf asdfasdf'}
+          location={dir}
         />
       )}
       {type === 'move to trash' && (
@@ -107,7 +101,7 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({
           open={isOpened}
           handleClose={() => setIsOpened(false)}
           title={`${arrSelected.length} items`}
-          id={dirId}
+          id={dir.id}
           source_ids={arrSelected}
           setResult={setResult}
         />

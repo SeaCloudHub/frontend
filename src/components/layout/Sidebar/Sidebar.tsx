@@ -7,6 +7,8 @@ import ButtonIcon from '../../core/button/ButtonIcon';
 import LinearChartBar from '../../core/linear-chart-bar/linearChartBar';
 import SidebarItem from '../../core/sidebar-item/SidebarItem';
 import AddFileMenu from './AddFileMenu';
+import { useNavigate } from 'react-router-dom';
+import { ADMIN_HOME, CUSTOMER_HOME } from '@/utils/constants/router.constant';
 
 type SidebarProps = {
   shrinkMode: boolean;
@@ -14,6 +16,7 @@ type SidebarProps = {
 };
 const Sidebar = ({ role, shrinkMode }: SidebarProps) => {
   const updateShrinkMode = useScreenMode((state) => state.updateShrinkMode);
+  const navigate = useNavigate();
 
   const [tabs, setTabs] = useState<SidebarItemType[]>([]);
 
@@ -24,7 +27,7 @@ const Sidebar = ({ role, shrinkMode }: SidebarProps) => {
       setTabs(userSidebar);
     }
   }, [role]);
-  const [dropdown, setDropdown] = useState(false);
+  // const [dropdown, setDropdown] = useState(false);
 
   return (
     <>
@@ -42,13 +45,14 @@ const Sidebar = ({ role, shrinkMode }: SidebarProps) => {
             </div>
           ) : (
             <div className='flex w-full  flex-col '>
-              <div className='flex h-16 w-full items-center justify-around gap-2 p-3 pl-6 '>
+              <div
+                className='flex h-16 w-full items-center justify-around gap-2 p-3 pl-6 cursor-pointer'
+                onClick={() => navigate(role === Role.USER ? CUSTOMER_HOME: ADMIN_HOME)}
+              >
                 <img src={(import.meta.env.BASE_URL + 'logo.png') as string} alt='placeholder' className='h-9  rounded-full' />
                 <p className='h4'>SEACLOUD</p>
                 <ButtonIcon
-                  onClick={() => {
-                    updateShrinkMode(true);
-                  }}
+                  onClick={() => updateShrinkMode(true)}
                   icon='ion:caret-back'
                   size={'25px'}
                 />

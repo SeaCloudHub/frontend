@@ -8,7 +8,6 @@ import SidePanel from '@/pages/user/my-drive/side-panel/SidePanel';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { useCopyMutation, useListEntries } from '@/hooks/drive.hooks';
 import { toast } from 'react-toastify';
-import { useTheme } from '@/providers/theme-provider';
 
 export type LocalEntry = {
   isDir: boolean;
@@ -26,25 +25,17 @@ export type LocalEntry = {
 };
 
 const MyDrive = () => {
-  const { rootId } = useStorageStore();
-
   const [{ sort, order }, setSort] = useState<{ sort: string; order: string }>({ sort: 'Name', order: 'desc' });
   const [typeFilter, setTypeFilter] = useState<string>('');
   const [peopleFilter, setPeopleFilter] = useState<string>('');
   const [modifiedFilter, setModifiedFilter] = useState<string>('');
-  const { arrSelected, setArrSelected } = useSelected();
   const [copiedIds, setCopiedIds] = useState<string[]>([]);
 
+  const { arrSelected, setArrSelected } = useSelected();
   const viewMode = useViewMode((state) => state.viewMode);
-  const { parents, data, refetch, isLoading } = useListEntries();
-  const [selected, setSelected] = useState<{ id: string; name: string }>({
-    id: parents[parents.length - 1].id,
-    name: parents[parents.length - 1].name,
-  });
-
-  console.log('[MyDrive] data', data);
-
   const copyMutation = useCopyMutation();
+
+  const {parents, data, refetch, isLoading } = useListEntries();
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -90,7 +81,7 @@ const MyDrive = () => {
       sidePanel={
         <SidePanel
           id={arrSelected.length === 0 ? parents[parents.length - 1].id : arrSelected.length === 1 ? arrSelected[0] : ''}
-          title={arrSelected.length === 0 ? 'My Drive' : selected.name}
+          title={arrSelected.length === 0 ? 'My Drive' : parents[parents.length - 1].name}
         />
       }
     />
