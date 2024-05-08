@@ -73,17 +73,9 @@ const MyDrive = () => {
       }
       bodyLeft={
         viewMode === 'grid' ? (
-          <DriveGridView
-            entries={data}
-            isLoading={isLoading}
-            curDir={parents[parents.length - 1]}
-          />
+          <DriveGridView entries={data} isLoading={isLoading} curDir={parents[parents.length - 1]} />
         ) : (
-          <DriveListView
-            entries={data}
-            isLoading={isLoading}
-            curDir={parents[parents.length - 1]}
-          />
+          <DriveListView entries={data} isLoading={isLoading} curDir={parents[parents.length - 1]} />
         )
       }
       sidePanel={

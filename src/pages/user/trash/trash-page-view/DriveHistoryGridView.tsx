@@ -75,7 +75,10 @@ const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({
           <div className='flex h-96 items-center justify-center'>
             <div className='text-center'>
               <div className='text-3xl font-semibold'>Trash is empty</div>
-              <div className='text-gray-500 line-clamp-2'>You can move files that you don't need to the trash. <br/> Files in the trash will be permanently deleted after 30 days.</div>
+              <div className='line-clamp-2 text-gray-500'>
+                You can move files that you don't need to the trash. <br /> Files in the trash will be permanently deleted after
+                30 days.
+              </div>
             </div>
           </div>
         )}

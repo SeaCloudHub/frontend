@@ -6,10 +6,16 @@ import { numToSize } from '@/utils/function/numbertToSize';
 import { Tab } from '@headlessui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { LinearProgress } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { DriveLocationButton } from './DriveLocationButton';
 import SidePanelAction from './SidePanelAction';
 import { useStorageStore } from '@/store/storage/storage.store';
+import { useQuery } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
+import { ApiGenericError } from '@/utils/types/api-generic-error.type';
+import { toast } from 'react-toastify';
+import { toastError } from '@/utils/toast-options/toast-options';
+import { downloadFileApi } from '@/apis/user/storage/storage.api';
 
 type SidePanelProps = {
   id?: string;
@@ -70,14 +76,60 @@ const fakeDataSidePanelAction = [
 ];
 
 const SidePanel: React.FC<SidePanelProps> = ({ id, title }) => {
-  console.log('[SidePanel] id:', id, 'title:', title);
   const { closeDrawer } = useDrawer();
   const identity = useSession((state) => state.identity);
-  const { data: details, isLoading } = useEntryMetadata(id);
+  const { data: details, isLoading, isFetching } = useEntryMetadata(id);
   const { data: access, isLoading: isLoadingAccess } = useEntryAccess(id);
   const { rootId } = useStorageStore();
 
   const tabs = ['Details', 'Activity'];
+
+  // const { data: imageUrl, error } = useQuery({
+  //   queryKey: ['image', id],
+  //   queryFn: async () => {
+  //     const res = await downloadFileApi(id);
+  //     console.log(res);
+  //     const blob = new Blob([res.data], { type: res.headers['content-type'] });
+  //     const url = URL.createObjectURL(blob);
+  //     return url;
+  //   },
+  //   enabled:
+  //     details &&
+  //     !isLoading &&
+  //     (details.mime_type === 'image/png' || details.mime_type === 'image/jpg' || details.mime_type === 'image/jpeg'),
+  // });
+
+  // if (isAxiosError<ApiGenericError>(error)) {
+  //   toast.error(error.response?.data.message, toastError());
+  // }
+
+  // console.log('[SidePanel] imageUrl', imageUrl);
+
+  const [imageUrl, setImageUrl] = React.useState<string | null>(null);
+
+  useEffect(() => {
+    const getUrl = async () => {
+      try {
+        const res = await downloadFileApi(id);
+        const blob = new Blob([res.data], { type: res.headers['content-type'] });
+        setImageUrl(URL.createObjectURL(blob));
+      } catch (error) {
+        if (isAxiosError<ApiGenericError>(error)) {
+          toast.error(error.response?.data.message, toastError());
+        }
+      }
+    };
+
+    if (
+      details &&
+      !isLoading &&
+      (details.mime_type === 'image/png' || details.mime_type === 'image/jpg' || details.mime_type === 'image/jpeg')
+    ) {
+      getUrl();
+    } else {
+      setImageUrl(null);
+    }
+  }, [details, isLoading, id]);
 
   return (
     <div className='flex h-full w-[336px] flex-col overflow-hidden border-l'>
@@ -127,7 +179,9 @@ const SidePanel: React.FC<SidePanelProps> = ({ id, title }) => {
                 <LinearProgress className=' translate-y-1' />
               ) : details ? (
                 <div className='flex flex-col space-y-6 '>
-                  <div className='flex h-40 items-center justify-center'>{details.preview}</div>
+                  <div className='flex h-40 items-center justify-center'>
+                    {imageUrl ? <img src={imageUrl} alt={title} className='h-full w-full object-cover' /> : details.preview}
+                  </div>
 
                   <div className='flex flex-col space-y-2 pl-4'>
                     <div className='font-medium'>Who has access</div>

@@ -169,9 +169,9 @@ const FileTableManagement = () => {
             noneSort: true,
           },
           { id: 'name', label: 'Name', minWidth: 100 },
-          { id: 'date', label: 'Date', width: 200, minWidth: 100 },
-          { id: 'type', label: 'Type', width: 100, minWidth: 50 },
-          { id: 'member', label: 'Member', width: 250, minWidth: 100 },
+          { id: 'type', label: 'Type', width: 560 },
+          { id: 'size', label: 'Size', width: 72 },
+          { id: 'date', label: 'Date', width: 142 },
         ]}
         data={dataFile.map((item) => ({
           ...item,

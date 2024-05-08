@@ -1,0 +1,7 @@
+.filer-row .operations {
+  display: none;
+}
+
+.filer-row:hover .operations {
+  display: flex;
+}

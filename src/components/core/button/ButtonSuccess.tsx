@@ -8,7 +8,7 @@ type ButtonSuccessProps = {
   variant?: 'contained' | 'outlined' | 'text';
 };
 
-const ButtonSuccess: React.FC<ButtonSuccessProps> = ({children, type, onClick, variant}) => {
+const ButtonSuccess: React.FC<ButtonSuccessProps> = ({ children, type, onClick, variant }) => {
   return (
     <Button
       type='submit'

@@ -12,7 +12,7 @@ type SidebarItemProps = {
 const SidebarItem = ({ icon, title, link, shrink, tooltip }: SidebarItemProps) => {
   const pathName = useLocation();
   const navigate = useNavigate();
-  const {setArrSelected} = useSelected();
+  const { setArrSelected } = useSelected();
   const onClick = () => {
     navigate(link);
     setArrSelected([]);

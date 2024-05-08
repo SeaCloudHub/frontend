@@ -9,7 +9,10 @@ type PopUpProps = {
 
 const PopUp: React.FC<PopUpProps> = ({ open, handleClose, children }) => {
   return (
-    <Dialog open={open} onClose={handleClose} onDoubleClick={(e) => e.stopPropagation()}
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      onDoubleClick={(e) => e.stopPropagation()}
       sx={{
         fontSize: '16px',
         '.dark &': {
@@ -20,8 +23,7 @@ const PopUp: React.FC<PopUpProps> = ({ open, handleClose, children }) => {
             color: 'white',
           },
         },
-      }}
-    >
+      }}>
       {children}
     </Dialog>
   );

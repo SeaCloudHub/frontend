@@ -39,9 +39,9 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
           <IconifyIcon
             icon='mdi:restore'
             className='h-8 w-8 cursor-pointer rounded-full p-1 hover:bg-gray-300'
-            onClick={()=> {
+            onClick={() => {
               setResult(true);
-              restoreMutation.mutate({ source_ids: arrSelected })
+              restoreMutation.mutate({ source_ids: arrSelected });
             }}
           />
           <IconifyIcon
@@ -78,20 +78,16 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
               setIsOpened(true);
             }}
           />
-          <IconifyIcon
-            icon='mdi:link'
-            className='h-8 w-8 cursor-pointer rounded-full hover:bg-gray-300'
-            onClick={() => {
-
-            }}
-          />
+          <IconifyIcon icon='mdi:link' className='h-8 w-8 cursor-pointer rounded-full hover:bg-gray-300' onClick={() => {}} />
           <CustomDropdown
             button={<IconifyIcon icon='mdi:dots-vertical' className='h-8 w-8 cursor-pointer rounded-full hover:bg-gray-300' />}
             items={[]}
           />
         </>
       )}
-      {type === 'share' && <SharePopUp open={isOpened} handleClose={() => setIsOpened(false)} title={`${arrSelected.length} items`} />}
+      {type === 'share' && (
+        <SharePopUp open={isOpened} handleClose={() => setIsOpened(false)} title={`${arrSelected.length} items`} />
+      )}
       {type === 'move' && (
         <MovePopUp
           open={isOpened}

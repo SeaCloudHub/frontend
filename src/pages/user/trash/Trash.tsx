@@ -17,9 +17,9 @@ const Trash = () => {
   const { viewMode, setViewMode } = useViewMode();
   const [typeFilterItem, setTypeFilterItem] = useState<string>('');
   const [modifiedFilterItem, setModifiedFilterItem] = useState<string>('');
-  const {rootId} = useStorageStore();
+  const { rootId } = useStorageStore();
 
-  const {arrSelected, setArrSelected} = useSelected();
+  const { arrSelected, setArrSelected } = useSelected();
   console.log('[Trash] arrSelected', arrSelected);
 
   const { data, isLoading, refetch } = useTrash();
@@ -41,7 +41,9 @@ const Trash = () => {
       sidePanel={
         <SidePanel
           id={arrSelected.length === 0 ? rootId : arrSelected.length === 1 ? arrSelected[0] : ''}
-          title={arrSelected.length === 0 ? 'Trash' : data.find((item) => item.id === arrSelected[arrSelected.length - 1])?.title || ''}
+          title={
+            arrSelected.length === 0 ? 'Trash' : data.find((item) => item.id === arrSelected[arrSelected.length - 1])?.title || ''
+          }
         />
       }
     />

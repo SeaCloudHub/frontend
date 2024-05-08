@@ -236,7 +236,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
       action: () => {
         console.log('[FileCard] Restore ' + id);
         setResult(true);
-        restoreMutation.mutate({ source_ids: [id]});
+        restoreMutation.mutate({ source_ids: [id] });
       },
     },
     {
@@ -315,12 +315,12 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
         onClick={handleClick}
         onDoubleClick={handleDoubleClick}
         className={classNames(
-          'data-row grid grid-cols-7 max-[1160px]:grid-cols-7 max-[1150px]:grid-cols-6 max-[1000px]:grid-cols-5 gap-3 border-b border-b-[#dadce0] truncate py-2 cursor-pointer',
+          'data-row grid cursor-pointer grid-cols-7 gap-3 truncate border-b border-b-[#dadce0] py-2 max-[1160px]:grid-cols-7 max-[1150px]:grid-cols-6 max-[1000px]:grid-cols-5',
           isSelected
             ? 'bg-[#c2e7ff]  dark:bg-blue-900'
             : 'hover:bg-[#dfe3e7] dark:bg-slate-600 dark:text-white dark:hover:bg-blue-950',
         )}>
-        <div className='flex col-span-4'>
+        <div className='col-span-4 flex'>
           <div className='px-4'>
             <div className='h-6 w-6'>{icon}</div>
           </div>
@@ -348,16 +348,14 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
                 </p>
               </div>
             )}
-            <span className='truncate'>
-              {owner?.id === identity.id ? 'me' : owner?.last_name}
-            </span>
+            <span className='truncate'>{owner?.id === identity.id ? 'me' : owner?.last_name}</span>
           </div>
         </div>
-        <div className='max-[1000px]:hidden truncate'>
+        <div className='truncate max-[1000px]:hidden'>
           {formatDate(lastModified, owner?.id === identity.id ? 'me' : owner?.last_name)}
         </div>
         <div className='flex justify-between max-[1160px]:justify-end'>
-          <div className='max-[1160px]:hidden truncate'>{numToSize(size)}</div>
+          <div className='truncate max-[1160px]:hidden'>{numToSize(size)}</div>
           <div className='text-end'>
             <CustomDropdown
               button={<Icon icon='ic:baseline-more-vert' className='h-7 w-7 rounded-full p-1 hover:bg-surfaceContainerLow' />}

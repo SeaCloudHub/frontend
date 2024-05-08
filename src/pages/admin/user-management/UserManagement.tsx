@@ -172,11 +172,9 @@ const UserManagement = () => {
       toast.success('Create user successfully', toastSuccess());
     },
   });
-
   const handlePageChange = (page: number) => {
     setPaging((prev) => ({ ...prev, page: page }));
   };
-
   const columns = [
     {
       title: 'STT',
@@ -308,11 +306,10 @@ const UserManagement = () => {
         </div>
       </div>
 
-      <Card className='mx-5' loading={data == null}>
+      <Card className='mx-5 dark:border-none ' loading={data == null}>
         {data && (
           <>
             <Table
-             
               dataSource={data.identitiesDto}
               columns={columns}
               bordered={true}

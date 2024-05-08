@@ -18,10 +18,11 @@ const DeletePopUp: React.FC<DeletePopUpProps> = ({ open, handleClose, title, sou
   return (
     <PopUp open={open} handleClose={handleClose}>
       <DialogTitle>Delete permanently?</DialogTitle>
-      {title
-        ? <DialogContent>"{title}" will be deleted permanently and cannot be recovered.</DialogContent>
-        : <DialogContent>{source_ids.length} items will be deleted permanently and cannot be recovered.</DialogContent>
-      }
+      {title ? (
+        <DialogContent>"{title}" will be deleted permanently and cannot be recovered.</DialogContent>
+      ) : (
+        <DialogContent>{source_ids.length} items will be deleted permanently and cannot be recovered.</DialogContent>
+      )}
       <DialogActions>
         <ButtonCancel onClick={handleClose}> Cancel </ButtonCancel>
         <ButtonSuccess

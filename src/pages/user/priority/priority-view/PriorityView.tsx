@@ -21,7 +21,7 @@ const PriorityView: React.FC<PriorityViewProps> = ({
   isFileMode,
 }) => {
   const { viewMode } = useViewMode();
-  const {rootId} = useStorageStore();
+  const { rootId } = useStorageStore();
   const localEntries = isFileMode ? entries.filter((entry) => !entry.isDir) : entries.filter((entry) => entry.isDir);
 
   return viewMode === 'grid' ? (

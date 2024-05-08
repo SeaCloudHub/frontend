@@ -32,13 +32,13 @@ const MyDriveHeader: React.FC<MyDriveHeaderProps> = ({
   order,
   setSort,
 }) => {
-  const {arrSelected} = useSelected();
+  const { arrSelected } = useSelected();
 
   return (
     <div className='flex flex-col pr-3'>
       <div className='flex'>
         <div className='w-full pb-[8px] pl-1 pt-[14px]'>
-          <DrivePath path={path} type={'MyDrive'}/>
+          <DrivePath path={path} type={'MyDrive'} />
         </div>
         <div className='flex items-center pb-[6px] pl-[25px] pr-[11px] pt-[14px]'>
           <DriveViewMode />

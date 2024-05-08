@@ -46,16 +46,18 @@ const TextFieldCore = ({
       helperText={
         helperText && (
           <span className='flex -translate-x-3 items-center gap-1'>
-            {error && <Error
-              sx={{
-                width: '15px',
-                height: '15px',
-                color: 'red',
-                '.dark &': {
-                  color: '#F87171',
-                },
-              }}
-            />}
+            {error && (
+              <Error
+                sx={{
+                  width: '15px',
+                  height: '15px',
+                  color: 'red',
+                  '.dark &': {
+                    color: '#F87171',
+                  },
+                }}
+              />
+            )}
             <span>{helperText}</span>
           </span>
         )

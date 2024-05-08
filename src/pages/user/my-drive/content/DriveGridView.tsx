@@ -17,9 +17,6 @@ type DriveGridViewProps = {
   entries: LocalEntry[];
   fileShow?: boolean;
   folderShow?: boolean;
-  // setPath?: React.Dispatch<React.SetStateAction<Path>>;
-  // setSelected?: React.Dispatch<React.SetStateAction<{ id: string; name: string }>>;
-  // selected?: { id: string; name: string };
   isLoading?: boolean;
   parent?: 'priority' | 'my-drive' | 'shared' | 'trash' | 'starred';
 };

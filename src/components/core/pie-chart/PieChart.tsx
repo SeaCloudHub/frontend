@@ -81,7 +81,7 @@ const PieChartCore: React.FC<PieChartProps> = ({ data, isLoading, isFetching }) 
     <div id='chart' className='m-2'>
       <Show when={(chartData?.length === 0 || !chartData) && !isLoading && !isFetching}>
         <div className='flex h-full  items-center justify-center'>
-          <p className='text-gray-500'>No Data</p>
+          <p className=''>No Data</p>
         </div>
       </Show>
 
@@ -105,11 +105,11 @@ const PieChartCore: React.FC<PieChartProps> = ({ data, isLoading, isFetching }) 
           <table className='w-full px-4 shadow-md'>
             <tbody>
               {chartData.slice(0, totalList).map((item, index) => (
-                <tr key={index} className='w-full bg-white '>
-                  <td className='w-2/5 text-base font-medium text-[#535E76] max-sm:max-w-[50px] max-sm:break-words sm:px-4 sm:py-[15px]'>
+                <tr key={index} className='w-full dark:bg-black dark:text-white '>
+                  <td className='w-2/5 text-base font-medium  max-sm:max-w-[50px] max-sm:break-words sm:px-4 sm:py-[15px]'>
                     {item.label}
                   </td>
-                  <td className='w-1/5 text-sm font-semibold text-gray-900 max-sm:text-center sm:px-4 sm:py-[15px]'>
+                  <td className='w-1/5 text-sm font-semibold  max-sm:text-center sm:px-4 sm:py-[15px]'>
                     {item.value}
                   </td>
                   <td className='w-2/5 py-[15px] text-right sm:px-4'>

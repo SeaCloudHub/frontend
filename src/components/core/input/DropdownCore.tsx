@@ -1,4 +1,4 @@
-'use client';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import { useState } from 'react';
 import { DropdownItems } from '../../../utils/types/drop-down.type';
@@ -34,23 +34,52 @@ const DropdownCore = ({
     onChange && onChange(event.target.value);
     setInputValue(event.target.value);
   };
+
   return (
     <div
       className={`${className}  w-auto ${
-        label && ` flex items-center whitespace-nowrap text-base font-semibold space leading-[25.6px]`
+        label && ` space flex items-center whitespace-nowrap text-base font-semibold leading-[25.6px] dark:text-white`
       }`}>
-     <p className='text-black mr-2'> {label}</p>
+      <p className='mr-2 '> {label}</p>
       <Select
         sx={{
-          height: height ?? '35px',
+          paddingTop: 0,
+          height: height ?? '40px',
           minWidth: minWidth ?? '120px',
+          '.MuiSelect-root': {
+            padding: 182,
+          },
+          '.dark &': {
+            '& .MuiOutlinedInput-notchedOutline': {
+              borderColor: 'gray',
+            },
+            '& .MuiSelect-icon, & .MuiSelect-select.MuiSelect-select': {
+              color: 'white',
+            },
+            '&:hover': {
+              backgroundColor: 'rgb(23 37 84)',
+            },
+          },
         }}
         disabled={disabled}
         onChange={onChangeConverter}
         value={inputValue}
-        placeholder={placeholder}>
+        placeholder={placeholder}
+        IconComponent={KeyboardArrowDownIcon}>
         {options.map((option) => (
-          <MenuItem key={option.value} value={option.value}>
+          <MenuItem
+            key={option.value}
+            sx={{
+              py: '3px',
+              '.dark &': {
+                color: 'white',
+                backgroundColor: '#1E293B',
+                '&:hover': {
+                  backgroundColor: 'rgb(23 37 84)',
+                },
+              },
+            }}
+            value={option.value}>
             {option.preIcon && (
               <div className='flex items-center space-x-3'>
                 {option.preIcon}

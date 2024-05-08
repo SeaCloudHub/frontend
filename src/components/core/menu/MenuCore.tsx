@@ -25,7 +25,19 @@ export default function MenuCore({ menuItems, children, mix }: MenuCoreProps) {
     <>
       {!children && <ButtonIcon icon='radix-icons:hamburger-menu' size={'25px'} onClick={handleClick} />}
       {children && <div onClick={handleClick}>{children}</div>}
-      <Menu id='basic-menu' anchorEl={anchorEl} open={open} onClose={handleClose}>
+      <Menu
+        sx={{
+          '.dark &': {
+            '.MuiPaper-root': {
+              backgroundColor: '#1E293B',
+              color: 'white',
+            },
+          },
+        }}
+        id='basic-menu'
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}>
         {menuItems.map((item, index) => (
           <MenuItemCore mix={mix} key={index} title={item.title} onClick={item.onClick} icon={item.icon} />
         ))}

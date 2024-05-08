@@ -23,13 +23,17 @@ const DashBoardSkeleton = () => {
     <Paper
       sx={{
         transition: 'transform 0.3s ease-in-out',
+        '.dark &': {
+          color: 'white',
+          background: '#071A2B',
+        },
       }}
       elevation={3}
       className='flex h-fit w-full justify-center rounded-lg border border-gray-50 px-6 py-5  shadow-lg'>
       <Skeleton variant='circular' width={45} height={40} />
       <div className='w-full pl-5'>
         <div className='flex min-w-max items-center justify-between text-xl font-bold text-gray-700'>
-          <Skeleton variant='text' width={50} />
+          <Skeleton variant='text'  width={50} />
           <Skeleton variant='text' width={50} />
         </div>
         <Skeleton variant='text' width={100} />

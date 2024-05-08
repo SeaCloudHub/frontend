@@ -6,7 +6,7 @@ type ButtonCancelProps = {
   children: React.ReactNode;
 };
 
-const ButtonCancel: React.FC<ButtonCancelProps> = ({children, onClick}) => {
+const ButtonCancel: React.FC<ButtonCancelProps> = ({ children, onClick }) => {
   return (
     <Button
       onClick={onClick}

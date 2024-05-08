@@ -23,7 +23,7 @@ const UserManagementDetail = () => {
     }
   }, []);
   return (
-    <div className='h-full w-full overflow-x-hidden overflow-y-auto'>
+    <div className='h-full w-full overflow-y-auto overflow-x-hidden'>
       <div
         ref={divRef}
         className={`fixed ${screenMode != ScreenMode.DESKTOP ? 'left-0' : shrinkMode ? 'left-[76px]' : ' left-[16rem]'}  top-[4rem] z-20  flex w-full items-center space-x-1  bg-white px-3  py-1 dark:bg-content-bg-dark `}>
@@ -76,7 +76,7 @@ const UserManagementDetail = () => {
           <div className='z-0 w-full space-y-2 p-3 shadow-md'>
             <ButtonContainer title='Modify memory' icon={<IconifyIcon icon={'tabler:edit'} />} />
           </div>
-          <div className='rounded-xl border pl-3 mr-2 shadow-xl dark:bg-white'>
+          <div className='mr-2 rounded-xl border pl-3 shadow-xl dark:bg-[#031525] dark:text-white'>
             <FileFolderFilter />
             {/* <FileSection />
             <FolderSection /> */}

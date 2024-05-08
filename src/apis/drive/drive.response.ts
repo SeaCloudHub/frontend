@@ -8,7 +8,7 @@ export type EntryRESP = {
   shown_path: string;
   size: number;
   mode: number;
-  mine_type: string;
+  mime_type: string;
   md5: string;
   is_dir: boolean;
   general_access: string;

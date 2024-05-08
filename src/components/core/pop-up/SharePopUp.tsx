@@ -68,7 +68,7 @@ const SharePopUp: React.FC<SharePopUpProps> = ({ open, handleClose, title }) => 
   const [typeShare, setTypeShare] = React.useState('Viewer');
   const [typeView, setTypeView] = React.useState(fakelistPeople.map((item) => item.type));
   const [isPublic, setIsPublic] = React.useState(false);
-  const {theme} = useTheme();
+  const { theme } = useTheme();
 
   return (
     <PopUp open={open} handleClose={handleClose}>
@@ -113,7 +113,11 @@ const SharePopUp: React.FC<SharePopUpProps> = ({ open, handleClose, title }) => 
             freeSolo
             renderTags={(value: readonly string[], getTagProps) =>
               value.map((option: string, index: number) => (
-                <Chip variant='outlined' label={option} {...getTagProps({ index })} key={index}
+                <Chip
+                  variant='outlined'
+                  label={option}
+                  {...getTagProps({ index })}
+                  key={index}
                   sx={{
                     '.dark &': {
                       color: 'white',
@@ -121,15 +125,17 @@ const SharePopUp: React.FC<SharePopUpProps> = ({ open, handleClose, title }) => 
                         color: 'white',
                       },
                     },
-                }}/>
+                  }}
+                />
               ))
             }
             value={values}
             onChange={(_, newValue) => {
               setValues(newValue);
             }}
-            renderInput={(params) =>
-              <TextField {...params}
+            renderInput={(params) => (
+              <TextField
+                {...params}
                 variant='outlined'
                 placeholder='Favorites'
                 sx={{
@@ -137,13 +143,12 @@ const SharePopUp: React.FC<SharePopUpProps> = ({ open, handleClose, title }) => 
                   overflowY: 'auto',
                 }}
               />
-            }
+            )}
           />
           {values.length > 0 && (
             <CustomSelect
               value={typeShare}
-              onChange={(event: SelectChangeEvent<unknown>, _) => setTypeShare(event.target.value as string)}
-            >
+              onChange={(event: SelectChangeEvent<unknown>, _) => setTypeShare(event.target.value as string)}>
               {typeShareItems.map((item) => (
                 <MenuItem key={item} value={item}>
                   {item}
@@ -152,9 +157,12 @@ const SharePopUp: React.FC<SharePopUpProps> = ({ open, handleClose, title }) => 
             </CustomSelect>
           )}
         </div>
-        {values.length > 0 ?
+        {values.length > 0 ? (
           <div>
-            <TextareaAutosize placeholder='Add a message' minRows={10} maxRows={10}
+            <TextareaAutosize
+              placeholder='Add a message'
+              minRows={10}
+              maxRows={10}
               style={{
                 border: `1px solid ${theme === 'dark' ? '#1E293B' : '#CBD5E1'}`,
                 borderRadius: '5px',
@@ -167,7 +175,8 @@ const SharePopUp: React.FC<SharePopUpProps> = ({ open, handleClose, title }) => 
                 paddingRight: '10px',
               }}
             />
-          </div> :
+          </div>
+        ) : (
           <div>
             <div className='my-2'>
               <div className='text-base font-semibold'>People with access</div>
@@ -177,13 +186,15 @@ const SharePopUp: React.FC<SharePopUpProps> = ({ open, handleClose, title }) => 
               <div className='text-base font-semibold'>General access</div>
               <ListItem
                 alignItems='center'
-                className='hover:bg-gray-100 dark:hover:bg-blue-950 cursor-pointer'
+                className='cursor-pointer hover:bg-gray-100 dark:hover:bg-blue-950'
                 sx={{
                   py: 1,
-
                 }}>
                 <ListItemAvatar>
-                  <Icon icon='material-symbols:lock-outline' className='h-8 w-8 rounded-full bg-gray-200 dark:text-dashboard-dark px-1.5 text-xl' />
+                  <Icon
+                    icon='material-symbols:lock-outline'
+                    className='h-8 w-8 rounded-full bg-gray-200 px-1.5 text-xl dark:text-dashboard-dark'
+                  />
                 </ListItemAvatar>
                 <ListItemText
                   primary={
@@ -216,14 +227,14 @@ const SharePopUp: React.FC<SharePopUpProps> = ({ open, handleClose, title }) => 
               </ListItem>
             </div>
           </div>
-        }
+        )}
       </div>
       <DialogActions
         sx={{
           justifyContent: 'space-between',
         }}>
         <ButtonSuccess onClick={handleClose} type='button'>
-          <Icon icon='material-symbols:link' className='text-xl mr-1' />
+          <Icon icon='material-symbols:link' className='mr-1 text-xl' />
           <span>Coppy link</span>
         </ButtonSuccess>
         <ButtonSuccess type='submit'>Finished</ButtonSuccess>

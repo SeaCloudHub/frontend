@@ -47,8 +47,8 @@ const TextInputCore = ({
 
   return (
     <div
-      className={`${labelDirection === 'vertical' ? 'flex flex-col justify-start' : 'flex items-center space-x-1'} ${className} ${fullWidth ? 'w-full' : ''} `}>
-      {label && <InputLabel sx={{ fontWeight: 'bold' }}>{label}</InputLabel>}
+      className={`${labelDirection === 'vertical' ? 'flex flex-col justify-start' : 'flex items-center space-x-1'} ${className} ${fullWidth ? 'w-full' : ''}  `}>
+      {label && <InputLabel sx={{ fontWeight: 'bold', '.dark &': { color: 'white' } }}>{label}</InputLabel>}
       <TextField
         fullWidth={fullWidth}
         InputProps={{ ...inputProps }}
@@ -62,6 +62,40 @@ const TextInputCore = ({
           },
           '& .MuiInputLabel-root': {
             transform: 'translateY(-50%)',
+          },
+          '.dark &': {
+            backgroundColor: '#031525',
+            color: 'white',
+            '& .MuiInputLabel-root': {
+              color: 'white',
+            },
+            '& .MuiOutlinedInput-root.Mui-disabled .MuiOutlinedInput-notchedOutline': {
+              borderColor: '#64748B',
+            },
+            '& .MuiFormHelperText-root': {
+              color: '#64748B',
+            },
+            '& .MuiOutlinedInput-notchedOutline': {
+              borderColor: 'rgba(255, 255, 255, 0.25)',
+            },
+            '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
+              borderColor: 'rgba(255, 255, 255, 0.5)',
+            },
+            '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+              borderColor: 'rgba(255, 255, 255, 0.5)',
+            },
+            '& .MuiFormLabel-root': {
+              color: 'white',
+            },
+            '& .MuiInputBase-input': {
+              color: 'white',
+            },
+            '& .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline': {
+              borderColor: '#F87171',
+            },
+            '& .MuiFormHelperText-root.Mui-error': {
+              color: '#F87171',
+            },
           },
         }}
         name={name}
