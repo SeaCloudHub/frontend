@@ -4,11 +4,12 @@ import {
   deleteEntries,
   getAccessEntries,
   getEntryMetadata,
-  getListEntriesMyDrive,
+  getListEntries,
   getListEntriesPageMyDrive,
   getListEntriesPageStarred,
   getListEntriesTrash,
   getSharedEntries,
+  moveEntries,
   moveToTrash,
   renameEntry,
   restoreEntries,
@@ -46,7 +47,6 @@ export const useListEntries = () => {
         const path = data.parents.map((parent) =>
           parent.id === rootId ? { id: rootId, name: 'My Drive' } : { id: parent.id, name: parent.name },
         );
-        // console.log('[useListEntries] path', path);
         path.push({ id: data.file.id, name: data.file.name });
         return path;
       }
@@ -75,6 +75,54 @@ export const useListEntries = () => {
 
   return { parents: parents || [{ id, name: 'My Drive' }], data: data || [], refetch, isLoading };
 };
+
+const tab = ['Priority', 'My Drive', 'Starred', 'Shared',];
+
+export const useListFolders = ( volumn?: 'Priority' | 'My Drive' | 'Starred' | 'Shared', dirId?: string,) => {
+  const { rootId } = useStorageStore();
+  if (!dirId) dirId = rootId;
+
+  const { data: parents, error: parentsError } = useQuery({
+    queryKey: ['entry-metadata', dirId],
+    queryFn: () => getEntryMetadata({ id: dirId }).then((res) => res?.data),
+    staleTime: 10 * 1000,
+    select: (data): Path => {
+      if (data.parents) {
+        data.parents.sort((a, b) => a.path.localeCompare(b.path));
+        const path = data.parents.map((parent) =>
+          parent.id === rootId ? { id: rootId, name: volumn || 'My Drive' } : { id: parent.id, name: parent.name },
+        );
+        path.push({ id: data.file.id, name: data.file.name });
+        return path;
+      }
+      return [{ id: rootId, name: volumn || 'My Drive' }];
+    },
+  });
+
+  if (isAxiosError<ApiGenericError>(parentsError)) {
+    toast.error(parentsError.response?.data.message, toastError());
+  }
+
+  const { data, error, refetch, isLoading } = useQuery({
+    queryKey: ['list-folders', dirId],
+    queryFn: async () => {
+      return (
+        await getListEntriesPageMyDrive({ id: dirId })
+          .then((res) => res?.data?.entries || []))
+          .filter((e) => e.is_dir)
+          .filter((e)=> !e.name.includes('.trash')
+      );
+    },
+    staleTime: 10 * 1000,
+    select: transformEntries,
+  });
+
+  if (isAxiosError<ApiGenericError>(error)) {
+    toast.error(error.response?.data.message, toastError());
+  }
+
+  return { parents: parents || [{ id: dirId, name: 'My Drive' }], data: data || [], refetch, isLoading };
+}
 
 export const usePriorityEntries = () => {
   const { dirId } = useParams();
@@ -306,6 +354,28 @@ export const useUnstarEntryMutation = () => {
   });
 }
 
+export const useMoveEntriesMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (body: Required<{id: string, to: string}>&RestoreEntriesREQ) => {
+      return moveEntries(body);
+    },
+    onError: (error) => {
+      if (isAxiosError<ApiGenericError>(error)) {
+        toast.error(error.response?.data.message, toastError());
+      }
+    },
+    onSuccess: (data) => {
+      toast.success(`${data.data.length} entries moved`);
+      queryClient.invalidateQueries({ queryKey: ['mydrive-entries'] });
+      queryClient.invalidateQueries({ queryKey: ['priority-entries'] });
+      queryClient.invalidateQueries({ queryKey: ['starred-entries'] });
+      queryClient.invalidateQueries({ queryKey: ['Shared-entries'] });
+    },
+  });
+}
+
 export const useRestoreEntriesMutation = () => {
   const queryClient = useQueryClient();
 
@@ -408,10 +478,6 @@ export type LocalEntry = {
   lastModified: Date;
   size: number;
   fileType?: string;
-
-  // onDoubleClick?: () => void;
-  // onChanged?: () => void;
-  // parent?: 'priority' | 'my-drive' | 'shared' | 'trash';
 };
 
 export const transformEntries = (entries: EntryRESP[]): LocalEntry[] => {

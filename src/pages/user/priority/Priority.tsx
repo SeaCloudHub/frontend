@@ -11,7 +11,6 @@ import { LocalEntry } from '@/hooks/drive.hooks';
 import { Entry } from '@/utils/types/entry.type';
 import { useQuery } from '@tanstack/react-query';
 import { useSession } from '@/store/auth/session';
-import { getListEntriesMyDrive } from '@/apis/drive/drive.api';
 import { useStorageStore } from '@/store/storage/storage.store';
 import DrivePath from '../my-drive/header/drive-path/DrivePath';
 import { ListEntriesRESP } from '@/apis/drive/drive.response';
@@ -67,7 +66,7 @@ const Priority = () => {
                   setViewMode={setViewMode}
                 />
               ) : (
-                <MultipleDriveHeader parent='Priority' dirId={rootId} />
+                <MultipleDriveHeader parent='Priority' dir={{id: rootId, name: 'Priority'}} />
               )}
             </div>
           </div>

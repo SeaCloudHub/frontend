@@ -15,6 +15,7 @@ type DriveHistoryViewProps = {
   order?: string;
   setSort?: ({ sort, order }: { sort: string; order: string }) => void;
   entries: LocalEntry[];
+  dir: { id: string; name: string };
   // setArrSelected?: Dispatch<SetStateAction<string[]>>;
   // arrSelected?: string[];
 };
@@ -38,6 +39,7 @@ const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({
   order,
   setSort,
   entries,
+  dir,
 }) => {
   console.log(entries)
   const timeEntries = LocalEntryToTimeEntry(entries);
@@ -93,6 +95,7 @@ const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({
                       fileType={file.fileType}
                       isSelected={arrSelected.includes(file.id)}
                       isDir={file.isDir}
+                      dir={dir}
                     />
                   </div>
                 ))}

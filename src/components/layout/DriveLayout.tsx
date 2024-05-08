@@ -10,7 +10,6 @@ type DriveLayoutProps = {
 const DriveLayout: React.FC<DriveLayoutProps> = ({ headerLeft, bodyLeft, sidePanel }) => {
   const drawerOpen = useDrawer((state) => state.drawerOpen);
 
-  // console.log('[DriveLayout] drawerOpen', drawerOpen);
   return (
     <div className='h-[calc(100vh-4rem)] px-2 py-2'>
       <div className='grid h-full w-full grid-flow-col grid-cols-[1fr_auto] grid-rows-[auto_1fr] gap-1 rounded-xl bg-white dark:bg-dashboard-dark'>

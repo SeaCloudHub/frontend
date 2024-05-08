@@ -23,7 +23,8 @@ type FileCardProps = {
   preview?: React.ReactNode;
   id: string;
   isSelected?: boolean;
-  dirId?: string;
+  // dirId?: string;
+  dir?: { id: string; name: string };
   fileType?: string;
   parent?: 'priority' | 'my-drive' | 'shared' | 'trash' | 'starred';
   isDir: boolean;
@@ -42,7 +43,7 @@ const FileCard: React.FC<FileCardProps> = ({
   preview,
   id,
   isSelected,
-  dirId,
+  dir,
   fileType,
   parent,
   isDir,
@@ -89,7 +90,7 @@ const FileCard: React.FC<FileCardProps> = ({
         label: 'Make a copy',
         icon: <Icon icon='material-symbols:content-copy-outline' />,
         action: () => {
-          copyMutation.mutate({ ids: [id], to: dirId });
+          copyMutation.mutate({ ids: [id], to: dir.id });
         },
       },
     ],
@@ -262,7 +263,7 @@ const FileCard: React.FC<FileCardProps> = ({
             open={isPopUpOpen}
             handleClose={() => setIsPopUpOpen(false)}
             title={title}
-            location={'adfasdfasdf asdfasdfasdf asdfasdf'}
+            location={dir}
           />
         )}
         {type === 'rename' && <RenamePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} name={title} id={id} />}
@@ -271,7 +272,7 @@ const FileCard: React.FC<FileCardProps> = ({
             open={isPopUpOpen}
             handleClose={() => setIsPopUpOpen(false)}
             title={title}
-            id={dirId}
+            id={dir.id}
             source_ids={[id]}
             setResult={setResult}
           />

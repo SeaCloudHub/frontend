@@ -22,11 +22,12 @@ import { CUSTOMER_MY_DRIVE, CUSTOMER_SHARED_DIR } from '@/utils/constants/router
 import DeleteTempPopUp from '@/components/core/pop-up/DeleteTempPopUp';
 
 type DataRowProps = {
-  dirId?: string;
+  // dirId?: string;
   isSelected?: boolean;
   onDoubleClick?: () => void;
   onChanged?: () => void;
   parent?: 'priority' | 'my-drive' | 'shared' | 'trash' | 'starred';
+  dir: { id: string; name: string };
 };
 
 export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
@@ -40,7 +41,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
   onDoubleClick,
   parent,
   onChanged,
-  dirId,
+  dir,
   fileType,
   isSelected,
 }) => {
@@ -60,16 +61,17 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
   const unstarEntryMutation = useUnstarEntryMutation();
 
   const entryMenu: MenuItem[][] = [
-    !isDir && (
-    [
-      {
-        label: 'Preview',
-        icon: <Icon icon='material-symbols:visibility' />,
-        action: () => {
-          setFileViewer(true);
+    // chỉ !isdir mới có preview
+    !isDir ?
+      [
+        {
+          label: 'Preview',
+          icon: <Icon icon='material-symbols:visibility' />,
+          action: () => {
+            setFileViewer(true);
+          },
         },
-      },
-    ]),
+      ]:[],
     [
       {
         label: 'Download',
@@ -91,7 +93,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
         label: 'Make a copy',
         icon: <Icon icon='material-symbols:content-copy-outline' />,
         action: () => {
-          copyMutation.mutate({ ids: [id], to: dirId });
+          copyMutation.mutate({ ids: [id], to: dir.id });
         },
       },
     ],
@@ -154,7 +156,8 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
         },
       },
     ],
-  ];
+  ]
+  .filter(e => e.length!=0);
 
   // const folderMenu = [
   //   [
@@ -368,7 +371,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
             open={isPopUpOpen}
             handleClose={() => setIsPopUpOpen(false)}
             title={title}
-            location={'adfasdfasdf asdfasdfasdf asdfasdf'}
+            location={dir}
           />
         )}
         {type === 'rename' && <RenamePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} name={title} id={id} />}
@@ -386,7 +389,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
             open={isPopUpOpen}
             handleClose={() => setIsPopUpOpen(false)}
             title={title}
-            id={dirId}
+            id={dir.id}
             source_ids={[id]}
             setResult={setResult}
           />

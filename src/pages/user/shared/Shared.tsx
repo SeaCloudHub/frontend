@@ -82,9 +82,13 @@ const Shared = () => {
                 )}
               </>
             ) : (
-              <MultipleDriveHeader parent='SharedWithMe' dirId={
-                arrSelected.length === 1 ? arrSelected[0] : ''
-              } />
+              <MultipleDriveHeader
+                parent='SharedWithMe'
+                dir={{
+                  id: arrSelected.length === 1 ? arrSelected[0] : '',
+                  name: arrSelected.length === 1 ? data.find((item) => item.id === arrSelected[0])?.title || '' : '',
+                }}
+              />
             )}
           </div>
         </div>

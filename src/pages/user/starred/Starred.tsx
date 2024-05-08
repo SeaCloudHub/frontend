@@ -5,11 +5,10 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import ButtonCore from '@/components/core/button/ButtonCore';
 import StarredView from './stared-view/StarredView';
 import DriveLayout from '@/components/layout/DriveLayout';
-import { useDrawer, useViewMode } from '@/store/my-drive/myDrive.store';
+import { useDrawer, useSelected, useViewMode } from '@/store/my-drive/myDrive.store';
 import SidePanel from '../my-drive/side-panel/SidePanel';
 import { useSession } from '@/store/auth/session';
 import { useQuery } from '@tanstack/react-query';
-import { getListEntriesMyDrive } from '@/apis/drive/drive.api';
 import { toast } from 'react-toastify';
 import { Entry } from '@/utils/types/entry.type';
 import { useStorageStore } from '@/store/storage/storage.store';
@@ -18,24 +17,16 @@ import MultipleDriveHeader from '../my-drive/header/MultipleDriveHeader';
 import { useStarred } from '@/hooks/drive.hooks';
 
 const Starred = () => {
-  const { viewMode, setViewMode } = useViewMode();
   const [typeFilterItem, setTypeFilterItem] = useState<string>('');
   const [peopleFilterItem, setPeopleFilterItem] = useState<string>('');
   const [modifiedFilterItem, setModifiedFilterItem] = useState<string>('');
-  const [arrSelected, setArrSelected] = useState<string[]>([]);
+
+  const { viewMode, setViewMode } = useViewMode();
+  const { arrSelected } = useSelected();
   const { drawerOpen, openDrawer, closeDrawer } = useDrawer();
   const { rootId } = useStorageStore();
 
-  // const { data, error, refetch, isLoading } = useQuery({
-  //   queryKey: ['starred-entries', rootId],
-  //   queryFn: async () =>
-  //     (await getListEntriesMyDrive({ id: rootId }).then((res) => res?.data?.entries || [])).filter(
-  //       (e) => !e.name.includes('.trash'),
-  //     ),
-  // });
-
   const {data, isLoading} =  useStarred();
-  console.log('[Starred] data', data);
 
   return (
     <DriveLayout
@@ -84,7 +75,13 @@ const Starred = () => {
                 )}
               </>
             ) : (
-              <MultipleDriveHeader parent='Starred' dirId={rootId} />
+              <MultipleDriveHeader
+                parent='Starred'
+                dir={{
+                  id: rootId,
+                  name: 'Starred',
+                }}
+              />
             )}
           </div>
         </div>
@@ -92,8 +89,6 @@ const Starred = () => {
       bodyLeft={
         <StarredView
           entries={data}
-          arrSelected={arrSelected}
-          setArrSelected={setArrSelected}
           isLoading={isLoading}
         />
       }

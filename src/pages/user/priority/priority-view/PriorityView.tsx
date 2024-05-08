@@ -11,10 +11,6 @@ type PriorityViewProps = {
   sort: string;
   order: string;
   setSort: (value: { sort: string; order: string }) => void;
-  // setPath?: React.Dispatch<React.SetStateAction<Path>>;
-
-  // setArrSelected?: React.Dispatch<React.SetStateAction<string[]>>;
-  // arrSelected?: string[];
 };
 
 const PriorityView: React.FC<PriorityViewProps> = ({
@@ -23,15 +19,10 @@ const PriorityView: React.FC<PriorityViewProps> = ({
   order,
   setSort,
   isFileMode,
-  // setPath,
-  // arrSelected,
-  // setArrSelected,
 }) => {
   const { viewMode } = useViewMode();
   const {rootId} = useStorageStore();
   const localEntries = isFileMode ? entries.filter((entry) => !entry.isDir) : entries.filter((entry) => entry.isDir);
-
-  console.log('PriorityView', localEntries);
 
   return viewMode === 'grid' ? (
     <DriveGridView
@@ -41,10 +32,7 @@ const PriorityView: React.FC<PriorityViewProps> = ({
       entries={localEntries}
       fileShow={!isFileMode}
       folderShow={isFileMode}
-      // arrSelected={arrSelected}
-      // setArrSelected={setArrSelected}
       curDir={{ id: rootId, name: 'Priority' }}
-      // setPath={setPath}
     />
   ) : (
     <DriveListView
@@ -52,7 +40,6 @@ const PriorityView: React.FC<PriorityViewProps> = ({
       sort={sort}
       setSort={setSort}
       entries={localEntries}
-      // setPath={setPath}
       curDir={{ id: rootId, name: 'Priority' }}
     />
   );
