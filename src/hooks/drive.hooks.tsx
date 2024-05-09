@@ -64,7 +64,7 @@ export const useListEntries = () => {
     queryKey: ['mydrive-entries', id],
     queryFn: async () => {
       return (await getListEntriesPageMyDrive({ id, limit: 100 }).then((res) => res?.data?.entries || [])).filter(
-        (e) => !e.name.includes('.trash'),
+        (e) => !e.name.includes('.trash')
       );
     },
     staleTime: 10 * 1000,
@@ -512,6 +512,7 @@ export type LocalEntry = {
 };
 
 export const transformEntries = (entries: EntryRESP[]): LocalEntry[] => {
+  console.log('[transformEntries] entries', entries);
   return entries.map((entry) => {
     if (entry.is_dir) {
       return {
@@ -532,7 +533,9 @@ export const transformEntries = (entries: EntryRESP[]): LocalEntry[] => {
       isDir: false,
       title: entry.name,
       icon: icon,
-      preview: <div className='h-16 w-16'>{icon}</div>,
+      preview: entry.thumbnail ?
+        <img src={`${import.meta.env.VITE_BACKEND_API}${entry.thumbnail}`} alt={entry.name} className='h-full w-full object-cover' /> :
+        <div className='h-16 w-16'>{icon}</div>,
       id: entry.id,
       owner: entry.owner,
       lastModified: new Date(entry.updated_at),

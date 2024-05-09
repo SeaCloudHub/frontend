@@ -36,6 +36,7 @@ const MyDrive = () => {
   const copyMutation = useCopyMutation();
 
   const {parents, data, refetch, isLoading } = useListEntries();
+  console.log('MyDrive -> data', data);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
