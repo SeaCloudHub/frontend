@@ -89,7 +89,7 @@ const ChangePassword = () => {
               fontWeight={{
                 fontWeight: 600,
               }}>
-              Old password
+              Current password
             </Typography>
             <TextFieldCore
               name={'old_password'}
@@ -108,7 +108,7 @@ const ChangePassword = () => {
               fontWeight={{
                 fontWeight: 600,
               }}>
-              Create password
+              New password
             </Typography>
             <TextFieldCore
               name={'new_password'}
