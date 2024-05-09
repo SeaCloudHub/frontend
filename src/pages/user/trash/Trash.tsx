@@ -23,6 +23,7 @@ const Trash = () => {
   console.log('[Trash] arrSelected', arrSelected);
 
   const { data, isLoading, refetch } = useTrash();
+  console.log('[Trash] data', data);
 
   return (
     <DriveLayout
@@ -34,10 +35,7 @@ const Trash = () => {
           typeFilterItem={typeFilterItem}
         />
       }
-      bodyLeft={<TrashPageView entries={data} dir={{
-        id: rootId,
-        name: 'Trash'
-      }} />}
+      bodyLeft={<TrashPageView entries={data} dir={{ id: rootId, name: 'Trash' }} />}
       sidePanel={
         <SidePanel
           id={arrSelected.length === 0 ? rootId : arrSelected.length === 1 ? arrSelected[0] : ''}

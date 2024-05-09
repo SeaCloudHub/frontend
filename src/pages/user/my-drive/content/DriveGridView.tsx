@@ -71,7 +71,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
         </div>
       ) : (
         <div ref={driveGridViewRef} className='pl-5 pr-3 pt-4'>
-          <div className='relative flex flex-col space-y-2'>
+          <div className='relative flex flex-col space-y-2 min-w-40'>
             {folders.length !== 0 && (
               <div className={!folderShow ? 'visible' : 'hidden'}>
                 <div className='pb-4 pt-2 text-sm font-medium'> Folders</div>
@@ -96,7 +96,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
             {files.length !== 0 && (
               <div className={!fileShow ? 'visible' : 'hidden'}>
                 <div className='pb-4 pt-2 text-sm font-medium'>Files</div>
-                <div className={`grid gap-4 ${drawerOpen ? 'xl:grid-cols-3' : 'sm:grid-cols-2 xl:grid-cols-5'}`}>
+                <div className={`grid grid-cols-1 gap-4 ${drawerOpen ? 'xl:grid-cols-3' : 'sm:grid-cols-2 xl:grid-cols-5'}`}>
                   {files.map((file, index) => (
                     <div key={index} className='aspect-square '>
                       <FileCard

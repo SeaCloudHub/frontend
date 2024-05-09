@@ -208,11 +208,11 @@ export const useTrash = () => {
   const { dirId } = useParams();
   const { rootId } = useStorageStore();
   const id = dirId || rootId;
-
+  console.log('[useTrash] id', id);
   const { data, error, refetch, isLoading } = useQuery({
     queryKey: ['Trash-entries', id],
     queryFn: async () => {
-      return await getListEntriesTrash({ id, limit: 100 }).then((res) => res?.data?.entries || []);
+      return (await getListEntriesTrash().then((res) => res?.data?.entries || []));
     },
     staleTime: 10 * 1000,
     select: transformEntries,

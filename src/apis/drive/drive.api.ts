@@ -39,10 +39,8 @@ export const getListEntriesPageStarred = async () => {
   return res.data;
 }
 
-export const getListEntriesTrash = async (param: ListEntriesREQ) => {
-  const res = await api.get<BaseResponse<ListEntriesRESP>>(`/files/starred`, {
-    params: { cursor: param.cusor, limit: param.limit },
-  });
+export const getListEntriesTrash = async () => {
+  const res = await api.get<BaseResponse<ListEntriesRESP>>(`/files/trash`);
   return res.data;
 };
 
