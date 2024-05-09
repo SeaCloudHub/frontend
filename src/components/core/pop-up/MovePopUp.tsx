@@ -27,7 +27,8 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
   const [curFolder,setCurFolder] = React.useState<{id: string, name: string}>({id: rootId, name: 'priority'});
   const [locateTo, setLocateTo] = React.useState<string>();
   const {theme} = useTheme();
-  const { data, isLoading, parents, refetch } = useListFolders(volumn, curFolder?.id);
+  const { data, isLoading, parents } = useListFolders(volumn, curFolder?.id);
+  console.log('[MovePopUp] volumn', volumn);
 
   return (
     <PopUp open={open} handleClose={handleClose}>
@@ -77,6 +78,7 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
                         onClick={() => {
                           if(item === curFolder.name) return;
                           setvolumn(item as 'Priority' | 'My Drive' | 'Starred' | 'Shared')
+                          setLocateTo('')
                         }}
                       >
                         <div
@@ -101,9 +103,15 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
                   data.map((item, index) => (
                     <div
                       key={index}
-                      className={`flex cursor-pointer items-center gap-3 px-3 py-1 hover:bg-gray-100 dark:hover:bg-blue-950 ${locateTo === item.id ? 'dark:bg-blue-900 bg-[#c2e7ff]' : ''}`}
-                      onClick={() => locateTo === item.id ? setLocateTo('') : setLocateTo(item.id)}
-                      onDoubleClick={() => setCurFolder({id: item.id, name: item.title })}>
+                      className={`flex items-center gap-3 px-3 py-1 ${locateTo === item.id ? 'dark:bg-blue-900 bg-[#c2e7ff]' : ''} ${arrSelected.includes(item.id) ? 'brightness-75' : 'cursor-pointer hover:bg-gray-100 dark:hover:bg-blue-950'}`}
+                      onClick={() => {
+                        if(arrSelected.includes(item.id)) return;
+                        setLocateTo(item.id)
+                      }}
+                      onDoubleClick={() => {
+                        if(arrSelected.includes(item.id)) return;
+                        setCurFolder({id: item.id, name: item.title })
+                      }}>
                         <Icon icon='mdi:folder-multiple-outline' className='text-xl' />
                         <span className='select-none'>{item.title}</span>
                     </div>
