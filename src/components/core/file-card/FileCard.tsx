@@ -16,12 +16,6 @@ import DeleteTempPopUp from '../pop-up/DeleteTempPopUp';
 import MovePopUp from '../pop-up/MovePopUp';
 import RenamePopUp from '../pop-up/RenamePopUp';
 import SharePopUp from '../pop-up/SharePopUp';
-import { downloadFileApi } from '@/apis/user/storage/storage.api';
-import { useQuery } from '@tanstack/react-query';
-import { isAxiosError } from 'axios';
-import { ApiGenericError } from '@/utils/types/api-generic-error.type';
-import { toast } from 'react-toastify';
-import { toastError } from '@/utils/toast-options/toast-options';
 
 type FileCardProps = {
   title: string;
@@ -29,7 +23,6 @@ type FileCardProps = {
   preview?: React.ReactNode;
   id: string;
   isSelected?: boolean;
-  // dirId?: string;
   dir?: { id: string; name: string };
   fileType?: string;
   parent?: 'priority' | 'my-drive' | 'shared' | 'trash' | 'starred';
@@ -206,21 +199,6 @@ const FileCard: React.FC<FileCardProps> = ({
     !isDir && setFileViewer(true);
   };
 
-  const { data: imageUrl, error } = useQuery({
-    queryKey: ['image-preview', id],
-    queryFn: async () => {
-      const res = await downloadFileApi(id);
-      const blob = new Blob([res.data], { type: res.headers['content-type'] });
-      const url = URL.createObjectURL(blob);
-      console.log('[FileCard] url', url);
-      return url;
-    },
-    enabled: fileType === 'image/png' || fileType === 'image/jpg' || fileType === 'image/jpeg',
-  });
-
-  if (isAxiosError<ApiGenericError>(error)) {
-    toast.error(error.response?.data.message, toastError());
-  }
   useEffect(() => {
     if (result) {
       setResult(false);
@@ -246,12 +224,6 @@ const FileCard: React.FC<FileCardProps> = ({
             lastModified: new Date(),
             size: 0,
             fileType: fileType,
-            // onDoubleClick: function (): void {
-            //   throw new Error('Function not implemented.');
-            // },
-            // onChanged: function (): void {
-            //   throw new Error('Function not implemented.');
-            // },
           }}
         />
       )}
@@ -279,7 +251,7 @@ const FileCard: React.FC<FileCardProps> = ({
           </div>
         </div>
         <div className='mb-2 flex h-full w-full items-center justify-center overflow-hidden rounded-md bg-white'>
-          {imageUrl ? <img src={imageUrl} alt={title} className='h-full w-full object-cover' /> : preview}
+          {preview}
         </div>
         {type === 'share' && <SharePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} />}
         {type === 'move' && (
