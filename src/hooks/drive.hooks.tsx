@@ -518,7 +518,7 @@ export const transformEntries = (entries: EntryRESP[]): LocalEntry[] => {
       return {
         isDir: true,
         title: entry.name,
-        icon: <Icon icon='ic:baseline-folder' className='object-cover-full h-full w-full dark:text-yellow-600' />,
+        icon: <Icon icon='ic:baseline-folder' className='object-cover h-full w-full dark:text-yellow-600' />,
         preview: <Icon icon='ic:baseline-folder' className='h-full w-full dark:text-yellow-600' />,
         id: entry.id,
         owner: entry.owner,

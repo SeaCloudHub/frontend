@@ -132,7 +132,7 @@ const SidePanel: React.FC<SidePanelProps> = ({ id, title }) => {
   }, [details, isLoading, id]);
 
   return (
-    <div className='flex h-full w-[336px] flex-col overflow-hidden border-l'>
+    <div className='flex h-full flex-col overflow-hidden border-l'>
       <div className='mb-4 mt-6 flex min-h-9 w-full items-center justify-between px-6 pr-2'>
         {id ? (
           <div className='flex items-center space-x-4'>
