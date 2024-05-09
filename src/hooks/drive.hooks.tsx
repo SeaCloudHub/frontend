@@ -20,7 +20,7 @@ import { CopyFileREQ, RenameREQ, DeleteEntriesREQ, RestoreEntriesREQ, ListEntrie
 import { EntryMetadataRES, EntryRESP } from '@/apis/drive/drive.response';
 import { MoveToTrashREQ } from '@/apis/drive/request/move-to-trash.request';
 import { downloadFileApi, uploadFilesApi } from '@/apis/user/storage/storage.api';
-import { Path, useDrawer } from '@/store/my-drive/myDrive.store';
+import { Path, useDrawer, useSelected } from '@/store/my-drive/myDrive.store';
 import { useProgressIndicator } from '@/store/storage/progressIndicator.store';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { fileTypeIcons } from '@/utils/constants/file-icons.constant';
@@ -78,10 +78,9 @@ export const useListEntries = () => {
   return { parents: parents || [{ id, name: 'My Drive' }], data: data || [], refetch, isLoading };
 };
 
-const tab = ['Priority', 'My Drive', 'Starred', 'Shared',];
-
 export const useListFolders = ( volumn?: 'Priority' | 'My Drive' | 'Starred' | 'Shared', dirId?: string,) => {
   const { rootId } = useStorageStore();
+  const {arrSelected} = useSelected();
   if (!dirId) dirId = rootId;
 
   const { data: parents, error: parentsError } = useQuery({
@@ -104,16 +103,28 @@ export const useListFolders = ( volumn?: 'Priority' | 'My Drive' | 'Starred' | '
   if (isAxiosError<ApiGenericError>(parentsError)) {
     toast.error(parentsError.response?.data.message, toastError());
   }
-
   const { data, error, refetch, isLoading } = useQuery({
-    queryKey: ['list-folders', dirId],
+    queryKey: ['list-folders', dirId, volumn],
     queryFn: async () => {
-      return (
-        await getListEntriesPageMyDrive({ id: dirId })
-          .then((res) => res?.data?.entries || []))
-          .filter((e) => e.is_dir)
-          .filter((e)=> !e.name.includes('.trash')
-      );
+      console.log('[useListFolders] volumn', volumn);
+      if(dirId !== rootId) volumn = 'My Drive'
+      switch (volumn) {
+        case 'Starred':
+          return (await getListEntriesPageStarred().then((res) => res?.data || []))
+            .filter((e) => e.is_dir)
+            .filter((e) => !e.name.includes('.trash'))
+            // .filter((e) => !arrSelected.includes(e.id));
+        case 'Shared':
+          return (await getSharedEntries().then((res) => res?.data || []))
+            .filter((e) => e.is_dir)
+            .filter((e) => !e.name.includes('.trash'))
+            // .filter((e) => !arrSelected.includes(e.id));
+        default:
+          return (await getListEntriesPageMyDrive({ id: dirId, limit: 100 }).then((res) => res?.data?.entries || []))
+            .filter((e) => e.is_dir)
+            .filter((e) => !e.name.includes('.trash'))
+            // .filter((e) => !arrSelected.includes(e.id));
+      }
     },
     staleTime: 10 * 1000,
     select: transformEntries,
