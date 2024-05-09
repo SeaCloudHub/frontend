@@ -26,7 +26,7 @@ const TrashPageHeader: React.FC<TrashPageHeaderProps> = ({
   console.log('[TrashPageHeader] arrSelected', arrSelected);
 
   return (
-    <div className='px-5'>
+    <div className='px-5 flex flex-col'>
       <div className='flex justify-between space-x-2'>
         <h2 className='pb-[20px] pt-[17px] text-2xl font-semibold'>Trash</h2>
         <div className='flex items-center gap-2'>
@@ -44,32 +44,30 @@ const TrashPageHeader: React.FC<TrashPageHeaderProps> = ({
           />
         </div>
       </div>
-      <div className='flex items-center gap-3'>
-        {arrSelected.length === 0 ? (
-          <>
-            <TrashPageFilter
-              modifiedFilter={modifiedFilterItem}
-              setModifiedFilterItem={setModifiedFilterItem}
-              typeFilter={typeFilterItem}
-              setTypeFilterItem={setTypeFilterItem}
-            />
-            {(typeFilterItem || modifiedFilterItem) && (
-              <div className='flex h-7 items-center rounded-full px-[12px] py-[1px] hover:bg-[#ededed]'>
-                <div
-                  onClick={() => {
-                    setTypeFilterItem('');
-                    setModifiedFilterItem('');
-                  }}
-                  className='cursor-pointer text-sm font-medium'>
-                  Clear filters
-                </div>
+      {arrSelected.length === 0 ? (
+        <div className='flex items-center gap-3'>
+          <TrashPageFilter
+            modifiedFilter={modifiedFilterItem}
+            setModifiedFilterItem={setModifiedFilterItem}
+            typeFilter={typeFilterItem}
+            setTypeFilterItem={setTypeFilterItem}
+          />
+          {(typeFilterItem || modifiedFilterItem) && (
+            <div className='flex h-7 items-center rounded-full px-[12px] py-[1px] hover:bg-[#ededed]'>
+              <div
+                onClick={() => {
+                  setTypeFilterItem('');
+                  setModifiedFilterItem('');
+                }}
+                className='cursor-pointer text-sm font-medium'>
+                Clear filters
               </div>
-            )}
-          </>
-        ) : (
-          <MultipleDriveHeader parent='Trash' dir={{id: rootId, name: 'Trash'}}/>
-        )}
-      </div>
+            </div>
+          )}
+        </div>
+      ) : (
+        <MultipleDriveHeader parent='Trash' dir={{id: rootId, name: 'Trash'}}/>
+      )}
     </div>
   );
 };

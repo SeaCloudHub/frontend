@@ -12,7 +12,7 @@ type PriorityFilterProps = {
 
 const PriorityFilter: React.FC<PriorityFilterProps> = ({ viewMode, setViewMode, isFileMode, setIsFileMode }) => {
   return (
-    <div className='flex items-center justify-between'>
+    <div className='flex items-center justify-between px-4 overflow-x-auto'>
       <div className='flex items-center gap-3'>
         <span className='text-md font-semibold'>Recomment</span>
         <PriorityViewType isFileMode={isFileMode} setIsFileMode={setIsFileMode} />

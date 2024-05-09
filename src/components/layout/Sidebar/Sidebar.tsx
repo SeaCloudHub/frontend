@@ -31,7 +31,7 @@ const Sidebar = ({ role, shrinkMode }: SidebarProps) => {
 
   return (
     <>
-      <div className={`sidebar z-20 ${shrinkMode ? '' : 'sidebar-lg'}`}>
+      <div className={`sidebar z-20 ${shrinkMode ? '' : 'sidebar-lg'} dark:bg-content-bg-dark`}>
         <div className='flex w-full items-center justify-center'>
           {shrinkMode ? (
             <div className='flex h-16 items-center'>

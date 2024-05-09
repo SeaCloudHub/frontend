@@ -132,14 +132,14 @@ const SidePanel: React.FC<SidePanelProps> = ({ id, title }) => {
   }, [details, isLoading, id]);
 
   return (
-    <div className='flex h-full w-[336px] flex-col overflow-hidden border-l'>
+    <div className='flex h-full w-[360px] flex-col overflow-hidden border-l'>
       <div className='mb-4 mt-6 flex min-h-9 w-full items-center justify-between px-6 pr-2'>
         {id ? (
           <div className='flex items-center space-x-4'>
             <div className='w-6'>
               {details ? details.icon : <Icon icon='mdi:folder-google-drive' className='h-full w-full' />}
             </div>
-            <div className='w-[236px] text-wrap font-medium'>{!isLoading ? (details ? details.name : title) : title}</div>
+            <div className='text-wrap font-medium'>{!isLoading ? (details ? details.name : title) : title}</div>
           </div>
         ) : (
           <div></div>
@@ -179,7 +179,7 @@ const SidePanel: React.FC<SidePanelProps> = ({ id, title }) => {
                 <LinearProgress className=' translate-y-1' />
               ) : details ? (
                 <div className='flex flex-col space-y-6 '>
-                  <div className='flex h-40 items-center justify-center'>
+                  <div className='flex w-full items-center justify-center'>
                     {imageUrl ? <img src={imageUrl} alt={title} className='h-full w-full object-cover' /> : details.preview}
                   </div>
 
@@ -282,7 +282,7 @@ const SidePanel: React.FC<SidePanelProps> = ({ id, title }) => {
 const DefaultTabPanel: React.FC = () => {
   return (
     <div className='flex flex-col items-center'>
-      <img className='mb-4 object-contain' src={(import.meta.env.BASE_URL + 'guide1.png') as string} alt='Guide1' />
+      <img className='mb-4 w-full h-60 object-cover' src={(import.meta.env.BASE_URL + 'guide1.png') as string} alt='Guide1' />
       <div>Select item to see the details</div>
     </div>
   );

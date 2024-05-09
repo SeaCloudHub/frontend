@@ -208,11 +208,11 @@ export const useTrash = () => {
   const { dirId } = useParams();
   const { rootId } = useStorageStore();
   const id = dirId || rootId;
-
+  console.log('[useTrash] id', id);
   const { data, error, refetch, isLoading } = useQuery({
     queryKey: ['Trash-entries', id],
     queryFn: async () => {
-      return await getListEntriesTrash({ id, limit: 100 }).then((res) => res?.data?.entries || []);
+      return (await getListEntriesTrash().then((res) => res?.data?.entries || []));
     },
     staleTime: 10 * 1000,
     select: transformEntries,
@@ -518,7 +518,7 @@ export const transformEntries = (entries: EntryRESP[]): LocalEntry[] => {
       return {
         isDir: true,
         title: entry.name,
-        icon: <Icon icon='ic:baseline-folder' className='object-cover-full h-full w-full dark:text-yellow-600' />,
+        icon: <Icon icon='ic:baseline-folder' className='object-cover h-full w-full dark:text-yellow-600' />,
         preview: <Icon icon='ic:baseline-folder' className='h-full w-full dark:text-yellow-600' />,
         id: entry.id,
         owner: entry.owner,

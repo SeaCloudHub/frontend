@@ -18,7 +18,7 @@ const DynamicLayout = ({ children }: PropsWithChildren) => {
       {!(screenMode == ScreenMode.MOBILE) && <Sidebar shrinkMode={shrinkMode} role={role!} />}
       {role === Role.ADMIN ? (
         <div
-          className={` ${screenMode == ScreenMode.DESKTOP ? (shrinkMode ? 'content-shrink-mode' : 'content-default-mode') : 'pt-4rem pl-0'}    
+          className={` ${screenMode == ScreenMode.DESKTOP ? (shrinkMode ? 'content-shrink-mode' : 'content-default-mode') : 'pt-4rem pl-0'}
         ${screenMode == ScreenMode.MOBILE ? 'pl-0 pt-16' : ''}`}>
           <div className='h-[calc(100vh-4rem)] w-full rounded-xl   bg-white p-2  shadow-2xl dark:bg-dashboard-dark'>
             {children}
@@ -27,7 +27,7 @@ const DynamicLayout = ({ children }: PropsWithChildren) => {
       ) : (
         <div
           className={classNames(
-            'h-full w-full pt-16 ',
+            'h-full w-full pt-16 overflow-x-auto',
             screenMode == ScreenMode.DESKTOP ? (shrinkMode ? 'pl-[76px]' : 'pl-64') : 'pl-0',
           )}>
           {children}
