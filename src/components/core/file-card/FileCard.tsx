@@ -273,6 +273,7 @@ const FileCard: React.FC<FileCardProps> = ({
           </div>
           <div className='h-6 w-6 rounded-full p-1 hover:bg-slate-300 dark:hover:bg-slate-800'>
             <CustomDropdown
+              minWidth
               button={<BsThreeDotsVertical className='dark:hover:text-slate-500' />}
               items={parent === 'trash' ? menuItemsTrash : menuItems}
             />

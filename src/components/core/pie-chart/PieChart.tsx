@@ -7,12 +7,14 @@ import Show from '../condition/Show';
 type PieChartLabelData = {
   value: number;
   label: string;
+  
 };
 
 type PieChartProps = {
   data: PieChartLabelData[];
   isLoading?: boolean;
   isFetching?: boolean;
+  mapperFunction?: (data: any) => string;
 };
 
 const DEFAULT_NUMBER_DATA_DISPLAY = 5;
@@ -30,7 +32,7 @@ const LIST_COLOR_CHART = [
   '#db2a16',
 ];
 
-const PieChartCore: React.FC<PieChartProps> = ({ data, isLoading, isFetching }) => {
+const PieChartCore: React.FC<PieChartProps> = ({ data, isLoading, isFetching, mapperFunction }) => {
   const [totalList, setTotalList] = useState<number>(DEFAULT_NUMBER_DATA_DISPLAY);
   const [chartData, setChartData] = useState<PieChartLabelData[]>([]);
 
@@ -109,8 +111,9 @@ const PieChartCore: React.FC<PieChartProps> = ({ data, isLoading, isFetching }) 
                   <td className='w-2/5 text-base font-medium  max-sm:max-w-[50px] max-sm:break-words sm:px-4 sm:py-[15px]'>
                     {item.label}
                   </td>
+
                   <td className='w-1/5 text-sm font-semibold  max-sm:text-center sm:px-4 sm:py-[15px]'>
-                    {item.value}
+                    {mapperFunction ? mapperFunction(item.value) : item.value}
                   </td>
                   <td className='w-2/5 py-[15px] text-right sm:px-4'>
                     <div className='flex w-full items-center justify-start gap-1'>
