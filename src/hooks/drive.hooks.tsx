@@ -20,7 +20,7 @@ import { CopyFileREQ, RenameREQ, DeleteEntriesREQ, RestoreEntriesREQ, ListEntrie
 import { EntryMetadataRES, EntryRESP } from '@/apis/drive/drive.response';
 import { MoveToTrashREQ } from '@/apis/drive/request/move-to-trash.request';
 import { downloadFileApi, uploadFilesApi } from '@/apis/user/storage/storage.api';
-import { Path, useDrawer } from '@/store/my-drive/myDrive.store';
+import { Path, useDrawer, useSelected } from '@/store/my-drive/myDrive.store';
 import { useProgressIndicator } from '@/store/storage/progressIndicator.store';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { fileTypeIcons } from '@/utils/constants/file-icons.constant';
@@ -64,7 +64,7 @@ export const useListEntries = () => {
     queryKey: ['mydrive-entries', id],
     queryFn: async () => {
       return (await getListEntriesPageMyDrive({ id, limit: 100 }).then((res) => res?.data?.entries || [])).filter(
-        (e) => !e.name.includes('.trash'),
+        (e) => !e.name.includes('.trash')
       );
     },
     staleTime: 10 * 1000,
@@ -78,10 +78,9 @@ export const useListEntries = () => {
   return { parents: parents || [{ id, name: 'My Drive' }], data: data || [], refetch, isLoading };
 };
 
-const tab = ['Priority', 'My Drive', 'Starred', 'Shared',];
-
 export const useListFolders = ( volumn?: 'Priority' | 'My Drive' | 'Starred' | 'Shared', dirId?: string,) => {
   const { rootId } = useStorageStore();
+  const {arrSelected} = useSelected();
   if (!dirId) dirId = rootId;
 
   const { data: parents, error: parentsError } = useQuery({
@@ -104,16 +103,28 @@ export const useListFolders = ( volumn?: 'Priority' | 'My Drive' | 'Starred' | '
   if (isAxiosError<ApiGenericError>(parentsError)) {
     toast.error(parentsError.response?.data.message, toastError());
   }
-
   const { data, error, refetch, isLoading } = useQuery({
-    queryKey: ['list-folders', dirId],
+    queryKey: ['list-folders', dirId, volumn],
     queryFn: async () => {
-      return (
-        await getListEntriesPageMyDrive({ id: dirId })
-          .then((res) => res?.data?.entries || []))
-          .filter((e) => e.is_dir)
-          .filter((e)=> !e.name.includes('.trash')
-      );
+      console.log('[useListFolders] volumn', volumn);
+      if(dirId !== rootId) volumn = 'My Drive'
+      switch (volumn) {
+        case 'Starred':
+          return (await getListEntriesPageStarred().then((res) => res?.data || []))
+            .filter((e) => e.is_dir)
+            .filter((e) => !e.name.includes('.trash'))
+            // .filter((e) => !arrSelected.includes(e.id));
+        case 'Shared':
+          return (await getSharedEntries().then((res) => res?.data || []))
+            .filter((e) => e.is_dir)
+            .filter((e) => !e.name.includes('.trash'))
+            // .filter((e) => !arrSelected.includes(e.id));
+        default:
+          return (await getListEntriesPageMyDrive({ id: dirId, limit: 100 }).then((res) => res?.data?.entries || []))
+            .filter((e) => e.is_dir)
+            .filter((e) => !e.name.includes('.trash'))
+            // .filter((e) => !arrSelected.includes(e.id));
+      }
     },
     staleTime: 10 * 1000,
     select: transformEntries,
@@ -197,11 +208,11 @@ export const useTrash = () => {
   const { dirId } = useParams();
   const { rootId } = useStorageStore();
   const id = dirId || rootId;
-
+  console.log('[useTrash] id', id);
   const { data, error, refetch, isLoading } = useQuery({
     queryKey: ['Trash-entries', id],
     queryFn: async () => {
-      return await getListEntriesTrash({ id, limit: 100 }).then((res) => res?.data?.entries || []);
+      return (await getListEntriesTrash().then((res) => res?.data?.entries || []));
     },
     staleTime: 10 * 1000,
     select: transformEntries,
@@ -501,12 +512,13 @@ export type LocalEntry = {
 };
 
 export const transformEntries = (entries: EntryRESP[]): LocalEntry[] => {
+  console.log('[transformEntries] entries', entries);
   return entries.map((entry) => {
     if (entry.is_dir) {
       return {
         isDir: true,
         title: entry.name,
-        icon: <Icon icon='ic:baseline-folder' className='object-cover-full h-full w-full dark:text-yellow-600' />,
+        icon: <Icon icon='ic:baseline-folder' className='object-cover h-full w-full dark:text-yellow-600' />,
         preview: <Icon icon='ic:baseline-folder' className='h-full w-full dark:text-yellow-600' />,
         id: entry.id,
         owner: entry.owner,
@@ -521,7 +533,9 @@ export const transformEntries = (entries: EntryRESP[]): LocalEntry[] => {
       isDir: false,
       title: entry.name,
       icon: icon,
-      preview: <div className='h-16 w-16'>{icon}</div>,
+      preview: entry.thumbnail ?
+        <img src={`${import.meta.env.VITE_BACKEND_API}${entry.thumbnail}`} alt={entry.name} className='h-full w-full object-cover' /> :
+        <div className='h-16 w-16'>{icon}</div>,
       id: entry.id,
       owner: entry.owner,
       lastModified: new Date(entry.updated_at),

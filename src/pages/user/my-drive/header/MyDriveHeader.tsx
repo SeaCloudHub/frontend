@@ -35,9 +35,9 @@ const MyDriveHeader: React.FC<MyDriveHeaderProps> = ({
   const { arrSelected } = useSelected();
 
   return (
-    <div className='flex flex-col pr-3'>
-      <div className='flex'>
-        <div className='w-full pb-[8px] pl-1 pt-[14px]'>
+    <div className='flex flex-col overflow-hidden'>
+      <div className='flex justify-between min-w-[375px]'>
+        <div className='pb-[8px] pl-1 pt-[14px]'>
           <DrivePath path={path} type={'MyDrive'} />
         </div>
         <div className='flex items-center pb-[6px] pl-[25px] pr-[11px] pt-[14px]'>
@@ -48,12 +48,13 @@ const MyDriveHeader: React.FC<MyDriveHeaderProps> = ({
         </div>
       </div>
       {arrSelected.length > 0 ? (
-        <div className='px-4 py-1'>
+        <div className='px-4 py-1 overflow-x-auto'>
           <MultipleDriveHeader parent='MyDrive' dir={path[path.length-1]} />
         </div>
       ) : (
-        <div className='flex items-center justify-between pl-5 pr-3'>
-          <div className='flex items-center gap-3'>
+        <div className='w-full pl-5'>
+          <div className='flex items-center justify-between gap-3 overflow-x-auto'>
+            <div >
             <DriveFilter
               setModifiedFilter={setModifiedFilter}
               setPeopleFilter={setPeopleFilter}
@@ -61,7 +62,7 @@ const MyDriveHeader: React.FC<MyDriveHeaderProps> = ({
               modifiedFilter={modifiedFilter}
               peopleFilter={peopleFilter}
               typeFilter={typeFilter}
-            />
+              />
             {(typeFilter || peopleFilter || modifiedFilter) && (
               <div className='flex h-7 items-center rounded-full px-[12px] py-[1px] hover:bg-[#ededed]'>
                 <div
@@ -75,8 +76,9 @@ const MyDriveHeader: React.FC<MyDriveHeaderProps> = ({
                 </div>
               </div>
             )}
+            </div>
+            <Sort sort={sort} order={order} setSort={setSort} />
           </div>
-          <Sort sort={sort} order={order} setSort={setSort} />
         </div>
       )}
     </div>

@@ -31,7 +31,7 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
   }, [result, setArrSelected]);
 
   return (
-    <div className='flex h-8 items-center gap-3'>
+    <div className='flex h-8 items-center gap-3 min-w-fit'>
       <IconifyIcon icon='mdi:close' className='h-8 w-8 rounded-full p-1 hover:bg-gray-300' onClick={() => setArrSelected([])} />
       <div className='min-w-40'> {arrSelected.length} items selected </div>
       {parent === 'Trash' ? (

@@ -13,6 +13,7 @@ export type EntryRESP = {
   is_dir: boolean;
   general_access: string;
   owner_id: string;
+  thumbnail: string;
   owner: IdentityRESP;
   created_at: string;
   updated_at: string;

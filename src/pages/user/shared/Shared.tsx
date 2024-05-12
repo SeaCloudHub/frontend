@@ -35,7 +35,7 @@ const Shared = () => {
   return (
     <DriveLayout
       headerLeft={
-        <div>
+        <div className='flex flex-col overflow-hidden'>
           <div className='flex justify-between space-x-2 text-2xl'>
             <div className='w-full pb-[14px] pt-[15px]'>
               <DrivePath path={parents} type='Shared' />
@@ -55,10 +55,9 @@ const Shared = () => {
               />
             </div>
           </div>
-
-          <div className='flex items-center gap-3 px-5'>
-            {arrSelected.length === 0 ? (
-              <>
+          {arrSelected.length === 0 ? (
+            <>
+              <div className='flex items-center gap-3 px-5'>
                 <SharingPageFilter
                   setModifiedFilterItem={setModifiedFilterItem}
                   setPeopleFilterItem={setPeopleFilterItem}
@@ -80,8 +79,10 @@ const Shared = () => {
                     </div>
                   </div>
                 )}
-              </>
-            ) : (
+              </div>
+            </>
+          ) : (
+            <div className='px-4 py-1 overflow-x-auto'>
               <MultipleDriveHeader
                 parent='SharedWithMe'
                 dir={{
@@ -89,8 +90,8 @@ const Shared = () => {
                   name: arrSelected.length === 1 ? data.find((item) => item.id === arrSelected[0])?.title || '' : '',
                 }}
               />
-            )}
-          </div>
+            </div>
+          )}
         </div>
       }
       bodyLeft={
