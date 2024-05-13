@@ -27,7 +27,7 @@ const DynamicLayout = ({ children }: PropsWithChildren) => {
       ) : (
         <div
           className={classNames(
-            'h-full w-full pt-16 overflow-x-auto',
+            'h-full w-full overflow-x-auto pt-16',
             screenMode == ScreenMode.DESKTOP ? (shrinkMode ? 'pl-[76px]' : 'pl-64') : 'pl-0',
           )}>
           {children}

@@ -64,7 +64,7 @@ export const useListEntries = () => {
     queryKey: ['mydrive-entries', id],
     queryFn: async () => {
       return (await getListEntriesPageMyDrive({ id, limit: 100 }).then((res) => res?.data?.entries || [])).filter(
-        (e) => !e.name.includes('.trash')
+        (e) => !e.name.includes('.trash'),
       );
     },
     staleTime: 10 * 1000,
@@ -78,9 +78,9 @@ export const useListEntries = () => {
   return { parents: parents || [{ id, name: 'My Drive' }], data: data || [], refetch, isLoading };
 };
 
-export const useListFolders = ( volumn?: 'Priority' | 'My Drive' | 'Starred' | 'Shared', dirId?: string,) => {
+export const useListFolders = (volumn?: 'Priority' | 'My Drive' | 'Starred' | 'Shared', dirId?: string) => {
   const { rootId } = useStorageStore();
-  const {arrSelected} = useSelected();
+  const { arrSelected } = useSelected();
   if (!dirId) dirId = rootId;
 
   const { data: parents, error: parentsError } = useQuery({
@@ -107,23 +107,23 @@ export const useListFolders = ( volumn?: 'Priority' | 'My Drive' | 'Starred' | '
     queryKey: ['list-folders', dirId, volumn],
     queryFn: async () => {
       console.log('[useListFolders] volumn', volumn);
-      if(dirId !== rootId) volumn = 'My Drive'
+      if (dirId !== rootId) volumn = 'My Drive';
       switch (volumn) {
         case 'Starred':
           return (await getListEntriesPageStarred().then((res) => res?.data || []))
             .filter((e) => e.is_dir)
-            .filter((e) => !e.name.includes('.trash'))
-            // .filter((e) => !arrSelected.includes(e.id));
+            .filter((e) => !e.name.includes('.trash'));
+        // .filter((e) => !arrSelected.includes(e.id));
         case 'Shared':
           return (await getSharedEntries().then((res) => res?.data || []))
             .filter((e) => e.is_dir)
-            .filter((e) => !e.name.includes('.trash'))
-            // .filter((e) => !arrSelected.includes(e.id));
+            .filter((e) => !e.name.includes('.trash'));
+        // .filter((e) => !arrSelected.includes(e.id));
         default:
           return (await getListEntriesPageMyDrive({ id: dirId, limit: 100 }).then((res) => res?.data?.entries || []))
             .filter((e) => e.is_dir)
-            .filter((e) => !e.name.includes('.trash'))
-            // .filter((e) => !arrSelected.includes(e.id));
+            .filter((e) => !e.name.includes('.trash'));
+        // .filter((e) => !arrSelected.includes(e.id));
       }
     },
     staleTime: 10 * 1000,
@@ -135,7 +135,7 @@ export const useListFolders = ( volumn?: 'Priority' | 'My Drive' | 'Starred' | '
   }
 
   return { parents: parents || [{ id: dirId, name: 'My Drive' }], data: data || [], refetch, isLoading };
-}
+};
 
 export const usePriorityEntries = () => {
   const { dirId } = useParams();
@@ -212,7 +212,7 @@ export const useTrash = () => {
   const { data, error, refetch, isLoading } = useQuery({
     queryKey: ['Trash-entries', id],
     queryFn: async () => {
-      return (await getListEntriesTrash().then((res) => res?.data?.entries || []));
+      return await getListEntriesTrash().then((res) => res?.data?.entries || []);
     },
     staleTime: 10 * 1000,
     select: transformEntries,
@@ -312,7 +312,7 @@ export const useStarred = () => {
   const { data, error, refetch, isLoading } = useQuery({
     queryKey: ['starred-entries', id],
     queryFn: async () => {
-      return (await getListEntriesPageStarred().then((res) => res?.data || []));
+      return await getListEntriesPageStarred().then((res) => res?.data || []);
     },
     staleTime: 10 * 1000,
     select: transformEntries,
@@ -323,7 +323,7 @@ export const useStarred = () => {
   }
 
   return { data: data || [], refetch, isLoading };
-}
+};
 
 export const useStarEntryMutation = () => {
   const queryClient = useQueryClient();
@@ -344,7 +344,7 @@ export const useStarEntryMutation = () => {
       queryClient.invalidateQueries({ queryKey: ['priority-entries'] });
     },
   });
-}
+};
 
 export const useUnstarEntryMutation = () => {
   const queryClient = useQueryClient();
@@ -365,13 +365,13 @@ export const useUnstarEntryMutation = () => {
       queryClient.invalidateQueries({ queryKey: ['priority-entries'] });
     },
   });
-}
+};
 
 export const useMoveEntriesMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (body: Required<{id: string, to: string}>&RestoreEntriesREQ) => {
+    mutationFn: (body: Required<{ id: string; to: string }> & RestoreEntriesREQ) => {
       return moveEntries(body);
     },
     onError: (error) => {
@@ -387,7 +387,7 @@ export const useMoveEntriesMutation = () => {
       queryClient.invalidateQueries({ queryKey: ['Shared-entries'] });
     },
   });
-}
+};
 
 export const useRestoreEntriesMutation = () => {
   const queryClient = useQueryClient();
@@ -518,7 +518,7 @@ export const transformEntries = (entries: EntryRESP[]): LocalEntry[] => {
       return {
         isDir: true,
         title: entry.name,
-        icon: <Icon icon='ic:baseline-folder' className='object-cover h-full w-full dark:text-yellow-600' />,
+        icon: <Icon icon='ic:baseline-folder' className='h-full w-full object-cover dark:text-yellow-600' />,
         preview: <Icon icon='ic:baseline-folder' className='h-full w-full dark:text-yellow-600' />,
         id: entry.id,
         owner: entry.owner,
@@ -533,9 +533,15 @@ export const transformEntries = (entries: EntryRESP[]): LocalEntry[] => {
       isDir: false,
       title: entry.name,
       icon: icon,
-      preview: entry.thumbnail ?
-        <img src={`${import.meta.env.VITE_BACKEND_API}${entry.thumbnail}`} alt={entry.name} className='h-full w-full object-cover' /> :
-        <div className='h-16 w-16'>{icon}</div>,
+      preview: entry.thumbnail ? (
+        <img
+          src={`${import.meta.env.VITE_BACKEND_API}${entry.thumbnail}`}
+          alt={entry.name}
+          className='h-full w-full object-cover'
+        />
+      ) : (
+        <div className='h-16 w-16'>{icon}</div>
+      ),
       id: entry.id,
       owner: entry.owner,
       lastModified: new Date(entry.updated_at),

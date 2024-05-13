@@ -35,7 +35,7 @@ const MyDrive = () => {
   const viewMode = useViewMode((state) => state.viewMode);
   const copyMutation = useCopyMutation();
 
-  const {parents, data, refetch, isLoading } = useListEntries();
+  const { parents, data, refetch, isLoading } = useListEntries();
   console.log('MyDrive -> data', data);
 
   useEffect(() => {

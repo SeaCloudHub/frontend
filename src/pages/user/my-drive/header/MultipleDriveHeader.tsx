@@ -31,7 +31,7 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
   }, [result, setArrSelected]);
 
   return (
-    <div className='flex h-8 items-center gap-3 min-w-fit'>
+    <div className='flex h-8 min-w-fit items-center gap-3'>
       <IconifyIcon icon='mdi:close' className='h-8 w-8 rounded-full p-1 hover:bg-gray-300' onClick={() => setArrSelected([])} />
       <div className='min-w-40'> {arrSelected.length} items selected </div>
       {parent === 'Trash' ? (
@@ -89,12 +89,7 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
         <SharePopUp open={isOpened} handleClose={() => setIsOpened(false)} title={`${arrSelected.length} items`} />
       )}
       {type === 'move' && (
-        <MovePopUp
-          open={isOpened}
-          handleClose={() => setIsOpened(false)}
-          title={`${arrSelected.length} items`}
-          location={dir}
-        />
+        <MovePopUp open={isOpened} handleClose={() => setIsOpened(false)} title={`${arrSelected.length} items`} location={dir} />
       )}
       {type === 'move to trash' && (
         <DeleteTempPopUp

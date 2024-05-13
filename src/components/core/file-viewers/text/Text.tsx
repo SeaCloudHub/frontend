@@ -18,7 +18,7 @@ const Text: React.FC<FileViewerProps> = ({ file }) => {
     fetchText();
   }, [file]);
 
-  return <pre className='word-break  my-auto block h-full pt-2 w-full whitespace-pre-wrap text-xs'>{text}</pre>;
+  return <pre className='word-break  my-auto block h-full w-full whitespace-pre-wrap pt-2 text-xs'>{text}</pre>;
 };
 
 export default Text;

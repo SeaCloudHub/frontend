@@ -3,7 +3,13 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Avatar, Tooltip } from '@mui/material';
 import { useDrawer, useSelected } from '@/store/my-drive/myDrive.store';
-import { LocalEntry, useCopyMutation, useRestoreEntriesMutation, useStarEntryMutation, useUnstarEntryMutation } from '@/hooks/drive.hooks';
+import {
+  LocalEntry,
+  useCopyMutation,
+  useRestoreEntriesMutation,
+  useStarEntryMutation,
+  useUnstarEntryMutation,
+} from '@/hooks/drive.hooks';
 import CustomDropdown from '@/components/core/drop-down/CustomDropdown';
 import SharePopUp from '@/components/core/pop-up/SharePopUp';
 import MovePopUp from '@/components/core/pop-up/MovePopUp';
@@ -62,16 +68,17 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
 
   const entryMenu: MenuItem[][] = [
     // chỉ !isdir mới có preview
-    !isDir ?
-      [
-        {
-          label: 'Preview',
-          icon: <Icon icon='material-symbols:visibility' />,
-          action: () => {
-            setFileViewer(true);
+    !isDir
+      ? [
+          {
+            label: 'Preview',
+            icon: <Icon icon='material-symbols:visibility' />,
+            action: () => {
+              setFileViewer(true);
+            },
           },
-        },
-      ]:[],
+        ]
+      : [],
     [
       {
         label: 'Download',
@@ -88,8 +95,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
           setIsPopUpOpen(true);
         },
       },
-      !isDir &&
-      {
+      !isDir && {
         label: 'Make a copy',
         icon: <Icon icon='material-symbols:content-copy-outline' />,
         action: () => {
@@ -156,8 +162,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
         },
       },
     ],
-  ]
-  .filter(e => e.length!=0);
+  ].filter((e) => e.length != 0);
 
   // const folderMenu = [
   //   [
@@ -365,12 +370,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
         </div>
         {type === 'share' && <SharePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} />}
         {type === 'move' && (
-          <MovePopUp
-            open={isPopUpOpen}
-            handleClose={() => setIsPopUpOpen(false)}
-            title={title}
-            location={dir}
-          />
+          <MovePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} location={dir} />
         )}
         {type === 'rename' && <RenamePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} name={title} id={id} />}
         {parent === 'trash' && (

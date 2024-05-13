@@ -8,10 +8,10 @@ import { useDeleteMutation, useRenameMutation } from '@/hooks/drive.hooks';
 type FilerRowProps = {
   data: FilerDataType;
   onClick?: () => void;
-  onDoubleClick?: () => void;
+  onDoubleClick?: (id: string, name: string) => void;
 };
 
-export const FilerRow: React.FC<FilerRowProps> = ({ data }) => {
+export const FilerRow: React.FC<FilerRowProps> = ({ data, onDoubleClick }) => {
   const renameMutation = useRenameMutation();
   const deleteMutation = useDeleteMutation();
 
@@ -47,23 +47,29 @@ export const FilerRow: React.FC<FilerRowProps> = ({ data }) => {
   };
 
   return (
-    <div className='filer-row grid grid-cols-9 gap-3 border-b border-b-[#dadce0] py-1 hover:bg-[#f5f5f5] max-[1160px]:grid-cols-6'>
-      <div className='col-span-5 flex items-center gap-1'>
+    <div
+      className='filer-row grid cursor-pointer grid-cols-9 gap-3 border-b border-b-[#dadce0] py-1 hover:bg-[#f5f5f5] max-[1160px]:grid-cols-6'
+      onDoubleClick={() => {
+        onDoubleClick && data.is_dir && onDoubleClick(data.id, data.name);
+      }}>
+      <div className='col-span-3 flex items-center gap-1'>
         {data.is_dir && <Icon icon='mdi:folder' />}
         {data.name}
       </div>
-      <div className=''>{data.type && data.type}</div>
+      <div className='col-span-3 flex justify-end text-wrap'>{data.type && data.type}</div>
       <div className='truncate  max-[1000px]:hidden'>{data.size && numToSize(data.size)}</div>
       <div className=''>{formatDate(data.created)}</div>
-      <div className={'operations hidden items-center justify-center gap-4'}>
-        {ops.map((op, idx) => {
-          return (
-            <div className='cursor-pointer' key={idx} onClick={op.action}>
-              {op.icon}
-            </div>
-          );
-        })}
-      </div>
+      {!data.is_root && data.name !== '.trash' && (
+        <div className={'operations hidden items-center justify-center gap-4'}>
+          {ops.map((op, idx) => {
+            return (
+              <div className='cursor-pointer' key={idx} onClick={op.action}>
+                {op.icon}
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };

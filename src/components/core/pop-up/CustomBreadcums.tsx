@@ -8,36 +8,32 @@ type CustomBreadcumsProps = {
   onClick?: (id?: string, name?: string) => void;
 };
 
-const CustomBreadcums: React.FC<CustomBreadcumsProps> = ({path, onClick}) => {
+const CustomBreadcums: React.FC<CustomBreadcumsProps> = ({ path, onClick }) => {
   return (
     <Breadcrumbs
-      separator={<NavigateNext fontSize="small" />}
-      aria-label="breadcrumb"
-      classes={{root: 'mb-3 dark:text-white select-none'}}
+      separator={<NavigateNext fontSize='small' />}
+      aria-label='breadcrumb'
+      classes={{ root: 'mb-3 dark:text-white select-none' }}
       sx={{
         fontSize: '0.875rem',
-      }}
-    >
-      {path.map((p, index) => (
-        (index <= path.length - 2) ?
-        <Link
-          key={index}
-          underline='hover'
-          color='inherit'
-          onClick={() => onClick(p.id, p.name)}
-          className='cursor-pointer'
-        >
-          {p.name}
-        </Link> :
-        <Typography key={index} color='text.primary'
-          classes={{root: 'cursor-default dark:text-white select-none'}}
-          sx={{
-            fontSize: '0.875rem',
-          }}
-        >
-          {p.name}
-        </Typography>
-      ))}
+      }}>
+      {path.map((p, index) =>
+        index <= path.length - 2 ? (
+          <Link key={index} underline='hover' color='inherit' onClick={() => onClick(p.id, p.name)} className='cursor-pointer'>
+            {p.name}
+          </Link>
+        ) : (
+          <Typography
+            key={index}
+            color='text.primary'
+            classes={{ root: 'cursor-default dark:text-white select-none' }}
+            sx={{
+              fontSize: '0.875rem',
+            }}>
+            {p.name}
+          </Typography>
+        ),
+      )}
     </Breadcrumbs>
   );
 };

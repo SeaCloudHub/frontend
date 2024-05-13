@@ -13,13 +13,7 @@ type PriorityViewProps = {
   setSort: (value: { sort: string; order: string }) => void;
 };
 
-const PriorityView: React.FC<PriorityViewProps> = ({
-  entries,
-  sort,
-  order,
-  setSort,
-  isFileMode,
-}) => {
+const PriorityView: React.FC<PriorityViewProps> = ({ entries, sort, order, setSort, isFileMode }) => {
   const { viewMode } = useViewMode();
   const { rootId } = useStorageStore();
   const localEntries = isFileMode ? entries.filter((entry) => !entry.isDir) : entries.filter((entry) => entry.isDir);
@@ -35,13 +29,7 @@ const PriorityView: React.FC<PriorityViewProps> = ({
       curDir={{ id: rootId, name: 'Priority' }}
     />
   ) : (
-    <DriveListView
-      order={order}
-      sort={sort}
-      setSort={setSort}
-      entries={localEntries}
-      curDir={{ id: rootId, name: 'Priority' }}
-    />
+    <DriveListView order={order} sort={sort} setSort={setSort} entries={localEntries} curDir={{ id: rootId, name: 'Priority' }} />
   );
 };
 

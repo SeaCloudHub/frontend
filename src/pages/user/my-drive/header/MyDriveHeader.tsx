@@ -36,7 +36,7 @@ const MyDriveHeader: React.FC<MyDriveHeaderProps> = ({
 
   return (
     <div className='flex flex-col overflow-hidden'>
-      <div className='flex justify-between min-w-[375px]'>
+      <div className='flex min-w-[375px] justify-between'>
         <div className='pb-[8px] pl-1 pt-[14px]'>
           <DrivePath path={path} type={'MyDrive'} />
         </div>
@@ -48,34 +48,34 @@ const MyDriveHeader: React.FC<MyDriveHeaderProps> = ({
         </div>
       </div>
       {arrSelected.length > 0 ? (
-        <div className='px-4 py-1 overflow-x-auto'>
-          <MultipleDriveHeader parent='MyDrive' dir={path[path.length-1]} />
+        <div className='overflow-x-auto px-4 py-1'>
+          <MultipleDriveHeader parent='MyDrive' dir={path[path.length - 1]} />
         </div>
       ) : (
         <div className='w-full pl-5'>
           <div className='flex items-center justify-between gap-3 overflow-x-auto'>
-            <div >
-            <DriveFilter
-              setModifiedFilter={setModifiedFilter}
-              setPeopleFilter={setPeopleFilter}
-              setTypeFilter={setTypeFilter}
-              modifiedFilter={modifiedFilter}
-              peopleFilter={peopleFilter}
-              typeFilter={typeFilter}
+            <div>
+              <DriveFilter
+                setModifiedFilter={setModifiedFilter}
+                setPeopleFilter={setPeopleFilter}
+                setTypeFilter={setTypeFilter}
+                modifiedFilter={modifiedFilter}
+                peopleFilter={peopleFilter}
+                typeFilter={typeFilter}
               />
-            {(typeFilter || peopleFilter || modifiedFilter) && (
-              <div className='flex h-7 items-center rounded-full px-[12px] py-[1px] hover:bg-[#ededed]'>
-                <div
-                  onClick={() => {
-                    setTypeFilter('');
-                    setPeopleFilter('');
-                    setModifiedFilter('');
-                  }}
-                  className='cursor-pointer text-sm font-medium'>
-                  Clear filters
+              {(typeFilter || peopleFilter || modifiedFilter) && (
+                <div className='flex h-7 items-center rounded-full px-[12px] py-[1px] hover:bg-[#ededed]'>
+                  <div
+                    onClick={() => {
+                      setTypeFilter('');
+                      setPeopleFilter('');
+                      setModifiedFilter('');
+                    }}
+                    className='cursor-pointer text-sm font-medium'>
+                    Clear filters
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
             </div>
             <Sort sort={sort} order={order} setSort={setSort} />
           </div>

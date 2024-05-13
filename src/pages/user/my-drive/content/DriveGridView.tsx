@@ -21,14 +21,7 @@ type DriveGridViewProps = {
   parent?: 'priority' | 'my-drive' | 'shared' | 'trash' | 'starred';
 };
 
-export const DriveGridView: React.FC<DriveGridViewProps> = ({
-  entries,
-  fileShow,
-  folderShow,
-  isLoading,
-  curDir,
-  parent,
-}) => {
+export const DriveGridView: React.FC<DriveGridViewProps> = ({ entries, fileShow, folderShow, isLoading, curDir, parent }) => {
   const files = entries.filter((entry) => !entry.isDir);
   const folders = entries.filter((entry) => entry.isDir);
 
@@ -71,7 +64,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
         </div>
       ) : (
         <div ref={driveGridViewRef} className='pl-5 pr-3 pt-4'>
-          <div className='relative flex flex-col space-y-2 min-w-40'>
+          <div className='relative flex min-w-40 flex-col space-y-2'>
             {folders.length !== 0 && (
               <div className={!folderShow ? 'visible' : 'hidden'}>
                 <div className='pb-4 pt-2 text-sm font-medium'> Folders</div>

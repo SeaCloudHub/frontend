@@ -78,9 +78,10 @@ export const DriveListView: React.FC<DriveListViewProps> = ({
                 {...entry}
                 onDoubleClick={() => {
                   navigate(`${CUSTOMER_MY_DRIVE}/dir/${entry.id}`);
-                } }
+                }}
                 isSelected={arrSelected?.includes(entry.id)}
-                parent={parent}              />
+                parent={parent}
+              />
             ))}
             {files.map((entry, index) => (
               <DataRow

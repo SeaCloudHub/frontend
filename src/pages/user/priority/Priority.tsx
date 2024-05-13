@@ -42,7 +42,7 @@ const Priority = () => {
         headerLeft={
           <div className='flex flex-col overflow-hidden'>
             <div className='flex justify-between space-x-2 text-2xl'>
-              <div className='pb-[20px] pl-5 pt-[17px] line-clamp-1'>Welcome to SeaCloud</div>
+              <div className='line-clamp-1 pb-[20px] pl-5 pt-[17px]'>Welcome to SeaCloud</div>
               <div className='flex items-center gap-2'>
                 <Icon
                   icon='mdi:information-outline'
@@ -58,18 +58,18 @@ const Priority = () => {
               </div>
             </div>
             {/* <div className=''> */}
-              {arrSelected.length === 0 ? (
-                <PriorityFilter
-                  isFileMode={isFileMode}
-                  setIsFileMode={setIsFileMode}
-                  viewMode={viewMode}
-                  setViewMode={setViewMode}
-                />
-              ) : (
-                <div className='px-4 py-1 overflow-x-auto'>
-                  <MultipleDriveHeader parent='Priority' dir={{id: rootId, name: 'Priority'}} />
-                </div>
-              )}
+            {arrSelected.length === 0 ? (
+              <PriorityFilter
+                isFileMode={isFileMode}
+                setIsFileMode={setIsFileMode}
+                viewMode={viewMode}
+                setViewMode={setViewMode}
+              />
+            ) : (
+              <div className='overflow-x-auto px-4 py-1'>
+                <MultipleDriveHeader parent='Priority' dir={{ id: rootId, name: 'Priority' }} />
+              </div>
+            )}
             {/* </div> */}
           </div>
         }

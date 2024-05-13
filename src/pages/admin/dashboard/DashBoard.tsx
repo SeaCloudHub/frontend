@@ -119,7 +119,7 @@ const DashBoard = () => {
             <PieChartCore
               mapperFunction={numToSize}
               data={[
-                { value: userStatisticData ?  userStatisticData.total_storage_usage : 0, label: 'Used' },
+                { value: userStatisticData ? userStatisticData.total_storage_usage : 0, label: 'Used' },
                 { value: userStatisticData ? userStatisticData.total_storage_capacity : 0, label: 'Free' },
               ]}
             />
