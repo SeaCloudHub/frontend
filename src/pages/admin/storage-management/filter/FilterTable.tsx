@@ -23,7 +23,7 @@ export const FilerTable: React.FC<FilerTableProps> = ({ data, setPath }) => {
         <div className='col-span-3 font-medium'>Name</div>
         <div className='col-span-2'></div>
         <div className='flex justify-end font-medium'>File type</div>
-        <div className='truncate font-medium max-[1000px]:hidden'>Size</div>
+        <div className='truncate text-end font-medium max-[1000px]:hidden'>Size</div>
         <div className='font-medium'>Created</div>
         <div className=''></div>
       </div>

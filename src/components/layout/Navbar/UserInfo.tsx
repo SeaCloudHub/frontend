@@ -1,5 +1,5 @@
 import { useSession } from '@/store/auth/session';
-import { AUTH_LOGIN_EMAIL } from '@/utils/constants/router.constant';
+import { AUTH_LOGIN_EMAIL, CUSTOMER_PROFILE } from '@/utils/constants/router.constant';
 import { getFirstCharacters } from '@/utils/function/getFirstCharacter';
 import { getRandomColor } from '@/utils/function/getRandomColor';
 import { LinearProgress } from '@mui/material';
@@ -23,6 +23,10 @@ function UserInfo({ onClose }: UserInfoProps) {
       setIsLogout(false);
       navigate(AUTH_LOGIN_EMAIL);
     }, 2000);
+  };
+
+  const onUserProfileClick = () => {
+    navigate(CUSTOMER_PROFILE);
   };
 
   return (
@@ -54,7 +58,12 @@ function UserInfo({ onClose }: UserInfoProps) {
       </div>
       <h2 className='tablet:text-2xl w-full truncate text-center text-xl font-normal'>{`Hi, ${identity.first_name}!`}</h2>
 
-      <div className='flex justify-center space-x-1'>
+      <div className='flex flex-col items-center justify-center'>
+        <button
+          onClick={onUserProfileClick}
+          className='tablet:w-44 hover:bg-darkC flex w-48 items-center justify-center space-x-2 rounded-full border bg-white py-3  hover:bg-gray-200 dark:text-black'>
+          <span className='text-[#2e6ed6]'>Manage your account</span>
+        </button>
         <button
           disabled={isLogout}
           onClick={onSignOutClick}

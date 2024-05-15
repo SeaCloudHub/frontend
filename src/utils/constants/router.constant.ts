@@ -12,6 +12,7 @@ import Priority from '../../pages/user/priority/Priority';
 import Shared from '../../pages/user/shared/Shared';
 import Starred from '../../pages/user/starred/Starred';
 import Trash from '../../pages/user/trash/Trash';
+import { Profile } from '@/pages/user/profile/Profile';
 
 export const HOME = '/';
 export const AUTH_HOME = '/auth';
@@ -42,6 +43,7 @@ export const CUSTOMER_MY_DRIVE_DIR = `${CUSTOMER_HOME}/my-drive/dir/:dirId`;
 export const CUSTOMER_STARRED = `${CUSTOMER_HOME}/starred`;
 export const CUSTOMER_TRASH = `${CUSTOMER_HOME}/trash`;
 export const CUSTOMER_MEMORY = `${CUSTOMER_HOME}/memory`;
+export const CUSTOMER_PROFILE = `${CUSTOMER_HOME}/profile`;
 
 export const routes = {
   auth: [
@@ -69,6 +71,7 @@ export const routes = {
     { path: CUSTOMER_STARRED, component: Starred },
     { path: CUSTOMER_TRASH, component: Trash },
     { path: CUSTOMER_MEMORY, component: Memory },
+    { path: CUSTOMER_PROFILE, component: Profile },
   ],
   notFound: { path: PAGE_NOT_FOUND, component: ErrorPage },
 };
