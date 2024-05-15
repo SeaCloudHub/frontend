@@ -113,7 +113,7 @@ const FileFolderResult = ({ name, type, fileType }: FileFolderResultProps) => {
             {!responsive && (
               <div className='flex w-[50%] items-center justify-end'>
                 <p className='w-1/3 truncate'>{item.owner && ''}</p>
-                <p className='w-1/3 truncate'>{formatDate(item.lastModified, '')}</p>
+                <p className='w-1/3 truncate'>{formatDate(item.lastModified)}</p>
                 <p className='w-1/3  truncate pr-4 text-end'>{item.size}</p>
               </div>
             )}

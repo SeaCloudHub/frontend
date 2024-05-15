@@ -82,7 +82,7 @@ const Shared = () => {
               </div>
             </>
           ) : (
-            <div className='px-4 py-1 overflow-x-auto'>
+            <div className='overflow-x-auto px-4 py-1'>
               <MultipleDriveHeader
                 parent='SharedWithMe'
                 dir={{

@@ -1,4 +1,5 @@
 import ButtonIcon from '@/components/core/button/ButtonIcon';
+import { ColorSchemeToggle } from '@/components/core/button/ColorSchemeToggle';
 import CustomDropdown from '@/components/core/drop-down/CustomDropdown';
 import { MenuItem } from '@/components/core/drop-down/Dropdown';
 import MenuCore from '@/components/core/menu/MenuCore';
@@ -46,11 +47,12 @@ const Configuration = () => {
         <ButtonIcon tooltip='Help' size={'1.6rem'} icon='material-symbols:help-outline' />
       </MenuCore>
       {/* <MenuCore mix={false} menuItems={settingMenu}></MenuCore> */}
-      <CustomDropdown
+      {/* <CustomDropdown
         minWidth={false}
         button={<ButtonIcon tooltip='Setting' size={'1.6rem'} icon='uil:setting' />}
         items={settingMenu}
-      />
+      /> */}
+      <ColorSchemeToggle />
     </div>
   );
 };

@@ -48,6 +48,7 @@ const ModalCreateFolder = ({ isOpen, handleConfirm, dirId }: ModalCreateFolderPr
           <input
             className='border-textC outline-textC2 w-full rounded-md border py-2 indent-5 dark:bg-black'
             type='text'
+            autoFocus={true}
             placeholder='Untitled folder'
             value={folderName}
             onChange={onInputChange}

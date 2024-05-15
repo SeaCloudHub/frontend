@@ -17,7 +17,7 @@ const ModalChangePasswordSuccess = ({ isOpen, handleConfirm }: ModalChangePasswo
             alt='Success'
           />
           <p className='text-lg font-bold text-gray-800'>Password Changed Successfully</p>
-          <p className='mb-6 text-sm text-gray-600'>Please login again.</p>
+          <p className='mb-6 text-sm text-gray-600'>Back to home page to continue using our services.</p>
           <ButtonCore
             title='OK'
             onClick={() => {

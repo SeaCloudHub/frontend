@@ -7,7 +7,6 @@ import Show from '../condition/Show';
 type PieChartLabelData = {
   value: number;
   label: string;
-  
 };
 
 type PieChartProps = {

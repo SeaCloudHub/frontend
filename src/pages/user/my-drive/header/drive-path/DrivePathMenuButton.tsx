@@ -24,7 +24,7 @@ type DrivePathMenuButtonProps = {
 
 const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ dirId, dirName, type }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const folderInputRef = useRef<HTMLInputElement>(null);
+  // const folderInputRef = useRef<HTMLInputElement>(null);
   const [createModal, setCreateModal] = useState<boolean>(false);
   const { setFileNames } = useProgressIndicator();
   const { rootId } = useStorageStore();
@@ -52,30 +52,30 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ dirId, dirNam
     }
   };
 
-  const handleFolderUpload = (e: React.ChangeEvent<HTMLInputElement>, curDirId: string) => {
-    const folderInput = e.target;
-    const fileList = folderInput.files;
-    if (fileList && fileList.length > 0) {
-      const selectedFolder = fileList[0];
-      const folderName = selectedFolder.webkitRelativePath.split('/')[0];
-      const listFilesAndFolders = (directory: string, files: FileList) => {
-        for (let i = 0; i < files.length; i++) {
-          const file = files[i];
-          const relativePath = file.webkitRelativePath;
-          const parts = relativePath.split('/');
-          if (parts[0] === directory) {
-            if (parts.length === 1) {
-              console.log('File inside', directory, ':', parts[1]);
-            } else {
-              listFilesAndFolders(parts.slice(1).join('/'), files);
-            }
-          }
-        }
-      };
+  // const handleFolderUpload = (e: React.ChangeEvent<HTMLInputElement>, curDirId: string) => {
+  //   const folderInput = e.target;
+  //   const fileList = folderInput.files;
+  //   if (fileList && fileList.length > 0) {
+  //     const selectedFolder = fileList[0];
+  //     const folderName = selectedFolder.webkitRelativePath.split('/')[0];
+  //     const listFilesAndFolders = (directory: string, files: FileList) => {
+  //       for (let i = 0; i < files.length; i++) {
+  //         const file = files[i];
+  //         const relativePath = file.webkitRelativePath;
+  //         const parts = relativePath.split('/');
+  //         if (parts[0] === directory) {
+  //           if (parts.length === 1) {
+  //             console.log('File inside', directory, ':', parts[1]);
+  //           } else {
+  //             listFilesAndFolders(parts.slice(1).join('/'), files);
+  //           }
+  //         }
+  //       }
+  //     };
 
-      listFilesAndFolders(folderName, fileList);
-    }
-  };
+  //     listFilesAndFolders(folderName, fileList);
+  //   }
+  // };
 
   const rootMenuItems: MenuItem[][] = [
     [
@@ -95,15 +95,15 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ dirId, dirNam
           }
         },
       },
-      {
-        label: 'Folder Upload',
-        icon: <IconifyIcon icon={'uil:folder-upload'} />,
-        action: () => {
-          if (folderInputRef.current) {
-            folderInputRef.current.click();
-          }
-        },
-      },
+      // {
+      //   label: 'Folder Upload',
+      //   icon: <IconifyIcon icon={'uil:folder-upload'} />,
+      //   action: () => {
+      //     if (folderInputRef.current) {
+      //       folderInputRef.current.click();
+      //     }
+      //   },
+      // },
     ],
   ];
 
@@ -161,15 +161,15 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ dirId, dirNam
           }
         },
       },
-      {
-        label: 'Folder upload',
-        icon: <Icon icon='mdi:folder-upload-outline' />,
-        action: () => {
-          if (folderInputRef.current) {
-            folderInputRef.current.click();
-          }
-        },
-      },
+      // {
+      //   label: 'Folder upload',
+      //   icon: <Icon icon='mdi:folder-upload-outline' />,
+      //   action: () => {
+      //     if (folderInputRef.current) {
+      //       folderInputRef.current.click();
+      //     }
+      //   },
+      // },
     ],
   ];
 
@@ -177,7 +177,7 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ dirId, dirNam
     <>
       <CustomDropdown
         button={
-          <div className='my-0.5 flex h-9 cursor-pointer items-center rounded-full py-1 pl-4 pr-3 hover:bg-[#ededed]'>
+          <div className='my-0.5 flex h-9 cursor-pointer items-center rounded-full py-1 pl-4 pr-3 hover:bg-[#ededed] dark:hover:bg-slate-500 active:brightness-90'>
             <div className='pb-1 text-2xl'>{dirName}</div>
             <Icon icon='mdi:caret-down' className='h-5 w-5' />
           </div>
@@ -193,18 +193,6 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ dirId, dirNam
           handleFileUpload(e, dirId);
         }}
         multiple
-      />
-      <input
-        ref={folderInputRef}
-        id='folderInput'
-        type=''
-        directory=''
-        webkitdirectory=''
-        style={{ display: 'none' }}
-        onChange={(e) => {
-          handleFolderUpload(e, dirId);
-        }}
-        multiple={false}
       />
       {createModal && (
         <ModalCreateFolder

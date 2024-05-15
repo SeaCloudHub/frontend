@@ -1,11 +1,11 @@
-import { Divider, Menu, MenuItem } from '@mui/material';
+import { Divider, Menu, MenuItem, Tooltip } from '@mui/material';
 import React, { useState } from 'react';
 import { MenuItem as MenuItemCustom } from './Dropdown';
 
 type DropdownProps = {
   button: React.ReactNode;
   items: MenuItemCustom[][];
-  minWidth?:boolean
+  minWidth?: boolean;
 };
 
 const CustomDropdown: React.FC<DropdownProps> = ({ button, items, minWidth }) => {
@@ -21,7 +21,9 @@ const CustomDropdown: React.FC<DropdownProps> = ({ button, items, minWidth }) =>
   };
   return (
     <>
-      <div onClick={handleClick}>{button}</div>
+      <Tooltip title='More options'>
+        <div onClick={handleClick}>{button}</div>
+      </Tooltip>
       <Menu
         id='simple-menu'
         anchorEl={anchorEl}
@@ -39,23 +41,23 @@ const CustomDropdown: React.FC<DropdownProps> = ({ button, items, minWidth }) =>
           <div key={ind}>
             {group.map(({ label, icon, action }) => (
               <MenuItem
-                key={label}
+                key={ind+ ' ' +label}
                 onClick={() => {
                   action && action();
                   handleClose();
                 }}
                 sx={{
-                  minWidth:minWidth?  '250px':'0px',
+                  minWidth: minWidth ? '250px' : '0px',
                   py: '3px',
                   '.dark &': {
                     '&:hover': {
-                      backgroundColor: 'rgb(23 37 84)',
+                      backgroundColor: '#334155',
                     },
                   },
                 }}>
                 <div className='flex items-center space-x-2'>
                   {icon}
-                  <div>{label}</div>
+                  <div className='select-none'>{label}</div>
                 </div>
               </MenuItem>
             ))}

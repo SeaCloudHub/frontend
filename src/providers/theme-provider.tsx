@@ -1,4 +1,6 @@
+import { ConfigProvider } from 'antd';
 import { createContext, useContext, useEffect, useState } from 'react';
+import { theme as themeAntd } from 'antd';
 
 type Theme = 'dark' | 'light' | 'system';
 
@@ -22,6 +24,7 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 
 export function ThemeProvider({ children, defaultTheme = 'system', storageKey = 'vite-ui-theme', ...props }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(() => (localStorage.getItem(storageKey) as Theme) || defaultTheme);
+  const { defaultAlgorithm, darkAlgorithm } = themeAntd;
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -48,7 +51,12 @@ export function ThemeProvider({ children, defaultTheme = 'system', storageKey = 
 
   return (
     <ThemeProviderContext.Provider {...props} value={value}>
-      {children}
+      <ConfigProvider
+        theme={{
+          algorithm: theme === 'dark' ? darkAlgorithm : defaultAlgorithm,
+        }}>
+        {children}
+      </ConfigProvider>
     </ThemeProviderContext.Provider>
   );
 }

@@ -16,12 +16,11 @@ type DriveHistoryViewProps = {
   setSort?: ({ sort, order }: { sort: string; order: string }) => void;
   entries: LocalEntry[];
   dir: { id: string; name: string };
-  // setArrSelected?: Dispatch<SetStateAction<string[]>>;
-  // arrSelected?: string[];
 };
 
 export const LocalEntryToTimeEntry = (entries: LocalEntry[]): TimeEntry[] => {
   const timeEntries: TimeEntry[] = [];
+  entries.sort((a, b) => new Date(b.lastModified).getTime() - new Date(a.lastModified).getTime());
   entries.forEach((entry) => {
     const time = FormatDateStrToDDMMYYYY(entry.lastModified.toString());
     const timeEntry = timeEntries.find((timeEntry) => timeEntry.time === time);
@@ -34,14 +33,8 @@ export const LocalEntryToTimeEntry = (entries: LocalEntry[]): TimeEntry[] => {
   return timeEntries;
 };
 
-const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({
-  sort,
-  order,
-  setSort,
-  entries,
-  dir,
-}) => {
-  console.log(entries)
+const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({ sort, order, setSort, entries, dir }) => {
+  console.log(entries);
   const timeEntries = LocalEntryToTimeEntry(entries);
   const driveGridViewRef = useRef(null);
   const { drawerOpen } = useDrawer();
@@ -66,7 +59,7 @@ const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({
   }, [arrSelected, setArrSelected]);
 
   return (
-    <div className='mx-2 mt-2' ref={driveGridViewRef}>
+    <div className='mx-5 mt-2' ref={driveGridViewRef}>
       <div className='flex flex-col space-y-2'>
         <div className='absolute right-4 top-3'>
           <Sort sort={sort} order={order} setSort={setSort} />
@@ -82,30 +75,31 @@ const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({
             </div>
           </div>
         )}
-        {timeEntries.length && timeEntries.map((entry, index) => (
-          <div key={index}>
-            <div className='pb-4 pt-2 text-sm font-medium'>{entry.time}</div>
-            {entry.entries.length !== 0 && (
-              <div className={`grid gap-4 ${drawerOpen ? 'xl:grid-cols-3' : 'sm:grid-cols-2 xl:grid-cols-5'}`}>
-                {entry.entries.map((file, index) => (
-                  <div key={index} className='aspect-square'>
-                    <FileCard
-                      title={file.title}
-                      icon={file.icon}
-                      preview={file.preview}
-                      id={file.id}
-                      parent='trash'
-                      fileType={file.fileType}
-                      isSelected={arrSelected.includes(file.id)}
-                      isDir={file.isDir}
-                      dir={dir}
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        ))}
+        {timeEntries.length &&
+          timeEntries.map((entry, index) => (
+            <div key={index}>
+              <div className='pb-4 pt-2 text-sm font-medium'>{entry.time}</div>
+              {entry.entries.length !== 0 && (
+                <div className={`grid gap-4 ${drawerOpen ? 'xl:grid-cols-3' : 'sm:grid-cols-2 xl:grid-cols-5'}`}>
+                  {entry.entries.map((file, index) => (
+                    <div key={index} className='aspect-square'>
+                      <FileCard
+                        title={file.title}
+                        icon={file.icon}
+                        preview={file.preview}
+                        id={file.id}
+                        parent='trash'
+                        fileType={file.fileType}
+                        isSelected={arrSelected.includes(file.id)}
+                        isDir={file.isDir}
+                        dir={dir}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
       </div>
     </div>
   );

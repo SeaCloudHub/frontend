@@ -1,4 +1,4 @@
-import { Path, useSelected } from '@/store/my-drive/myDrive.store';
+import { Path, useSelected, useTypeFilter } from '@/store/my-drive/myDrive.store';
 import Sort from '../content/Sort';
 import DriveFilter from './DriveFilter';
 import DriveViewMode from './DriveViewMode';
@@ -6,13 +6,15 @@ import InfoButton from './InfoButton';
 import DrivePath from './drive-path/DrivePath';
 import PriorityFilter from '../../priority/priority-filter/PriorityFilter';
 import MultipleDriveHeader from './MultipleDriveHeader';
+import { Tooltip } from '@mui/material';
+import { TypeEntry } from '@/apis/drive/drive.request';
 
 type MyDriveHeaderProps = {
   path: Path;
-  typeFilter: string;
+  // typeFilter: TypeEntry;
   peopleFilter: string;
   modifiedFilter: string;
-  setTypeFilter: (type: string) => void;
+  // setTypeFilter?: (type: TypeEntry) => void;
   setPeopleFilter: (people: string) => void;
   setModifiedFilter: (modified: string) => void;
   sort: string;
@@ -26,21 +28,22 @@ const MyDriveHeader: React.FC<MyDriveHeaderProps> = ({
   setModifiedFilter,
   peopleFilter,
   setPeopleFilter,
-  typeFilter,
-  setTypeFilter,
+  // typeFilter,
+  // setTypeFilter,
   sort,
   order,
   setSort,
 }) => {
   const { arrSelected } = useSelected();
+  const { setTypeFilter, typeFilter } = useTypeFilter();
 
   return (
     <div className='flex flex-col overflow-hidden'>
-      <div className='flex justify-between min-w-[375px]'>
+      <div className='flex min-w-[375px] justify-between'>
         <div className='pb-[8px] pl-1 pt-[14px]'>
           <DrivePath path={path} type={'MyDrive'} />
         </div>
-        <div className='flex items-center pb-[6px] pl-[25px] pr-[11px] pt-[14px]'>
+        <div className='flex items-center pb-[6px] pr-[11px] pt-[14px]'>
           <DriveViewMode />
           <div className='mx-1 my-0.5'>
             <InfoButton />
@@ -48,34 +51,36 @@ const MyDriveHeader: React.FC<MyDriveHeaderProps> = ({
         </div>
       </div>
       {arrSelected.length > 0 ? (
-        <div className='px-4 py-1 overflow-x-auto'>
+        <div className='px-4 py-0.5 overflow-x-auto'>
           <MultipleDriveHeader parent='MyDrive' dir={path[path.length-1]} />
         </div>
       ) : (
         <div className='w-full pl-5'>
-          <div className='flex items-center justify-between gap-3 overflow-x-auto'>
-            <div >
-            <DriveFilter
-              setModifiedFilter={setModifiedFilter}
-              setPeopleFilter={setPeopleFilter}
-              setTypeFilter={setTypeFilter}
-              modifiedFilter={modifiedFilter}
-              peopleFilter={peopleFilter}
-              typeFilter={typeFilter}
+          <div className='flex items-center justify-between overflow-x-auto'>
+            <div className='flex gap-3'>
+              <DriveFilter
+                setModifiedFilter={setModifiedFilter}
+                // setPeopleFilter={setPeopleFilter}
+                // setTypeFilter={setTypeFilter}
+                modifiedFilter={modifiedFilter}
+                // peopleFilter={peopleFilter}
+                // typeFilter={typeFilter}
               />
-            {(typeFilter || peopleFilter || modifiedFilter) && (
-              <div className='flex h-7 items-center rounded-full px-[12px] py-[1px] hover:bg-[#ededed]'>
-                <div
-                  onClick={() => {
-                    setTypeFilter('');
-                    setPeopleFilter('');
-                    setModifiedFilter('');
-                  }}
-                  className='cursor-pointer text-sm font-medium'>
-                  Clear filters
+              {(typeFilter || peopleFilter || modifiedFilter) && (
+                <div className='flex h-7 items-center rounded-full px-[12px] py-[1px] hover:bg-slate-200 active:brightness-90 dark:hover:bg-slate-500'>
+                  <Tooltip title='Clear filters'>
+                    <div
+                      onClick={() => {
+                        setTypeFilter('');
+                        setPeopleFilter('');
+                        setModifiedFilter('');
+                      }}
+                      className='cursor-pointer text-sm font-medium line-clamp-1'>
+                      Clear filters
+                    </div>
+                  </Tooltip>
                 </div>
-              </div>
-            )}
+              )}
             </div>
             <Sort sort={sort} order={order} setSort={setSort} />
           </div>

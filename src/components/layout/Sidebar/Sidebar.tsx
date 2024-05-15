@@ -1,5 +1,4 @@
 import { useStorageStore } from '@/store/storage/storage.store';
-import { ADMIN_HOME, CUSTOMER_HOME } from '@/utils/constants/router.constant';
 import { numToSize } from '@/utils/function/numbertToSize';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -11,6 +10,8 @@ import ButtonIcon from '../../core/button/ButtonIcon';
 import LinearChartBar from '../../core/linear-chart-bar/linearChartBar';
 import SidebarItem from '../../core/sidebar-item/SidebarItem';
 import AddFileMenu from './AddFileMenu';
+import { ADMIN_HOME, DRIVE_HOME } from '@/utils/constants/router.constant';
+import { useSelected } from '@/store/my-drive/myDrive.store';
 
 type SidebarProps = {
   shrinkMode: boolean;
@@ -20,6 +21,7 @@ const Sidebar = ({ role, shrinkMode }: SidebarProps) => {
   const updateShrinkMode = useScreenMode((state) => state.updateShrinkMode);
   const navigate = useNavigate();
   const { storageCapacity, storageUsage } = useStorageStore();
+  const { setArrSelected } = useSelected();
   const [tabs, setTabs] = useState<SidebarItemType[]>([]);
 
   useEffect(() => {
@@ -48,8 +50,12 @@ const Sidebar = ({ role, shrinkMode }: SidebarProps) => {
           ) : (
             <div className='flex w-full  flex-col '>
               <div
-                className='flex h-16 w-full cursor-pointer items-center justify-around gap-2 p-3 pl-6'
-                onClick={() => navigate(role === Role.USER ? CUSTOMER_HOME : ADMIN_HOME)}>
+                className='flex h-16 w-full items-center justify-around gap-2 p-3 pl-6 cursor-pointer'
+                onClick={() => {
+                  setArrSelected([]);
+                  navigate(role === Role.USER ? DRIVE_HOME: ADMIN_HOME)
+                }}
+              >
                 <img src={(import.meta.env.BASE_URL + 'logo.png') as string} alt='placeholder' className='h-9  rounded-full' />
                 <p className='h4'>SEACLOUD</p>
                 <ButtonIcon onClick={() => updateShrinkMode(true)} icon='ion:caret-back' size={'25px'} />

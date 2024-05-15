@@ -1,60 +1,39 @@
-import Dropdown, { MenuItem, classNames } from '@/components/core/drop-down/Dropdown';
-import { Icon } from '@iconify/react/dist/iconify.js';
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { Avatar, Tooltip } from '@mui/material';
-import { useDrawer, useSelected } from '@/store/my-drive/myDrive.store';
-import {
-  LocalEntry,
-  useCopyMutation,
-  useRestoreEntriesMutation,
-  useStarEntryMutation,
-  useUnstarEntryMutation,
-} from '@/hooks/drive.hooks';
+import { downloadFile } from '@/apis/drive/drive.api';
 import CustomDropdown from '@/components/core/drop-down/CustomDropdown';
-import SharePopUp from '@/components/core/pop-up/SharePopUp';
+import { MenuItem, classNames } from '@/components/core/drop-down/Dropdown';
+import FileViewerContainer from '@/components/core/file-viewers/file-viewer-container/FileViewerContainer';
+import DeleteTempPopUp from '@/components/core/pop-up/DeleteTempPopUp';
 import MovePopUp from '@/components/core/pop-up/MovePopUp';
 import RenamePopUp from '@/components/core/pop-up/RenamePopUp';
-import DeletePopUp from '@/components/core/pop-up/DeletePopUp';
-import { FormatDateStrToDDMMYYYY, formatDate } from '@/utils/function/formatDate.function';
-import { useLocation, useNavigate } from 'react-router-dom';
+import SharePopUp from '@/components/core/pop-up/SharePopUp';
+import { LocalEntry, SuggestedEntry, useCopyMutation, useRestoreEntriesMutation, useStarEntryMutation, useUnstarEntryMutation } from '@/hooks/drive.hooks';
 import { useSession } from '@/store/auth/session';
+import { useDrawer, useSelected } from '@/store/my-drive/myDrive.store';
+import { useStorageStore } from '@/store/storage/storage.store';
+import { DRIVE_HOME } from '@/utils/constants/router.constant';
+import { CopyToClipboard } from '@/utils/function/copy.function';
+import { formatDate } from '@/utils/function/formatDate.function';
 import { getFirstCharacters } from '@/utils/function/getFirstCharacter';
 import { getRandomColor } from '@/utils/function/getRandomColor';
 import { numToSize } from '@/utils/function/numbertToSize';
-import FileViewerContainer from '@/components/core/file-viewers/file-viewer-container/FileViewerContainer';
-import { downloadFile } from '@/apis/drive/drive.api';
-import { CopyToClipboard } from '@/utils/function/copy.function';
-import { DRIVE_MY_DRIVE, DRIVE_SHARED_DIR } from '@/utils/constants/router.constant';
-import DeleteTempPopUp from '@/components/core/pop-up/DeleteTempPopUp';
+import { Icon } from '@iconify/react/dist/iconify.js';
+import { Avatar, Tooltip } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-type DataRowProps = {
-  // dirId?: string;
+type DataRowPriorityViewProps = {
   isSelected?: boolean;
   onDoubleClick?: () => void;
   onChanged?: () => void;
   dir: { id: string; name: string };
-  parent?: 'priority' | 'my-drive' | 'shared' | 'trash' | 'starred';
 };
 
-export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
-  id,
-  isDir,
-  title,
-  icon,
-  lastModified,
-  owner,
-  size,
-  onDoubleClick,
-  parent,
-  onChanged,
-  dir,
-  fileType,
-  isSelected,
-}) => {
+const DataRowPriorityView: React.FC<SuggestedEntry&DataRowPriorityViewProps> = ({dir, isSelected, onChanged, onDoubleClick, isDir, id, title, owner, fileType, icon, lastModified, preview, size, log, parent}) => {
   const [type, setType] = useState<'move' | 'share' | 'rename' | 'move to trash' | null>(null);
   const [fileViewer, setFileViewer] = useState(false);
-  const [isPopUpOpen, setIsPopUpOpen] = React.useState(false);
+  const [isPopUpOpen, setIsPopUpOpen] = useState(false);
   const [result, setResult] = useState(false);
+  const {rootId} = useStorageStore();
 
   const { openDrawer } = useDrawer();
   const { identity } = useSession();
@@ -67,18 +46,16 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
   const unstarEntryMutation = useUnstarEntryMutation();
 
   const entryMenu: MenuItem[][] = [
-    // chỉ !isdir mới có preview
-    !isDir
-      ? [
-          {
-            label: 'Preview',
-            icon: <Icon icon='material-symbols:visibility' />,
-            action: () => {
-              setFileViewer(true);
-            },
+    !isDir ?
+      [
+        {
+          label: 'Preview',
+          icon: <Icon icon='material-symbols:visibility' />,
+          action: () => {
+            setFileViewer(true);
           },
-        ]
-      : [],
+        },
+      ]:[],
     [
       {
         label: 'Download',
@@ -95,7 +72,8 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
           setIsPopUpOpen(true);
         },
       },
-      !isDir && {
+      !isDir &&
+      {
         label: 'Make a copy',
         icon: <Icon icon='material-symbols:content-copy-outline' />,
         action: () => {
@@ -136,10 +114,10 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
         action: () => {},
       },
       {
-        label: parent !== 'starred' ? 'Add to starred' : 'Remove from starred',
-        icon: parent !== 'starred' ? <Icon icon='material-symbols:star-outline' /> : <Icon icon='mdi:star-off-outline' />,
+        label: 'Add to starred',
+        icon: <Icon icon='material-symbols:star-outline' />,
         action: () => {
-          parent !== 'starred' ? starEntryMutation.mutate({ file_ids: [id] }) : unstarEntryMutation.mutate({ file_ids: [id] });
+          starEntryMutation.mutate({ file_ids: [id] });
         },
       },
     ],
@@ -162,97 +140,8 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
         },
       },
     ],
-  ].filter((e) => e.length != 0);
-
-  // const folderMenu = [
-  //   [
-  //     { label: 'Download', icon: <Icon icon='ic:outline-file-download' /> },
-  //     {
-  //       label: 'Rename',
-  //       icon: <Icon icon='ic:round-drive-file-rename-outline' />,
-  //       action: () => {
-  //         setType('rename');
-  //         setIsPopUpOpen(true);
-  //       },
-  //     },
-  //   ],
-  //   [
-  //     {
-  //       label: 'Copy link',
-  //       icon: <Icon icon='material-symbols:link' />,
-  //       action: () => {
-  //         CopyToClipboard(window.location.origin + CUSTOMER_MY_DRIVE + `/dir/${id}`);
-  //       },
-  //     },
-  //     {
-  //       label: 'Share',
-  //       icon: <Icon icon='lucide:user-plus' />,
-  //       action: () => {
-  //         setType('share');
-  //         setIsPopUpOpen(true);
-  //       },
-  //     },
-  //   ],
-  //   [
-  //     {
-  //       label: 'Move',
-  //       icon: <Icon icon='mdi:folder-move-outline' />,
-  //       action: () => {
-  //         setType('move');
-  //         setIsPopUpOpen(true);
-  //       },
-  //     },
-  //     {
-  //       label: 'Add shortcut',
-  //       icon: <Icon icon='material-symbols:add-to-drive' />,
-  //     },
-  //     {
-  //       label: parent !== 'starred' ? 'Add to starred' : 'Remove from starred',
-  //       icon: parent !== 'starred' ? <Icon icon='material-symbols:star-outline' /> : <Icon icon='mdi:star-off-outline' />,
-  //       action: () => {
-  //         parent !== 'starred' ? starEntryMutation.mutate({ id }) : unstarEntryMutation.mutate({ id });
-  //       },
-  //     },
-  //   ],
-  //   [
-  //     {
-  //       label: 'Detail',
-  //       icon: <Icon icon='mdi:information-outline' />,
-  //       action: () => openDrawer(id),
-  //     },
-  //     { label: 'Activity', icon: <Icon icon='mdi:graph-line-variant' /> },
-  //   ],
-  //   [
-  //     {
-  //       label: 'Move to trash',
-  //       icon: <Icon icon='fa:trash-o' />,
-  //       action: () => {
-  //         setType('move to trash');
-  //         setIsPopUpOpen(true);
-  //       },
-  //     },
-  //   ],
-  // ];
-
-  const menuItemsTrash: MenuItem[] = [
-    {
-      label: 'Restore',
-      icon: <Icon icon='mdi:restore' />,
-      action: () => {
-        console.log('[FileCard] Restore ' + id);
-        setResult(true);
-        restoreMutation.mutate({ source_ids: [id] });
-      },
-    },
-    {
-      label: 'Delete permanently',
-      icon: <Icon icon='fa:trash-o' />,
-      action: () => {
-        console.log('[FileCard] Delete permanently ' + id);
-        setIsPopUpOpen(true);
-      },
-    },
-  ];
+  ]
+  .filter(e => e.length!=0);
 
   const handleCtrlClick = () => {
     setArrSelected(arrSelected.includes(id) ? arrSelected.filter((item) => item !== id) : [...arrSelected, id]);
@@ -273,12 +162,12 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
     }
     if (isDir) {
       setArrSelected && setArrSelected([]);
-      if (parent === 'shared') {
-        navigate(`${DRIVE_SHARED_DIR}/dir/${id}`);
-      }
+      // if (parent === 'shared') {
+      //   navigate(`${DRIVE_SHARED_DIR}/dir/${id}`);
+      // }
       onDoubleClick && onDoubleClick();
     } else {
-      parent !== 'trash' && setFileViewer(true);
+      setFileViewer(true);
     }
   };
 
@@ -307,12 +196,6 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
             lastModified: new Date(),
             size: size,
             fileType: fileType,
-            // onDoubleClick: function (): void {
-            //   throw new Error('Function not implemented.');
-            // },
-            // onChanged: function (): void {
-            //   throw new Error('Function not implemented.');
-            // },
           }}
         />
       )}
@@ -320,7 +203,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
         onClick={handleClick}
         onDoubleClick={handleDoubleClick}
         className={classNames(
-          'data-row grid cursor-pointer grid-cols-7 gap-3 truncate border-b border-b-[#dadce0] py-2 max-[1160px]:grid-cols-7 max-[1150px]:grid-cols-6 max-[1000px]:grid-cols-5',
+          'data-row grid cursor-pointer grid-cols-8 gap-3 truncate border-b border-b-[#dadce0] py-2 max-[1160px]:grid-cols-7 max-[1150px]:grid-cols-6 max-[1000px]:grid-cols-5',
           isSelected
             ? 'bg-[#c2e7ff]  dark:bg-blue-900'
             : 'hover:bg-[#dfe3e7] dark:bg-slate-600 dark:text-white dark:hover:bg-slate-700',
@@ -333,7 +216,10 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
             <div className='truncate'>{title}</div>
           </Tooltip>
         </div>
-        <div className='max-[1150px]:hidden'>
+        <div className='max-[1150px]:hidden col-span-2'>
+          <span className='truncate'> You {log.action} • {formatDate(log.created_at)} </span>
+        </div>
+        <div className='truncate max-[1000px]:hidden'>
           <div className='flex items-center gap-x-2'>
             {owner?.avatar_url ? (
               <Avatar
@@ -356,32 +242,30 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
             <span className='truncate'>{owner?.id === identity.id ? 'me' : owner?.last_name}</span>
           </div>
         </div>
-        <div className='truncate max-[1000px]:hidden'>
-          {formatDate(lastModified)}
-        </div>
+
         <div className='flex justify-between max-[1160px]:justify-end'>
-          <div className='truncate max-[1160px]:hidden'>{isDir ? '---' : numToSize(size)}</div>
+          <div className='truncate max-[1160px]:hidden'>
+            <div onClick={()=>navigate(`${DRIVE_HOME}/my-drive/dir/${parent.id}`)}>
+              {parent.id === rootId ? 'My Drive' : parent.name}
+            </div>
+          </div>
           <div className='text-end'>
             <CustomDropdown
               button={<Icon icon='ic:baseline-more-vert' className='h-7 w-7 rounded-full p-1 hover:bg-surfaceContainerLow' />}
-              items={parent === 'trash' ? [menuItemsTrash] : entryMenu}
+              items={entryMenu}
             />
           </div>
         </div>
         {type === 'share' && <SharePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} />}
         {type === 'move' && (
-          <MovePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} location={dir} />
-        )}
-        {type === 'rename' && <RenamePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} name={title} id={id} />}
-        {parent === 'trash' && (
-          <DeletePopUp
+          <MovePopUp
             open={isPopUpOpen}
             handleClose={() => setIsPopUpOpen(false)}
             title={title}
-            source_ids={[id]}
-            setResult={setResult}
+            location={dir}
           />
         )}
+        {type === 'rename' && <RenamePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} name={title} id={id} />}
         {type === 'move to trash' && (
           <DeleteTempPopUp
             open={isPopUpOpen}
@@ -396,3 +280,5 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
     </>
   );
 };
+
+export default DataRowPriorityView;

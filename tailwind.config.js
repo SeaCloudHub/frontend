@@ -56,7 +56,7 @@ export default {
         'file-bg': '#F0F4F9',
         'content-bg-dark': '#071A2B',
         'dashboard-dark': '#031525',
-        'search-bg-dark': '#0D2136',
+        'search-bg-dark': '#10263C',
         'icons-color-dark': '#95a5bd',
         primary: '#216487',
         surfaceTint: '#216487',

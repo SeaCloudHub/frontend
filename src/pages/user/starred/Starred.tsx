@@ -26,7 +26,7 @@ const Starred = () => {
   const { drawerOpen, openDrawer, closeDrawer } = useDrawer();
   const { rootId } = useStorageStore();
 
-  const {data, isLoading} =  useStarred();
+  const { data, isLoading } = useStarred();
 
   return (
     <DriveLayout
@@ -49,32 +49,32 @@ const Starred = () => {
               />
             </div>
           </div>
-          <div className='flex items-center gap-3'>
-            {arrSelected.length === 0 ? (
-              <>
-                <SharingPageFilter
-                  setModifiedFilterItem={setModifiedFilterItem}
-                  setPeopleFilterItem={setPeopleFilterItem}
-                  setTypeFilterItem={setTypeFilterItem}
-                  modifiedFilter={modifiedFilterItem}
-                  peopleFilter={peopleFilterItem}
-                  typeFilter={typeFilterItem}
-                />
-                {(typeFilterItem || peopleFilterItem || modifiedFilterItem) && (
-                  <div className='flex h-7 items-center rounded-full px-[12px] py-[1px] hover:bg-[#ededed]'>
-                    <div
-                      onClick={() => {
-                        setTypeFilterItem('');
-                        setPeopleFilterItem('');
-                        setModifiedFilterItem('');
-                      }}
-                      className='cursor-pointer text-sm font-medium'>
-                      Clear filters
-                    </div>
+          {arrSelected.length === 0 ? (
+            <div className='flex items-center gap-3 w-full mb-1.5'>
+              <SharingPageFilter
+                setModifiedFilterItem={setModifiedFilterItem}
+                setPeopleFilterItem={setPeopleFilterItem}
+                setTypeFilterItem={setTypeFilterItem}
+                modifiedFilter={modifiedFilterItem}
+                peopleFilter={peopleFilterItem}
+                typeFilter={typeFilterItem}
+              />
+              {(typeFilterItem || peopleFilterItem || modifiedFilterItem) && (
+                <div className='flex h-7 items-center rounded-full px-[12px] py-[1px] hover:bg-[#ededed]'>
+                  <div
+                    onClick={() => {
+                      setTypeFilterItem('');
+                      setPeopleFilterItem('');
+                      setModifiedFilterItem('');
+                    }}
+                    className='cursor-pointer text-sm font-medium'>
+                    Clear filters
                   </div>
-                )}
-              </>
-            ) : (
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className='overflow-x-auto'>
               <MultipleDriveHeader
                 parent='Starred'
                 dir={{
@@ -82,21 +82,19 @@ const Starred = () => {
                   name: 'Starred',
                 }}
               />
-            )}
-          </div>
+            </div>
+          )}
         </div>
       }
-      bodyLeft={
-        <StarredView
-          entries={data}
-          isLoading={isLoading}
-        />
-      }
+      bodyLeft={<StarredView entries={data} isLoading={isLoading} />}
       sidePanel={
         <SidePanel
           id={arrSelected.length === 0 ? rootId : arrSelected.length === 1 ? arrSelected[0] : ''}
-          title={arrSelected.length === 0 ? 'Starred' :
-            data.find((item) => item.id === arrSelected[arrSelected.length - 1])?.title || ''}
+          title={
+            arrSelected.length === 0
+              ? 'Starred'
+              : data.find((item) => item.id === arrSelected[arrSelected.length - 1])?.title || ''
+          }
         />
       }
     />
