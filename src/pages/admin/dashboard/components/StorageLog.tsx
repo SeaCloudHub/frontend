@@ -1,53 +1,44 @@
+import { StorageLogDto } from '@/utils/types/strorage-log.type';
 import AccordionCore from '../../../../components/core/accordion/AccordionCore';
 
-const StorageLog = () => {
-  const logs = [
-    { date: '2023-12-23', user: 'Minnas', action: 'Delete', file: 'storage.pdf' },
-    { date: '2023-12-23', user: 'Minnas', action: 'Add', file: 'storage.pdf' },
-    { date: '2023-12-23', user: 'Minnas', action: 'Rename', file: 'storage.pdf' },
-    { date: '2023-12-23', user: 'Minnas', action: 'Delete', file: 'storage.pdf' },
-    { date: '2023-12-23', user: 'Minnas', action: 'Add', file: 'storage.pdf' },
-    { date: '2023-12-23', user: 'Minnas', action: 'Rename', file: 'storage.pdf' },
-    { date: '2023-12-23', user: 'Minnas', action: 'Delete', file: 'storage.pdf' },
-    { date: '2023-12-23', user: 'Minnas', action: 'Add', file: 'storage.pdf' },
-    { date: '2023-12-23', user: 'Minnas', action: 'Add', file: 'storage.pdf' },
-    { date: '2023-12-23', user: 'Minnas', action: 'Rename', file: 'storage.pdf' },
-    { date: '2023-12-23', user: 'Minnas', action: 'Delete', file: 'storage.pdf' },
-    { date: '2023-12-23', user: 'Minnas', action: 'Delete', file: 'storage.pdf' },
-    { date: '2023-12-23', user: 'Minnas', action: 'Add', file: 'storage.pdf' },
-    { date: '2023-12-23', user: 'Minnas', action: 'Rename', file: 'storage.pdf' },
-    { date: '2023-12-23', user: 'Minnas', action: 'Delete', file: 'storage.pdf' },
-    { date: '2023-12-23', user: 'Minnas', action: 'Add', file: 'storage.pdf' },
-    { date: '2023-12-23', user: 'Minnas', action: 'Add', file: 'storage.pdf' },
-    { date: '2023-12-23', user: 'Minnas', action: 'Rename', file: 'storage.pdf' },
-    { date: '2023-12-23', user: 'Minnas', action: 'Delete', file: 'storage.pdf' },
-    { date: '2023-12-23', user: 'Minnas', action: 'Add', file: 'storage.pdf' },
-    { date: '2023-12-23', user: 'Minnas', action: 'Rename', file: 'storage.pdf' },
-    { date: '2023-12-23', user: 'Minnas', action: 'Delete', file: 'storage.pdf' },
-    { date: '2023-12-23', user: 'Minnas', action: 'Add', file: 'storage.pdf' },
-    { date: '2023-12-23', user: 'Minnas', action: 'Rename', file: 'storage.pdf' },
-    { date: '2023-12-23', user: 'Minnas', action: 'Delete', file: 'storage.pdf' },
-    { date: '2023-12-23', user: 'Minnas', action: 'Add', file: 'storage.pdf' },
-    { date: '2023-12-23', user: 'Minnas', action: 'Rename', file: 'storage.pdf' },
-  ];
+type StorageLogProps = {
+  logs?: StorageLogDto[];
+  isFetching?: boolean;
+  moreClick?: () => void;
+};
+
+const actionColors = {
+  DELETE: 'text-red-600',
+  ADD: 'text-blue-600',
+  RENAME: 'text-purple-500',
+  OPEN: 'text-green-600',
+  STAR:'text-pink-600'
+};
+
+const StorageLog = ({ logs, isFetching, moreClick }: StorageLogProps) => {
+  const getActionColorClass = (action: string) => {
+    return actionColors[action] || 'black';
+  };
   return (
     <AccordionCore title='Storage Log'>
-      <div className='max-h-[400px] overflow-y-auto  px-2 text-sm'>
-        {logs.map((item, index) => (
-          <div className='flex space-x-2 truncate' key={index}>
-            <p className=' italic'>{item.date}</p>
-            <p className='statement-upper-medium'>{item.user}</p>
-            <p
-              className={`${
-                item.action === 'Delete' ? 'text-red-600' : item.action === 'Add' ? 'text-green-600' : 'text-purple-500'
-              } statement-upper-medium `}>
-              {`[${item.action}]`}
-            </p>
-            <p className='statement-upper-medium'>{item.file}</p>
-          </div>
-        ))}
+      <div className='max-h-[400px] overflow-y-auto px-2 text-sm'>
+        {logs &&
+          logs.map((log, index) => (
+            <div className='flex space-x-2 truncate' key={index}>
+              <p className=' italic '>{log.date}</p>
+              <p className=' font-bold'>{log.username}</p>
+              <p className={`${getActionColorClass(log.action)}  `}>{`[${log.action}]`}</p>
+              <p className='truncate'>{log.fileName}</p>
+            </div>
+          ))}
       </div>
-      <p className='statement-bold cursor-pointer px-2 italic underline'>See more</p>
+      <p
+        onClick={() => {
+          moreClick();
+        }}
+        className='statement-bold cursor-pointer px-2 italic underline'>
+        See more
+      </p>
     </AccordionCore>
   );
 };

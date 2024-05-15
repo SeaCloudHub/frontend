@@ -1,37 +1,38 @@
-import React from 'react';
-import PopUp from './PopUp';
+import { SharedUsersSearchREQ } from '@/apis/user/storage/request/share.request';
+import { shareFileAPi, sharedUserApi } from '@/apis/user/storage/storage.api';
+import { useDebounce } from '@/hooks/useDebounce';
+import { useTheme } from '@/providers/theme-provider';
+import { Icon } from '@iconify/react/dist/iconify.js';
 import {
   Autocomplete,
-  Avatar,
-  Button,
   Chip,
   DialogActions,
-  Input,
   ListItem,
   ListItemAvatar,
   ListItemText,
   MenuItem,
-  Select,
   SelectChangeEvent,
   TextField,
   TextareaAutosize,
   Tooltip,
   Typography,
 } from '@mui/material';
-import { Icon } from '@iconify/react/dist/iconify.js';
-import Dropdown, { MenuItem as MenuItemCustom } from '../drop-down/Dropdown';
-import ListPeople from '../list-people/ListPeople';
-import ButtonContainer from '../button/ButtonContainer';
-import CustomDropdown from '../drop-down/CustomDropdown';
+import { useMutation } from '@tanstack/react-query';
+import React, { useEffect, useState } from 'react';
 import ButtonSuccess from '../button/ButtonSuccess';
+import CustomDropdown from '../drop-down/CustomDropdown';
 import CustomSelect from '../drop-down/CustomSelect';
-import { Textarea } from '@mui/joy';
-import { useTheme } from '@/providers/theme-provider';
+import { MenuItem as MenuItemCustom } from '../drop-down/Dropdown';
+import ListPeople from '../list-people/ListPeople';
+import PopUp from './PopUp';
+import { toastSuccess } from '@/utils/toast-options/toast-options';
+import { toast } from 'react-toastify';
 
 type SharePopUpProps = {
   open: boolean;
   handleClose: () => void;
   title: string;
+  fileId: string;
 };
 
 type UserOption = {
@@ -61,15 +62,52 @@ const helpItems: MenuItemCustom[] = [
   { icon: null, label: 'Report', action: () => {} },
 ];
 
-const typeShareItems = ['Viewer', 'Editor', 'Owner'];
+// const typeShareItems = ['Viewer', 'Editor', 'Owner'];
+const typeShareItems = ['Viewer', 'Editor'];
 
-const SharePopUp: React.FC<SharePopUpProps> = ({ open, handleClose, title }) => {
+const SharePopUp: React.FC<SharePopUpProps> = ({ open, handleClose, title, fileId }) => {
   const [values, setValues] = React.useState([]);
   const [typeShare, setTypeShare] = React.useState('Viewer');
   const [typeView, setTypeView] = React.useState(fakelistPeople.map((item) => item.type));
   const [isPublic, setIsPublic] = React.useState(false);
+  const [keyword, setKeyword] = useState<string>('');
+  const searchValue = useDebounce({ delay: 500, value: keyword });
+  const [apiData, setApiData] = useState<UserOption[]>([]);
+  const [errror, setError] = useState<boolean>(false);
   const { theme } = useTheme();
+  const shareFileMutation = useMutation({
+    mutationFn: () => {
+      return shareFileAPi({
+        emails: values,
+        id: fileId,
+        role: typeShare.toLowerCase() as 'viewer' | 'editor',
+      });
+    },
+    onError: (error) => {},
+    onSuccess: (data) => {
+      handleClose();
+      toast.success('Share file successfully', toastSuccess());
+    },
+  });
+  const sharedUsersMutation = useMutation({
+    mutationFn: (param: SharedUsersSearchREQ) => {
+      return sharedUserApi(param);
+    },
+    onError: (error) => {
+      setApiData([]);
+    },
+    onSuccess: (data) => {
+      const mappedData = data.data.map(
+        (item, index) =>
+          ({ email: item.email, name: item.first_name + ' ' + item.last_name, avatar: item.avatar_url }) as UserOption,
+      );
+      setApiData(mappedData);
+    },
+  });
 
+  useEffect(() => {
+    sharedUsersMutation.mutateAsync({ query: searchValue });
+  }, [searchValue]);
   return (
     <PopUp open={open} handleClose={handleClose}>
       <div className='m-3 mb-0 flex items-center justify-between'>
@@ -109,7 +147,8 @@ const SharePopUp: React.FC<SharePopUpProps> = ({ open, handleClose, title }) => 
             id='tags-filled'
             className={`${values.length > 0 ? 'w-[calc(100%-40px)]' : 'w-full'} min-w-60`}
             classes={{ listbox: 'dark:bg-slate-800 dark:text-white' }}
-            options={fakeUsers.map((option) => option.email)}
+            options={apiData.map((option) => option.email)}
+            onInputChange={(event, newInputValue) => setKeyword(newInputValue)}
             freeSolo
             renderTags={(value: readonly string[], getTagProps) =>
               value.map((option: string, index: number) => (
@@ -178,9 +217,10 @@ const SharePopUp: React.FC<SharePopUpProps> = ({ open, handleClose, title }) => 
           </div>
         ) : (
           <div>
+            {errror && <p className='text-red-600'>Please select people to share file.</p>}
             <div className='my-2'>
               <div className='text-base font-semibold'>People with access</div>
-              <ListPeople items={fakelistPeople} state={typeView} setState={setTypeView} height='150px' />
+              <ListPeople items={fakeUsers} state={typeView} setState={setTypeView} height='150px' />
             </div>
             <div>
               <div className='text-base font-semibold'>General access</div>
@@ -237,7 +277,18 @@ const SharePopUp: React.FC<SharePopUpProps> = ({ open, handleClose, title }) => 
           <Icon icon='material-symbols:link' className='mr-1 text-xl' />
           <span>Coppy link</span>
         </ButtonSuccess>
-        <ButtonSuccess type='submit'>Finished</ButtonSuccess>
+        <ButtonSuccess
+          onClick={() => {
+            if (values.length <= 0) {
+              setError(true);
+            } else {
+              setError(false);
+              shareFileMutation.mutateAsync();
+            }
+          }}
+          type='submit'>
+          Share
+        </ButtonSuccess>
       </DialogActions>
     </PopUp>
   );

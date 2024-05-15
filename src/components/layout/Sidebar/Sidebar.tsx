@@ -1,4 +1,8 @@
+import { useStorageStore } from '@/store/storage/storage.store';
+import { ADMIN_HOME, CUSTOMER_HOME } from '@/utils/constants/router.constant';
+import { numToSize } from '@/utils/function/numbertToSize';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useScreenMode } from '../../../store/responsive/screenMode';
 import { adminSidebar, userSidebar } from '../../../utils/constants/sidebar.constant';
 import { Role } from '../../../utils/enums/role.enum';
@@ -7,8 +11,6 @@ import ButtonIcon from '../../core/button/ButtonIcon';
 import LinearChartBar from '../../core/linear-chart-bar/linearChartBar';
 import SidebarItem from '../../core/sidebar-item/SidebarItem';
 import AddFileMenu from './AddFileMenu';
-import { useNavigate } from 'react-router-dom';
-import { ADMIN_HOME, CUSTOMER_HOME } from '@/utils/constants/router.constant';
 
 type SidebarProps = {
   shrinkMode: boolean;
@@ -17,7 +19,7 @@ type SidebarProps = {
 const Sidebar = ({ role, shrinkMode }: SidebarProps) => {
   const updateShrinkMode = useScreenMode((state) => state.updateShrinkMode);
   const navigate = useNavigate();
-
+  const { storageCapacity, storageUsage } = useStorageStore();
   const [tabs, setTabs] = useState<SidebarItemType[]>([]);
 
   useEffect(() => {
@@ -46,16 +48,11 @@ const Sidebar = ({ role, shrinkMode }: SidebarProps) => {
           ) : (
             <div className='flex w-full  flex-col '>
               <div
-                className='flex h-16 w-full items-center justify-around gap-2 p-3 pl-6 cursor-pointer'
-                onClick={() => navigate(role === Role.USER ? CUSTOMER_HOME: ADMIN_HOME)}
-              >
+                className='flex h-16 w-full cursor-pointer items-center justify-around gap-2 p-3 pl-6'
+                onClick={() => navigate(role === Role.USER ? CUSTOMER_HOME : ADMIN_HOME)}>
                 <img src={(import.meta.env.BASE_URL + 'logo.png') as string} alt='placeholder' className='h-9  rounded-full' />
                 <p className='h4'>SEACLOUD</p>
-                <ButtonIcon
-                  onClick={() => updateShrinkMode(true)}
-                  icon='ion:caret-back'
-                  size={'25px'}
-                />
+                <ButtonIcon onClick={() => updateShrinkMode(true)} icon='ion:caret-back' size={'25px'} />
               </div>
             </div>
           )}
@@ -79,7 +76,10 @@ const Sidebar = ({ role, shrinkMode }: SidebarProps) => {
           {role === Role.USER && (
             <div className='mt-2'>
               <LinearChartBar width='100%' value={70} total={100} />
-              <p className={`mt-2 text-center ${shrinkMode ? 'hidden' : ''} `}> 90 of 8 GB of memory</p>
+              <p className={`mt-2 text-center ${shrinkMode ? 'hidden' : ''} `}>
+                {' '}
+                {`${numToSize(storageUsage)} of ${numToSize(storageCapacity)} of memory`}
+              </p>
             </div>
           )}
         </div>

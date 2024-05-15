@@ -1,9 +1,9 @@
 import { FileViewerProps } from '@/utils/types/file-viewer-props.type';
 import React from 'react';
-import Audio from '../audio/Audio';
 import Docx from '../docx/Docx';
 import Image from '../image/Image';
 import Pdf from '../pdf/Pdf';
+import UnSupportFile from '../un-supported-file/UnSupportFile';
 import Text from '../text/Text';
 
 const Viewer: React.FC<FileViewerProps> = (props) => {
@@ -13,29 +13,17 @@ const Viewer: React.FC<FileViewerProps> = (props) => {
     case 'pdf': {
       return <Pdf {...props} />;
     }
-    case 'application/zip': {
+    case 'document': {
       return <Docx {...props} />;
     }
-    case 'xlsx': {
-      return <Pdf {...props} />;
-    }
-    case 'pptx': {
-      return <Pdf {...props} />;
-    }
-    case 'text/plain; charset=utf-8': {
-      return <Text {...props} />;
-    }
-    case 'image/png': {
+    case 'image': {
       return <Image {...props} />;
     }
-    case 'image/jpg': {
-      return <Image {...props} />;
-    }
-    case 'image/jpeg': {
-      return <Image {...props} />;
+    case 'text': {
+      return <Text {...props}/>;
     }
     default: {
-      return <Pdf {...props} />;
+      return <UnSupportFile {...props} />;
     }
   }
 };

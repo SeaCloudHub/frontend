@@ -1,6 +1,7 @@
-import { userByMonthToDto } from '@/apis/admin/dashboard/dash-board.service';
-import { userStatisticApi } from '@/apis/admin/dashboard/dashboard-api';
+import { storageLogToDto, userByMonthToDto } from '@/apis/admin/dashboard/dash-board.service';
+import { storageLogApi, userStatisticApi } from '@/apis/admin/dashboard/dashboard-api';
 import LineChartCore from '@/components/core/line-chart/LineChartCore';
+import { numToSize } from '@/utils/function/numbertToSize';
 import { ApiGenericError } from '@/utils/types/api-generic-error.type';
 import { Paper, Skeleton } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
@@ -9,7 +10,6 @@ import { useState } from 'react';
 import PieChartCore from '../../../components/core/pie-chart/PieChart';
 import DashboardCard from './components/DashboardCard';
 import StorageLog from './components/StorageLog';
-import { numToSize } from '@/utils/function/numbertToSize';
 
 const UserStatisticHook = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -50,9 +50,20 @@ const DashBoardSkeleton = () => {
     </Paper>
   );
 };
-
 const DashBoard = () => {
   const { data: userStatisticData, errorMessage: userStatisticError, isLoading: userStatisticLoading } = UserStatisticHook();
+  const [page, setPage] = useState(1);
+  const {
+    data: logData,
+    error: logError,
+    isFetching: logFetching,
+  } = useQuery({
+    queryKey: ['storage-logs', page],
+    queryFn: () => storageLogApi({ cursor: '', limit: 10 * page, userID: '' }),
+    staleTime: 0,
+    select: (data) => data && data.logs.map((item, indext) => storageLogToDto(item)),
+  });
+  console.log(logData);
   return (
     <div className='h-full w-full  space-y-2 overflow-y-auto overflow-x-hidden  lg:flex lg:space-y-0'>
       <div className='w-full overflow-y-auto lg:h-full  lg:w-3/4 '>
@@ -119,7 +130,7 @@ const DashBoard = () => {
             <PieChartCore
               mapperFunction={numToSize}
               data={[
-                { value: userStatisticData ?  userStatisticData.total_storage_usage : 0, label: 'Used' },
+                { value: userStatisticData ? userStatisticData.total_storage_usage : 0, label: 'Used' },
                 { value: userStatisticData ? userStatisticData.total_storage_capacity : 0, label: 'Free' },
               ]}
             />
@@ -139,7 +150,13 @@ const DashBoard = () => {
       </div>
       <div className=' ml-1 h-12 lg:w-1/4'>
         {/* <RecentlyAddedUsers /> */}
-        <StorageLog />
+        <StorageLog
+          isFetching={logFetching}
+          logs={logData}
+          moreClick={() => {
+            setPage((prev) => prev + 1);
+          }}
+        />
       </div>
     </div>
   );

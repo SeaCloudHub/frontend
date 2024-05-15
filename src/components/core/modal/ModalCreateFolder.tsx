@@ -18,12 +18,10 @@ const ModalCreateFolder = ({ isOpen, handleConfirm, dirId }: ModalCreateFolderPr
   const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFolderName(event.target.value);
   };
+  console.log(dirId);
   const createFolderMutation = useMutation({
     mutationFn: () => {
-      const data = queryClient.getQueriesData({ queryKey: ['entry-metadata'] });
-      const dirIdFromQueryData = data?.[0]?.[0]?.[1] as string;
-      console.log('[ModalCreateFolder] dirIdFromQueryData', dirIdFromQueryData);
-      return createFolderApi({ id: dirId || dirIdFromQueryData, name: folderName });
+      return createFolderApi({ id: dirId, name: folderName });
     },
     onError: (error) => {
       if (isAxiosError<ApiGenericError>(error)) {

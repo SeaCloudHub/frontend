@@ -1,3 +1,6 @@
+import { IdentityRESP } from '@/apis/auth/response/auth.sign-in.response';
+import { EntryRESP } from '@/apis/drive/drive.response';
+
 export type DashboardRESP = {
   Topology: Topology;
   Version: string;
@@ -77,15 +80,13 @@ export type TTL = {
   Unit: number;
 };
 
-
-
 export type StatisticRESP = {
   statistic_user: StatisticUser[];
   statistic_user_by_month: StatisticUserByMonth;
   total_storage_usage: number;
   total_storage_capacity: number;
   file_by_type: FileByType;
-}
+};
 type StatisticUser = {
   name: string;
   value: number;
@@ -102,4 +103,18 @@ export type StatisticUserByMonth = {
 
 type FileByType = {
   [key: string]: number;
+};
+
+export type UserFileLogRESP = {
+  file_id: string;
+  user_id: string;
+  action: string;
+  created_at: string;
+  file:  EntryRESP;
+  user: IdentityRESP;
+};
+export type Logs = UserFileLogRESP[];
+export type StorageLogRESP = {
+  logs: Logs;
+  cursor: string;
 };

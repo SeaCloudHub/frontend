@@ -10,7 +10,8 @@ import { toastError } from '@/utils/toast-options/toast-options';
 import { ApiGenericError } from '@/utils/types/api-generic-error.type';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
-import React, { useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 type AddFileMenuProps = {
@@ -20,6 +21,7 @@ type AddFileMenuProps = {
 const AddFileMenu = ({ shrinkMode }: AddFileMenuProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const folderInputRef = useRef<HTMLInputElement>(null);
+  const location = useLocation();
   const rootId = useStorageStore((state) => state.rootId);
   const setFileNames = useProgressIndicator((state) => state.setFileNames);
   const uploadFilesMutation = useMutation({
@@ -33,14 +35,14 @@ const AddFileMenu = ({ shrinkMode }: AddFileMenuProps) => {
     },
     onSuccess: (data) => {
       setFileNames(data.data.map((item) => item.name));
+      queryClient.invalidateQueries({ queryKey: ['mydrive-entries'] });
     },
   });
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, curDirId: string) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const fileList = e.currentTarget.files;
     if (fileList) {
       const filesArray = Array.from(fileList);
-      await uploadFilesMutation.mutateAsync({ files: filesArray, id: curDirId });
-      queryClient.invalidateQueries({ queryKey: ['mydrive-entries'] });
+      await uploadFilesMutation.mutateAsync({ files: filesArray, id: dirId });
     }
   };
 
@@ -104,7 +106,14 @@ const AddFileMenu = ({ shrinkMode }: AddFileMenuProps) => {
 
   const [createModal, setCreateModal] = useState<boolean>(false);
   const queryClient = useQueryClient();
-
+  const dirId = useMemo(() => {
+    if (location.pathname.includes('/dir/')) {
+      const lastSlashIndex = location.pathname.lastIndexOf('/');
+      return location.pathname.substring(lastSlashIndex + 1);
+    } else {
+      return rootId;
+    }
+  }, [location]);
   return (
     <>
       <CustomDropdown
@@ -123,10 +132,7 @@ const AddFileMenu = ({ shrinkMode }: AddFileMenuProps) => {
         type='file'
         style={{ display: 'none' }}
         onChange={(e) => {
-          const data = queryClient.getQueriesData({ queryKey: ['entry-metadata'] });
-          const curDirId = data?.[0]?.[0]?.[1] as string;
-          console.log('[AddFileMenu] curDirId', curDirId);
-          handleFileUpload(e, curDirId);
+          handleFileUpload(e);
         }}
         multiple
       />
@@ -140,13 +146,13 @@ const AddFileMenu = ({ shrinkMode }: AddFileMenuProps) => {
         onChange={(e) => {
           const data = queryClient.getQueriesData({ queryKey: ['entry-metadata'] });
           const curDirId = data?.[0]?.[0]?.[1] as string;
-          console.log('[AddFileMenu] curDirId', curDirId);
           handleFolderUpload(e, curDirId);
         }}
         multiple={false}
       />
       {createModal && (
         <ModalCreateFolder
+          dirId={dirId}
           isOpen={createModal}
           handleConfirm={() => {
             setCreateModal(false);
