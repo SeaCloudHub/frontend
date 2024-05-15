@@ -256,7 +256,7 @@ const DataRowPriorityView: React.FC<SuggestedEntry&DataRowPriorityViewProps> = (
             />
           </div>
         </div>
-        {type === 'share' && <SharePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} />}
+        {type === 'share' && <SharePopUp fileId='' open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} />}
         {type === 'move' && (
           <MovePopUp
             open={isPopUpOpen}
