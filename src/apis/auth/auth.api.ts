@@ -17,3 +17,8 @@ export const changePasswordApi = async (body: AuthChangePasswordREQ) => {
   const res = await api.post<BaseResponse<void>>('users/change-password', body);
   return res.data;
 };
+
+export const signOutApi = async () => {
+  const res = await api.post<BaseResponse<void>>('/users/logout');
+  return res.data;
+};

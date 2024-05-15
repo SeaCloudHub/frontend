@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Path, useDrawer, useSelected, useViewMode } from '@/store/my-drive/myDrive.store';
+import { Path, useDrawer, useIsFileMode, useLimit, useSelected, useViewMode } from '@/store/my-drive/myDrive.store';
 import DriveLayout from '@/components/layout/DriveLayout';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import PriorityFilter from './priority-filter/PriorityFilter';
 import SidePanel from '../my-drive/side-panel/SidePanel';
 import PriorityView from './priority-view/PriorityView';
-import { transformEntries, usePriorityEntries } from '@/hooks/drive.hooks';
+import { transformEntries, usePriorityEntries, useSuggestedEntries } from '@/hooks/drive.hooks';
 import { toast } from 'react-toastify';
 import { LocalEntry } from '@/hooks/drive.hooks';
 import { Entry } from '@/utils/types/entry.type';
@@ -16,65 +16,49 @@ import DrivePath from '../my-drive/header/drive-path/DrivePath';
 import { ListEntriesRESP } from '@/apis/drive/drive.response';
 import MultipleDriveHeader from '../my-drive/header/MultipleDriveHeader';
 import { useTheme } from '@/providers/theme-provider';
+import InfoButton from '../my-drive/header/InfoButton';
 
 const Priority = () => {
   const { viewMode, setViewMode } = useViewMode();
-  const [isFileMode, setIsFileMode] = useState<boolean>(true);
-  const { drawerOpen, openDrawer, closeDrawer } = useDrawer();
+  const {isFileMode, setIsFileMode} = useIsFileMode();
   const { rootId } = useStorageStore();
-  const [path, setPath] = useState<Path>([{ name: 'Priority', id: rootId }]);
   const { arrSelected } = useSelected();
+  const { limit, increaseLimit } = useLimit();
+  const { data, isLoading, refetch } = useSuggestedEntries();
+  console.log(data);
 
-  // const { data, error, refetch } = useQuery({
-  //   queryKey: ['priority-entries', path[path.length - 1].id],
-  //   queryFn: async () =>
-  //     (await getListEntriesMyDrive({ id: path[path.length - 1].id }).then((res) => res.data.entries)).filter(
-  //       (e) => !e.name.includes('.trash'),
-  //     ),
-  // });
-  const { data, isLoading, refetch } = usePriorityEntries();
-
-  // const entries: LocalEntry[] = transformEntries((data || []) as Required<Entry[]> & ListEntriesRESP['entries']);
+  const onScrollBottom = () => {
+    if(data.length < limit) return;
+    increaseLimit();
+  }
 
   return (
-    <div>
+    // <div>
       <DriveLayout
         headerLeft={
           <div className='flex flex-col overflow-hidden'>
-            <div className='flex justify-between space-x-2 text-2xl'>
-              <div className='line-clamp-1 pb-[20px] pl-5 pt-[17px]'>Welcome to SeaCloud</div>
-              <div className='flex items-center gap-2'>
-                <Icon
-                  icon='mdi:information-outline'
-                  className='h-8 w-8 cursor-pointer rounded-full p-1 transition-all hover:bg-surfaceContainerLow active:brightness-90'
-                  onClick={() => {
-                    if (!drawerOpen) {
-                      openDrawer();
-                    } else {
-                      closeDrawer();
-                    }
-                  }}
-                />
-              </div>
+            <div className='flex justify-between items-center space-x-2 text-2xl mr-2'>
+              <div className='pb-[20px] pl-5 pt-[17px] line-clamp-1'>Welcome to SeaCloud</div>
+              <InfoButton />
             </div>
-            {/* <div className=''> */}
             {arrSelected.length === 0 ? (
               <PriorityFilter
-                isFileMode={isFileMode}
-                setIsFileMode={setIsFileMode}
+                // isFileMode={isFileMode}
+                // setIsFileMode={setIsFileMode}
                 viewMode={viewMode}
                 setViewMode={setViewMode}
               />
             ) : (
-              <div className='overflow-x-auto px-4 py-1'>
-                <MultipleDriveHeader parent='Priority' dir={{ id: rootId, name: 'Priority' }} />
+              <div className='px-4 overflow-x-auto'>
+                <MultipleDriveHeader parent='Priority' dir={{id: rootId, name: 'Priority'}} />
               </div>
             )}
-            {/* </div> */}
           </div>
         }
+        onScrollBottom={onScrollBottom}
         bodyLeft={
           <PriorityView
+            isLoading={isLoading}
             isFileMode={isFileMode}
             entries={data}
             sort={''}
@@ -93,7 +77,7 @@ const Priority = () => {
           />
         }
       />
-    </div>
+    // </div>
   );
 };
 

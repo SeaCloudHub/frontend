@@ -12,6 +12,8 @@ const RequireAuth = ({ allowedRole }: RequireAuthProps) => {
   const role = useSession((state) => state.role);
   const location = useLocation();
 
+  console.log('role', role);
+
   return allowedRole.find((allow) => allow == role) ? (
     <Outlet />
   ) : session ? (

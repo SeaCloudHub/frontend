@@ -1,32 +1,48 @@
+import { signOutApi } from '@/apis/auth/auth.api';
 import { useSession } from '@/store/auth/session';
-import { AUTH_LOGIN_EMAIL, CUSTOMER_PROFILE } from '@/utils/constants/router.constant';
+import { AUTH_LOGIN_EMAIL, DRIVE_PROFILE } from '@/utils/constants/router.constant';
 import { getFirstCharacters } from '@/utils/function/getFirstCharacter';
 import { getRandomColor } from '@/utils/function/getRandomColor';
+import { toastError } from '@/utils/toast-options/toast-options';
+import { ApiGenericError } from '@/utils/types/api-generic-error.type';
 import { LinearProgress } from '@mui/material';
-import { useRef, useState } from 'react'; // Import useRef and useEffect
+import { useMutation } from '@tanstack/react-query';
+import { isAxiosError } from 'axios';
+import { useRef, useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import { PiSignOutBold } from 'react-icons/pi';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 type UserInfoProps = {
   onClose: () => void;
 };
 function UserInfo({ onClose }: UserInfoProps) {
   const navigate = useNavigate();
-  const [isLogout, setIsLogout] = useState(false);
   const { signOut, identity } = useSession();
   const modalRef = useRef(null);
-  const onSignOutClick = async () => {
-    setIsLogout(true);
-    setTimeout(() => {
+
+  const logoutMutation = useMutation({
+    mutationFn: () => {
+      return signOutApi();
+    },
+    onError: (error) => {
+      if (isAxiosError<ApiGenericError>(error)) {
+        toast.error(error.response?.data.message, toastError());
+      }
+    },
+    onSuccess: () => {
       signOut();
-      setIsLogout(false);
       navigate(AUTH_LOGIN_EMAIL);
-    }, 2000);
+    },
+  });
+
+  const onSignOutClick = async () => {
+    await logoutMutation.mutateAsync();
   };
 
   const onUserProfileClick = () => {
-    navigate(CUSTOMER_PROFILE);
+    navigate(DRIVE_PROFILE);
   };
 
   return (
@@ -65,21 +81,14 @@ function UserInfo({ onClose }: UserInfoProps) {
           <span className='text-[#2e6ed6]'>Manage your account</span>
         </button>
         <button
-          disabled={isLogout}
+          disabled={logoutMutation.isPending}
           onClick={onSignOutClick}
           className='tablet:w-44 hover:bg-darkC flex w-36 items-center justify-center space-x-2 rounded-full bg-white py-3  hover:bg-gray-200 dark:text-black'>
           <PiSignOutBold className='h-6 w-6' />
           <span>Sign out</span>
         </button>
       </div>
-      <div className=' flex  h-10 items-center space-x-2  text-xs '>
-        <span className='cursor-pointer rounded-full px-3 py-2 text-center hover:bg-blue-100 hover:dark:text-black'>
-          Privacy policy
-        </span>
-        <span className='-mt-[3px] '> . </span>{' '}
-        <span className='rounded-full px-3 py-2 text-center hover:bg-blue-100 hover:dark:text-black'>Terms of service</span>
-      </div>
-      {isLogout && <LinearProgress className=' w-full translate-y-1' />}
+      {logoutMutation.isPending && <LinearProgress className=' w-full translate-y-1' />}
     </div>
   );
 }

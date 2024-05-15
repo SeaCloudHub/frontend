@@ -131,6 +131,8 @@ const SidePanel: React.FC<SidePanelProps> = ({ id, title }) => {
     }
   }, [details, isLoading, id]);
 
+  console.log('[SidePanel] detail', details)
+
   return (
     <div className='flex h-full w-[360px] flex-col overflow-hidden border-l'>
       <div className='mb-4 mt-6 flex min-h-9 w-full items-center justify-between px-6 pr-2'>
@@ -145,7 +147,7 @@ const SidePanel: React.FC<SidePanelProps> = ({ id, title }) => {
           <div></div>
         )}
         <Icon
-          className='h-10 w-10 cursor-pointer rounded-full p-2 hover:bg-surfaceContainerLow'
+          className='h-10 w-10 cursor-pointer rounded-full p-2 hover:bg-surfaceContainerLow dark:hover:bg-slate-400 dark:active:brightness-90'
           icon='ic:baseline-close'
           onClick={() => closeDrawer()}
         />

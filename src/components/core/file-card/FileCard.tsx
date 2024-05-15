@@ -8,7 +8,7 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import { MenuItem, classNames } from '../drop-down/Dropdown';
 import { downloadFile } from '@/apis/drive/drive.api';
 import { useCopyMutation, useRestoreEntriesMutation, useStarEntryMutation, useUnstarEntryMutation } from '@/hooks/drive.hooks';
-import { useDrawer, useSelected } from '@/store/my-drive/myDrive.store';
+import { useDrawer, useEntries, useLimit, useSelected } from '@/store/my-drive/myDrive.store';
 import CustomDropdown from '../drop-down/CustomDropdown';
 import FileViewerContainer from '../file-viewers/file-viewer-container/FileViewerContainer';
 import DeletePopUp from '../pop-up/DeletePopUp';
@@ -16,6 +16,9 @@ import DeleteTempPopUp from '../pop-up/DeleteTempPopUp';
 import MovePopUp from '../pop-up/MovePopUp';
 import RenamePopUp from '../pop-up/RenamePopUp';
 import SharePopUp from '../pop-up/SharePopUp';
+import { DRIVE_MY_DRIVE } from '@/utils/constants/router.constant';
+import { useNavigate } from 'react-router-dom';
+import { useStorageStore } from '@/store/storage/storage.store';
 
 type FileCardProps = {
   title: string;
@@ -42,6 +45,9 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
   const [type, setType] = useState<'move' | 'share' | 'rename' | 'move to trash' | null>(null);
   const openDrawer = useDrawer((state) => state.openDrawer);
   const [result, setResult] = useState(false);
+  const navigate = useNavigate();
+  const { resetLimit } = useLimit();
+  const { setListEntries } = useEntries();
 
   const copyMutation = useCopyMutation();
   // const renameMutation = useRenameMutation();
@@ -120,7 +126,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
         label: parent !== 'starred' ? 'Add to starred' : 'Remove from starred',
         icon: parent !== 'starred' ? <Icon icon='material-symbols:star-outline' /> : <Icon icon='mdi:star-off-outline' />,
         action: () => {
-          parent !== 'starred' ? starEntryMutation.mutate({ id }) : unstarEntryMutation.mutate({ id });
+          parent !== 'starred' ? starEntryMutation.mutate({ file_ids: [id] }) : unstarEntryMutation.mutate({ file_ids: [id] });
         },
       },
     ],
@@ -181,12 +187,13 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
   };
 
   const handleDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.ctrlKey) {
-      handleCtrlClick();
-      return;
+    if(!isDir) setFileViewer(true)
+    else {
+      setArrSelected([]);
+      setListEntries([]);
+      resetLimit();
+      navigate(`${DRIVE_MY_DRIVE}/dir/${id}`);
     }
-    console.log(isDir);
-    !isDir && setFileViewer(true);
   };
 
   useEffect(() => {
@@ -221,11 +228,12 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
         onClick={handleClick}
         onDoubleClick={handleDoubleClick}
         className={classNames(
-          'file-card flex h-full cursor-pointer flex-col items-center justify-center rounded-xl px-2 shadow-sm duration-150',
+          'file-card flex h-full cursor-pointer flex-col items-center justify-center rounded-xl px-2 shadow-sm duration-150 active:brightness-90',
           isSelected
             ? 'bg-[#c2e7ff] dark:bg-blue-900 dark:text-white'
-            : 'bg-[#f0f4f9] hover:bg-[#dfe3e7] dark:bg-slate-600 dark:text-white dark:hover:bg-blue-950',
-        )}>
+            : 'bg-[#f0f4f9] hover:bg-[#dfe3e7] dark:bg-slate-600 dark:text-white dark:hover:bg-slate-700',
+        )}
+      >
         <div className='flex w-full items-center justify-between px-1 py-3'>
           <div className='flex max-w-[calc(100%-1.5rem)] items-center space-x-4'>
             <div className='h-6 w-6 min-w-fit'>{icon}</div>
@@ -233,15 +241,17 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
               <div className='select-none truncate text-sm font-medium'>{title}</div>
             </Tooltip>
           </div>
-          <div className='h-6 w-6 rounded-full p-1 hover:bg-slate-300 dark:hover:bg-slate-800'>
+          <div className='h-6 w-6 rounded-full p-1 hover:bg-slate-300 dark:hover:bg-slate-500'>
             <CustomDropdown
+              button={<BsThreeDotsVertical className='dark:hover:text-white' />}
               minWidth
-              button={<BsThreeDotsVertical className='dark:hover:text-slate-500' />}
               items={parent === 'trash' ? menuItemsTrash : menuItems}
             />
           </div>
         </div>
-        <div className='mb-2 flex h-full w-full items-center justify-center overflow-hidden rounded-md bg-white'>{preview}</div>
+        <div className='mb-2 flex h-full w-full items-center justify-center overflow-hidden rounded-md bg-white dark:bg-slate-400'>
+          {preview}
+        </div>
         {type === 'share' && <SharePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} />}
         {type === 'move' && (
           <MovePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} location={dir} />

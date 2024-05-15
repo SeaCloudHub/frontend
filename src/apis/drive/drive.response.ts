@@ -4,7 +4,7 @@ export type EntryRESP = {
   id: string;
   name: string;
   path: string;
-  full_path: string;
+  // full_path: string;
   shown_path: string;
   size: number;
   mode: number;
@@ -17,6 +17,11 @@ export type EntryRESP = {
   owner: IdentityRESP;
   created_at: string;
   updated_at: string;
+};
+
+export type SuggestedEntriesRESP = EntryRESP & {
+  parent: Pick<EntryRESP, 'id' & 'name' & 'path'>;
+  log?: LogEntry;
 };
 
 export type ListEntriesRESP = {
@@ -33,12 +38,18 @@ export type ParentRES = {
   id: string;
   name: string;
   path: string;
-  full_path: string;
+  full_path?: string;
 };
+
+export type RoleUser = {
+  user_id: string;
+  role: string;
+}
 
 export type EntryMetadataRES = {
   file: EntryRESP;
   parents: ParentRES[];
+  users: RoleUser[];
 };
 
 export type RenameRESP = {
@@ -60,3 +71,16 @@ export type PageInfoRESP = {
   last_page: number;
   limit: number;
 };
+
+
+export type LogEntry = {
+  user_id: string;
+  action: string;
+  created_at: Date;
+  file_id: string;
+}
+
+export type SearchRESP ={
+  entries: EntryRESP & {parent: ParentRES};
+  cursor: string;
+}

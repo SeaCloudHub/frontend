@@ -1,12 +1,13 @@
 import { useColorScheme } from '@mui/joy/styles';
 import IconButton from '@mui/joy/IconButton';
-import Tooltip from '@mui/joy/Tooltip';
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import { useEffect, useState } from 'react';
+import { useTheme } from '@/providers/theme-provider';
+import { Tooltip } from '@mui/material';
 
 export function ColorSchemeToggle() {
-  const { mode, setMode } = useColorScheme();
+  const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
     setMounted(true);
@@ -16,21 +17,36 @@ export function ColorSchemeToggle() {
     return <IconButton size='sm' variant='outlined' color='primary' />;
   }
   return (
-    <Tooltip title='Change theme' variant='outlined'>
-      <IconButton
-        size='sm'
-        variant='plain'
-        color='neutral'
-        sx={{ alignSelf: 'center' }}
+    <Tooltip title={theme==='dark'? 'To light': 'To dark'}>
+      <div className={`w-[4.3rem] relative flex items-center ${theme === 'dark' ? ' bg-search-bg-dark hover:brightness-105' : 'bg-search-bg hover:brightness-95'} rounded-full p-0.5`}
         onClick={() => {
-          if (mode === 'light') {
-            setMode('dark');
+          if (theme === 'light') {
+            setTheme('dark');
           } else {
-            setMode('light');
+            setTheme('light');
           }
         }}>
-        {mode === 'light' ? <DarkModeRoundedIcon /> : <LightModeRoundedIcon />}
-      </IconButton>
+        <IconButton
+          size='sm'
+          variant='plain'
+          className={`w-7 h-7 rounded-full transition-transform duration-300 transform absolute ${theme === 'dark' ? 'translate-x-0' : 'translate-x-full'}`}
+          sx={{
+            borderRadius: '100%',
+            border: '1px solid white',
+            ":hover": {
+              bgcolor: 'transparent',
+            },
+            '.dark &': {
+              border: '1px solid #374151',
+              "&:hover": {
+                bgcolor: 'transparent',
+              }
+            },
+          }}
+          >
+          {theme === 'light' ? <DarkModeRoundedIcon className='text-black' /> : <LightModeRoundedIcon className='text-yellow-500'/>}
+        </IconButton>
+      </div>
     </Tooltip>
   );
 }

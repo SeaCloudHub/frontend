@@ -1,10 +1,10 @@
 import FileCard from '@/components/core/file-card/FileCard';
 import FolderCard from '@/components/core/folder-card/FolderCard';
 import { LocalEntry } from '@/hooks/drive.hooks';
-import { Path, useDrawer, useSelected } from '@/store/my-drive/myDrive.store';
-import { CUSTOMER_MY_DRIVE } from '@/utils/constants/router.constant';
+import { Path, useDrawer, useEntries, useSelected } from '@/store/my-drive/myDrive.store';
+import { DRIVE_MY_DRIVE } from '@/utils/constants/router.constant';
 import { LinearProgress } from '@mui/material';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 type DriveGridViewProps = {
@@ -12,8 +12,6 @@ type DriveGridViewProps = {
   sort?: string;
   order?: string;
   setSort?: ({ sort, order }: { sort: string; order: string }) => void;
-  // arrSelected: string[];
-  // setArrSelected: React.Dispatch<React.SetStateAction<string[]>>;
   entries: LocalEntry[];
   fileShow?: boolean;
   folderShow?: boolean;
@@ -21,15 +19,24 @@ type DriveGridViewProps = {
   parent?: 'priority' | 'my-drive' | 'shared' | 'trash' | 'starred';
 };
 
-export const DriveGridView: React.FC<DriveGridViewProps> = ({ entries, fileShow, folderShow, isLoading, curDir, parent }) => {
-  const files = entries.filter((entry) => !entry.isDir);
-  const folders = entries.filter((entry) => entry.isDir);
+export const DriveGridView: React.FC<DriveGridViewProps> = ({
+  entries,
+  fileShow,
+  folderShow,
+  isLoading,
+  curDir,
+  parent,
+}) => {
+  console.log('DriveGridView', entries);
+  // const files = entries.filter((entry) => !entry.isDir);
+  // const folders = entries.filter((entry) => entry.isDir);
+  const showEntry = fileShow ? entries.filter((entry) => !entry.isDir) : folderShow ? entries.filter((entry) => entry.isDir) : entries;
+  const driveGridViewRef = useRef(null);
 
   const navigate = useNavigate();
   const { drawerOpen } = useDrawer();
   const { setArrSelected, arrSelected } = useSelected();
 
-  const driveGridViewRef = useRef(null);
   useEffect(() => {
     const fileCardRefs = document.querySelectorAll('.file-card');
     const folderCardRefs = document.querySelectorAll('.folder-card');
@@ -44,16 +51,16 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({ entries, fileShow,
         setArrSelected([]);
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [arrSelected, setArrSelected]);
 
+
   return (
     <>
-      {isLoading ? (
+      {isLoading && entries.length < 15 ? (
         <LinearProgress className='translate-y-1' />
       ) : entries.length === 0 ? (
         <div className='flex h-96 items-center justify-center'>
@@ -64,8 +71,8 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({ entries, fileShow,
         </div>
       ) : (
         <div ref={driveGridViewRef} className='pl-5 pr-3 pt-4'>
-          <div className='relative flex min-w-40 flex-col space-y-2'>
-            {folders.length !== 0 && (
+          <div className='relative flex flex-col space-y-2 min-w-40 overflow-y-auto overflow-hidden'>
+            {/* {folders.length !== 0 && (
               <div className={!folderShow ? 'visible' : 'hidden'}>
                 <div className='pb-4 pt-2 text-sm font-medium'> Folders</div>
                 <div className={`grid grid-cols-1 gap-4 ${drawerOpen ? 'xl:grid-cols-3' : 'sm:grid-cols-2 xl:grid-cols-5'}`}>
@@ -75,7 +82,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({ entries, fileShow,
                         title={folder.title}
                         icon={folder.icon}
                         id={folder.id}
-                        onDoubleClick={() => navigate(`${CUSTOMER_MY_DRIVE}/dir/${folder.id}`)}
+                        onDoubleClick={() => navigate(`${DRIVE_MY_DRIVE}/dir/${folder.id}`)}
                         onClick={() => setArrSelected([folder.id])}
                         isSelected={arrSelected?.includes(folder.id)}
                         parent={parent}
@@ -85,28 +92,43 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({ entries, fileShow,
                   ))}
                 </div>
               </div>
-            )}
-            {files.length !== 0 && (
-              <div className={!fileShow ? 'visible' : 'hidden'}>
-                <div className='pb-4 pt-2 text-sm font-medium'>Files</div>
+            )} */}
+            {entries.length !== 0 && (
+              <>
+                <div className='pb-4 text-sm font-medium'>{folderShow ? 'Folders' : fileShow ? 'Files' : 'All'}</div>
                 <div className={`grid grid-cols-1 gap-4 ${drawerOpen ? 'xl:grid-cols-3' : 'sm:grid-cols-2 xl:grid-cols-5'}`}>
-                  {files.map((file, index) => (
-                    <div key={index} className='aspect-square '>
-                      <FileCard
-                        isDir={file.isDir}
-                        title={file.title}
-                        icon={file.icon}
-                        preview={file.preview}
-                        id={file.id}
-                        dir={curDir}
-                        isSelected={arrSelected?.includes(file.id)}
-                        fileType={file.fileType}
-                        parent={parent}
-                      />
-                    </div>
+                  {showEntry.map((entry, index) => (
+                    folderShow ? (
+                      <div key={index} className='w-auto'>
+                        <FolderCard
+                          title={entry.title}
+                          icon={entry.icon}
+                          id={entry.id}
+                          onDoubleClick={() => navigate(`${DRIVE_MY_DRIVE}/dir/${entry.id}`)}
+                          onClick={() => setArrSelected([entry.id])}
+                          isSelected={arrSelected?.includes(entry.id)}
+                          parent={parent}
+                          dir={curDir}
+                        />
+                      </div>
+                    ) : (
+                      <div key={index} className='aspect-square '>
+                        <FileCard
+                          isDir={entry.isDir}
+                          title={entry.title}
+                          icon={entry.icon}
+                          preview={entry.preview}
+                          id={entry.id}
+                          dir={curDir}
+                          isSelected={arrSelected?.includes(entry.id)}
+                          fileType={entry.fileType}
+                          parent={parent}
+                        />
+                      </div>
+                    )
                   ))}
                 </div>
-              </div>
+              </>
             )}
           </div>
         </div>

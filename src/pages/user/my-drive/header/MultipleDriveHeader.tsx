@@ -1,3 +1,4 @@
+import { downloadFile } from '@/apis/drive/drive.api';
 import IconifyIcon from '@/components/core/Icon/IConCore';
 import ButtonIcon from '@/components/core/button/ButtonIcon';
 import CustomDropdown from '@/components/core/drop-down/CustomDropdown';
@@ -6,8 +7,9 @@ import DeleteTempPopUp from '@/components/core/pop-up/DeleteTempPopUp';
 import MovePopUp from '@/components/core/pop-up/MovePopUp';
 import RenamePopUp from '@/components/core/pop-up/RenamePopUp';
 import SharePopUp from '@/components/core/pop-up/SharePopUp';
-import { useDeleteMutation, useRestoreEntriesMutation } from '@/hooks/drive.hooks';
+import { useDeleteMutation, useRestoreEntriesMutation, useStarEntryMutation, useUnstarEntryMutation } from '@/hooks/drive.hooks';
 import { useSelected } from '@/store/my-drive/myDrive.store';
+import { Tooltip } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
 type MultipleDriveHeaderProps = {
@@ -23,6 +25,72 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
   const [result, setResult] = useState(false);
   const [type, setType] = useState<'move' | 'share' | 'rename' | 'move to trash' | null>();
 
+  const starEntryMutation = useStarEntryMutation();
+  const unstarEntryMutation = useUnstarEntryMutation();
+
+  const multipleDriveHeaderMenu: {icon: string, label: string, action: () => void}[] = [
+    {
+      icon: 'mdi:account-multiple-plus',
+      label: 'Share',
+      action: () => {
+        setType('share');
+        setIsOpened(true);
+      }
+    },
+    {
+      icon: 'mdi:download',
+      label: 'Download',
+      action: () => {
+        // downloadFile({ id, name: title });
+      }
+    },
+    {
+      icon: 'mdi:folder-move',
+      label: 'Move',
+      action: () => {
+        if (parent === 'SharedWithMe') return;
+        setType('move');
+        setIsOpened(true);
+      }
+    },
+    {
+      icon: 'mdi:delete',
+      label: 'Move to trash',
+      action: () => {
+        setType('move to trash');
+        setIsOpened(true);
+      }
+    },
+    parent === 'Starred' ? {
+      label: 'Unstar',
+      icon: 'mdi:star-off-outline',
+      action: () => {
+        unstarEntryMutation.mutate({ file_ids: arrSelected });
+      }
+    } : {
+      label: 'Star',
+      icon: 'mdi:star',
+      action: () => {
+        starEntryMutation.mutate({ file_ids: arrSelected});
+      }
+    },
+    {
+      icon: 'mdi:link',
+      label: 'Copy link',
+      action: () => {
+        // copy link
+      }
+    },
+    {
+      icon: 'mdi:rename-box',
+      label: 'Rename',
+      action: () => {
+        setType('rename');
+        setIsOpened(true);
+      }
+    },
+  ];
+
   useEffect(() => {
     if (result) {
       setArrSelected([]);
@@ -31,14 +99,21 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
   }, [result, setArrSelected]);
 
   return (
-    <div className='flex h-8 min-w-fit items-center gap-3'>
-      <IconifyIcon icon='mdi:close' className='h-8 w-8 rounded-full p-1 hover:bg-gray-300' onClick={() => setArrSelected([])} />
+    <div className='flex items-center gap-3 min-w-fit rounded-full bg-gray-100 dark:bg-search-bg-dark p-0.5'>
+      <Tooltip title='Clear selection'>
+        <div>
+          <IconifyIcon icon='mdi:close'
+            className='h-8 w-8 rounded-full p-1 hover:bg-gray-200 dark:hover:bg-slate-500 dark:hover:text-white'
+            onClick={() => setArrSelected([])}
+          />
+        </div>
+      </Tooltip>
       <div className='min-w-40'> {arrSelected.length} items selected </div>
       {parent === 'Trash' ? (
         <>
           <IconifyIcon
             icon='mdi:restore'
-            className='h-8 w-8 cursor-pointer rounded-full p-1 hover:bg-gray-300'
+            className='h-8 w-8 cursor-pointer rounded-full p-1 hover:bg-gray-200 dark:hover:bg-slate-500 dark:hover:text-white'
             onClick={() => {
               setResult(true);
               restoreMutation.mutate({ source_ids: arrSelected });
@@ -46,44 +121,24 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
           />
           <IconifyIcon
             icon='mdi:delete'
-            className='h-8 w-8 cursor-pointer rounded-full p-1 hover:bg-gray-300'
+            className='h-8 w-8 cursor-pointer rounded-full p-1 hover:bg-gray-200 dark:hover:bg-slate-500 dark:hover:text-white'
             onClick={() => setIsOpened(true)}
           />
         </>
       ) : (
-        <>
-          <IconifyIcon
-            icon='mdi:account-multiple-plus'
-            className='h-8 w-8 cursor-pointer rounded-full p-1 hover:bg-gray-300'
-            onClick={() => {
-              setType('share');
-              setIsOpened(true);
-            }}
-          />
-          <IconifyIcon icon='mdi:download' className='h-8 w-8 cursor-pointer rounded-full p-1 hover:bg-gray-300' />
-          <IconifyIcon
-            icon='mdi:folder-move'
-            className={`h-8 w-8 rounded-full p-1 ${parent === 'SharedWithMe' ? 'brightness-75' : 'cursor-pointer hover:bg-gray-300'}`}
-            onClick={() => {
-              if (parent === 'SharedWithMe') return;
-              setType('move');
-              setIsOpened(true);
-            }}
-          />
-          <IconifyIcon
-            icon='mdi:delete'
-            className='h-8 w-8 cursor-pointer rounded-full p-1 hover:bg-gray-300'
-            onClick={() => {
-              setType('move to trash');
-              setIsOpened(true);
-            }}
-          />
-          <IconifyIcon icon='mdi:link' className='h-8 w-8 cursor-pointer rounded-full hover:bg-gray-300' onClick={() => {}} />
-          <CustomDropdown
-            button={<IconifyIcon icon='mdi:dots-vertical' className='h-8 w-8 cursor-pointer rounded-full hover:bg-gray-300' />}
-            items={[]}
-          />
-        </>
+        multipleDriveHeaderMenu.map((item, index) => (
+          <Tooltip key={index} title={item.label}>
+            <div>
+              <IconifyIcon
+                icon={item.icon}
+                className={`h-8 w-8 rounded-full p-1  ${parent === 'SharedWithMe' && item.label === 'Move to trash' ||
+                item.label === 'Rename' && arrSelected.length > 1
+                ? 'text-gray-400 dark:brightness-75' : 'cursor-pointer hover:bg-gray-200 dark:hover:bg-slate-500 dark:hover:text-white'}`}
+                onClick={item.action}
+              />
+            </div>
+          </Tooltip>
+        ))
       )}
       {type === 'share' && (
         <SharePopUp open={isOpened} handleClose={() => setIsOpened(false)} title={`${arrSelected.length} items`} />

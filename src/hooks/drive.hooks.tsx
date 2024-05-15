@@ -7,20 +7,22 @@ import {
   getListEntries,
   getListEntriesPageMyDrive,
   getListEntriesPageStarred,
+  getListEntriesSuggested,
   getListEntriesTrash,
   getSharedEntries,
   moveEntries,
   moveToTrash,
   renameEntry,
   restoreEntries,
+  searchEntriesApi,
   starEntry,
   unstarEntry,
 } from '@/apis/drive/drive.api';
-import { CopyFileREQ, RenameREQ, DeleteEntriesREQ, RestoreEntriesREQ, ListEntriesPageREQ } from '@/apis/drive/drive.request';
-import { EntryMetadataRES, EntryRESP } from '@/apis/drive/drive.response';
+import { CopyFileREQ, RenameREQ, DeleteEntriesREQ, RestoreEntriesREQ, ListEntriesPageREQ, TypeEntry, StarEntriesREQ } from '@/apis/drive/drive.request';
+import { EntryMetadataRES, EntryRESP, ListEntriesRESP, LogEntry, ParentRES, SuggestedEntriesRESP } from '@/apis/drive/drive.response';
 import { MoveToTrashREQ } from '@/apis/drive/request/move-to-trash.request';
 import { downloadFileApi, uploadFilesApi } from '@/apis/user/storage/storage.api';
-import { Path, useDrawer, useSelected } from '@/store/my-drive/myDrive.store';
+import { Path, useDrawer, useEntries, useIsFileMode, useLimit, useSelected } from '@/store/my-drive/myDrive.store';
 import { useProgressIndicator } from '@/store/storage/progressIndicator.store';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { fileTypeIcons } from '@/utils/constants/file-icons.constant';
@@ -30,13 +32,16 @@ import { ApiGenericError } from '@/utils/types/api-generic-error.type';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
-import { useParams } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-export const useListEntries = () => {
+export const useListEntries = (limit: number, type: TypeEntry) => {
   const { dirId } = useParams();
   const { rootId } = useStorageStore();
+  // console.log('[useListEntries] limit', limit);
   const id = dirId || rootId;
+  const {setListEntries, listEntries} = useEntries();
 
   const { data: parents, error: parentsError } = useQuery({
     queryKey: ['entry-metadata', id],
@@ -45,7 +50,6 @@ export const useListEntries = () => {
     select: (data): Path => {
       if (data.parents) {
         data.parents.sort((a, b) => a.path.localeCompare(b.path));
-
         const path = data.parents.map((parent) =>
           parent.id === rootId ? { id: rootId, name: 'My Drive' } : { id: parent.id, name: parent.name },
         );
@@ -61,21 +65,28 @@ export const useListEntries = () => {
   }
 
   const { data, error, refetch, isLoading } = useQuery({
-    queryKey: ['mydrive-entries', id],
+    queryKey: ['mydrive-entries', id, limit, type],
     queryFn: async () => {
-      return (await getListEntriesPageMyDrive({ id, limit: 100 }).then((res) => res?.data?.entries || [])).filter(
-        (e) => !e.name.includes('.trash'),
-      );
+      const res = await getListEntries({ id, limit, type }).then((res) => res?.data);
+      // const entries = transformEntries(res?.entries || []);
+      // setListEntries(entries);
+      return (res?.entries || []);
     },
-    staleTime: 10 * 1000,
+    staleTime: 1000,
     select: transformEntries,
   });
+
+  useEffect(() => {
+    if (data) setListEntries(data);
+  }, [data, setListEntries]);
+
+  // console.log('[useListEntries] data', data);
 
   if (isAxiosError<ApiGenericError>(error)) {
     toast.error(error.response?.data.message, toastError());
   }
 
-  return { parents: parents || [{ id, name: 'My Drive' }], data: data || [], refetch, isLoading };
+  return { parents: parents || [{ id, name: 'My Drive' }], data: listEntries, refetch, isLoading };
 };
 
 export const useListFolders = (volumn?: 'Priority' | 'My Drive' | 'Starred' | 'Shared', dirId?: string) => {
@@ -106,24 +117,21 @@ export const useListFolders = (volumn?: 'Priority' | 'My Drive' | 'Starred' | 'S
   const { data, error, refetch, isLoading } = useQuery({
     queryKey: ['list-folders', dirId, volumn],
     queryFn: async () => {
-      console.log('[useListFolders] volumn', volumn);
-      if (dirId !== rootId) volumn = 'My Drive';
+      // console.log('[useListFolders] volumn', volumn);
+      if(dirId !== rootId) volumn = 'My Drive'
       switch (volumn) {
         case 'Starred':
           return (await getListEntriesPageStarred().then((res) => res?.data || []))
             .filter((e) => e.is_dir)
-            .filter((e) => !e.name.includes('.trash'));
-        // .filter((e) => !arrSelected.includes(e.id));
+            .filter((e) => !e.name.includes('.trash'))
         case 'Shared':
           return (await getSharedEntries().then((res) => res?.data || []))
             .filter((e) => e.is_dir)
-            .filter((e) => !e.name.includes('.trash'));
-        // .filter((e) => !arrSelected.includes(e.id));
+            .filter((e) => !e.name.includes('.trash'))
         default:
           return (await getListEntriesPageMyDrive({ id: dirId, limit: 100 }).then((res) => res?.data?.entries || []))
             .filter((e) => e.is_dir)
-            .filter((e) => !e.name.includes('.trash'));
-        // .filter((e) => !arrSelected.includes(e.id));
+            .filter((e) => !e.name.includes('.trash'))
       }
     },
     staleTime: 10 * 1000,
@@ -136,6 +144,67 @@ export const useListFolders = (volumn?: 'Priority' | 'My Drive' | 'Starred' | 'S
 
   return { parents: parents || [{ id: dirId, name: 'My Drive' }], data: data || [], refetch, isLoading };
 };
+
+export const useSuggestedEntries = () => {
+  const { limit } = useLimit();
+  const {isFileMode, setIsFileMode} = useIsFileMode();
+  const {setListSuggestedEntries, listSuggestedEntries} = useEntries();
+
+  const { data, error, refetch, isLoading } = useQuery({
+    queryKey: ['suggested-entries', limit, isFileMode?'File':'Folder'],
+    queryFn: async () => {
+      const res = await getListEntriesSuggested({ limit, dir: !isFileMode }).then((res) => res?.data);
+      return res || [];
+    },
+    staleTime: 10 * 1000,
+    select: transformSuggestedEntries,
+  });
+
+  useEffect(() => {
+    if (data) setListSuggestedEntries(data);
+  }, [data, setListSuggestedEntries]);
+
+  if (isAxiosError<ApiGenericError>(error)) {
+    toast.error(error.response?.data.message, toastError());
+  }
+
+  return { data: listSuggestedEntries || [], refetch, isLoading };
+};
+
+export const useSearchEntries = (query: string, set?:boolean) => {
+  const { limit } = useLimit();
+  const {setListEntries, listEntries} = useEntries();
+
+  const { data, error, refetch, isLoading } = useQuery({
+    queryKey: ['search-entries', query, limit],
+    queryFn: async () => {
+      if(!query) return [];
+      const res = await searchEntriesApi({ query, limit }).then((res) => res?.data?.entries);
+      return res || [];
+    },
+    staleTime: 10 * 1000,
+    select: transformEntries,
+  });
+
+  useEffect(() => {
+    if (data && set) setListEntries(data);
+  }, [data, set, setListEntries]);
+
+  if (isAxiosError<ApiGenericError>(error)) {
+    toast.error(error.response?.data.message, toastError());
+  }
+
+  return { data: set ? data||[] : listEntries, refetch, isLoading };
+}
+
+export const useSearchEntriesPage = () => {
+  const query = useQueries().get('q') || '';
+  const {listEntries, setListEntries} = useEntries();
+
+  const { data, refetch, isLoading } = useSearchEntries(query,true);
+
+  return { data: listEntries, refetch, isLoading };
+}
 
 export const usePriorityEntries = () => {
   const { dirId } = useParams();
@@ -160,6 +229,10 @@ export const usePriorityEntries = () => {
   return { data: data || [], refetch, isLoading };
 };
 
+export const useQueries = () => {
+  return new URLSearchParams(useLocation().search);
+};
+
 export const useSharedEntry = () => {
   const { dirId } = useParams();
   const { rootId } = useStorageStore();
@@ -176,7 +249,7 @@ export const useSharedEntry = () => {
         const path = data.parents.map((parent) =>
           parent.id === rootId ? { id: rootId, name: 'Shared' } : { id: parent.id, name: parent.name },
         );
-        console.log('[useSharedEntry] path', path);
+        // console.log('[useSharedEntry] path', path);
         path.push({ id: data.file.id, name: data.file.name });
         return path;
       }
@@ -208,7 +281,7 @@ export const useTrash = () => {
   const { dirId } = useParams();
   const { rootId } = useStorageStore();
   const id = dirId || rootId;
-  console.log('[useTrash] id', id);
+  // console.log('[useTrash] id', id);
   const { data, error, refetch, isLoading } = useQuery({
     queryKey: ['Trash-entries', id],
     queryFn: async () => {
@@ -329,7 +402,7 @@ export const useStarEntryMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (param: Pick<ListEntriesPageREQ, 'id'>) => {
+    mutationFn: (param: StarEntriesREQ) => {
       return starEntry(param);
     },
     onError: (error) => {
@@ -350,7 +423,7 @@ export const useUnstarEntryMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (param: Pick<ListEntriesPageREQ, 'id'>) => {
+    mutationFn: (param: StarEntriesREQ) => {
       return unstarEntry(param);
     },
     onError: (error) => {
@@ -468,9 +541,9 @@ const transformMetadata = (data: EntryMetadataRES) => {
   if (data.file.is_dir && data.parents) {
     return {
       is_dir: true,
-      icon: <Icon icon='ic:baseline-folder' className='h-full w-full' />,
+      icon: <Icon icon='ic:baseline-folder' className='h-full w-full text-yellow-600' />,
       name: data.file.name,
-      preview: <Icon icon='ic:baseline-folder' className='h-full w-full' />,
+      preview: <Icon icon='ic:baseline-folder' className='h-full w-full text-yellow-600' />,
       type: 'Folder',
       location: { id: data.parents[data.parents.length - 1].id, name: data.parents[data.parents.length - 1].name },
       owner: { username: data.file.owner.email, avatar_url: data.file.owner.avatar_url },
@@ -511,15 +584,17 @@ export type LocalEntry = {
   fileType?: string;
 };
 
+export type SuggestedEntry = LocalEntry & {parent: ParentRES} & {log?: LogEntry}
+
 export const transformEntries = (entries: EntryRESP[]): LocalEntry[] => {
-  console.log('[transformEntries] entries', entries);
+  // console.log('[transformEntries] entries', entries);
   return entries.map((entry) => {
     if (entry.is_dir) {
       return {
         isDir: true,
         title: entry.name,
-        icon: <Icon icon='ic:baseline-folder' className='h-full w-full object-cover dark:text-yellow-600' />,
-        preview: <Icon icon='ic:baseline-folder' className='h-full w-full dark:text-yellow-600' />,
+        icon: <Icon icon='ic:baseline-folder' className='object-cover h-full w-full text-yellow-600' />,
+        preview: <Icon icon='ic:baseline-folder' className='h-32 w-32 text-yellow-600' />,
         id: entry.id,
         owner: entry.owner,
         fileType: entry.mime_type,
@@ -533,15 +608,9 @@ export const transformEntries = (entries: EntryRESP[]): LocalEntry[] => {
       isDir: false,
       title: entry.name,
       icon: icon,
-      preview: entry.thumbnail ? (
-        <img
-          src={`${import.meta.env.VITE_BACKEND_API}${entry.thumbnail}`}
-          alt={entry.name}
-          className='h-full w-full object-cover'
-        />
-      ) : (
-        <div className='h-16 w-16'>{icon}</div>
-      ),
+      preview: entry.thumbnail ?
+        <img src={`${import.meta.env.VITE_BACKEND_API}${entry.thumbnail}`} alt={entry.name} className='h-full w-full object-cover' draggable={false} /> :
+        <div className='h-16 w-16'>{icon}</div>,
       id: entry.id,
       owner: entry.owner,
       lastModified: new Date(entry.updated_at),
@@ -550,3 +619,42 @@ export const transformEntries = (entries: EntryRESP[]): LocalEntry[] => {
     } as LocalEntry;
   });
 };
+
+const transformSuggestedEntries = (entries: SuggestedEntriesRESP[]): SuggestedEntry[] => {
+  // console.log('[transformSuggestedEntries] entries', entries);
+  return entries.map((entry) => {
+    if (entry.is_dir) {
+      return {
+        isDir: true,
+        title: entry.name,
+        icon: <Icon icon='ic:baseline-folder' className='object-cover h-full w-full text-yellow-600' />,
+        preview: <Icon icon='ic:baseline-folder' className='h-32 w-32 text-yellow-600' />,
+        id: entry.id,
+        owner: entry.owner,
+        fileType: entry.mime_type,
+        lastModified: new Date(entry.updated_at),
+        size: entry.size,
+        parent: entry.parent,
+        // log: entry.log ? {...entry.log, ...{created_at: new Date(entry.log.created_at)}} : {created_at: new Date()},
+      } as SuggestedEntry;
+    }
+    const ext = entry.name.split('.').pop() || 'any';
+    const icon = fileTypeIcons[ext] || fileTypeIcons.any;
+    return {
+      isDir: false,
+      title: entry.name,
+      icon: icon,
+      preview: entry.thumbnail ?
+        <img src={`${import.meta.env.VITE_BACKEND_API}${entry.thumbnail}`} alt={entry.name} className='h-full w-full object-cover' draggable={false} /> :
+        <div className='h-16 w-16'>{icon}</div>,
+      id: entry.id,
+      owner: entry.owner,
+      lastModified: new Date(entry.updated_at),
+      fileType: entry.mime_type,
+      size: entry.size,
+      parent: entry.parent,
+      log: {...entry.log, ...{created_at: new Date(entry.log.created_at)}} as LogEntry,
+    } as SuggestedEntry;
+  });
+}
+

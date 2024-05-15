@@ -32,6 +32,7 @@ const TextFieldCore = ({
   return (
     <TextField
       autoComplete='off'
+      autoFocus={true}
       name={name}
       disabled={disabled}
       type={type}

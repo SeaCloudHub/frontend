@@ -10,15 +10,14 @@ export const FormatDateStrToMMHHDDMMYYYY = (dateStr: string): string => {
   return `${date.getHours()}:${date.getMinutes()} ${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
 };
 
-export const formatDate = (date: Date, user: string) => {
+export const formatDate = (date: Date) => {
+  console.log(date);
   return (
     date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
       timeZone: 'Asia/Ho_Chi_Minh',
-    }) +
-    ' ' +
-    user
+    })
   );
 };
