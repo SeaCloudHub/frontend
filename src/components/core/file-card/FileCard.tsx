@@ -39,17 +39,7 @@ export const FileOperation = [
   { icon: <TrashIcon />, label: 'Delete file' },
 ];
 
-const FileCard: React.FC<FileCardProps> = ({
-  title,
-  icon,
-  preview,
-  id,
-  isSelected,
-  dir,
-  fileType,
-  parent,
-  isDir,
-}) => {
+const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelected, dir, fileType, parent, isDir }) => {
   const [fileViewer, setFileViewer] = useState(false);
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
   const [type, setType] = useState<'move' | 'share' | 'rename' | 'move to trash' | null>(null);
@@ -254,6 +244,7 @@ const FileCard: React.FC<FileCardProps> = ({
           <div className='h-6 w-6 rounded-full p-1 hover:bg-slate-300 dark:hover:bg-slate-500'>
             <CustomDropdown
               button={<BsThreeDotsVertical className='dark:hover:text-white' />}
+              minWidth
               items={parent === 'trash' ? menuItemsTrash : menuItems}
             />
           </div>
@@ -263,12 +254,7 @@ const FileCard: React.FC<FileCardProps> = ({
         </div>
         {type === 'share' && <SharePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} />}
         {type === 'move' && (
-          <MovePopUp
-            open={isPopUpOpen}
-            handleClose={() => setIsPopUpOpen(false)}
-            title={title}
-            location={dir}
-          />
+          <MovePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} location={dir} />
         )}
         {type === 'rename' && <RenamePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} name={title} id={id} />}
         {type === 'move to trash' && (

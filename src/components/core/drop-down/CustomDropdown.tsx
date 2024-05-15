@@ -5,7 +5,7 @@ import { MenuItem as MenuItemCustom } from './Dropdown';
 type DropdownProps = {
   button: React.ReactNode;
   items: MenuItemCustom[][];
-  minWidth?:boolean
+  minWidth?: boolean;
 };
 
 const CustomDropdown: React.FC<DropdownProps> = ({ button, items, minWidth }) => {
@@ -47,7 +47,7 @@ const CustomDropdown: React.FC<DropdownProps> = ({ button, items, minWidth }) =>
                   handleClose();
                 }}
                 sx={{
-                  minWidth:minWidth?  '250px':'0px',
+                  minWidth: minWidth ? '250px' : '0px',
                   py: '3px',
                   '.dark &': {
                     '&:hover': {

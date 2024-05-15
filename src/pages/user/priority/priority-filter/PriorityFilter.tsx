@@ -15,7 +15,7 @@ const PriorityFilter: React.FC<PriorityFilterProps> = ({ viewMode, setViewMode,
 }) => {
 
   return (
-    <div className='flex items-center justify-between px-4 overflow-x-auto'>
+    <div className='flex items-center justify-between overflow-x-auto px-4'>
       <div className='flex items-center gap-3'>
         <span className='text-md font-semibold'>Recommend</span>
         <PriorityViewType  />

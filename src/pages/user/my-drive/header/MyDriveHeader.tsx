@@ -39,7 +39,7 @@ const MyDriveHeader: React.FC<MyDriveHeaderProps> = ({
 
   return (
     <div className='flex flex-col overflow-hidden'>
-      <div className='flex justify-between min-w-[375px]'>
+      <div className='flex min-w-[375px] justify-between'>
         <div className='pb-[8px] pl-1 pt-[14px]'>
           <DrivePath path={path} type={'MyDrive'} />
         </div>

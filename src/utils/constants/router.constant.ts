@@ -13,6 +13,7 @@ import Shared from '../../pages/user/shared/Shared';
 import Starred from '../../pages/user/starred/Starred';
 import Trash from '../../pages/user/trash/Trash';
 import SearchPage from '@/pages/user/search/SearchPage';
+import { Profile } from '@/pages/user/profile/Profile';
 
 export const HOME = '/';
 export const AUTH_HOME = '/auth';
@@ -44,6 +45,7 @@ export const DRIVE_MY_DRIVE_DIR = `${DRIVE_HOME}/my-drive/dir/:dirId`;
 export const DRIVE_STARRED = `${DRIVE_HOME}/starred`;
 export const DRIVE_TRASH = `${DRIVE_HOME}/trash`;
 export const DRIVE_MEMORY = `${DRIVE_HOME}/memory`;
+export const DRIVE_PROFILE = `${DRIVE_HOME}/profile`;
 
 export const routes = {
   auth: [
@@ -72,6 +74,7 @@ export const routes = {
     { path: DRIVE_STARRED, component: Starred },
     { path: DRIVE_TRASH, component: Trash },
     { path: DRIVE_MEMORY, component: Memory },
+    { path: DRIVE_PROFILE, component: Profile },
   ],
   notFound: { path: PAGE_NOT_FOUND, component: ErrorPage },
 };

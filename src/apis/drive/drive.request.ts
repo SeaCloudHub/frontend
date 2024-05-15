@@ -47,4 +47,3 @@ export type StarEntriesREQ = {
 };
 
 export type SearchREQ = Partial<ListEntriesREQ> & {query: string};
-

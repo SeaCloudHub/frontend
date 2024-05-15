@@ -1,6 +1,6 @@
 import { signOutApi } from '@/apis/auth/auth.api';
 import { useSession } from '@/store/auth/session';
-import { AUTH_LOGIN_EMAIL } from '@/utils/constants/router.constant';
+import { AUTH_LOGIN_EMAIL, DRIVE_PROFILE } from '@/utils/constants/router.constant';
 import { getFirstCharacters } from '@/utils/function/getFirstCharacter';
 import { getRandomColor } from '@/utils/function/getRandomColor';
 import { toastError } from '@/utils/toast-options/toast-options';
@@ -41,6 +41,10 @@ function UserInfo({ onClose }: UserInfoProps) {
     await logoutMutation.mutateAsync();
   };
 
+  const onUserProfileClick = () => {
+    navigate(DRIVE_PROFILE);
+  };
+
   return (
     <div
       ref={modalRef}
@@ -70,7 +74,12 @@ function UserInfo({ onClose }: UserInfoProps) {
       </div>
       <h2 className='tablet:text-2xl w-full truncate text-center text-xl font-normal'>{`Hi, ${identity.first_name}!`}</h2>
 
-      <div className='flex justify-center space-x-1'>
+      <div className='flex flex-col items-center justify-center'>
+        <button
+          onClick={onUserProfileClick}
+          className='tablet:w-44 hover:bg-darkC flex w-48 items-center justify-center space-x-2 rounded-full border bg-white py-3  hover:bg-gray-200 dark:text-black'>
+          <span className='text-[#2e6ed6]'>Manage your account</span>
+        </button>
         <button
           disabled={logoutMutation.isPending}
           onClick={onSignOutClick}

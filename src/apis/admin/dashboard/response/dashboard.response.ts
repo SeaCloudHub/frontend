@@ -77,9 +77,27 @@ export type TTL = {
   Unit: number;
 };
 
-export type UserStatisticRESP = {
-  total_users: number;
-  active_users: number;
-  blocked_users: number;
+export type StatisticRESP = {
+  statistic_user: StatisticUser[];
+  statistic_user_by_month: StatisticUserByMonth;
   total_storage_usage: number;
+  total_storage_capacity: number;
+  file_by_type: FileByType;
+};
+type StatisticUser = {
+  name: string;
+  value: number;
+  percentage: number;
+};
+
+export type StatisticUserByMonth = {
+  [key: string]: {
+    total_users: number;
+    active_users: number;
+    blocked_users: number;
+  };
+};
+
+type FileByType = {
+  [key: string]: number;
 };

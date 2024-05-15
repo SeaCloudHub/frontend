@@ -14,7 +14,7 @@ const AccordionCore: React.FC<DashboardPageProps> = ({ title, children, classNam
   return (
     <Paper elevation={3} className='w-full'>
       <div>
-        <DashboardTitlePage  title={title} handleOpen={handleOpen} open={open} />
+        <DashboardTitlePage title={title} handleOpen={handleOpen} open={open} />
       </div>
       <div className={className}>{open && children}</div>
     </Paper>

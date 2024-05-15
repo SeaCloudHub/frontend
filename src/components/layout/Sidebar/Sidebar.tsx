@@ -56,11 +56,7 @@ const Sidebar = ({ role, shrinkMode }: SidebarProps) => {
               >
                 <img src={(import.meta.env.BASE_URL + 'logo.png') as string} alt='placeholder' className='h-9  rounded-full' />
                 <p className='h4'>SEACLOUD</p>
-                <ButtonIcon
-                  onClick={() => updateShrinkMode(true)}
-                  icon='ion:caret-back'
-                  size={'25px'}
-                />
+                <ButtonIcon onClick={() => updateShrinkMode(true)} icon='ion:caret-back' size={'25px'} />
               </div>
             </div>
           )}

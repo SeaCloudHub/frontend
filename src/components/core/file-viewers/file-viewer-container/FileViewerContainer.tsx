@@ -99,7 +99,6 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({ isCloseOutsid
       }
     }
   };
-
   useEffect(() => {
     if (fileInfo.id) {
       const fetchData = async () => {
@@ -108,7 +107,7 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({ isCloseOutsid
         }
       };
       fetchData();
-      const FileIcon = getFileIcon(fileInfo.fileType) as React.ReactNode;
+      const FileIcon = getFileIcon(fileInfo.title.split('.').pop().toString()) as React.ReactNode;
       setFileIcon(FileIcon);
     }
   }, [fileInfo]);

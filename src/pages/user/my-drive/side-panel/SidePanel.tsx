@@ -284,7 +284,7 @@ const SidePanel: React.FC<SidePanelProps> = ({ id, title }) => {
 const DefaultTabPanel: React.FC = () => {
   return (
     <div className='flex flex-col items-center'>
-      <img className='mb-4 w-full h-60 object-cover' src={(import.meta.env.BASE_URL + 'guide1.png') as string} alt='Guide1' />
+      <img className='mb-4 h-60 w-full object-cover' src={(import.meta.env.BASE_URL + 'guide1.png') as string} alt='Guide1' />
       <div>Select item to see the details</div>
     </div>
   );

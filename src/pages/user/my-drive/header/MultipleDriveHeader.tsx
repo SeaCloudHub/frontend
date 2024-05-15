@@ -144,12 +144,7 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
         <SharePopUp open={isOpened} handleClose={() => setIsOpened(false)} title={`${arrSelected.length} items`} />
       )}
       {type === 'move' && (
-        <MovePopUp
-          open={isOpened}
-          handleClose={() => setIsOpened(false)}
-          title={`${arrSelected.length} items`}
-          location={dir}
-        />
+        <MovePopUp open={isOpened} handleClose={() => setIsOpened(false)} title={`${arrSelected.length} items`} location={dir} />
       )}
       {type === 'move to trash' && (
         <DeleteTempPopUp

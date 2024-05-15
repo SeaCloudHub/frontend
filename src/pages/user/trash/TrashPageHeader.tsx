@@ -26,7 +26,7 @@ const TrashPageHeader: React.FC<TrashPageHeaderProps> = ({
   console.log('[TrashPageHeader] arrSelected', arrSelected);
 
   return (
-    <div className='px-5 flex flex-col'>
+    <div className='flex flex-col px-5'>
       <div className='flex justify-between space-x-2'>
         <h2 className='pb-[20px] pt-[17px] text-2xl font-semibold'>Trash</h2>
         <div className='flex items-center gap-2'>
@@ -66,7 +66,7 @@ const TrashPageHeader: React.FC<TrashPageHeaderProps> = ({
           )}
         </div>
       ) : (
-        <MultipleDriveHeader parent='Trash' dir={{id: rootId, name: 'Trash'}}/>
+        <MultipleDriveHeader parent='Trash' dir={{ id: rootId, name: 'Trash' }} />
       )}
     </div>
   );

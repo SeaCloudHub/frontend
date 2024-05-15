@@ -3,6 +3,7 @@ export type PagingState = {
   size: number;
   count?: number;
   totalPage: number;
+  hasMore?: boolean;
 };
 
 export const initialPagingState: PagingState = {

@@ -31,7 +31,7 @@ export type ListEntriesRESP = {
 
 export type ListEntriesPageRESP = {
   entries: EntryRESP[];
-  pagination: PaginationRESP;
+  pagination: PageInfoRESP;
 };
 
 export type ParentRES = {
@@ -61,7 +61,7 @@ export type SharedEntriesRESP = EntryRESP[];
 
 export type DeleteFilesRESP = EntryRESP[];
 
-export type PaginationRESP = {
+export type PageInfoRESP = {
   total_items: number;
   total_pages: number;
   current_page: number;

@@ -14,7 +14,7 @@ type StarredPageViewProps = {
 
 const StarredView: React.FC<StarredPageViewProps> = ({ entries, isLoading }) => {
   const { viewMode } = useViewMode();
-  const {rootId} = useStorageStore();
+  const { rootId } = useStorageStore();
   const [{ sort, order }, setSort] = useState<{ sort: string; order: string }>({ sort: 'Name', order: 'desc' });
 
   return viewMode === 'grid' ? (
@@ -24,7 +24,7 @@ const StarredView: React.FC<StarredPageViewProps> = ({ entries, isLoading }) => 
       setSort={setSort}
       entries={entries}
       isLoading={isLoading}
-      parent = 'starred'
+      parent='starred'
       curDir={{ id: rootId, name: 'Starred' }}
     />
   ) : (
@@ -34,7 +34,7 @@ const StarredView: React.FC<StarredPageViewProps> = ({ entries, isLoading }) => 
       setSort={setSort}
       entries={entries}
       isLoading={isLoading}
-      parent = 'starred'
+      parent='starred'
       curDir={{ id: rootId, name: 'Starred' }}
     />
   );

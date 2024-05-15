@@ -323,7 +323,6 @@ const UserManagement = () => {
               total={data.paging.count}
               onChange={handlePageChange}
               style={{ marginTop: 16, textAlign: 'right' }}
-              className='bg-white '
             />
           </>
         )}

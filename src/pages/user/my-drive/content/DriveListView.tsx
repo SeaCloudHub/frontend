@@ -73,19 +73,18 @@ export const DriveListView: React.FC<DriveListViewProps> = ({
                 {...entry}
                 onDoubleClick={() => {
                   navigate(`${DRIVE_MY_DRIVE}/dir/${entry.id}`);
-                } }
+                }}
                 isSelected={arrSelected?.includes(entry.id)}
-                parent={parent}              />
+                parent={parent}
+              />
             ))}
             {files.map((entry, index) => (
               <DataRow
                 key={index}
                 {...entry}
                 dir={curDir}
-                // onClick={() => setArrSelected && setArrSelected([entry.id])}
                 isSelected={arrSelected?.includes(entry.id)}
                 parent={parent}
-                // setArrSelected={setArrSelected}
               />
             ))}
           </div>
