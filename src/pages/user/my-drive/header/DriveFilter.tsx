@@ -1,20 +1,46 @@
 import React from 'react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import FilterChip from '@/components/core/filter-chip/FilterChip';
+import { TypeEntry } from '@/apis/drive/drive.request';
+import { useTypeFilter } from '@/store/my-drive/myDrive.store';
 
 const typeFilterItems = [
   {
-    label: 'Documents',
+    label: 'Folder',
+    icon: <Icon icon='mdi:folder' />,
+  },
+  {
+    label: 'Text',
+    icon: <Icon icon='mdi:file-document' />,
+  },
+  {
+    label: 'Document',
     icon: <Icon icon='simple-icons:googledocs' />,
   },
   {
-    label: 'Spreadsheets',
-    icon: <Icon icon='mdi:google-spreadsheet' />,
+    label: 'Pdf',
+    icon: <Icon icon='mdi:file-pdf' />,
   },
   {
-    label: 'Presentations',
-    icon: <Icon icon='mdi:file-presentation-box' />,
+    label: 'Json',
+    icon: <Icon icon='mdi:json' />,
   },
+  {
+    label: 'Image',
+    icon: <Icon icon='mdi:image' />,
+  },
+  {
+    label: 'Video',
+    icon: <Icon icon='mdi:video' />,
+  },
+  {
+    label: 'Audio',
+    icon: <Icon icon='mdi:audio' />,
+  },
+  {
+    label: 'Archive',
+    icon: <Icon icon='mdi:archive' />,
+  }
 ];
 
 const peopleFilterItems = [
@@ -29,26 +55,27 @@ const modifiedFilterItems = [
 ];
 
 type FilterChipProps = {
-  typeFilter: string;
-  peopleFilter: string;
+  // typeFilter: TypeEntry;
+  // peopleFilter: string;
   modifiedFilter: string;
-  setTypeFilter: (value: string) => void;
-  setPeopleFilter: (value: string) => void;
+  // setTypeFilter: (value: TypeEntry) => void;
+  // setPeopleFilter: (value: string) => void;
   setModifiedFilter: (value: string) => void;
 };
 
 const DriveFilter: React.FC<FilterChipProps> = ({
-  setTypeFilter,
-  setPeopleFilter,
+  // setTypeFilter,
+  // setPeopleFilter,
   setModifiedFilter,
-  typeFilter,
-  peopleFilter,
+  // typeFilter,
+  // peopleFilter,
   modifiedFilter,
 }) => {
+  const { typeFilter, setTypeFilter } = useTypeFilter();
   return (
     <div className='flex gap-2'>
-      <FilterChip name='Type' options={typeFilterItems} action={(value) => setTypeFilter(value)} value={typeFilter} />
-      <FilterChip name='People' options={peopleFilterItems} action={(value) => setPeopleFilter(value)} value={peopleFilter} />
+      <FilterChip name='Type' options={typeFilterItems} action={(value) => setTypeFilter(value as TypeEntry)} value={typeFilter} />
+      {/* <FilterChip name='People' options={peopleFilterItems} action={(value) => setPeopleFilter(value)} value={peopleFilter} /> */}
       <FilterChip
         name='Modified'
         options={modifiedFilterItems}

@@ -49,32 +49,32 @@ const Starred = () => {
               />
             </div>
           </div>
-          <div className='flex items-center gap-3'>
-            {arrSelected.length === 0 ? (
-              <>
-                <SharingPageFilter
-                  setModifiedFilterItem={setModifiedFilterItem}
-                  setPeopleFilterItem={setPeopleFilterItem}
-                  setTypeFilterItem={setTypeFilterItem}
-                  modifiedFilter={modifiedFilterItem}
-                  peopleFilter={peopleFilterItem}
-                  typeFilter={typeFilterItem}
-                />
-                {(typeFilterItem || peopleFilterItem || modifiedFilterItem) && (
-                  <div className='flex h-7 items-center rounded-full px-[12px] py-[1px] hover:bg-[#ededed]'>
-                    <div
-                      onClick={() => {
-                        setTypeFilterItem('');
-                        setPeopleFilterItem('');
-                        setModifiedFilterItem('');
-                      }}
-                      className='cursor-pointer text-sm font-medium'>
-                      Clear filters
-                    </div>
+          {arrSelected.length === 0 ? (
+            <div className='flex items-center gap-3 w-full mb-1.5'>
+              <SharingPageFilter
+                setModifiedFilterItem={setModifiedFilterItem}
+                setPeopleFilterItem={setPeopleFilterItem}
+                setTypeFilterItem={setTypeFilterItem}
+                modifiedFilter={modifiedFilterItem}
+                peopleFilter={peopleFilterItem}
+                typeFilter={typeFilterItem}
+              />
+              {(typeFilterItem || peopleFilterItem || modifiedFilterItem) && (
+                <div className='flex h-7 items-center rounded-full px-[12px] py-[1px] hover:bg-[#ededed]'>
+                  <div
+                    onClick={() => {
+                      setTypeFilterItem('');
+                      setPeopleFilterItem('');
+                      setModifiedFilterItem('');
+                    }}
+                    className='cursor-pointer text-sm font-medium'>
+                    Clear filters
                   </div>
-                )}
-              </>
-            ) : (
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className='overflow-x-auto'>
               <MultipleDriveHeader
                 parent='Starred'
                 dir={{
@@ -82,8 +82,8 @@ const Starred = () => {
                   name: 'Starred',
                 }}
               />
-            )}
-          </div>
+            </div>
+          )}
         </div>
       }
       bodyLeft={

@@ -8,7 +8,8 @@ import LinearChartBar from '../../core/linear-chart-bar/linearChartBar';
 import SidebarItem from '../../core/sidebar-item/SidebarItem';
 import AddFileMenu from './AddFileMenu';
 import { useNavigate } from 'react-router-dom';
-import { ADMIN_HOME, CUSTOMER_HOME } from '@/utils/constants/router.constant';
+import { ADMIN_HOME, DRIVE_HOME } from '@/utils/constants/router.constant';
+import { useSelected } from '@/store/my-drive/myDrive.store';
 
 type SidebarProps = {
   shrinkMode: boolean;
@@ -17,6 +18,7 @@ type SidebarProps = {
 const Sidebar = ({ role, shrinkMode }: SidebarProps) => {
   const updateShrinkMode = useScreenMode((state) => state.updateShrinkMode);
   const navigate = useNavigate();
+  const { setArrSelected } = useSelected();
 
   const [tabs, setTabs] = useState<SidebarItemType[]>([]);
 
@@ -47,7 +49,10 @@ const Sidebar = ({ role, shrinkMode }: SidebarProps) => {
             <div className='flex w-full  flex-col '>
               <div
                 className='flex h-16 w-full items-center justify-around gap-2 p-3 pl-6 cursor-pointer'
-                onClick={() => navigate(role === Role.USER ? CUSTOMER_HOME: ADMIN_HOME)}
+                onClick={() => {
+                  setArrSelected([]);
+                  navigate(role === Role.USER ? DRIVE_HOME: ADMIN_HOME)
+                }}
               >
                 <img src={(import.meta.env.BASE_URL + 'logo.png') as string} alt='placeholder' className='h-9  rounded-full' />
                 <p className='h4'>SEACLOUD</p>

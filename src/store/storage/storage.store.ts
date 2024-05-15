@@ -1,3 +1,4 @@
+import { LocalEntry } from '@/hooks/drive.hooks';
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 

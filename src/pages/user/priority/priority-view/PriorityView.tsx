@@ -1,16 +1,18 @@
 import React from 'react';
-import { LocalEntry } from '@/hooks/drive.hooks';
+import { LocalEntry, SuggestedEntry } from '@/hooks/drive.hooks';
 import { Path, useViewMode } from '@/store/my-drive/myDrive.store';
 import { DriveGridView } from '../../my-drive/content/DriveGridView';
 import { DriveListView } from '../../my-drive/content/DriveListView';
 import { useStorageStore } from '@/store/storage/storage.store';
+import PriorityListView from './PriorityListView';
 
 type PriorityViewProps = {
   isFileMode: boolean;
-  entries: LocalEntry[];
+  entries: SuggestedEntry[];
   sort: string;
   order: string;
   setSort: (value: { sort: string; order: string }) => void;
+  isLoading: boolean;
 };
 
 const PriorityView: React.FC<PriorityViewProps> = ({
@@ -19,6 +21,7 @@ const PriorityView: React.FC<PriorityViewProps> = ({
   order,
   setSort,
   isFileMode,
+  isLoading,
 }) => {
   const { viewMode } = useViewMode();
   const { rootId } = useStorageStore();
@@ -26,20 +29,30 @@ const PriorityView: React.FC<PriorityViewProps> = ({
 
   return viewMode === 'grid' ? (
     <DriveGridView
+      isLoading={isLoading}
       sort={sort}
       order={order}
       setSort={setSort}
       entries={localEntries}
-      fileShow={!isFileMode}
-      folderShow={isFileMode}
+      fileShow={isFileMode}
+      folderShow={!isFileMode}
       curDir={{ id: rootId, name: 'Priority' }}
     />
   ) : (
-    <DriveListView
-      order={order}
-      sort={sort}
-      setSort={setSort}
+    // <DriveListView
+    //   isLoading={isLoading}
+    //   order={order}
+    //   sort={sort}
+    //   setSort={setSort}
+    //   entries={localEntries}
+    //   curDir={{ id: rootId, name: 'Priority' }}
+    // />
+    <PriorityListView
       entries={localEntries}
+      isLoading={isLoading}
+      order={order}
+      setSort={setSort}
+      sort={sort}
       curDir={{ id: rootId, name: 'Priority' }}
     />
   );

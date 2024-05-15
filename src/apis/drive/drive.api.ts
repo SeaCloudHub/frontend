@@ -7,15 +7,18 @@ import {
   DeleteEntriesREQ,
   ListEntriesPageREQ,
   RestoreEntriesREQ,
+  SuggestedEntriesREQ,
+  StarEntriesREQ,
+  SearchREQ,
 } from './drive.request';
 import { BaseResponse } from '@/utils/types/api-base-response.type';
 import { MoveToTrashREQ } from './request/move-to-trash.request';
-import { EntryMetadataRES, EntryRESP, ListEntriesPageRESP, ListEntriesRESP, SharedEntriesRESP } from './drive.response';
+import { EntryMetadataRES, EntryRESP, ListEntriesPageRESP, ListEntriesRESP, SearchRESP, SharedEntriesRESP, SuggestedEntriesRESP } from './drive.response';
 import { HTTP_HEADER } from '@/utils/constants/http.constant';
 
-export const getListEntries = async (param: ListEntriesREQ) => {
-  const res = await api.get<BaseResponse<ListEntriesRESP>>(`/files/${param.id}`, {
-    params: { cursor: param.cusor, limit: param.limit },
+export const getListEntries = async (params: ListEntriesREQ) => {
+  const res = await api.get<BaseResponse<ListEntriesRESP>>(`/files/${params.id}`, {
+    params: {...params, type: params.type?.toLowerCase()}
   });
   return res.data;
 };
@@ -27,20 +30,18 @@ export const getListEntriesPageMyDrive = async (param: ListEntriesPageREQ) => {
   return res.data;
 };
 
-// export const getListEntriesPriority = async (param: ListEntriesREQ) => {
-//   const res = await api.get<BaseResponse<ListEntriesRESP>>(`/files/priority`, {
-//     params: { cursor: param.cusor, limit: param.limit },
-//   });
-//   return res.data;
-// }
+export const getListEntriesSuggested= async (params: SuggestedEntriesREQ) => {
+  const res = await api.get<BaseResponse<SuggestedEntriesRESP>>(`/files/suggested`, { params });
+  return res.data;
+}
 
 export const getListEntriesPageStarred = async () => {
   const res = await api.get<BaseResponse<EntryRESP[]>>(`/files/starred`);
   return res.data;
 }
 
-export const getListEntriesTrash = async () => {
-  const res = await api.get<BaseResponse<ListEntriesRESP>>(`/files/trash`);
+export const getListEntriesTrash = async (params?: Pick<ListEntriesREQ, 'limit' | 'cursor'>) => {
+  const res = await api.get<BaseResponse<ListEntriesRESP>>(`/files/trash`, { params });
   return res.data;
 };
 
@@ -60,7 +61,6 @@ export const copyFiles = async (body: CopyFileREQ) => {
 };
 
 export const getEntryMetadata = async (param: Pick<ListEntriesREQ, 'id'>) => {
-  // console.log('[getEntryMetadata] param', `/files/${param.id}/metadata`)
   const res = await api.get<BaseResponse<EntryMetadataRES>>(`/files/${param.id}/metadata`);
   return res.data;
 };
@@ -76,7 +76,6 @@ export const downloadFile = async (param: { id: string; name?: string }) => {
 };
 
 export const uploadFiles = async (body: UploadFileREQ) => {
-  // TODO: doesnt work
   const formData = new FormData();
   for (const key in body) {
     console.log('[uploadFiles] key', key, body[key]);
@@ -109,17 +108,22 @@ export const restoreEntries = async (body: RestoreEntriesREQ) => {
   return res.data;
 }
 
-export const starEntry = async (param: Pick<ListEntriesREQ, 'id'>) => {
-  const res = await api.patch<BaseResponse<EntryRESP>>(`/files/${param.id}/star`);
+export const starEntry = async (body: StarEntriesREQ) => {
+  const res = await api.patch<BaseResponse<EntryRESP>>(`/files/star`, body);
   return res.data;
 }
 
-export const unstarEntry = async (param: Pick<ListEntriesREQ, 'id'>) => {
-  const res = await api.patch<BaseResponse<EntryRESP>>(`/files/${param.id}/unstar`);
+export const unstarEntry = async (body: StarEntriesREQ) => {
+  const res = await api.patch<BaseResponse<EntryRESP>>(`/files/unstar`, body);
   return res.data;
 }
 
 export const moveEntries = async (body: Required<{id: string, to: string}>&RestoreEntriesREQ) => {
   const res = await api.post<BaseResponse<EntryRESP[]>>(`/files/move`, body);
+  return res.data;
+}
+
+export const searchEntriesApi = async (params: SearchREQ) => {
+  const res = await api.get<BaseResponse<SearchRESP>>(`/files/search`, { params });
   return res.data;
 }

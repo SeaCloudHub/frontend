@@ -5,9 +5,13 @@ export type CopyFileREQ = {
 
 export type ListEntriesREQ = {
   id: string;
-  cusor?: string;
+  cursor?: string;
   limit?: number;
+  after?: string;
+  type?: TypeEntry;
 };
+
+export type TypeEntry = 'folder' | 'text' | 'document' | 'pdf' | 'json' | 'image' | 'video' | 'audio' | 'archive' | 'other' |'';
 
 export type ListEntriesPageREQ = {
   id: string;
@@ -32,3 +36,15 @@ export type DeleteEntriesREQ = {
 export type RestoreEntriesREQ = {
   source_ids: string[];
 };
+
+export type SuggestedEntriesREQ = {
+  dir?: boolean;
+  limit?: number;
+};
+
+export type StarEntriesREQ = {
+  file_ids: string[];
+};
+
+export type SearchREQ = Partial<ListEntriesREQ> & {query: string};
+

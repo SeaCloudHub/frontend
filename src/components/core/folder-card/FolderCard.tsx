@@ -83,7 +83,7 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick,
         label: parent !== 'starred' ? 'Add to starred' : 'Remove from starred',
         icon: parent !== 'starred' ? <Icon icon='material-symbols:star-outline' /> : <Icon icon='mdi:star-off-outline' />,
         action: () => {
-          parent !== 'starred' ? starEntryMutation.mutate({ id }) : unstarEntryMutation.mutate({ id });
+          parent !== 'starred' ? starEntryMutation.mutate({file_ids: [id]}) : unstarEntryMutation.mutate({ file_ids: [id] });
         },
       },
     ],
@@ -116,7 +116,6 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick,
 
   const handleCtrlClick = () => {
     if (setArrSelected) {
-      // setArrSelected((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
       setArrSelected(arrSelected.includes(id) ? arrSelected.filter((item) => item !== id) : [...arrSelected, id]);
     }
   };
@@ -130,10 +129,6 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick,
   };
 
   const handleDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.ctrlKey) {
-      handleCtrlClick();
-      return;
-    }
     setArrSelected([]);
     onDoubleClick && onDoubleClick();
   };
@@ -144,7 +139,7 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick,
         'folder-card flex w-full cursor-pointer items-center justify-between rounded-xl px-3 py-3 shadow-sm',
         isSelected
           ? 'bg-[#c2e7ff] dark:bg-blue-900 dark:text-white'
-          : 'bg-[#f0f4f9] hover:bg-[#dfe3e7] dark:bg-slate-600 dark:text-white dark:hover:bg-blue-950',
+          : 'bg-[#f0f4f9] hover:bg-[#dfe3e7] dark:bg-slate-600 dark:hover:bg-slate-700 dark:text-white transition-all',
       )}
       onDoubleClick={handleDoubleClick}
       onClick={handleClick}>
@@ -154,8 +149,8 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick,
           <div className='select-none truncate text-sm font-medium'>{title}</div>
         </Tooltip>
       </div>
-      <div className='h-6 w-6 rounded-full p-1 hover:bg-slate-300 dark:hover:bg-slate-800'>
-        <CustomDropdown button={<BsThreeDotsVertical />} items={folderOps} />
+      <div className='h-6 w-6 rounded-full p-1 hover:bg-slate-300 dark:hover:bg-slate-500'>
+        <CustomDropdown button={<BsThreeDotsVertical className='dark:hover:text-white'/>} items={folderOps} />
       </div>
 
       {type === 'move' && (

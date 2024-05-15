@@ -1,28 +1,19 @@
-import { LocalEntry } from '@/hooks/drive.hooks';
-import { Path, useSelected } from '@/store/my-drive/myDrive.store';
+import { LocalEntry, SuggestedEntry } from '@/hooks/drive.hooks';
+import { useSelected } from '@/store/my-drive/myDrive.store';
 import React, { useEffect, useRef } from 'react';
-import { DataRow } from './DataRow';
 import { useNavigate } from 'react-router-dom';
-import { DRIVE_MY_DRIVE } from '@/utils/constants/router.constant';
+import DataRowPriorityView from './DataRowPriorityView';
 
-type DriveListViewProps = {
+type PriorityListViewProps = {
   sort?: string;
   order?: string;
   setSort?: ({ sort, order }: { sort: string; order: string }) => void;
-  entries: LocalEntry[];
+  entries: SuggestedEntry[];
   isLoading?: boolean;
   curDir?: { id: string; name: string };
-  parent?: 'priority' | 'my-drive' | 'shared' | 'trash' | 'starred';
 };
 
-export const DriveListView: React.FC<DriveListViewProps> = ({
-  order,
-  setSort,
-  sort,
-  entries,
-  curDir,
-  parent,
-}) => {
+const PriorityListView: React.FC<PriorityListViewProps> = ({entries, curDir, isLoading, order, setSort, sort}) => {
   const files = entries.filter((entry) => !entry.isDir);
   const folders = entries.filter((entry) => entry.isDir);
 
@@ -60,32 +51,26 @@ export const DriveListView: React.FC<DriveListViewProps> = ({
       ) : (
         <div className='pl-5 pr-5 h-full' ref={driveListViewRef}>
           <div className='relative flex flex-col'>
-            <div className='grid grid-cols-7 gap-3 border-b border-b-[#dadce0] pt-2 max-[1160px]:grid-cols-6'>
+            <div className='grid grid-cols-8 gap-3 border-b border-b-[#dadce0] pt-2 max-[1160px]:grid-cols-6'>
               <div className='col-span-4 font-medium'>Name</div>
-              <div className='font-medium max-[1150px]:hidden'>Owner</div>
-              <div className='truncate font-medium max-[1000px]:hidden'>Last Modified</div>
-              <div className='font-medium max-[1160px]:hidden'>File Size</div>
+              <div className='font-medium col-span-2 max-[1150px]:hidden'>Suggested reasons</div>
+              <div className='truncate font-medium max-[1000px]:hidden'>Owner</div>
+              <div className='font-medium max-[1160px]:hidden'>Location</div>
             </div>
             {folders.map((entry, index) => (
-              <DataRow
-                key={index}
+              <DataRowPriorityView
                 dir={curDir}
+                key={index}
                 {...entry}
-                onDoubleClick={() => {
-                  navigate(`${DRIVE_MY_DRIVE}/dir/${entry.id}`);
-                } }
                 isSelected={arrSelected?.includes(entry.id)}
-                parent={parent}              />
+              />
             ))}
             {files.map((entry, index) => (
-              <DataRow
+              <DataRowPriorityView
                 key={index}
                 {...entry}
                 dir={curDir}
-                // onClick={() => setArrSelected && setArrSelected([entry.id])}
                 isSelected={arrSelected?.includes(entry.id)}
-                parent={parent}
-                // setArrSelected={setArrSelected}
               />
             ))}
           </div>
@@ -94,3 +79,5 @@ export const DriveListView: React.FC<DriveListViewProps> = ({
     </>
   );
 };
+
+export default PriorityListView;

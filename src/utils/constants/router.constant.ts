@@ -12,11 +12,12 @@ import Priority from '../../pages/user/priority/Priority';
 import Shared from '../../pages/user/shared/Shared';
 import Starred from '../../pages/user/starred/Starred';
 import Trash from '../../pages/user/trash/Trash';
+import SearchPage from '@/pages/user/search/SearchPage';
 
 export const HOME = '/';
 export const AUTH_HOME = '/auth';
 export const ADMIN_HOME = '/admin';
-export const CUSTOMER_HOME = '/customer';
+export const DRIVE_HOME = '/drive';
 export const PAGE_NOT_FOUND = '/404';
 /* Auth Routes */
 export const AUTH_LOGIN_EMAIL = `${AUTH_HOME}/login/identifier`;
@@ -34,14 +35,15 @@ export const ADMIN_USER_MANAGEMENT_USER_DETAIL = `${ADMIN_USER_MANAGEMENT}/:user
 export const ADMIN_DASHBOARD = `${ADMIN_HOME}/dashboard`;
 export const ADMIN_STORAGE_MANAGEMENT = `${ADMIN_HOME}/storage-management`;
 //customer routes
-export const CUSTOMER_SHARED = `${CUSTOMER_HOME}/shared`;
-export const CUSTOMER_SHARED_DIR = `${CUSTOMER_HOME}/shared/dir/:dirId`;
-export const CUSTOMER_PRIORITY = `${CUSTOMER_HOME}/priority`;
-export const CUSTOMER_MY_DRIVE = `${CUSTOMER_HOME}/my-drive`;
-export const CUSTOMER_MY_DRIVE_DIR = `${CUSTOMER_HOME}/my-drive/dir/:dirId`;
-export const CUSTOMER_STARRED = `${CUSTOMER_HOME}/starred`;
-export const CUSTOMER_TRASH = `${CUSTOMER_HOME}/trash`;
-export const CUSTOMER_MEMORY = `${CUSTOMER_HOME}/memory`;
+export const DRIVE_SHARED = `${DRIVE_HOME}/shared`;
+export const DRIVE_SHARED_DIR = `${DRIVE_HOME}/shared/dir/:dirId`;
+export const DRIVE_PRIORITY = `${DRIVE_HOME}/priority`;
+export const DRIVE_MY_DRIVE = `${DRIVE_HOME}/my-drive`;
+export const DRIVE_SEARCH = `${DRIVE_HOME}/search`;
+export const DRIVE_MY_DRIVE_DIR = `${DRIVE_HOME}/my-drive/dir/:dirId`;
+export const DRIVE_STARRED = `${DRIVE_HOME}/starred`;
+export const DRIVE_TRASH = `${DRIVE_HOME}/trash`;
+export const DRIVE_MEMORY = `${DRIVE_HOME}/memory`;
 
 export const routes = {
   auth: [
@@ -61,14 +63,15 @@ export const routes = {
     { path: ADMIN_STORAGE_MANAGEMENT, component: StorageManagement },
   ],
   customer: [
-    { path: CUSTOMER_HOME, component: Priority },
-    { path: CUSTOMER_SHARED, component: Shared },
-    { path: CUSTOMER_SHARED_DIR, component: Shared },
-    { path: CUSTOMER_MY_DRIVE, component: MyDrive },
-    { path: CUSTOMER_MY_DRIVE_DIR, component: MyDrive },
-    { path: CUSTOMER_STARRED, component: Starred },
-    { path: CUSTOMER_TRASH, component: Trash },
-    { path: CUSTOMER_MEMORY, component: Memory },
+    { path: DRIVE_HOME, component: Priority },
+    { path: DRIVE_SHARED, component: Shared },
+    { path: DRIVE_SHARED_DIR, component: Shared },
+    { path: DRIVE_MY_DRIVE, component: MyDrive },
+    { path: DRIVE_SEARCH, component: SearchPage },
+    { path: DRIVE_MY_DRIVE_DIR, component: MyDrive },
+    { path: DRIVE_STARRED, component: Starred },
+    { path: DRIVE_TRASH, component: Trash },
+    { path: DRIVE_MEMORY, component: Memory },
   ],
   notFound: { path: PAGE_NOT_FOUND, component: ErrorPage },
 };

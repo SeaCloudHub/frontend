@@ -13,7 +13,7 @@ import TextFieldCore from '../../components/core/form/TextFieldCore';
 import ModalChangePasswordSuccess from '../../components/core/modal/ModalChangePasswordSuccess';
 import { changePasswordSchema } from '../../helpers/form-schema/change-password.schema';
 import { useScreenMode } from '../../store/responsive/screenMode';
-import { AUTH_LOGIN_EMAIL } from '../../utils/constants/router.constant';
+import { AUTH_LOGIN_EMAIL, DRIVE_HOME } from '../../utils/constants/router.constant';
 import { ScreenMode } from '../../utils/enums/screen-mode.enum';
 import { toastError } from '../../utils/toast-options/toast-options';
 import { ApiGenericError } from '../../utils/types/api-generic-error.type';
@@ -45,10 +45,7 @@ const ChangePassword = () => {
       setModalOpen(true);
     },
   });
-  const navigateLogin = () => {
-    signOut();
-    navigate(AUTH_LOGIN_EMAIL);
-  };
+
   return (
     <div className={`${screenMode == ScreenMode.MOBILE ? 'mx-2' : 'mx-auto'} max-w-[700px] text-gray-600 `}>
       {/* <IconifyIcon icon='logos:google' className='mx-auto h-20 w-40' /> */}
@@ -65,7 +62,7 @@ const ChangePassword = () => {
         isOpen={modalOpen}
         handleConfirm={() => {
           setModalOpen(false);
-          navigateLogin();
+          navigate(DRIVE_HOME);
         }}
       />
       <Paper
