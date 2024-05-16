@@ -33,7 +33,7 @@ const FilterChip: React.FC<FilterChipProps> = ({ name, options, action, value })
           </div>
         ) : (
           <div className='flex h-[30px]'>
-            <div className='flex cursor-pointer items-center space-x-2 rounded-l-lg border-0 bg-primaryContainer dark:bg-blue-900 px-4 py-1 text-sm font-medium hover:bg-primaryFixedDim active:brightness-90 dark:hover:bg-slate-500 dark:hover:text-content-bg'>
+            <div className='flex cursor-pointer items-center space-x-2 rounded-l-lg border-0 bg-primaryContainer px-4 py-1 text-sm font-medium hover:bg-primaryFixedDim active:brightness-90 dark:bg-blue-900 dark:hover:bg-slate-500 dark:hover:text-content-bg'>
               <Tooltip title={value}>
                 <span className='line-clamp-1 select-none'>{value}</span>
               </Tooltip>
@@ -44,7 +44,7 @@ const FilterChip: React.FC<FilterChipProps> = ({ name, options, action, value })
                 e.stopPropagation();
                 action && action('');
               }}
-              className='cursor-pointer rounded-r-lg border-0 bg-primaryContainer dark:bg-blue-900 p-2 text-sm font-medium hover:bg-primaryFixedDim active:brightness-90 dark:hover:bg-slate-500 dark:hover:text-content-bg'>
+              className='cursor-pointer rounded-r-lg border-0 bg-primaryContainer p-2 text-sm font-medium hover:bg-primaryFixedDim active:brightness-90 dark:bg-blue-900 dark:hover:bg-slate-500 dark:hover:text-content-bg'>
               <Icon icon='mdi:cancel-bold' />
             </div>
           </div>

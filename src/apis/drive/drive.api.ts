@@ -13,12 +13,21 @@ import {
 } from './drive.request';
 import { BaseResponse } from '@/utils/types/api-base-response.type';
 import { MoveToTrashREQ } from './request/move-to-trash.request';
-import { EntryMetadataRES, EntryRESP, ListEntriesPageRESP, ListEntriesRESP, SearchRESP, SharedEntriesRESP, SuggestedEntriesRESP } from './drive.response';
+import {
+  EntryMetadataRES,
+  EntryRESP,
+  ListEntriesPageRESP,
+  ListEntriesRESP,
+  SearchRESP,
+  SharedEntriesRESP,
+  SuggestedEntriesRESP,
+} from './drive.response';
 import { HTTP_HEADER } from '@/utils/constants/http.constant';
+import { GetStorageRESP } from './response/get-storage.response';
 
 export const getListEntries = async (params: ListEntriesREQ) => {
   const res = await api.get<BaseResponse<ListEntriesRESP>>(`/files/${params.id}`, {
-    params: {...params, type: params.type?.toLowerCase()}
+    params: { ...params, type: params.type?.toLowerCase() },
   });
   return res.data;
 };
@@ -30,10 +39,10 @@ export const getListEntriesPageMyDrive = async (param: ListEntriesPageREQ) => {
   return res.data;
 };
 
-export const getListEntriesSuggested= async (params: SuggestedEntriesREQ) => {
+export const getListEntriesSuggested = async (params: SuggestedEntriesREQ) => {
   const res = await api.get<BaseResponse<SuggestedEntriesRESP>>(`/files/suggested`, { params });
   return res.data;
-}
+};
 
 export const getListEntriesPageStarred = async () => {
   const res = await api.get<BaseResponse<EntryRESP[]>>(`/files/starred`);
@@ -123,6 +132,10 @@ export const moveEntries = async (body: Required<{ id: string; to: string }> & R
   return res.data;
 };
 
+export const getStorage = async () => {
+  const res = await api.get<BaseResponse<GetStorageRESP>>(`/files/storage`);
+  return res.data;
+};
 export const searchEntriesApi = async (params: SearchREQ) => {
   const res = await api.get<BaseResponse<SearchRESP>>(`/files/search`, { params });
   return res.data;

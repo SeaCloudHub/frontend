@@ -75,15 +75,10 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick,
         },
       },
       {
-        label: 'Add shortcut',
-        icon: <Icon icon='material-symbols:add-to-drive' />,
-        action: () => {},
-      },
-      {
         label: parent !== 'starred' ? 'Add to starred' : 'Remove from starred',
         icon: parent !== 'starred' ? <Icon icon='material-symbols:star-outline' /> : <Icon icon='mdi:star-off-outline' />,
         action: () => {
-          parent !== 'starred' ? starEntryMutation.mutate({file_ids: [id]}) : unstarEntryMutation.mutate({ file_ids: [id] });
+          parent !== 'starred' ? starEntryMutation.mutate({ file_ids: [id] }) : unstarEntryMutation.mutate({ file_ids: [id] });
         },
       },
     ],
@@ -139,7 +134,7 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick,
         'folder-card flex w-full cursor-pointer items-center justify-between rounded-xl px-3 py-3 shadow-sm',
         isSelected
           ? 'bg-[#c2e7ff] dark:bg-blue-900 dark:text-white'
-          : 'bg-[#f0f4f9] hover:bg-[#dfe3e7] dark:bg-slate-600 dark:hover:bg-slate-700 dark:text-white transition-all',
+          : 'bg-[#f0f4f9] transition-all hover:bg-[#dfe3e7] dark:bg-slate-600 dark:text-white dark:hover:bg-slate-700',
       )}
       onDoubleClick={handleDoubleClick}
       onClick={handleClick}>
@@ -150,7 +145,7 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick,
         </Tooltip>
       </div>
       <div className='h-6 w-6 rounded-full p-1 hover:bg-slate-300 dark:hover:bg-slate-500'>
-        <CustomDropdown button={<BsThreeDotsVertical className='dark:hover:text-white'/>} items={folderOps} />
+        <CustomDropdown button={<BsThreeDotsVertical className='dark:hover:text-white' />} items={folderOps} />
       </div>
 
       {type === 'move' && <MovePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} location={dir} />}

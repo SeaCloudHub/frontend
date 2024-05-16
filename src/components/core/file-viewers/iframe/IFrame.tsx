@@ -13,7 +13,7 @@ const Iframe: React.FC<IFrameProps> = ({ url, isHtml }) => {
           title='myFrame'
           srcDoc={isHtml ? url : undefined}
           style={{
-            background: isHtml?'white':'',
+            background: isHtml ? 'white' : '',
             height: '100%',
             width: '100%',
             border: '1px solid #d6d6d6',

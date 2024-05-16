@@ -131,7 +131,7 @@ const SidePanel: React.FC<SidePanelProps> = ({ id, title }) => {
     }
   }, [details, isLoading, id]);
 
-  console.log('[SidePanel] detail', details)
+  console.log('[SidePanel] detail', details);
 
   return (
     <div className='flex h-full w-[360px] flex-col overflow-hidden border-l'>

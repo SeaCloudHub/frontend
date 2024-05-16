@@ -16,8 +16,8 @@ function Search() {
   const [onFocus, setOnFocus] = useState<boolean>(false);
   const ref = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
-  const {submited, setSubmited} = useEntries();
-  const {resetLimit} = useLimit();
+  const { submited, setSubmited } = useEntries();
+  const { resetLimit } = useLimit();
 
   const searchValue = useDebounce({ delay: 260, value: keyWord });
   const {data, isLoading, refetch} = useSearchEntries(searchValue);

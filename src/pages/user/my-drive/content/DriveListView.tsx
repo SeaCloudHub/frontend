@@ -15,14 +15,7 @@ type DriveListViewProps = {
   parent?: 'priority' | 'my-drive' | 'shared' | 'trash' | 'starred';
 };
 
-export const DriveListView: React.FC<DriveListViewProps> = ({
-  order,
-  setSort,
-  sort,
-  entries,
-  curDir,
-  parent,
-}) => {
+export const DriveListView: React.FC<DriveListViewProps> = ({ order, setSort, sort, entries, curDir, parent }) => {
   const files = entries.filter((entry) => !entry.isDir);
   const folders = entries.filter((entry) => entry.isDir);
 
@@ -58,7 +51,7 @@ export const DriveListView: React.FC<DriveListViewProps> = ({
           </div>
         </div>
       ) : (
-        <div className='pl-5 pr-5 h-full' ref={driveListViewRef}>
+        <div className='h-full pl-5 pr-5' ref={driveListViewRef}>
           <div className='relative flex flex-col'>
             <div className='grid grid-cols-7 gap-3 border-b border-b-[#dadce0] pt-2 max-[1160px]:grid-cols-6'>
               <div className='col-span-4 font-medium'>Name</div>
@@ -79,13 +72,7 @@ export const DriveListView: React.FC<DriveListViewProps> = ({
               />
             ))}
             {files.map((entry, index) => (
-              <DataRow
-                key={index}
-                {...entry}
-                dir={curDir}
-                isSelected={arrSelected?.includes(entry.id)}
-                parent={parent}
-              />
+              <DataRow key={index} {...entry} dir={curDir} isSelected={arrSelected?.includes(entry.id)} parent={parent} />
             ))}
           </div>
         </div>

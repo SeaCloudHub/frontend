@@ -14,35 +14,32 @@ import { DriveListView } from '../my-drive/content/DriveListView';
 import { useSubmit } from 'react-router-dom';
 
 const SearchPage = () => {
-  const {rootId} = useStorageStore();
-  const {viewMode, setViewMode} = useViewMode();
-  const {arrSelected} = useSelected();
+  const { rootId } = useStorageStore();
+  const { viewMode, setViewMode } = useViewMode();
+  const { arrSelected } = useSelected();
   const [isFileMode, setIsFileMode] = useState<boolean>(true);
-  const {increaseLimit, limit} = useLimit();
+  const { increaseLimit, limit } = useLimit();
 
-  const {data, isLoading, refetch} = useSearchEntriesPage();
+  const { data, isLoading, refetch } = useSearchEntriesPage();
 
   const onScollBottom = () => {
-    if(data.length < limit) return;
+    if (data.length < limit) return;
     increaseLimit();
-  }
+  };
 
   return (
     <DriveLayout
       headerLeft={
         <div className='flex flex-col overflow-hidden'>
-          <div className='flex justify-between items-center space-x-2 text-2xl mr-2'>
-            <div className='pb-[20px] pl-5 pt-[17px] line-clamp-1'>Search result</div>
+          <div className='mr-2 flex items-center justify-between space-x-2 text-2xl'>
+            <div className='line-clamp-1 pb-[20px] pl-5 pt-[17px]'>Search result</div>
             <InfoButton />
           </div>
           {arrSelected.length === 0 ? (
-            <PriorityFilter
-              viewMode={viewMode}
-              setViewMode={setViewMode}
-            />
+            <PriorityFilter viewMode={viewMode} setViewMode={setViewMode} />
           ) : (
-            <div className='px-4 overflow-x-auto'>
-              <MultipleDriveHeader parent='Priority' dir={{id: rootId, name: 'Priority'}} />
+            <div className='overflow-x-auto px-4'>
+              <MultipleDriveHeader parent='Priority' dir={{ id: rootId, name: 'Priority' }} />
             </div>
           )}
         </div>
@@ -57,8 +54,12 @@ const SearchPage = () => {
       }
       sidePanel={
         <SidePanel
-          id={arrSelected.length === 0 ?  '' : arrSelected.length === 1 ? arrSelected[0] : ''}
-          title={arrSelected.length === 0 ? 'Search' : data.find((item) => item.id === arrSelected[arrSelected.length - 1])?.title || ''}
+          id={arrSelected.length === 0 ? '' : arrSelected.length === 1 ? arrSelected[0] : ''}
+          title={
+            arrSelected.length === 0
+              ? 'Search'
+              : data.find((item) => item.id === arrSelected[arrSelected.length - 1])?.title || ''
+          }
         />
       }
     />

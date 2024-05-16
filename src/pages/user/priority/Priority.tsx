@@ -20,7 +20,7 @@ import InfoButton from '../my-drive/header/InfoButton';
 
 const Priority = () => {
   const { viewMode, setViewMode } = useViewMode();
-  const {isFileMode, setIsFileMode} = useIsFileMode();
+  const { isFileMode, setIsFileMode } = useIsFileMode();
   const { rootId } = useStorageStore();
   const { arrSelected } = useSelected();
   const { limit, increaseLimit } = useLimit();
@@ -28,55 +28,55 @@ const Priority = () => {
   console.log(data);
 
   const onScrollBottom = () => {
-    if(data.length < limit) return;
+    if (data.length < limit) return;
     increaseLimit();
-  }
+  };
 
   return (
     // <div>
-      <DriveLayout
-        headerLeft={
-          <div className='flex flex-col overflow-hidden'>
-            <div className='flex justify-between items-center space-x-2 text-2xl mr-2'>
-              <div className='pb-[20px] pl-5 pt-[17px] line-clamp-1'>Welcome to SeaCloud</div>
-              <InfoButton />
-            </div>
-            {arrSelected.length === 0 ? (
-              <PriorityFilter
-                // isFileMode={isFileMode}
-                // setIsFileMode={setIsFileMode}
-                viewMode={viewMode}
-                setViewMode={setViewMode}
-              />
-            ) : (
-              <div className='px-4 overflow-x-auto'>
-                <MultipleDriveHeader parent='Priority' dir={{id: rootId, name: 'Priority'}} />
-              </div>
-            )}
+    <DriveLayout
+      headerLeft={
+        <div className='flex flex-col overflow-hidden'>
+          <div className='mr-2 flex items-center justify-between space-x-2 text-2xl'>
+            <div className='line-clamp-1 pb-[20px] pl-5 pt-[17px]'>Welcome to SeaCloud</div>
+            <InfoButton />
           </div>
-        }
-        onScrollBottom={onScrollBottom}
-        bodyLeft={
-          <PriorityView
-            isLoading={isLoading}
-            isFileMode={isFileMode}
-            entries={data}
-            sort={''}
-            order={''}
-            setSort={({ sort, order }) => console.log(sort, order)}
-          />
-        }
-        sidePanel={
-          <SidePanel
-            id={arrSelected.length === 0 ? rootId : arrSelected.length === 1 ? arrSelected[0] : ''}
-            title={
-              arrSelected.length === 0
-                ? 'Priority'
-                : data.find((item) => item.id === arrSelected[arrSelected.length - 1])?.title || ''
-            }
-          />
-        }
-      />
+          {arrSelected.length === 0 ? (
+            <PriorityFilter
+              // isFileMode={isFileMode}
+              // setIsFileMode={setIsFileMode}
+              viewMode={viewMode}
+              setViewMode={setViewMode}
+            />
+          ) : (
+            <div className='overflow-x-auto px-4'>
+              <MultipleDriveHeader parent='Priority' dir={{ id: rootId, name: 'Priority' }} />
+            </div>
+          )}
+        </div>
+      }
+      onScrollBottom={onScrollBottom}
+      bodyLeft={
+        <PriorityView
+          isLoading={isLoading}
+          isFileMode={isFileMode}
+          entries={data}
+          sort={''}
+          order={''}
+          setSort={({ sort, order }) => console.log(sort, order)}
+        />
+      }
+      sidePanel={
+        <SidePanel
+          id={arrSelected.length === 0 ? rootId : arrSelected.length === 1 ? arrSelected[0] : ''}
+          title={
+            arrSelected.length === 0
+              ? 'Priority'
+              : data.find((item) => item.id === arrSelected[arrSelected.length - 1])?.title || ''
+          }
+        />
+      }
+    />
     // </div>
   );
 };

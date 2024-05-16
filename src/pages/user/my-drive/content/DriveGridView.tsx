@@ -30,7 +30,11 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
   // console.log('DriveGridView', entries);
   // const files = entries.filter((entry) => !entry.isDir);
   // const folders = entries.filter((entry) => entry.isDir);
-  const showEntry = fileShow ? entries.filter((entry) => !entry.isDir) : folderShow ? entries.filter((entry) => entry.isDir) : entries;
+  const showEntry = fileShow
+    ? entries.filter((entry) => !entry.isDir)
+    : folderShow
+      ? entries.filter((entry) => entry.isDir)
+      : entries;
   const driveGridViewRef = useRef(null);
 
   const navigate = useNavigate();
@@ -57,7 +61,6 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
     };
   }, [arrSelected, setArrSelected]);
 
-
   return (
     <>
       {isLoading && entries.length < 15 ? (
@@ -71,7 +74,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
         </div>
       ) : (
         <div ref={driveGridViewRef} className='pl-5 pr-3 pt-4'>
-          <div className='relative flex flex-col space-y-2 min-w-40 overflow-y-auto overflow-hidden'>
+          <div className='relative flex min-w-40 flex-col space-y-2 overflow-hidden overflow-y-auto'>
             {/* {folders.length !== 0 && (
               <div className={!folderShow ? 'visible' : 'hidden'}>
                 <div className='pb-4 pt-2 text-sm font-medium'> Folders</div>
@@ -97,7 +100,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
               <>
                 <div className='pb-4 text-sm font-medium'>{folderShow ? 'Folders' : fileShow ? 'Files' : 'All'}</div>
                 <div className={`grid grid-cols-1 gap-4 ${drawerOpen ? 'xl:grid-cols-3' : 'sm:grid-cols-2 xl:grid-cols-5'}`}>
-                  {showEntry.map((entry, index) => (
+                  {showEntry.map((entry, index) =>
                     folderShow ? (
                       <div key={index} className='w-auto'>
                         <FolderCard
@@ -125,8 +128,8 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
                           parent={parent}
                         />
                       </div>
-                    )
-                  ))}
+                    ),
+                  )}
                 </div>
               </>
             )}

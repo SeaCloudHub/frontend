@@ -17,8 +17,9 @@ export function ColorSchemeToggle() {
     return <IconButton size='sm' variant='outlined' color='primary' />;
   }
   return (
-    <Tooltip title={theme==='dark'? 'To light': 'To dark'}>
-      <div className={`w-[4.3rem] relative flex items-center ${theme === 'dark' ? ' bg-search-bg-dark hover:brightness-105' : 'bg-search-bg hover:brightness-95'} rounded-full p-0.5`}
+    <Tooltip title={theme === 'dark' ? 'To light' : 'To dark'}>
+      <div
+        className={`relative flex w-[4.3rem] items-center ${theme === 'dark' ? ' bg-search-bg-dark hover:brightness-105' : 'bg-search-bg hover:brightness-95'} rounded-full p-0.5`}
         onClick={() => {
           if (theme === 'light') {
             setTheme('dark');
@@ -29,22 +30,25 @@ export function ColorSchemeToggle() {
         <IconButton
           size='sm'
           variant='plain'
-          className={`w-7 h-7 rounded-full transition-transform duration-300 transform absolute ${theme === 'dark' ? 'translate-x-0' : 'translate-x-full'}`}
+          className={`absolute h-7 w-7 transform rounded-full transition-transform duration-300 ${theme === 'dark' ? 'translate-x-0' : 'translate-x-full'}`}
           sx={{
             borderRadius: '100%',
             border: '1px solid white',
-            ":hover": {
+            ':hover': {
               bgcolor: 'transparent',
             },
             '.dark &': {
               border: '1px solid #374151',
-              "&:hover": {
+              '&:hover': {
                 bgcolor: 'transparent',
-              }
+              },
             },
-          }}
-          >
-          {theme === 'light' ? <DarkModeRoundedIcon className='text-black' /> : <LightModeRoundedIcon className='text-yellow-500'/>}
+          }}>
+          {theme === 'light' ? (
+            <DarkModeRoundedIcon className='text-black' />
+          ) : (
+            <LightModeRoundedIcon className='text-yellow-500' />
+          )}
         </IconButton>
       </div>
     </Tooltip>

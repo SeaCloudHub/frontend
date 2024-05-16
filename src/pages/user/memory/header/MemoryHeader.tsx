@@ -20,12 +20,12 @@ const MemoryHeader: React.FC<MemoryHeaderProps> = ({ modifiedFilter, typeFilter,
         </div>
       </div>
       <div className='flex items-center gap-3 pl-5'>
-        <MemoryFilter
+        {/* <MemoryFilter
           setModifiedFilter={setModifiedFilter}
           setTypeFilter={setTypeFilter}
           modifiedFilter={modifiedFilter}
           typeFilter={typeFilter}
-        />
+        /> */}
         {(typeFilter || modifiedFilter) && (
           <div className='flex h-7 items-center rounded-full px-[12px] py-[1px] hover:bg-[#ededed]'>
             <div

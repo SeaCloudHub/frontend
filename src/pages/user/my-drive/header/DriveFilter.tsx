@@ -40,7 +40,7 @@ const typeFilterItems = [
   {
     label: 'Archive',
     icon: <Icon icon='mdi:archive' />,
-  }
+  },
 ];
 
 const peopleFilterItems = [
@@ -74,7 +74,12 @@ const DriveFilter: React.FC<FilterChipProps> = ({
   const { typeFilter, setTypeFilter } = useTypeFilter();
   return (
     <div className='flex gap-2'>
-      <FilterChip name='Type' options={typeFilterItems} action={(value) => setTypeFilter(value as TypeEntry)} value={typeFilter} />
+      <FilterChip
+        name='Type'
+        options={typeFilterItems}
+        action={(value) => setTypeFilter(value as TypeEntry)}
+        value={typeFilter}
+      />
       {/* <FilterChip name='People' options={peopleFilterItems} action={(value) => setPeopleFilter(value)} value={peopleFilter} /> */}
       <FilterChip
         name='Modified'

@@ -33,7 +33,7 @@ const DriveLayout: React.FC<DriveLayoutProps> = ({ headerLeft, bodyLeft, sidePan
       <div className='grid h-full w-full grid-flow-col grid-cols-1 grid-rows-[auto_1fr] gap-1 rounded-xl bg-white dark:bg-dashboard-dark'>
         {headerLeft}
         <div className='mb-4 overflow-hidden'>
-          <div className='h-full w-full overflow-y-auto relative' ref={ref}>
+          <div className='relative h-full w-full overflow-y-auto' ref={ref}>
             {bodyLeft}
           </div>
         </div>
