@@ -27,7 +27,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
   curDir,
   parent,
 }) => {
-  console.log('DriveGridView', entries);
+  // console.log('DriveGridView', entries);
   // const files = entries.filter((entry) => !entry.isDir);
   // const folders = entries.filter((entry) => entry.isDir);
   const showEntry = fileShow ? entries.filter((entry) => !entry.isDir) : folderShow ? entries.filter((entry) => entry.isDir) : entries;

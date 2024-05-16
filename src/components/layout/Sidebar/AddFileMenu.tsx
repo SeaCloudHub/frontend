@@ -3,7 +3,6 @@ import IconifyIcon from '@/components/core/Icon/IConCore';
 import CustomDropdown from '@/components/core/drop-down/CustomDropdown';
 import { MenuItem } from '@/components/core/drop-down/Dropdown';
 import ModalCreateFolder from '@/components/core/modal/ModalCreateFolder';
-import ProgressIndicator from '@/components/core/progress-indicator/ProgressIndicator';
 import { useProgressIndicator } from '@/store/storage/progressIndicator.store';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { toastError } from '@/utils/toast-options/toast-options';
@@ -71,11 +70,11 @@ const AddFileMenu = ({ shrinkMode }: AddFileMenuProps) => {
     }
   };
 
-  const toggleFolderPicker = () => {
-    if (folderInputRef.current) {
-      folderInputRef.current.click();
-    }
-  };
+  // const toggleFolderPicker = () => {
+  //   if (folderInputRef.current) {
+  //     folderInputRef.current.click();
+  //   }
+  // };
 
   const toggleFilePicker = () => {
     if (fileInputRef.current) {
@@ -96,11 +95,11 @@ const AddFileMenu = ({ shrinkMode }: AddFileMenuProps) => {
     [{ label: 'New Folder', icon: <IconifyIcon icon={'lets-icons:folder-add-light'} />, action: toggleCreateFolder }],
     [
       { label: 'File Upload', icon: <IconifyIcon icon={'ic:baseline-upload-file'} />, action: toggleFilePicker },
-      {
-        label: 'Folder Upload',
-        icon: <IconifyIcon icon={'uil:folder-upload'} />,
-        action: toggleFolderPicker,
-      },
+      // {
+      //   label: 'Folder Upload',
+      //   icon: <IconifyIcon icon={'uil:folder-upload'} />,
+      //   action: toggleFolderPicker,
+      // },
     ],
   ];
 
@@ -159,7 +158,6 @@ const AddFileMenu = ({ shrinkMode }: AddFileMenuProps) => {
           }}
         />
       )}
-      <ProgressIndicator />
     </>
   );
 };

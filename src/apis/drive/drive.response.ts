@@ -17,6 +17,7 @@ export type EntryRESP = {
   owner: IdentityRESP;
   created_at: string;
   updated_at: string;
+  type:string;
 };
 
 export type SuggestedEntriesRESP = EntryRESP & {

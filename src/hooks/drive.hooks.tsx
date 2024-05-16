@@ -597,7 +597,7 @@ export const transformEntries = (entries: EntryRESP[]): LocalEntry[] => {
         preview: <Icon icon='ic:baseline-folder' className='h-32 w-32 text-yellow-600' />,
         id: entry.id,
         owner: entry.owner,
-        fileType: entry.mime_type,
+        fileType: entry.type,
         lastModified: new Date(entry.updated_at),
         size: entry.size,
       } as LocalEntry;
@@ -608,13 +608,20 @@ export const transformEntries = (entries: EntryRESP[]): LocalEntry[] => {
       isDir: false,
       title: entry.name,
       icon: icon,
-      preview: entry.thumbnail ?
-        <img src={`${import.meta.env.VITE_BACKEND_API}${entry.thumbnail}`} alt={entry.name} className='h-full w-full object-cover' draggable={false} /> :
-        <div className='h-16 w-16'>{icon}</div>,
+      preview: entry.thumbnail ? (
+        <img
+          src={`${import.meta.env.VITE_BACKEND_API}${entry.thumbnail}`}
+          alt={entry.name}
+          className='h-full w-full object-cover'
+          draggable={false}
+        />
+      ) : (
+        <div className='h-16 w-16'>{icon}</div>
+      ),
       id: entry.id,
       owner: entry.owner,
       lastModified: new Date(entry.updated_at),
-      fileType: entry.mime_type,
+      fileType: entry.type,
       size: entry.size,
     } as LocalEntry;
   });
@@ -650,7 +657,7 @@ const transformSuggestedEntries = (entries: SuggestedEntriesRESP[]): SuggestedEn
       id: entry.id,
       owner: entry.owner,
       lastModified: new Date(entry.updated_at),
-      fileType: entry.mime_type,
+      fileType: entry.type,
       size: entry.size,
       parent: entry.parent,
       log: {...entry.log, ...{created_at: new Date(entry.log.created_at)}} as LogEntry,

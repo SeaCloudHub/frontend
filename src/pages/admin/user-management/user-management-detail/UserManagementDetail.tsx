@@ -61,16 +61,14 @@ const UserManagementDetail = () => {
           <div className='flex flex-col border-b-2 p-3'>
             <UserDetailAction title='RESET PASSWORD' />
             <UserDetailAction title='UPDATE USER' />
-            <UserDetailAction title='UPLOAD PROFILE PHOTO' />
-            <UserDetailAction title='SUSPEND USER' />
-            <UserDetailAction title='DELETE PASSWORD' />
-            <UserDetailAction title='CHANGE ORGANIZATIONAL UNIT' />
+            <UserDetailAction title='BLOCK USER' />
+            <UserDetailAction title='DELETE USER' />
           </div>
         </div>
         {/* <!--section --> */}
         <div className={`flex  h-full flex-col space-y-4 overflow-y-auto pb-2 ${flex ? 'w-3/4 ' : ''}`}>
           <div className='w-full space-y-2 border p-3  shadow-md'>
-            <p className='statement-medium h4 '>Personal Dropbox space of Hung Vo Phi</p>
+            <p className='statement-medium h4 '>Personal storage space of Hung Vo Phi</p>
             <StorageStatistic />
           </div>
           <div className='z-0 w-full space-y-2 p-3 shadow-md'>
