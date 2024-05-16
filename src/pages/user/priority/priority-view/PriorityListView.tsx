@@ -13,7 +13,7 @@ type PriorityListViewProps = {
   curDir?: { id: string; name: string };
 };
 
-const PriorityListView: React.FC<PriorityListViewProps> = ({entries, curDir, isLoading, order, setSort, sort}) => {
+const PriorityListView: React.FC<PriorityListViewProps> = ({ entries, curDir, isLoading, order, setSort, sort }) => {
   const files = entries.filter((entry) => !entry.isDir);
   const folders = entries.filter((entry) => entry.isDir);
 
@@ -49,29 +49,19 @@ const PriorityListView: React.FC<PriorityListViewProps> = ({entries, curDir, isL
           </div>
         </div>
       ) : (
-        <div className='pl-5 pr-5 h-full' ref={driveListViewRef}>
+        <div className='h-full pl-5 pr-5' ref={driveListViewRef}>
           <div className='relative flex flex-col'>
             <div className='grid grid-cols-8 gap-3 border-b border-b-[#dadce0] pt-2 max-[1160px]:grid-cols-6'>
               <div className='col-span-4 font-medium'>Name</div>
-              <div className='font-medium col-span-2 max-[1150px]:hidden'>Suggested reasons</div>
+              <div className='col-span-2 font-medium max-[1150px]:hidden'>Suggested reasons</div>
               <div className='truncate font-medium max-[1000px]:hidden'>Owner</div>
               <div className='font-medium max-[1160px]:hidden'>Location</div>
             </div>
             {folders.map((entry, index) => (
-              <DataRowPriorityView
-                dir={curDir}
-                key={index}
-                {...entry}
-                isSelected={arrSelected?.includes(entry.id)}
-              />
+              <DataRowPriorityView dir={curDir} key={index} {...entry} isSelected={arrSelected?.includes(entry.id)} />
             ))}
             {files.map((entry, index) => (
-              <DataRowPriorityView
-                key={index}
-                {...entry}
-                dir={curDir}
-                isSelected={arrSelected?.includes(entry.id)}
-              />
+              <DataRowPriorityView key={index} {...entry} dir={curDir} isSelected={arrSelected?.includes(entry.id)} />
             ))}
           </div>
         </div>

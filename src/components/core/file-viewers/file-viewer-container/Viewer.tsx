@@ -20,7 +20,7 @@ const Viewer: React.FC<FileViewerProps> = (props) => {
       return <Image {...props} />;
     }
     case 'text': {
-      return <Text {...props}/>;
+      return <Text {...props} />;
     }
     default: {
       return <UnSupportFile {...props} />;

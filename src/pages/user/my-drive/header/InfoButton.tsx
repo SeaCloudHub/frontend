@@ -11,7 +11,7 @@ const InfoButton: React.FC = () => {
       <div
         className={classNames(
           'flex h-10 w-10 cursor-pointer items-center justify-center rounded-full transition-all',
-          drawerOpen ? 'bg-[#c2e7ff] hover:brightness-95 text-black' : 'hover:bg-slate-500 ',
+          drawerOpen ? 'bg-[#c2e7ff] text-black hover:brightness-95' : 'hover:bg-slate-500 ',
         )}
         onClick={() => {
           if (!drawerOpen) {

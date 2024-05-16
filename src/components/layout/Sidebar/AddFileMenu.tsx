@@ -21,9 +21,11 @@ type AddFileMenuProps = {
 const AddFileMenu = ({ shrinkMode }: AddFileMenuProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const folderInputRef = useRef<HTMLInputElement>(null);
-  const location = useLocation();
   const rootId = useStorageStore((state) => state.rootId);
   const setFileNames = useProgressIndicator((state) => state.setFileNames);
+  const location = useLocation();
+  const path = location.pathname.split('/');
+
   const uploadFilesMutation = useMutation({
     mutationFn: (body: { files: File[]; id: string }) => {
       return uploadFilesApi(body);

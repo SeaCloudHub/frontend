@@ -6,7 +6,14 @@ import DeleteTempPopUp from '@/components/core/pop-up/DeleteTempPopUp';
 import MovePopUp from '@/components/core/pop-up/MovePopUp';
 import RenamePopUp from '@/components/core/pop-up/RenamePopUp';
 import SharePopUp from '@/components/core/pop-up/SharePopUp';
-import { LocalEntry, SuggestedEntry, useCopyMutation, useRestoreEntriesMutation, useStarEntryMutation, useUnstarEntryMutation } from '@/hooks/drive.hooks';
+import {
+  LocalEntry,
+  SuggestedEntry,
+  useCopyMutation,
+  useRestoreEntriesMutation,
+  useStarEntryMutation,
+  useUnstarEntryMutation,
+} from '@/hooks/drive.hooks';
 import { useSession } from '@/store/auth/session';
 import { useDrawer, useSelected } from '@/store/my-drive/myDrive.store';
 import { useStorageStore } from '@/store/storage/storage.store';
@@ -28,12 +35,28 @@ type DataRowPriorityViewProps = {
   dir: { id: string; name: string };
 };
 
-const DataRowPriorityView: React.FC<SuggestedEntry&DataRowPriorityViewProps> = ({dir, isSelected, onChanged, onDoubleClick, isDir, id, title, owner, fileType, icon, lastModified, preview, size, log, parent}) => {
+const DataRowPriorityView: React.FC<SuggestedEntry & DataRowPriorityViewProps> = ({
+  dir,
+  isSelected,
+  onChanged,
+  onDoubleClick,
+  isDir,
+  id,
+  title,
+  owner,
+  fileType,
+  icon,
+  lastModified,
+  preview,
+  size,
+  log,
+  parent,
+}) => {
   const [type, setType] = useState<'move' | 'share' | 'rename' | 'move to trash' | null>(null);
   const [fileViewer, setFileViewer] = useState(false);
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
   const [result, setResult] = useState(false);
-  const {rootId} = useStorageStore();
+  const { rootId } = useStorageStore();
 
   const { openDrawer } = useDrawer();
   const { identity } = useSession();
@@ -46,16 +69,17 @@ const DataRowPriorityView: React.FC<SuggestedEntry&DataRowPriorityViewProps> = (
   const unstarEntryMutation = useUnstarEntryMutation();
 
   const entryMenu: MenuItem[][] = [
-    !isDir ?
-      [
-        {
-          label: 'Preview',
-          icon: <Icon icon='material-symbols:visibility' />,
-          action: () => {
-            setFileViewer(true);
+    !isDir
+      ? [
+          {
+            label: 'Preview',
+            icon: <Icon icon='material-symbols:visibility' />,
+            action: () => {
+              setFileViewer(true);
+            },
           },
-        },
-      ]:[],
+        ]
+      : [],
     [
       {
         label: 'Download',
@@ -72,8 +96,7 @@ const DataRowPriorityView: React.FC<SuggestedEntry&DataRowPriorityViewProps> = (
           setIsPopUpOpen(true);
         },
       },
-      !isDir &&
-      {
+      !isDir && {
         label: 'Make a copy',
         icon: <Icon icon='material-symbols:content-copy-outline' />,
         action: () => {
@@ -140,8 +163,7 @@ const DataRowPriorityView: React.FC<SuggestedEntry&DataRowPriorityViewProps> = (
         },
       },
     ],
-  ]
-  .filter(e => e.length!=0);
+  ].filter((e) => e.length != 0);
 
   const handleCtrlClick = () => {
     setArrSelected(arrSelected.includes(id) ? arrSelected.filter((item) => item !== id) : [...arrSelected, id]);
@@ -216,8 +238,11 @@ const DataRowPriorityView: React.FC<SuggestedEntry&DataRowPriorityViewProps> = (
             <div className='truncate'>{title}</div>
           </Tooltip>
         </div>
-        <div className='max-[1150px]:hidden col-span-2'>
-          <span className='truncate'> You {log.action} • {formatDate(log.created_at)} </span>
+        <div className='col-span-2 max-[1150px]:hidden'>
+          <span className='truncate'>
+            {' '}
+            You {log.action} • {formatDate(log.created_at)}{' '}
+          </span>
         </div>
         <div className='truncate max-[1000px]:hidden'>
           <div className='flex items-center gap-x-2'>
@@ -245,7 +270,7 @@ const DataRowPriorityView: React.FC<SuggestedEntry&DataRowPriorityViewProps> = (
 
         <div className='flex justify-between max-[1160px]:justify-end'>
           <div className='truncate max-[1160px]:hidden'>
-            <div onClick={()=>navigate(`${DRIVE_HOME}/my-drive/dir/${parent.id}`)}>
+            <div onClick={() => navigate(`${DRIVE_HOME}/my-drive/dir/${parent.id}`)}>
               {parent.id === rootId ? 'My Drive' : parent.name}
             </div>
           </div>
@@ -258,12 +283,7 @@ const DataRowPriorityView: React.FC<SuggestedEntry&DataRowPriorityViewProps> = (
         </div>
         {type === 'share' && <SharePopUp fileId='' open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} />}
         {type === 'move' && (
-          <MovePopUp
-            open={isPopUpOpen}
-            handleClose={() => setIsPopUpOpen(false)}
-            title={title}
-            location={dir}
-          />
+          <MovePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} location={dir} />
         )}
         {type === 'rename' && <RenamePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} name={title} id={id} />}
         {type === 'move to trash' && (

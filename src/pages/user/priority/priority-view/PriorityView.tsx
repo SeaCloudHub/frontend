@@ -15,14 +15,7 @@ type PriorityViewProps = {
   isLoading: boolean;
 };
 
-const PriorityView: React.FC<PriorityViewProps> = ({
-  entries,
-  sort,
-  order,
-  setSort,
-  isFileMode,
-  isLoading,
-}) => {
+const PriorityView: React.FC<PriorityViewProps> = ({ entries, sort, order, setSort, isFileMode, isLoading }) => {
   const { viewMode } = useViewMode();
   const { rootId } = useStorageStore();
   const localEntries = isFileMode ? entries.filter((entry) => !entry.isDir) : entries.filter((entry) => entry.isDir);

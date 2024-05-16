@@ -177,7 +177,7 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ dirId, dirNam
     <>
       <CustomDropdown
         button={
-          <div className='my-0.5 flex h-9 cursor-pointer items-center rounded-full py-1 pl-4 pr-3 hover:bg-[#ededed] dark:hover:bg-slate-500 active:brightness-90'>
+          <div className='my-0.5 flex h-9 cursor-pointer items-center rounded-full py-1 pl-4 pr-3 hover:bg-[#ededed] active:brightness-90 dark:hover:bg-slate-500'>
             <div className='pb-1 text-2xl'>{dirName}</div>
             <Icon icon='mdi:caret-down' className='h-5 w-5' />
           </div>

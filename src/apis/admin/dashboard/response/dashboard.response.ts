@@ -110,7 +110,7 @@ export type UserFileLogRESP = {
   user_id: string;
   action: string;
   created_at: string;
-  file:  EntryRESP;
+  file: EntryRESP;
   user: IdentityRESP;
 };
 export type Logs = UserFileLogRESP[];

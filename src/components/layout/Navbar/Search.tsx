@@ -14,33 +14,36 @@ function Search() {
   const [onFocus, setOnFocus] = useState<boolean>(false);
   const ref = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
-  const {submited, setSubmited} = useEntries();
-  const {resetLimit} = useLimit();
+  const { submited, setSubmited } = useEntries();
+  const { resetLimit } = useLimit();
 
   const searchValue = useDebounce({ delay: 260, value: keyWord });
-  const {data, isLoading, refetch} = useSearchEntries(searchValue);
+  const { data, isLoading, refetch } = useSearchEntries(searchValue);
 
   const { theme } = useTheme();
   const fill = theme === 'dark' ? 'white' : '';
   return (
-    <div className='relative max-w-2xl flex-1 ' onFocus={() => {
-      setOnFocus(true)
-      setSubmited(false);
-      resetLimit();
-    }}>
+    <div
+      className='relative max-w-2xl flex-1 '
+      onFocus={() => {
+        setOnFocus(true);
+        setSubmited(false);
+        resetLimit();
+      }}>
       <span
         onClick={() => {}}
         className=' absolute left-2 top-[5px] h-9 w-9 cursor-pointer rounded-full p-2 hover:bg-gray-100 dark:text-white hover:dark:bg-slate-800'>
         <AiOutlineSearch className='stroke-textC h-full w-full' stroke='2' />
       </span>
-      <form onSubmit={(e)=>{
-        e.preventDefault()
-        setOnFocus(false);
-        setSubmited(true);
-        resetLimit();
-        ref.current.blur();
-        navigate(`${DRIVE_SEARCH}?q=${searchValue}`)
-      }}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          setOnFocus(false);
+          setSubmited(true);
+          resetLimit();
+          ref.current.blur();
+          navigate(`${DRIVE_SEARCH}?q=${searchValue}`);
+        }}>
         <input
           ref={ref}
           onBlur={() => setOnFocus(false)}

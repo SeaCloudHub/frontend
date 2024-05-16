@@ -47,11 +47,7 @@ const DrivePath: React.FC<DrivePathProps> = ({ path, type }) => {
           items={driveMenuItems}
         />
         <Icon icon='ic:baseline-keyboard-arrow-right' className='h-6 w-6' />
-        <DrivePathButton
-          id={path[path.length - 2].id}
-          name={path[path.length - 2].name}
-          type={type}
-        />
+        <DrivePathButton id={path[path.length - 2].id} name={path[path.length - 2].name} type={type} />
         <Icon icon='ic:baseline-keyboard-arrow-right' className='h-6 w-6' />
         <DrivePathMenuButton dirName={path[path.length - 1].name} dirId={path[path.length - 1].id} type={type} />
       </div>

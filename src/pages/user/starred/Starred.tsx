@@ -50,7 +50,7 @@ const Starred = () => {
             </div>
           </div>
           {arrSelected.length === 0 ? (
-            <div className='flex items-center gap-3 w-full mb-1.5'>
+            <div className='mb-1.5 flex w-full items-center gap-3'>
               <SharingPageFilter
                 setModifiedFilterItem={setModifiedFilterItem}
                 setPeopleFilterItem={setPeopleFilterItem}
