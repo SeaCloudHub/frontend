@@ -18,8 +18,23 @@ import {
   starEntry,
   unstarEntry,
 } from '@/apis/drive/drive.api';
-import { CopyFileREQ, RenameREQ, DeleteEntriesREQ, RestoreEntriesREQ, ListEntriesPageREQ, TypeEntry, StarEntriesREQ } from '@/apis/drive/drive.request';
-import { EntryMetadataRES, EntryRESP, ListEntriesRESP, LogEntry, ParentRES, SuggestedEntriesRESP } from '@/apis/drive/drive.response';
+import {
+  CopyFileREQ,
+  RenameREQ,
+  DeleteEntriesREQ,
+  RestoreEntriesREQ,
+  ListEntriesPageREQ,
+  TypeEntry,
+  StarEntriesREQ,
+} from '@/apis/drive/drive.request';
+import {
+  EntryMetadataRES,
+  EntryRESP,
+  ListEntriesRESP,
+  LogEntry,
+  ParentRES,
+  SuggestedEntriesRESP,
+} from '@/apis/drive/drive.response';
 import { MoveToTrashREQ } from '@/apis/drive/request/move-to-trash.request';
 import { downloadFileApi, uploadFilesApi } from '@/apis/user/storage/storage.api';
 import { Path, useDrawer, useEntries, useIsFileMode, useLimit } from '@/store/my-drive/myDrive.store';
@@ -41,7 +56,7 @@ export const useListEntries = (limit: number, type: TypeEntry) => {
   const { rootId } = useStorageStore();
   // console.log('[useListEntries] limit', limit);
   const id = dirId || rootId;
-  const {setListEntries, listEntries} = useEntries();
+  const { setListEntries, listEntries } = useEntries();
 
   const { data: parents, error: parentsError } = useQuery({
     queryKey: ['entry-metadata', id],
@@ -70,7 +85,7 @@ export const useListEntries = (limit: number, type: TypeEntry) => {
       const res = await getListEntries({ id, limit, type }).then((res) => res?.data);
       // const entries = transformEntries(res?.entries || []);
       // setListEntries(entries);
-      return (res?.entries || []);
+      return res?.entries || [];
     },
     staleTime: 1000,
     select: transformEntries,
@@ -117,20 +132,20 @@ export const useListFolders = (volumn?: 'Priority' | 'My Drive' | 'Starred' | 'S
     queryKey: ['list-folders', dirId, volumn],
     queryFn: async () => {
       // console.log('[useListFolders] volumn', volumn);
-      if(dirId !== rootId) volumn = 'My Drive'
+      if (dirId !== rootId) volumn = 'My Drive';
       switch (volumn) {
         case 'Starred':
           return (await getListEntriesPageStarred().then((res) => res?.data || []))
             .filter((e) => e.is_dir)
-            .filter((e) => !e.name.includes('.trash'))
+            .filter((e) => !e.name.includes('.trash'));
         case 'Shared':
           return (await getSharedEntries().then((res) => res?.data || []))
             .filter((e) => e.is_dir)
-            .filter((e) => !e.name.includes('.trash'))
+            .filter((e) => !e.name.includes('.trash'));
         default:
           return (await getListEntriesPageMyDrive({ id: dirId, limit: 100 }).then((res) => res?.data?.entries || []))
             .filter((e) => e.is_dir)
-            .filter((e) => !e.name.includes('.trash'))
+            .filter((e) => !e.name.includes('.trash'));
       }
     },
     staleTime: 10 * 1000,
@@ -146,11 +161,11 @@ export const useListFolders = (volumn?: 'Priority' | 'My Drive' | 'Starred' | 'S
 
 export const useSuggestedEntries = () => {
   const { limit } = useLimit();
-  const {isFileMode, setIsFileMode} = useIsFileMode();
-  const {setListSuggestedEntries, listSuggestedEntries} = useEntries();
+  const { isFileMode, setIsFileMode } = useIsFileMode();
+  const { setListSuggestedEntries, listSuggestedEntries } = useEntries();
 
   const { data, error, refetch, isLoading } = useQuery({
-    queryKey: ['suggested-entries', limit, isFileMode?'File':'Folder'],
+    queryKey: ['suggested-entries', limit, isFileMode ? 'File' : 'Folder'],
     queryFn: async () => {
       const res = await getListEntriesSuggested({ limit, dir: !isFileMode }).then((res) => res?.data);
       return res || [];
@@ -170,14 +185,14 @@ export const useSuggestedEntries = () => {
   return { data: listSuggestedEntries || [], refetch, isLoading };
 };
 
-export const useSearchEntries = (query: string, set?:boolean) => {
+export const useSearchEntries = (query: string, set?: boolean) => {
   const { limit } = useLimit();
-  const {setListEntries, listEntries} = useEntries();
+  const { setListEntries, listEntries } = useEntries();
 
   const { data, error, refetch, isLoading } = useQuery({
     queryKey: ['search-entries', query, limit, set],
     queryFn: async () => {
-      if(!query) return [];
+      if (!query) return [];
       const res = await searchEntriesApi({ query, limit }).then((res) => res?.data?.entries);
       return res || [];
     },
@@ -582,7 +597,7 @@ export type LocalEntry = {
   fileType?: string;
 };
 
-export type SuggestedEntry = LocalEntry & {parent: ParentRES} & {log?: LogEntry}
+export type SuggestedEntry = LocalEntry & { parent: ParentRES } & { log?: LogEntry };
 
 export const transformEntries = (entries: EntryRESP[]): LocalEntry[] => {
   // console.log('[transformEntries] entries', entries);
@@ -591,11 +606,11 @@ export const transformEntries = (entries: EntryRESP[]): LocalEntry[] => {
       return {
         isDir: true,
         title: entry.name,
-        icon: <Icon icon='ic:baseline-folder' className='object-cover h-full w-full text-yellow-600' />,
+        icon: <Icon icon='ic:baseline-folder' className='h-full w-full object-cover text-yellow-600' />,
         preview: <Icon icon='ic:baseline-folder' className='h-32 w-32 text-yellow-600' />,
         id: entry.id,
         owner: entry.owner,
-        fileType: entry.mime_type,
+        fileType: entry.type,
         lastModified: new Date(entry.updated_at),
         size: entry.size,
       } as LocalEntry;
@@ -606,13 +621,20 @@ export const transformEntries = (entries: EntryRESP[]): LocalEntry[] => {
       isDir: false,
       title: entry.name,
       icon: icon,
-      preview: entry.thumbnail ?
-        <img src={`${import.meta.env.VITE_BACKEND_API}${entry.thumbnail}`} alt={entry.name} className='h-full w-full object-cover' draggable={false} /> :
-        <div className='h-16 w-16'>{icon}</div>,
+      preview: entry.thumbnail ? (
+        <img
+          src={`${import.meta.env.VITE_BACKEND_API}${entry.thumbnail}`}
+          alt={entry.name}
+          className='h-full w-full object-cover'
+          draggable={false}
+        />
+      ) : (
+        <div className='h-16 w-16'>{icon}</div>
+      ),
       id: entry.id,
       owner: entry.owner,
       lastModified: new Date(entry.updated_at),
-      fileType: entry.mime_type,
+      fileType: entry.type,
       size: entry.size,
     } as LocalEntry;
   });
@@ -625,7 +647,7 @@ const transformSuggestedEntries = (entries: SuggestedEntriesRESP[]): SuggestedEn
       return {
         isDir: true,
         title: entry.name,
-        icon: <Icon icon='ic:baseline-folder' className='object-cover h-full w-full text-yellow-600' />,
+        icon: <Icon icon='ic:baseline-folder' className='h-full w-full object-cover text-yellow-600' />,
         preview: <Icon icon='ic:baseline-folder' className='h-32 w-32 text-yellow-600' />,
         id: entry.id,
         owner: entry.owner,
@@ -642,17 +664,23 @@ const transformSuggestedEntries = (entries: SuggestedEntriesRESP[]): SuggestedEn
       isDir: false,
       title: entry.name,
       icon: icon,
-      preview: entry.thumbnail ?
-        <img src={`${import.meta.env.VITE_BACKEND_API}${entry.thumbnail}`} alt={entry.name} className='h-full w-full object-cover' draggable={false} /> :
-        <div className='h-16 w-16'>{icon}</div>,
+      preview: entry.thumbnail ? (
+        <img
+          src={`${import.meta.env.VITE_BACKEND_API}${entry.thumbnail}`}
+          alt={entry.name}
+          className='h-full w-full object-cover'
+          draggable={false}
+        />
+      ) : (
+        <div className='h-16 w-16'>{icon}</div>
+      ),
       id: entry.id,
       owner: entry.owner,
       lastModified: new Date(entry.updated_at),
-      fileType: entry.mime_type,
+      fileType: entry.type,
       size: entry.size,
       parent: entry.parent,
-      log: {...entry.log, ...{created_at: new Date(entry.log.created_at)}} as LogEntry,
+      log: { ...entry.log, ...{ created_at: new Date(entry.log.created_at) } } as LogEntry,
     } as SuggestedEntry;
   });
-}
-
+};

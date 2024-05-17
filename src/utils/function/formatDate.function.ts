@@ -12,12 +12,10 @@ export const FormatDateStrToMMHHDDMMYYYY = (dateStr: string): string => {
 
 export const formatDate = (date: Date) => {
   console.log(date);
-  return (
-    date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      timeZone: 'Asia/Ho_Chi_Minh',
-    })
-  );
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    timeZone: 'Asia/Ho_Chi_Minh',
+  });
 };

@@ -29,21 +29,21 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
   const starEntryMutation = useStarEntryMutation();
   const unstarEntryMutation = useUnstarEntryMutation();
 
-  const multipleDriveHeaderMenu: {icon: string, label: string, action: () => void}[] = [
+  const multipleDriveHeaderMenu: { icon: string; label: string; action: () => void }[] = [
     {
       icon: 'mdi:account-multiple-plus',
       label: 'Share',
       action: () => {
         setType('share');
         setIsOpened(true);
-      }
+      },
     },
     {
       icon: 'mdi:download',
       label: 'Download',
       action: () => {
         // downloadFile({ id, name: title });
-      }
+      },
     },
     {
       icon: 'mdi:folder-move',
@@ -52,7 +52,7 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
         if (parent === 'SharedWithMe') return;
         setType('move');
         setIsOpened(true);
-      }
+      },
     },
     {
       icon: 'mdi:delete',
@@ -89,7 +89,7 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
       action: () => {
         setType('rename');
         setIsOpened(true);
-      }
+      },
     },
   ];
 
@@ -101,10 +101,11 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
   }, [result, setArrSelected]);
 
   return (
-    <div className='flex items-center gap-3 min-w-fit rounded-full bg-gray-100 dark:bg-search-bg-dark p-0.5'>
+    <div className='flex min-w-fit items-center gap-3 rounded-full bg-gray-100 p-0.5 dark:bg-search-bg-dark'>
       <Tooltip title='Clear selection'>
         <div>
-          <IconifyIcon icon='mdi:close'
+          <IconifyIcon
+            icon='mdi:close'
             className='h-8 w-8 rounded-full p-1 hover:bg-gray-200 dark:hover:bg-slate-500 dark:hover:text-white'
             onClick={() => setArrSelected([])}
           />
@@ -133,9 +134,12 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
             <div>
               <IconifyIcon
                 icon={item.icon}
-                className={`h-8 w-8 rounded-full p-1  ${parent === 'SharedWithMe' && item.label === 'Move to trash' ||
-                item.label === 'Rename' && arrSelected.length > 1
-                ? 'text-gray-400 dark:brightness-75' : 'cursor-pointer hover:bg-gray-200 dark:hover:bg-slate-500 dark:hover:text-white'}`}
+                className={`h-8 w-8 rounded-full p-1  ${
+                  (parent === 'SharedWithMe' && item.label === 'Move to trash') ||
+                  (item.label === 'Rename' && arrSelected.length > 1)
+                    ? 'text-gray-400 dark:brightness-75'
+                    : 'cursor-pointer hover:bg-gray-200 dark:hover:bg-slate-500 dark:hover:text-white'
+                }`}
                 onClick={item.action}
               />
             </div>

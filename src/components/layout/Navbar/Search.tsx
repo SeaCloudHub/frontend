@@ -8,8 +8,10 @@ import { useSearchEntries } from '@/hooks/drive.hooks';
 import { useNavigate } from 'react-router-dom';
 import { DRIVE_SEARCH } from '@/utils/constants/router.constant';
 import { useEntries, useLimit, useSelected } from '@/store/my-drive/myDrive.store';
+import { useSession } from '@/store/auth/session';
 
 function Search() {
+  const identity = useSession((state) => state.identity);
   const [keyWord, setKeyWord] = useState<string>('');
   const [onFocus, setOnFocus] = useState<boolean>(false);
   const ref = useRef<HTMLInputElement>(null);

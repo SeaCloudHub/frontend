@@ -24,31 +24,29 @@ export type LocalEntry = {
   onChanged?: () => void;
 };
 
-
-
 const MyDrive = () => {
   const [{ sort, order }, setSort] = useState<{ sort: string; order: string }>({ sort: 'Name', order: 'desc' });
-  const {typeFilter} = useTypeFilter();
+  const { typeFilter } = useTypeFilter();
   const [peopleFilter, setPeopleFilter] = useState<string>('');
   const [modifiedFilter, setModifiedFilter] = useState<string>('');
   const [copiedIds, setCopiedIds] = useState<string[]>([]);
 
-  const {listEntries} = useEntries();
+  const { listEntries } = useEntries();
   const { arrSelected } = useSelected();
   const viewMode = useViewMode((state) => state.viewMode);
   const copyMutation = useCopyMutation();
-  const {limit, increaseLimit} = useLimit();
+  const { limit, increaseLimit } = useLimit();
 
-  const {parents, data, isLoading } = useListEntries(limit, typeFilter);
+  const { parents, data, isLoading } = useListEntries(limit, typeFilter);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-      if ((event.ctrlKey||event.metaKey) && event.key === 'c') {
+      if ((event.ctrlKey || event.metaKey) && event.key === 'c') {
         if (arrSelected.length !== 0 && JSON.stringify(arrSelected) !== JSON.stringify(copiedIds)) {
           toast.info(`Copied ${arrSelected.length}` + (arrSelected.length > 1 ? ' items' : ' item') + ` to clipboard`);
           setCopiedIds(arrSelected.map(e => e.id));
         }
-      } else if ((event.ctrlKey||event.metaKey) && event.key === 'v' && copiedIds.length !== 0) {
+      } else if ((event.ctrlKey || event.metaKey) && event.key === 'v' && copiedIds.length !== 0) {
         copyMutation.mutate({ ids: copiedIds, to: parents[parents.length - 1].id });
       }
     };
@@ -60,9 +58,9 @@ const MyDrive = () => {
   }, [arrSelected, copiedIds, parents, copyMutation]);
 
   const onScollBottom = () => {
-    if(data.length < limit) return;
+    if (data.length < limit) return;
     increaseLimit();
-  }
+  };
 
   return (
     <DriveLayout

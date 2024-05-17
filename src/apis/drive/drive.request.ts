@@ -11,7 +11,7 @@ export type ListEntriesREQ = {
   type?: TypeEntry;
 };
 
-export type TypeEntry = 'folder' | 'text' | 'document' | 'pdf' | 'json' | 'image' | 'video' | 'audio' | 'archive' | 'other' |'';
+export type TypeEntry = 'folder' | 'text' | 'document' | 'pdf' | 'json' | 'image' | 'video' | 'audio' | 'archive' | 'other' | '';
 
 export type ListEntriesPageREQ = {
   id: string;
@@ -46,4 +46,4 @@ export type StarEntriesREQ = {
   file_ids: string[];
 };
 
-export type SearchREQ = Partial<ListEntriesREQ> & {query: string};
+export type SearchREQ = Partial<ListEntriesREQ> & { query: string };

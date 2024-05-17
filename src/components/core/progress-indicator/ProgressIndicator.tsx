@@ -12,7 +12,7 @@ function ProgressIndicator() {
   const temp = fileNames.map((name, index) => {
     const fileExtension = name.split('.').pop();
     return (
-      <div key={index} className='hover:bg-darkC flex cursor-pointer items-center justify-between bg-white py-2.5 pl-4 pr-2'>
+      <div key={index} className='hover:bg-darkC flex cursor-pointer items-center justify-between bg-white  dark:bg-black  text-black dark:text-white py-2.5 pl-4 pr-2'>
         <div className='flex items-center space-x-3'>
           {fileExtension && fileTypeIcons[fileExtension] ? (
             <div className='h-6 w-6'>{fileTypeIcons[fileExtension]}</div>

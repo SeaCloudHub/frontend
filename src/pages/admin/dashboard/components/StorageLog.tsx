@@ -12,7 +12,7 @@ const actionColors = {
   ADD: 'text-blue-600',
   RENAME: 'text-purple-500',
   OPEN: 'text-green-600',
-  STAR:'text-pink-600'
+  STAR: 'text-pink-600',
 };
 
 const StorageLog = ({ logs, isFetching, moreClick }: StorageLogProps) => {

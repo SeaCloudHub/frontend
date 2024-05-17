@@ -17,6 +17,7 @@ export type EntryRESP = {
   owner: IdentityRESP;
   created_at: string;
   updated_at: string;
+  type:string;
 };
 
 export type SuggestedEntriesRESP = EntryRESP & {
@@ -44,7 +45,7 @@ export type ParentRES = {
 export type RoleUser = {
   user_id: string;
   role: string;
-}
+};
 
 export type EntryMetadataRES = {
   file: EntryRESP;
@@ -72,15 +73,14 @@ export type PageInfoRESP = {
   limit: number;
 };
 
-
 export type LogEntry = {
   user_id: string;
   action: string;
   created_at: Date;
   file_id: string;
-}
+};
 
-export type SearchRESP ={
-  entries: EntryRESP & {parent: ParentRES};
+export type SearchRESP = {
+  entries: EntryRESP & { parent: ParentRES };
   cursor: string;
-}
+};

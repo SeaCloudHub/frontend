@@ -72,7 +72,7 @@ const ModalChooseFile = ({ isOpen, handleConfirm, fileIcon, fileType }: ModalCho
             <div className='flex items-center space-x-1'>
               <IconifyIcon icon={fileIcon!} /> <p className='statement-upper-medium '>{file.name}</p>
               <ButtonIcon
-                icon={'bxs:edit'}
+                icon={'mdi:trash'}
                 color='red'
                 onClick={() => {
                   setFile(null);
@@ -87,7 +87,7 @@ const ModalChooseFile = ({ isOpen, handleConfirm, fileIcon, fileType }: ModalCho
               handleConfirm(undefined);
             }}
             className='statement-upper-medium pointer cursor-pointer  rounded-md px-3 py-2 text-blue-600 hover:bg-blue-100'>
-            Cancle
+            Cancel
           </p>
           <ButtonContainer
             borderRadius={15}

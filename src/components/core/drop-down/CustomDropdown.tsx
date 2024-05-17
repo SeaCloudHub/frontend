@@ -41,7 +41,7 @@ const CustomDropdown: React.FC<DropdownProps> = ({ button, items, minWidth }) =>
           <div key={ind}>
             {group.map(({ label, icon, action }) => (
               <MenuItem
-                key={ind+ ' ' +label}
+                key={ind + ' ' + label}
                 onClick={() => {
                   action && action();
                   handleClose();

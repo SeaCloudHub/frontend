@@ -20,7 +20,7 @@ const ModalConfirmDelete = ({ message, title, isOpen, handleConfirm }: ModalConf
               handleConfirm(false);
             }}
             className='statement-upper-medium pointer cursor-pointer text-blue-600'>
-            Cancle
+            Cancel
           </p>
           <ButtonContainer
             borderRadius={15}

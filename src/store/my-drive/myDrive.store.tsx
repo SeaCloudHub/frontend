@@ -67,7 +67,7 @@ export const useEntries = create<ListEntriesState>((set) => ({
 }));
 
 export type LimitState = {
-  limit: number
+  limit: number;
   increaseLimit: () => void;
   resetLimit: () => void;
 };

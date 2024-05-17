@@ -8,12 +8,12 @@ import DriveFilter from '../my-drive/header/DriveFilter';
 import { Tooltip } from '@mui/material';
 
 const SearchHeader = () => {
-  const {viewMode, setViewMode} = useViewMode();
-  const {drawerOpen, openDrawer, closeDrawer} = useDrawer();
-  const {arrSelected} = useSelected();
+  const { viewMode, setViewMode } = useViewMode();
+  const { drawerOpen, openDrawer, closeDrawer } = useDrawer();
+  const { arrSelected } = useSelected();
   const [modifiedFilter, setModifiedFilter] = useState<string>('');
   const [peopleFilter, setPeopleFilter] = useState<string>('');
-  const {typeFilter, setTypeFilter} = useTypeFilter();
+  const { typeFilter, setTypeFilter } = useTypeFilter();
 
   return (
     <div className='flex flex-col overflow-hidden'>
@@ -35,17 +35,14 @@ const SearchHeader = () => {
         </div>
       </div>
       {arrSelected.length > 0 ? (
-        <div className='px-4 py-0.5 overflow-x-auto'>
-          <MultipleDriveHeader parent='MyDrive' dir={{id: '', name: ''}} />
+        <div className='overflow-x-auto px-4 py-0.5'>
+          <MultipleDriveHeader parent='MyDrive' dir={{ id: '', name: '' }} />
         </div>
       ) : (
         <div className='w-full pl-5'>
           <div className='flex items-center justify-between overflow-x-auto'>
             <div className='flex gap-3'>
-              <DriveFilter
-                setModifiedFilter={setModifiedFilter}
-                modifiedFilter={modifiedFilter}
-              />
+              <DriveFilter setModifiedFilter={setModifiedFilter} modifiedFilter={modifiedFilter} />
               {(typeFilter || peopleFilter || modifiedFilter) && (
                 <div className='flex h-7 items-center rounded-full px-[12px] py-[1px] hover:bg-slate-200 active:brightness-90 dark:hover:bg-slate-500'>
                   <Tooltip title='Clear filters'>
@@ -55,7 +52,7 @@ const SearchHeader = () => {
                         setPeopleFilter('');
                         setModifiedFilter('');
                       }}
-                      className='cursor-pointer text-sm font-medium line-clamp-1'>
+                      className='line-clamp-1 cursor-pointer text-sm font-medium'>
                       Clear filters
                     </div>
                   </Tooltip>

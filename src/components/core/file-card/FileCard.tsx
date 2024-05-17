@@ -120,11 +120,6 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
         },
       },
       {
-        label: 'Add shortcut',
-        icon: <Icon icon='material-symbols:add-to-drive' />,
-        action: () => {},
-      },
-      {
         label: parent !== 'starred' ? 'Add to starred' : 'Remove from starred',
         icon: parent !== 'starred' ? <Icon icon='material-symbols:star-outline' /> : <Icon icon='mdi:star-off-outline' />,
         action: () => {
@@ -194,7 +189,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
   };
 
   const handleDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if(!isDir) setFileViewer(true)
+    if (!isDir) setFileViewer(true);
     else {
       setArrSelected([]);
       setListEntries([]);
@@ -239,8 +234,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
           isSelected
             ? 'bg-[#c2e7ff] dark:bg-blue-900 dark:text-white'
             : 'bg-[#f0f4f9] hover:bg-[#dfe3e7] dark:bg-slate-600 dark:text-white dark:hover:bg-slate-700',
-        )}
-      >
+        )}>
         <div className='flex w-full items-center justify-between px-1 py-3'>
           <div className='flex max-w-[calc(100%-1.5rem)] items-center space-x-4'>
             <div className='h-6 w-6 min-w-fit'>{icon}</div>
@@ -259,7 +253,9 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
         <div className='mb-2 flex h-full w-full items-center justify-center overflow-hidden rounded-md bg-white dark:bg-slate-400'>
           {preview}
         </div>
-        {type === 'share' && <SharePopUp fileId={id} open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} />}
+        {type === 'share' && (
+          <SharePopUp fileId={id} open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} />
+        )}
         {type === 'move' && (
           <MovePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} location={dir} />
         )}

@@ -51,8 +51,8 @@ const MyDriveHeader: React.FC<MyDriveHeaderProps> = ({
         </div>
       </div>
       {arrSelected.length > 0 ? (
-        <div className='px-4 py-0.5 overflow-x-auto'>
-          <MultipleDriveHeader parent='MyDrive' dir={path[path.length-1]} />
+        <div className='overflow-x-auto px-4 py-0.5'>
+          <MultipleDriveHeader parent='MyDrive' dir={path[path.length - 1]} />
         </div>
       ) : (
         <div className='w-full pl-5'>
@@ -75,7 +75,7 @@ const MyDriveHeader: React.FC<MyDriveHeaderProps> = ({
                         setPeopleFilter('');
                         setModifiedFilter('');
                       }}
-                      className='cursor-pointer text-sm font-medium line-clamp-1'>
+                      className='line-clamp-1 cursor-pointer text-sm font-medium'>
                       Clear filters
                     </div>
                   </Tooltip>

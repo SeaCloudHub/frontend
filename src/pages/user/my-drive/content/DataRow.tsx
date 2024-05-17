@@ -356,9 +356,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
             <span className='truncate'>{owner?.id === identity.id ? 'me' : owner?.last_name}</span>
           </div>
         </div>
-        <div className='truncate max-[1000px]:hidden'>
-          {formatDate(lastModified)}
-        </div>
+        <div className='truncate max-[1000px]:hidden'>{formatDate(lastModified)}</div>
         <div className='flex justify-between max-[1160px]:justify-end'>
           <div className='truncate max-[1160px]:hidden'>{isDir ? '---' : numToSize(size)}</div>
           <div className='text-end'>
@@ -368,7 +366,9 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
             />
           </div>
         </div>
-        {type === 'share' && <SharePopUp fileId={id} open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} />}
+        {type === 'share' && (
+          <SharePopUp fileId={id} open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} />
+        )}
         {type === 'move' && (
           <MovePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} location={dir} />
         )}

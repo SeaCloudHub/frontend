@@ -50,12 +50,11 @@ const Sidebar = ({ role, shrinkMode }: SidebarProps) => {
           ) : (
             <div className='flex w-full  flex-col '>
               <div
-                className='flex h-16 w-full items-center justify-around gap-2 p-3 pl-6 cursor-pointer'
+                className='flex h-16 w-full cursor-pointer items-center justify-around gap-2 p-3 pl-6'
                 onClick={() => {
                   setArrSelected([]);
-                  navigate(role === Role.USER ? DRIVE_HOME: ADMIN_HOME)
-                }}
-              >
+                  navigate(role === Role.USER ? DRIVE_HOME : ADMIN_HOME);
+                }}>
                 <img src={(import.meta.env.BASE_URL + 'logo.png') as string} alt='placeholder' className='h-9  rounded-full' />
                 <p className='h4'>SEACLOUD</p>
                 <ButtonIcon onClick={() => updateShrinkMode(true)} icon='ion:caret-back' size={'25px'} />
@@ -81,7 +80,7 @@ const Sidebar = ({ role, shrinkMode }: SidebarProps) => {
           ))}
           {role === Role.USER && (
             <div className='mt-2'>
-              <LinearChartBar width='100%' value={70} total={100} />
+              <LinearChartBar width='100%' value={storageUsage} total={storageCapacity} />
               <p className={`mt-2 text-center ${shrinkMode ? 'hidden' : ''} `}>
                 {' '}
                 {`${numToSize(storageUsage)} of ${numToSize(storageCapacity)} of memory`}
