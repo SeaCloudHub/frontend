@@ -37,37 +37,33 @@ export const useViewMode = create<ViewModeState>((set) => ({
 }));
 
 export type ArrSelectedState = {
-  arrSelected: string[];
-  setArrSelected: (arrSelected: string[]) => void;
+  arrSelected: {id: string; isDir: boolean}[];
+  setArrSelected: (arrSelected: {id: string; isDir: boolean}[]) => void;
 };
 
 export const useSelected = create<ArrSelectedState>((set) => ({
   arrSelected: [],
-  setArrSelected: (arrSelected: string[]) => set({ arrSelected }),
+  setArrSelected: (arrSelected: {id: string; isDir: boolean}[]) => set({ arrSelected }),
 }));
 
 export type ListEntriesState = {
   listEntries: LocalEntry[];
   listSuggestedEntries: SuggestedEntry[];
   searchEntries: SuggestedEntry[];
-  submited: boolean;
   setListEntries: Dispatch<SetStateAction<LocalEntry[]>>;
   setListSuggestedEntries: Dispatch<SetStateAction<SuggestedEntry[]>>;
   setSearchEntries: Dispatch<SetStateAction<SuggestedEntry[]>>;
   resetEntries: () => void;
-  setSubmited: (isSubmited: boolean) => void;
 };
 
 export const useEntries = create<ListEntriesState>((set) => ({
   listEntries: [],
   listSuggestedEntries: [],
   searchEntries: [],
-  submited: false,
   setListEntries: (listEntries: SuggestedEntry[]) => set({ listEntries }),
   setListSuggestedEntries: (listSuggestedEntries: SuggestedEntry[]) => set({ listSuggestedEntries }),
   setSearchEntries: (searchEntries: SuggestedEntry[]) => set({ searchEntries }),
   resetEntries: () => set({ listEntries: [], listSuggestedEntries: [], searchEntries: [] }),
-  setSubmited: (isSubmited: boolean) => set({ submited: isSubmited }),
 }));
 
 export type LimitState = {

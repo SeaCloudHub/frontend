@@ -3,6 +3,8 @@ import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 import { Role } from '../../utils/enums/role.enum';
 import { getLocalStorage } from '../../utils/function/auth.function';
+import { useCookies } from 'react-cookie'
+
 const initIdentityValue = {
   id: null,
   email: null,
@@ -18,11 +20,11 @@ type Identity = Pick<
   'id' | 'email' | 'password_changed_at' | 'first_name' | 'last_name' | 'avatar_url' | 'is_admin' | 'last_sign_in_at'
 >;
 type SessionState = {
-  token: string | null;
+  // token: string | null;
   role: Role | null;
   firstLogin: boolean;
   onEmailValid: (email: string, avatar_url: string, first_name: string, last_name: string, password_changed_at: string) => void;
-  signIn: (token: string | null, role: Role | null, firstLogin: boolean, identity: Identity) => void;
+  signIn: (role: Role | null, firstLogin: boolean, identity: Identity) => void;
   identity: Identity;
   signOut: () => void;
 };
@@ -33,12 +35,13 @@ export const useSession = create<SessionState>()(
   devtools(
     persist(
       (set) => ({
-        token: value.token || null,
+        // token: value.token || null,
         role: value.role || null,
         firstLogin: true,
         identity: value.identity || initIdentityValue,
-        signIn: (token: string | null, role: Role | null, firstLogin: boolean, identity: Identity) =>
-          set({ token, role, identity: identity, firstLogin: firstLogin }),
+        signIn: ( role: Role | null, firstLogin: boolean, identity: Identity) => {
+          set({ role, identity: identity, firstLogin: firstLogin });
+        },
         onEmailValid: (email, avatar_url: string, first_name: string, last_name: string, password_changed_at: string) =>
           set((state) => ({
             ...state,
@@ -52,7 +55,7 @@ export const useSession = create<SessionState>()(
             },
           })),
         signOut: () => {
-          set({ token: null, role: null, identity: initIdentityValue });
+          set({ role: null, identity: initIdentityValue });
           localStorage.clear();
         },
       }),

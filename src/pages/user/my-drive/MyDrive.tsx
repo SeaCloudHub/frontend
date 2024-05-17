@@ -46,7 +46,7 @@ const MyDrive = () => {
       if ((event.ctrlKey||event.metaKey) && event.key === 'c') {
         if (arrSelected.length !== 0 && JSON.stringify(arrSelected) !== JSON.stringify(copiedIds)) {
           toast.info(`Copied ${arrSelected.length}` + (arrSelected.length > 1 ? ' items' : ' item') + ` to clipboard`);
-          setCopiedIds(arrSelected);
+          setCopiedIds(arrSelected.map(e => e.id));
         }
       } else if ((event.ctrlKey||event.metaKey) && event.key === 'v' && copiedIds.length !== 0) {
         copyMutation.mutate({ ids: copiedIds, to: parents[parents.length - 1].id });
@@ -88,7 +88,7 @@ const MyDrive = () => {
       }
       sidePanel={
         <SidePanel
-          id={arrSelected.length === 0 ? parents[parents.length - 1].id : arrSelected.length === 1 ? arrSelected[0] : ''}
+          id={arrSelected.length === 0 ? parents[parents.length - 1].id : arrSelected.length === 1 ? arrSelected[0].id : ''}
           title={arrSelected.length === 0 ? 'My Drive' : parents[parents.length - 1].name}
         />
       }

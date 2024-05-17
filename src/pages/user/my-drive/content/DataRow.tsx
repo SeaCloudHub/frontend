@@ -255,7 +255,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
   ];
 
   const handleCtrlClick = () => {
-    setArrSelected(arrSelected.includes(id) ? arrSelected.filter((item) => item !== id) : [...arrSelected, id]);
+    setArrSelected(arrSelected.some(e=>e.id === id) ? arrSelected.filter((item) => item.id !== id) : [...arrSelected, { id, isDir}]);
   };
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -263,7 +263,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
       handleCtrlClick();
       return;
     }
-    setArrSelected([id]);
+    setArrSelected([{ id, isDir}]);
   };
 
   const handleDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {

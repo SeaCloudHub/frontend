@@ -7,25 +7,25 @@ import SearchResult from './SearchResult';
 import { useSearchEntries } from '@/hooks/drive.hooks';
 import { useNavigate } from 'react-router-dom';
 import { DRIVE_SEARCH } from '@/utils/constants/router.constant';
-import { useEntries, useLimit } from '@/store/my-drive/myDrive.store';
+import { useEntries, useLimit, useSelected } from '@/store/my-drive/myDrive.store';
 
 function Search() {
   const [keyWord, setKeyWord] = useState<string>('');
   const [onFocus, setOnFocus] = useState<boolean>(false);
   const ref = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
-  const {submited, setSubmited} = useEntries();
   const {resetLimit} = useLimit();
+  const {setArrSelected} = useSelected();
 
   const searchValue = useDebounce({ delay: 260, value: keyWord });
-  const {data, isLoading, refetch} = useSearchEntries(searchValue);
+  const {data, isLoading, refetch} = useSearchEntries(searchValue, false);
 
   const { theme } = useTheme();
   const fill = theme === 'dark' ? 'white' : '';
   return (
     <div className='relative max-w-2xl flex-1 ' onFocus={() => {
       setOnFocus(true)
-      setSubmited(false);
+      setArrSelected([]);
       resetLimit();
     }}>
       <span
@@ -36,7 +36,6 @@ function Search() {
       <form onSubmit={(e)=>{
         e.preventDefault()
         setOnFocus(false);
-        setSubmited(true);
         resetLimit();
         ref.current.blur();
         navigate(`${DRIVE_SEARCH}?q=${searchValue}`)
@@ -52,7 +51,7 @@ function Search() {
           dark:bg-search-bg-dark dark:text-icons-color-dark dark:placeholder-blue-50 dark:placeholder-opacity-60'
         />
       </form>
-      {onFocus && <SearchResult data={data} />}
+      {onFocus && <SearchResult data={data} loading={isLoading}/>}
     </div>
   );
 }

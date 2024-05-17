@@ -21,6 +21,9 @@ const SearchPage = () => {
   const {increaseLimit, limit} = useLimit();
 
   const {data, isLoading, refetch} = useSearchEntriesPage();
+  console.log('SearchPage', data);
+  console.log('SearchPage', isLoading);
+  console.log('SearchPage', limit);
 
   const onScollBottom = () => {
     if(data.length < limit) return;
@@ -57,8 +60,8 @@ const SearchPage = () => {
       }
       sidePanel={
         <SidePanel
-          id={arrSelected.length === 0 ?  '' : arrSelected.length === 1 ? arrSelected[0] : ''}
-          title={arrSelected.length === 0 ? 'Search' : data.find((item) => item.id === arrSelected[arrSelected.length - 1])?.title || ''}
+          id={arrSelected.length === 0 ?  '' : arrSelected.length === 1 ? arrSelected[0].id : ''}
+          title={arrSelected.length === 0 ? 'Search' : data.find((item) => item.id === arrSelected[arrSelected.length - 1].id)?.title || ''}
         />
       }
     />

@@ -1,10 +1,12 @@
+import { toast } from "react-toastify";
+
 export const CopyToClipboard = (text: string) => {
   navigator.clipboard
     .writeText(text)
     .then(() => {
-      console.log('Copied to clipboard');
+      toast.success('Link copied to clipboard');
     })
     .catch((error) => {
-      console.error('Copy failed', error);
+      toast.error('Failed to copy link to clipboard');
     });
 };

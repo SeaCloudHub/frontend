@@ -22,7 +22,7 @@ import { CopyFileREQ, RenameREQ, DeleteEntriesREQ, RestoreEntriesREQ, ListEntrie
 import { EntryMetadataRES, EntryRESP, ListEntriesRESP, LogEntry, ParentRES, SuggestedEntriesRESP } from '@/apis/drive/drive.response';
 import { MoveToTrashREQ } from '@/apis/drive/request/move-to-trash.request';
 import { downloadFileApi, uploadFilesApi } from '@/apis/user/storage/storage.api';
-import { Path, useDrawer, useEntries, useIsFileMode, useLimit, useSelected } from '@/store/my-drive/myDrive.store';
+import { Path, useDrawer, useEntries, useIsFileMode, useLimit } from '@/store/my-drive/myDrive.store';
 import { useProgressIndicator } from '@/store/storage/progressIndicator.store';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { fileTypeIcons } from '@/utils/constants/file-icons.constant';
@@ -91,7 +91,6 @@ export const useListEntries = (limit: number, type: TypeEntry) => {
 
 export const useListFolders = (volumn?: 'Priority' | 'My Drive' | 'Starred' | 'Shared', dirId?: string) => {
   const { rootId } = useStorageStore();
-  const { arrSelected } = useSelected();
   if (!dirId) dirId = rootId;
 
   const { data: parents, error: parentsError } = useQuery({
@@ -176,7 +175,7 @@ export const useSearchEntries = (query: string, set?:boolean) => {
   const {setListEntries, listEntries} = useEntries();
 
   const { data, error, refetch, isLoading } = useQuery({
-    queryKey: ['search-entries', query, limit],
+    queryKey: ['search-entries', query, limit, set],
     queryFn: async () => {
       if(!query) return [];
       const res = await searchEntriesApi({ query, limit }).then((res) => res?.data?.entries);
@@ -194,16 +193,15 @@ export const useSearchEntries = (query: string, set?:boolean) => {
     toast.error(error.response?.data.message, toastError());
   }
 
-  return { data: set ? data||[] : listEntries, refetch, isLoading };
+  return { data: !set ? data||[] : listEntries, refetch, isLoading };
 }
 
 export const useSearchEntriesPage = () => {
   const query = useQueries().get('q') || '';
-  const {listEntries, setListEntries} = useEntries();
 
-  const { data, refetch, isLoading } = useSearchEntries(query,true);
+  const { data, refetch, isLoading } = useSearchEntries(query, true);
 
-  return { data: listEntries, refetch, isLoading };
+  return { data: data, refetch, isLoading };
 }
 
 export const usePriorityEntries = () => {

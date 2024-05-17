@@ -52,8 +52,9 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick,
       {
         label: 'Copy link',
         icon: <Icon icon='material-symbols:link' />,
-        action: (text: string) => {
-          CopyToClipboard(text);
+        action: () => {
+          const link = `${window.location.origin}/folder/${id}`;
+          CopyToClipboard(link);
         },
       },
       {
@@ -115,9 +116,11 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick,
   }, [result, setArrSelected]);
 
   const handleCtrlClick = () => {
-    if (setArrSelected) {
-      setArrSelected(arrSelected.includes(id) ? arrSelected.filter((item) => item !== id) : [...arrSelected, id]);
-    }
+    setArrSelected(
+      arrSelected.includes({id, isDir: true}) ?
+      arrSelected.filter((item) => item.id !== id) :
+      [...arrSelected, {id, isDir:true}]
+    );
   };
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {

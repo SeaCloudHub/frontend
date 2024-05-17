@@ -94,8 +94,10 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
       {
         label: 'Copy link',
         icon: <Icon icon='material-symbols:link' />,
-        action: (text: string) => {
-          CopyToClipboard(text);
+        action: () => {
+          const domain = window.location.origin;
+          const link = `${domain}/${isDir?'folder':'file'}/${id}`
+          CopyToClipboard(link);
         },
       },
       {
@@ -175,7 +177,12 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
   ];
 
   const handleCtrlClick = () => {
-    setArrSelected(arrSelected.includes(id) ? arrSelected.filter((item) => item !== id) : [...arrSelected, id]);
+    // setArrSelected(arrSelected.includes(id) ? arrSelected.filter((item) => item !== id) : [...arrSelected, id]);
+    setArrSelected(
+      arrSelected.includes({id, isDir}) ?
+      arrSelected.filter((item) => item.id !== id) :
+      [...arrSelected, {id, isDir}]
+    );
   };
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -183,7 +190,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
       handleCtrlClick();
       return;
     }
-    setArrSelected([id]);
+    setArrSelected([{ id, isDir}]);
   };
 
   const handleDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {

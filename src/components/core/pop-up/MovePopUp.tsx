@@ -103,13 +103,13 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
                   data.map((item, index) => (
                     <div
                       key={index}
-                      className={`flex items-center gap-3 px-3 py-1 ${locateTo === item.id ? 'bg-[#c2e7ff] dark:bg-blue-900' : ''} ${arrSelected.includes(item.id) ? 'brightness-75' : 'cursor-pointer hover:bg-gray-100 dark:hover:bg-blue-950'}`}
+                      className={`flex items-center gap-3 px-3 py-1 ${locateTo === item.id ? 'bg-[#c2e7ff] dark:bg-blue-900' : ''} ${arrSelected.some(e=>e.id===item.id) ? 'brightness-75' : 'cursor-pointer hover:bg-gray-100 dark:hover:bg-blue-950'}`}
                       onClick={() => {
-                        if (arrSelected.includes(item.id)) return;
+                        if (arrSelected.some(e=>e.id===item.id)) return;
                         setLocateTo(item.id);
                       }}
                       onDoubleClick={() => {
-                        if (arrSelected.includes(item.id)) return;
+                        if (arrSelected.some(e=>e.id===item.id)) return;
                         setCurFolder({ id: item.id, name: item.title });
                       }}>
                       <Icon icon='mdi:folder-multiple-outline' className='text-xl' />
@@ -172,7 +172,7 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
             onClick={() => {
               if (arrSelected.length === 0) return;
               if (curFolder.id === location.id) return;
-              moveEntriesMutation.mutate({ id: location.id, source_ids: arrSelected, to: curFolder.id });
+              moveEntriesMutation.mutate({ id: location.id, source_ids: arrSelected.map((e) => e.id), to: curFolder.id });
               handleClose();
             }}
             variant='contained'

@@ -105,8 +105,8 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
                           icon={entry.icon}
                           id={entry.id}
                           onDoubleClick={() => navigate(`${DRIVE_MY_DRIVE}/dir/${entry.id}`)}
-                          onClick={() => setArrSelected([entry.id])}
-                          isSelected={arrSelected?.includes(entry.id)}
+                          onClick={() => setArrSelected([{ id: entry.id, isDir: entry.isDir }])}
+                          isSelected={arrSelected.some((item) => item.id === entry.id)}
                           parent={parent}
                           dir={curDir}
                         />
@@ -120,7 +120,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
                           preview={entry.preview}
                           id={entry.id}
                           dir={curDir}
-                          isSelected={arrSelected?.includes(entry.id)}
+                          isSelected={arrSelected.some((item) => item.id === entry.id)}
                           fileType={entry.fileType}
                           parent={parent}
                         />

@@ -9,6 +9,7 @@ import RenamePopUp from '@/components/core/pop-up/RenamePopUp';
 import SharePopUp from '@/components/core/pop-up/SharePopUp';
 import { useDeleteMutation, useRestoreEntriesMutation, useStarEntryMutation, useUnstarEntryMutation } from '@/hooks/drive.hooks';
 import { useSelected } from '@/store/my-drive/myDrive.store';
+import { CopyToClipboard } from '@/utils/function/copy.function';
 import { Tooltip } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
@@ -65,20 +66,21 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
       label: 'Unstar',
       icon: 'mdi:star-off-outline',
       action: () => {
-        unstarEntryMutation.mutate({ file_ids: arrSelected });
+        unstarEntryMutation.mutate({ file_ids: arrSelected.map((e) => e.id) });
       }
     } : {
       label: 'Star',
       icon: 'mdi:star',
       action: () => {
-        starEntryMutation.mutate({ file_ids: arrSelected});
+        starEntryMutation.mutate({ file_ids: arrSelected.map((e) => e.id) });
       }
     },
     {
       icon: 'mdi:link',
       label: 'Copy link',
       action: () => {
-        // copy link
+        const links = arrSelected.map((e) => `${window.location.origin}/${e.isDir ? 'folder' : 'file'}/${e.id}`);
+        CopyToClipboard(links.join('; '));
       }
     },
     {
@@ -116,7 +118,7 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
             className='h-8 w-8 cursor-pointer rounded-full p-1 hover:bg-gray-200 dark:hover:bg-slate-500 dark:hover:text-white'
             onClick={() => {
               setResult(true);
-              restoreMutation.mutate({ source_ids: arrSelected });
+              restoreMutation.mutate({ source_ids: arrSelected.map((e) => e.id) });
             }}
           />
           <IconifyIcon
@@ -152,7 +154,7 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
           handleClose={() => setIsOpened(false)}
           title={`${arrSelected.length} items`}
           id={dir.id}
-          source_ids={arrSelected}
+          source_ids={arrSelected.map((e) => e.id)}
           setResult={setResult}
         />
       )}
@@ -160,7 +162,7 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
         <DeletePopUp
           handleClose={() => setIsOpened(false)}
           open={isOpened}
-          source_ids={arrSelected}
+          source_ids={arrSelected.map((e) => e.id)}
           title={''}
           setResult={setResult}
         />

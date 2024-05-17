@@ -13,12 +13,14 @@ import { AiOutlineClose } from 'react-icons/ai';
 import { PiSignOutBold } from 'react-icons/pi';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useCookies } from 'react-cookie';
 
 type UserInfoProps = {
   onClose: () => void;
 };
 function UserInfo({ onClose }: UserInfoProps) {
   const navigate = useNavigate();
+  const [cookies, setCookie, removeCookie] = useCookies(['token']);
   const { signOut, identity } = useSession();
   const modalRef = useRef(null);
 
@@ -33,6 +35,7 @@ function UserInfo({ onClose }: UserInfoProps) {
     },
     onSuccess: () => {
       signOut();
+      removeCookie('token');
       navigate(AUTH_LOGIN_EMAIL);
     },
   });
