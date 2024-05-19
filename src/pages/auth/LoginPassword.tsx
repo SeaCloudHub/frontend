@@ -20,6 +20,7 @@ import { toastError } from '../../utils/toast-options/toast-options';
 import { ApiGenericError } from '../../utils/types/api-generic-error.type';
 import AuthFooter from './AuthFooter';
 import AuthLink from './auth-link/AuthLink';
+import { initializeSocket } from '@/helpers/socket/socket.io';
 
 const LoginPassword = () => {
   // const [currentValue, setCurrentValue] = React.useState('');
@@ -54,6 +55,7 @@ const LoginPassword = () => {
         navigate(AUTH_CHANGE_PASSWORD);
       }
       updateStorageStore(data.data.identity.storage_usage, data.data.identity.storage_capacity, data.data.identity.root_id);
+      initializeSocket(authenticated);
       signIn(data.data.session_token, data.data.identity.is_admin ? Role.ADMIN : Role.USER, firstSignin, data.data.identity);
     },
   });
