@@ -11,12 +11,14 @@ type NotificationProps = {
   receiveNewNotification: () => NotificationContent;
   handleUnviewedNotificationsCount: (count: number) => void;
   isClickMarkAllAsView: boolean;
+  handleHasNotification: (hasNotification: boolean) => void;
 };
 
 const Notification = ({
   receiveNewNotification,
   hasNewNotification,
   handleUnviewedNotificationsCount,
+  handleHasNotification,
   isClickMarkAllAsView,
 }: NotificationProps) => {
   const [notifications, setNotifications] = useState<NotificationContent[]>([]);
@@ -27,6 +29,10 @@ const Notification = ({
     if (!isFetch) return;
     const fetchNotification = async () => {
       const { notifications: newNotifications, nextPage } = await fetchNotifications(page, 5);
+
+      if (page == 1) {
+        handleHasNotification(newNotifications.length > 0);
+      }
       setNotifications((prevNotifications) => [...prevNotifications, ...newNotifications]);
       setPage(nextPage ?? 1);
     };
@@ -42,6 +48,10 @@ const Notification = ({
   useEffect(() => {
     if (hasNewNotification) {
       const newNotification = receiveNewNotification();
+
+      if (page == 1) {
+        handleHasNotification(true);
+      }
 
       setNotifications((prevNotification) => [newNotification, ...prevNotification]);
       handleUnviewedNotificationsCount(calcUnviewedNotifications());
