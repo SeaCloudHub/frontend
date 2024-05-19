@@ -1,10 +1,15 @@
 import ButtonIcon from '@/components/core/button/ButtonIcon';
 import { ColorSchemeToggle } from '@/components/core/button/ColorSchemeToggle';
-import CustomDropdown from '@/components/core/drop-down/CustomDropdown';
 import { MenuItem } from '@/components/core/drop-down/Dropdown';
 import MenuCore from '@/components/core/menu/MenuCore';
 import { MenuItemCoreProps } from '@/components/core/menu/MenuItem';
 import { useTheme } from '@/providers/theme-provider';
+import { Badge, Popover, notification } from 'antd';
+import Notification from './Notification';
+import { useEffect, useState } from 'react';
+import { pullNewNotification } from '@/apis/notification/notification.socket';
+import { NotificationContent } from '@/apis/notification/response/notification.response';
+import { markAllAsViewed } from '@/apis/notification/notification.api';
 
 const helpOptions: MenuItemCoreProps[] = [
   {
@@ -41,8 +46,58 @@ const useSettingProviders = () => {
 };
 const Configuration = () => {
   const { settingMenu } = useSettingProviders();
+  const [hasNewNotification, setHasNewNotification] = useState(false);
+  const [newNotification, setNewNotification] = useState<NotificationContent | null>(null);
+  const [unviewedNotificationsCount, setUnviewedNotificationsCount] = useState(0);
+  const [isClickMarkAllAsView, setIsClickMarkAllAsView] = useState(false);
+
+  const receiveNewNotification = () => {
+    setHasNewNotification(false);
+    return newNotification as NotificationContent;
+  };
+
+  const handleNewNotification = (newNotification: NotificationContent) => {
+    setHasNewNotification(true);
+    setNewNotification(newNotification);
+
+    notification.open({
+      message: 'New Notification',
+      description: `${newNotification.OwnerName} has shared a file with you.`,
+      icon: <ButtonIcon tooltip='Notification' size={'1.6rem'} icon='heroicons-outline:bell' />,
+      duration: 2,
+    });
+  };
+
+  useEffect(() => {
+    pullNewNotification(handleNewNotification);
+  }, []);
+
+  const handleUnviewedNotificationsCount = (count: number) => {
+    setUnviewedNotificationsCount(count);
+  };
+
   return (
-    <div className='ml-7 mr-5 flex items-center '>
+    <div className='ml-7 mr-5 flex items-center space-x-3'>
+      <Popover
+        content={Notification({
+          receiveNewNotification,
+          hasNewNotification,
+          handleUnviewedNotificationsCount,
+          isClickMarkAllAsView,
+        })}
+        title={
+          <div className='flex items-center justify-between'>
+            <span>Notifications</span>
+            <span className='cursor-pointer' onClick={() => setIsClickMarkAllAsView(true)}>
+              Mark all as viewed
+            </span>
+          </div>
+        }
+        trigger='click'>
+        <Badge count={unviewedNotificationsCount} size='small'>
+          <ButtonIcon tooltip='Notification' size={'1.6rem'} icon='heroicons-outline:bell' />
+        </Badge>
+      </Popover>
       <MenuCore mix={false} menuItems={helpOptions}>
         <ButtonIcon tooltip='Help' size={'1.6rem'} icon='material-symbols:help-outline' />
       </MenuCore>
