@@ -2,8 +2,11 @@ import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import DynamicLayout from './components/layout/DynamicLayout';
 import RequireAuth from './helpers/routers/RequireAuth';
 import ChangePassword from './pages/auth/ChangePassword';
-import { AUTH_CHANGE_PASSWORD, AUTH_LOGIN_EMAIL, routes } from './utils/constants/router.constant';
+import { AUTH_CHANGE_PASSWORD, AUTH_LOGIN_EMAIL, DRIVE_SHARED_VIEW_FILE, DRIVE_SHARED_VIEW_FOLDER, routes } from './utils/constants/router.constant';
 import { Role } from './utils/enums/role.enum';
+import ShareCheck from './helpers/routers/ShareCheck';
+import ShareFile from './pages/user/share/ShareFile';
+import ShareFolder from './pages/user/share/ShareFolder';
 
 function App() {
   return (
@@ -37,6 +40,10 @@ function App() {
             {routes.customer.map((item, index) => (
               <Route path={item.path} Component={item.component} key={index} />
             ))}
+            <Route element={<ShareCheck />}>
+              <Route path={DRIVE_SHARED_VIEW_FILE} element= {<ShareFile/>} />
+              <Route path={DRIVE_SHARED_VIEW_FOLDER} element={<ShareFolder/>} />
+            </Route>
           </Route>
         </Route>
 

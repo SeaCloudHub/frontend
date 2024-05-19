@@ -9,12 +9,13 @@ type StorageLogProps = {
 
 const actionColors = {
   DELETE: 'text-red-600',
-  ADD: 'text-blue-600',
-  RENAME: 'text-purple-500',
-  OPEN: 'text-green-600',
-  STAR: 'text-pink-600',
+  CREATE: 'text-green-600',
+  RENAME: 'text-yellow-600', 
+  OPEN: 'text-blue-600', 
+  STAR: 'text-yellow-500', 
+  MOVE: 'text-purple-500', 
+  SHARE: 'text-blue-400',
 };
-
 const StorageLog = ({ logs, isFetching, moreClick }: StorageLogProps) => {
   const getActionColorClass = (action: string) => {
     return actionColors[action] || 'black';
@@ -27,7 +28,7 @@ const StorageLog = ({ logs, isFetching, moreClick }: StorageLogProps) => {
             <div className='flex space-x-2 truncate' key={index}>
               <p className=' italic '>{log.date}</p>
               <p className=' font-bold'>{log.username}</p>
-              <p className={`${getActionColorClass(log.action)}  `}>{`[${log.action}]`}</p>
+              <p className={`font-bold ${getActionColorClass(log.action)}  `}>{`[${log.action}]`}</p>
               <p className='truncate'>{log.fileName}</p>
             </div>
           ))}

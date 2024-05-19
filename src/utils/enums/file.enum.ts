@@ -1,8 +1,10 @@
 export enum FileAction {
   OPEN = 'OPEN',
-  EDIT = 'EDIT',
   RENAME = 'RENAME',
   DELETE = 'DELETE',
-  ADD = 'ADD',
+  CREATE = 'CREATE',
   STAR = 'STAR',
+  UPDATE = 'UPDATE',
+  MOVE = 'MOVE',
+  SHARE = 'SHARE',
 }

@@ -23,7 +23,6 @@ const AddFileMenu = ({ shrinkMode }: AddFileMenuProps) => {
   const rootId = useStorageStore((state) => state.rootId);
   const setFileNames = useProgressIndicator((state) => state.setFileNames);
   const location = useLocation();
-  const path = location.pathname.split('/');
 
   const uploadFilesMutation = useMutation({
     mutationFn: (body: { files: File[]; id: string }) => {
@@ -97,11 +96,6 @@ const AddFileMenu = ({ shrinkMode }: AddFileMenuProps) => {
     [{ label: 'New Folder', icon: <IconifyIcon icon={'lets-icons:folder-add-light'} />, action: toggleCreateFolder }],
     [
       { label: 'File Upload', icon: <IconifyIcon icon={'ic:baseline-upload-file'} />, action: toggleFilePicker },
-      // {
-      //   label: 'Folder Upload',
-      //   icon: <IconifyIcon icon={'uil:folder-upload'} />,
-      //   action: toggleFolderPicker,
-      // },
     ],
   ];
 

@@ -1,5 +1,6 @@
 export type UserManagementInfoDto = {
   userId?: string;
+  isBlocked?: boolean;
   name?: string;
   avatar?: string;
   usedMemory: number | 0;

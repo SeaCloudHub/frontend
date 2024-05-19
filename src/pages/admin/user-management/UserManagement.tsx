@@ -1,5 +1,8 @@
 import { paginationRESPToDto } from '@/apis/shared/shared.service';
-import { BlockOutlined, DeleteOutline, EditOutlined, SettingsApplications, ViewDayOutlined } from '@mui/icons-material';
+import ModalConfirmBlockOrUnBlock from '@/components/core/modal/ModalBlockConfirm';
+import ModalConfirmDelete from '@/components/core/modal/ModalConfirmDelete';
+import { BlockOutlined, DeleteOutline, SettingsApplications, ViewDayOutlined } from '@mui/icons-material';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button, Card, Dropdown, Menu, Pagination, Table } from 'antd';
 import { isAxiosError } from 'axios';
@@ -10,10 +13,7 @@ import { UserManagementInfoDto } from '../../../apis/admin/user-management/dto/u
 import { ImportExcelREQ } from '../../../apis/admin/user-management/request/add-user-excel.request';
 import { downloadTemplateCSV, getIdentititesApi, importExcelApi } from '../../../apis/admin/user-management/user-management.api';
 import { getIdentitiesRESToUserManagementInfoDto } from '../../../apis/admin/user-management/user-management.service';
-import IconifyIcon from '../../../components/core/Icon/IConCore';
-import ButtonContainer from '../../../components/core/button/ButtonContainer';
 import LinearChartBar from '../../../components/core/linear-chart-bar/linearChartBar';
-import MenuCore from '../../../components/core/menu/MenuCore';
 import { MenuItemCoreProps } from '../../../components/core/menu/MenuItem';
 import ModalAddUser from '../../../components/core/modal/ModalAddUser';
 import ModalChooseFile from '../../../components/core/modal/ModalChooseFile';
@@ -41,9 +41,8 @@ const UserManagement = () => {
   const [paging, setPaging] = useState<PagingState>(initialPagingState);
   const screenMode = useScreenMode((state) => state.screenMode);
   const shrinkMode = useScreenMode((state) => state.shrinkMode);
-  const [scrollable, setScrollable] = useState(false);
-  const filterRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [keyword, setKeyword] = useState('');
   const addUserOptions: MenuItemCoreProps[] = [
     {
       icon: 'icon-park:add-one',
@@ -84,11 +83,14 @@ const UserManagement = () => {
       },
     },
   ];
+  const [blockModal, setBlockModal] = useState(false);
+  const [block, setBlock] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { data, error } = useQuery({
-    queryKey: ['get-identities', paging.size, paging.page],
-    queryFn: () => getIdentititesApi({ limit: paging.size, page: paging.page }),
+    queryKey: ['get-identities', paging.size, paging.page, keyword],
+    queryFn: () => getIdentititesApi({ limit: paging.size, page: paging.page, keyword: keyword }),
     staleTime: 0,
     select: (data) => {
       if (data) {
@@ -108,46 +110,10 @@ const UserManagement = () => {
       }
     }
     if (data) {
-      console.log(`Set paging:: ${JSON.stringify(data.paging)}`);
       setPaging(data.paging);
     }
   }, [error, data]);
-  useEffect(() => {
-    const handleScroll = () => {
-      if (
-        containerRef.current &&
-        containerRef.current.scrollTop > filterRef.current.offsetHeight &&
-        filterRef.current.offsetHeight !== 0
-      ) {
-        setScrollable(true);
-      } else if (
-        !(screenMode === ScreenMode.MOBILE) &&
-        containerRef.current &&
-        containerRef.current.scrollTop === filterRef.current.offsetHeight
-      ) {
-        setScrollable(false);
-      }
-    };
-    if (!(screenMode == ScreenMode.MOBILE)) {
-      containerRef.current.addEventListener('scroll', handleScroll);
-    }
-    return () => {
-      containerRef.current?.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-  useEffect(() => {
-    if (screenMode == ScreenMode.MOBILE) {
-      setScrollable(true);
-    }
-  }, [screenMode]);
-  const onFilterClick = () => {
-    if (screenMode == ScreenMode.MOBILE) {
-      //pop-up dialog for choose filter
-    } else {
-      setScrollable(false);
-      containerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
+
   const onCloseModalClick = (modalType: string) => {
     changeModalsState((prevModals) => {
       const updatedModals = prevModals.map((modal) => {
@@ -172,6 +138,7 @@ const UserManagement = () => {
       toast.success('Create user successfully', toastSuccess());
     },
   });
+  const [user, setUser] = useState<UserManagementInfoDto | null>(null);
   const handlePageChange = (page: number) => {
     setPaging((prev) => ({ ...prev, page: page }));
   };
@@ -205,6 +172,19 @@ const UserManagement = () => {
       },
     },
     {
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
+      render: (name: string, record: UserManagementInfoDto) => {
+        return (
+          <div className='flex items-center space-x-3 '>
+            <div className={`h-2 w-2  rounded-full ${record.isBlocked ? 'bg-red-600' : 'bg-green-600'} font-bold`}></div>
+            <p>{record.isBlocked ? 'Blocked' : 'Active'}</p>
+          </div>
+        );
+      },
+    },
+    {
       title: 'Memory Detail',
       dataIndex: 'usedMemory',
       key: 'usedMemory',
@@ -217,28 +197,51 @@ const UserManagement = () => {
       dataIndex: 'lastAccess',
       key: 'lastAccess',
     },
+
     {
       title: 'Actions',
       dataIndex: 'userId',
       key: 'actions',
-      render: (userId: string) => {
+      render: (userId: string, user: UserManagementInfoDto) => {
         return (
           <Dropdown
+            key={userId}
             trigger={['click']}
             overlay={
               <Menu>
                 <Menu.Item icon={<ViewDayOutlined />} onClick={() => navigate(userId)}>
                   View
                 </Menu.Item>
-                <Menu.Item icon={<EditOutlined />} onClick={() => {}}>
-                  Edit
-                </Menu.Item>
-                <Menu.Item icon={<DeleteOutline />} onClick={() => {}}>
+                <Menu.Item
+                  icon={<DeleteOutline />}
+                  onClick={() => {
+                    setUser(user);
+                    setDeleteModal(true);
+                  }}>
                   Delete
                 </Menu.Item>
-                <Menu.Item icon={<BlockOutlined />} onClick={() => {}}>
-                  Block
-                </Menu.Item>
+                {!user.isBlocked && (
+                  <Menu.Item
+                    icon={<BlockOutlined />}
+                    onClick={() => {
+                      setUser(user);
+                      setBlock(true);
+                      setBlockModal(true);
+                    }}>
+                    Block
+                  </Menu.Item>
+                )}
+                {user.isBlocked && (
+                  <Menu.Item
+                    icon={<LockOpenIcon />}
+                    onClick={() => {
+                      setUser(user);
+                      setBlock(false);
+                      setBlockModal(true);
+                    }}>
+                    Un-Block
+                  </Menu.Item>
+                )}
               </Menu>
             }
             placement='bottomLeft'>
@@ -250,32 +253,18 @@ const UserManagement = () => {
       },
     },
   ];
-
+  const onSearchClick = (keyword: string) => {
+    setKeyword(keyword);
+  };
   return (
     <div ref={containerRef} className='flex h-full w-full flex-col space-y-5 overflow-y-auto'>
-      <div
-        ref={filterRef}
-        className={`z-10 mt-2 w-full space-y-2 ${screenMode == ScreenMode.MOBILE ? 'fixed bottom-2 left-1/4  ' : ''}`}>
-        {!scrollable && (
-          <div className='mx-5'>
-            <UserManagementFilter />
-          </div>
-        )}
+      <div className={`z-10 mt-2 w-full space-y-2 ${screenMode == ScreenMode.MOBILE ? 'fixed bottom-2 left-1/4  ' : ''}`}>
+        <div className='mx-5'>
+          <UserManagementFilter handleSearch={onSearchClick} />
+        </div>
         <div
-          className={`${shrinkMode ? 'shrink-mode' : 'none-shrink-mode'} ${scrollable ? ' fixed  top-[4.3rem] mx-auto flex w-full  bg-white dark:bg-transparent ' : ''} mx-5`}>
-          {scrollable && (
-            <div className='mx-5'>
-              <ButtonContainer
-                color='063768'
-                onClick={onFilterClick}
-                tooltip={'Filter'}
-                title='Filter'
-                background='#063768'
-                icon={<IconifyIcon icon={'ant-design:filter-twotone'} />}
-              />
-            </div>
-          )}
-          <MenuCore menuItems={addUserOptions}>
+          className={`${shrinkMode ? 'shrink-mode' : 'none-shrink-mode'} ' '  fixed top-[4.3rem] mx-5  flex w-full bg-white dark:bg-transparent`}>
+          {/* <MenuCore menuItems={addUserOptions}>
             <ButtonContainer
               color='063768'
               tooltip={'Add user'}
@@ -283,7 +272,7 @@ const UserManagement = () => {
               background='#063768'
               icon={<IconifyIcon icon={'gg:add'} />}
             />
-          </MenuCore>
+          </MenuCore> */}
           <ModalChooseFile
             fileIcon='grommet-icons:document-csv'
             fileType='.csv'
@@ -327,6 +316,34 @@ const UserManagement = () => {
           </>
         )}
       </Card>
+      {deleteModal && (
+        <ModalConfirmDelete
+          message={'Do you want to delete this User'}
+          title={'Delete ' + user.name}
+          isOpen={true}
+          user={user}
+          handleConfirm={(data: boolean) => {
+            if (data) {
+              queryClient.invalidateQueries({ queryKey: ['get-identities', paging.size, paging.page] });
+            }
+            setDeleteModal(false);
+          }}
+        />
+      )}
+      {blockModal && (
+        <ModalConfirmBlockOrUnBlock
+          message={block ? 'Do you want to block this user' : 'Do you want to un-block this user'}
+          title={block ? 'Block' : 'Un-block' + user.name}
+          isOpen={true}
+          user={user}
+          handleConfirm={(data: boolean) => {
+            if (data) {
+              queryClient.invalidateQueries({ queryKey: ['get-identities', paging.size, paging.page] });
+            }
+            setBlockModal(false);
+          }}
+        />
+      )}
     </div>
   );
 };
