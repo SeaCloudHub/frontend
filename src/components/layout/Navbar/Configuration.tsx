@@ -9,7 +9,6 @@ import Notification from './Notification';
 import { useEffect, useState } from 'react';
 import { pullNewNotification } from '@/apis/notification/notification.socket';
 import { NotificationContent } from '@/apis/notification/response/notification.response';
-import { markAllAsViewed } from '@/apis/notification/notification.api';
 
 const helpOptions: MenuItemCoreProps[] = [
   {
@@ -50,6 +49,7 @@ const Configuration = () => {
   const [newNotification, setNewNotification] = useState<NotificationContent | null>(null);
   const [unviewedNotificationsCount, setUnviewedNotificationsCount] = useState(0);
   const [isClickMarkAllAsView, setIsClickMarkAllAsView] = useState(false);
+  const [hasNotification, setHasNotification] = useState(false);
 
   const receiveNewNotification = () => {
     setHasNewNotification(false);
@@ -84,13 +84,17 @@ const Configuration = () => {
           hasNewNotification,
           handleUnviewedNotificationsCount,
           isClickMarkAllAsView,
+          handleHasNotification: setHasNotification,
         })}
         title={
           <div className='flex items-center justify-between'>
             <span>Notifications</span>
-            <span className='cursor-pointer' onClick={() => setIsClickMarkAllAsView(true)}>
-              Mark all as viewed
-            </span>
+
+            {hasNotification && (
+              <span className='cursor-pointer' onClick={() => setIsClickMarkAllAsView(true)}>
+                Mark all as viewed
+              </span>
+            )}
           </div>
         }
         trigger='click'>
