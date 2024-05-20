@@ -83,7 +83,7 @@ function UserInfo({ onClose }: UserInfoProps) {
         <button
           disabled={logoutMutation.isPending}
           onClick={onSignOutClick}
-          className='tablet:w-44 hover:bg-darkC mt-2 flex w-36 items-center justify-center space-x-2 rounded-full  py-3 hover:bg-gray-300  hover:dark:bg-black dark:text-white'>
+          className='tablet:w-44 hover:bg-darkC mt-2 flex w-36 items-center justify-center space-x-2 rounded-full  py-3 hover:bg-gray-300  dark:text-white hover:dark:bg-black'>
           <PiSignOutBold className='h-6 w-6' />
           <span>Sign out</span>
         </button>

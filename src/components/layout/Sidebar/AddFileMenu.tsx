@@ -94,9 +94,7 @@ const AddFileMenu = ({ shrinkMode }: AddFileMenuProps) => {
 
   const addFileMenu: MenuItem[][] = [
     [{ label: 'New Folder', icon: <IconifyIcon icon={'lets-icons:folder-add-light'} />, action: toggleCreateFolder }],
-    [
-      { label: 'File Upload', icon: <IconifyIcon icon={'ic:baseline-upload-file'} />, action: toggleFilePicker },
-    ],
+    [{ label: 'File Upload', icon: <IconifyIcon icon={'ic:baseline-upload-file'} />, action: toggleFilePicker }],
   ];
 
   const [createModal, setCreateModal] = useState<boolean>(false);

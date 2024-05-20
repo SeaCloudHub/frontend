@@ -19,14 +19,7 @@ type DriveGridViewProps = {
   parent?: 'priority' | 'my-drive' | 'shared' | 'trash' | 'starred';
 };
 
-export const DriveGridView: React.FC<DriveGridViewProps> = ({
-  entries,
-  fileShow,
-  folderShow,
-  isLoading,
-  curDir,
-  parent,
-}) => {
+export const DriveGridView: React.FC<DriveGridViewProps> = ({ entries, fileShow, folderShow, isLoading, curDir, parent }) => {
   // console.log('DriveGridView', entries);
   // const files = entries.filter((entry) => !entry.isDir);
   // const folders = entries.filter((entry) => entry.isDir);

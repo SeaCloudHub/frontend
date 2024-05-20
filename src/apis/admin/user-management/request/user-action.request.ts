@@ -1,4 +1,4 @@
-export  type UserBlockREQ = {
+export type UserBlockREQ = {
   identity_id: string;
 };
 

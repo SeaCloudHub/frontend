@@ -49,7 +49,6 @@ export const DRIVE_PROFILE = `${DRIVE_HOME}/profile`;
 export const DRIVE_SHARED_VIEW_FILE = `${DRIVE_HOME}/file/:fileId`;
 export const DRIVE_SHARED_VIEW_FOLDER = `${DRIVE_HOME}/folder/:folderId`;
 
-
 export const routes = {
   auth: [
     { path: AUTH_LOGIN_EMAIL, component: LoginEmail },

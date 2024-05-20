@@ -53,7 +53,7 @@ const UserManagementDetail = () => {
     }
     return null;
   }, [identityData]);
-  console.log('trieu ')
+  console.log('trieu ');
   return (
     <div className='h-full w-full overflow-y-auto overflow-x-hidden'>
       <div

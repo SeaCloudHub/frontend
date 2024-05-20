@@ -1,5 +1,5 @@
 import { numToSize } from '@/utils/function/numbertToSize';
-import { FilerDataType } from './FilterTable';
+import { FilerDataDto } from './FilterTable';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { MenuItem } from '@/components/core/drop-down/Dropdown';
 import './index.css';
@@ -8,7 +8,7 @@ import FileViewerContainer from '@/components/core/file-viewers/file-viewer-cont
 import { useState } from 'react';
 
 type FilerRowProps = {
-  data: FilerDataType;
+  data: FilerDataDto;
   onClick?: () => void;
   onDoubleClick?: (id: string, name: string) => void;
 };
