@@ -2,11 +2,11 @@ import { Path } from '@/store/my-drive/myDrive.store';
 import { FilerRow } from './FilerRow';
 
 type FilerTableProps = {
-  data: FilerDataType[];
+  data: FilerDataDto[];
   setPath?: React.Dispatch<React.SetStateAction<Path>>;
 };
 
-export type FilerDataType = {
+export type FilerDataDto = {
   id: string;
   is_dir: boolean;
   name: string;

@@ -16,7 +16,6 @@ const UserManagementFilter = ({ handleSearch }: UserManagementFilterProps) => {
     }
   };
 
-
   return (
     <div className='relative flex max-w-2xl  '>
       <span

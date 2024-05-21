@@ -4,7 +4,7 @@ import { IdentityFileRESP } from './response/get-identities.response';
 
 export const getIdentitiesRESToUserManagementInfoDto = (data: IdentityFileRESP): UserManagementInfoDto => {
   return {
-    name:(data.first_name || '') + (data.first_name && data.last_name ? ' ' : '') + (data.last_name || ''),
+    name: (data.first_name || '') + (data.first_name && data.last_name ? ' ' : '') + (data.last_name || ''),
     usedMemory: data.storage_usage,
     totalMemory: data.storage_capacity,
     avatar: data.avatar_url,

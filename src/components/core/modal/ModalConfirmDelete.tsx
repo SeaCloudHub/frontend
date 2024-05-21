@@ -17,25 +17,25 @@ type ModalConfirmDeleteProps = {
   handleConfirm: (data?: boolean) => void;
 };
 
-const ModalConfirmDelete = ({ message, title, isOpen, handleConfirm,user }: ModalConfirmDeleteProps) => {
-    const deleteUserMutation = useMutation({
-      mutationFn: (param: UserDeleteREQ) => {
-        return deleteUserAPi(param);
-      },
-      onError: (error) => {
-        if (isAxiosError<ApiGenericError>(error)) {
-          handleConfirm(false);
-          toast.error(error.response?.data.message, toastError());
-        }
-      },
-      onSuccess: (data) => {
-        handleConfirm(true);
-        toast.success('User was deleted successfully', toastSuccess());
-      },
-    });
+const ModalConfirmDelete = ({ message, title, isOpen, handleConfirm, user }: ModalConfirmDeleteProps) => {
+  const deleteUserMutation = useMutation({
+    mutationFn: (param: UserDeleteREQ) => {
+      return deleteUserAPi(param);
+    },
+    onError: (error) => {
+      if (isAxiosError<ApiGenericError>(error)) {
+        handleConfirm(false);
+        toast.error(error.response?.data.message, toastError());
+      }
+    },
+    onSuccess: (data) => {
+      handleConfirm(true);
+      toast.success('User was deleted successfully', toastSuccess());
+    },
+  });
   return (
     <ModalCore open={isOpen} width={'40%'} closeOutside={handleConfirm}>
-      <div className='mb-3 p-2 flex w-full flex-col space-y-3'>
+      <div className='mb-3 flex w-full flex-col space-y-3 p-2'>
         <h3 className='statement-bold text-[24px]'>{title}</h3>
         <p>{message}</p>
         <div className='mt-6 flex items-center justify-end gap-5'>

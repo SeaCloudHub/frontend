@@ -349,6 +349,7 @@ export const useRenameMutation = () => {
       toast.success(`Renamed to ${data.data.name}`);
       queryClient.invalidateQueries({ queryKey: ['mydrive-entries'] });
       queryClient.invalidateQueries({ queryKey: ['priority-entries'] });
+      queryClient.invalidateQueries({ queryKey: ['list-storages'] });
     },
   });
 };
@@ -388,6 +389,7 @@ export const useDeleteMutation = () => {
     onSuccess: (data) => {
       toast.success(`${data.data.length} files deleted`);
       queryClient.invalidateQueries({ queryKey: ['Trash-entries'] });
+      queryClient.invalidateQueries({ queryKey: ['list-storages'] });
     },
   });
 };

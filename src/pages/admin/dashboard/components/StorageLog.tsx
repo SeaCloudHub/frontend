@@ -10,10 +10,10 @@ type StorageLogProps = {
 const actionColors = {
   DELETE: 'text-red-600',
   CREATE: 'text-green-600',
-  RENAME: 'text-yellow-600', 
-  OPEN: 'text-blue-600', 
-  STAR: 'text-yellow-500', 
-  MOVE: 'text-purple-500', 
+  RENAME: 'text-yellow-600',
+  OPEN: 'text-blue-600',
+  STAR: 'text-yellow-500',
+  MOVE: 'text-purple-500',
   SHARE: 'text-blue-400',
 };
 const StorageLog = ({ logs, isFetching, moreClick }: StorageLogProps) => {

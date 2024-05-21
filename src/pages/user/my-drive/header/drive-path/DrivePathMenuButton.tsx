@@ -203,7 +203,6 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ dirId, dirNam
           }}
         />
       )}
-   
     </>
   );
 };

@@ -20,7 +20,7 @@ function Search() {
   const { resetLimit } = useLimit();
 
   const searchValue = useDebounce({ delay: 260, value: keyWord });
-  const {data, isLoading, refetch} = useSearchEntries(searchValue);
+  const { data, isLoading, refetch } = useSearchEntries(searchValue);
   return (
     <div
       className={`${identity.is_admin ? 'pointer-events-none opacity-0' : ''} relative max-w-2xl flex-1`}

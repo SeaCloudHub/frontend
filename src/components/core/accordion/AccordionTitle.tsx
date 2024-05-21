@@ -11,7 +11,7 @@ type AccordionTitleProps = {
 const AccordionTitle: React.FC<AccordionTitleProps> = ({ title, open, handleOpen }) => {
   return (
     <>
-      <div className='text-md flex items-center justify-between px-3 py-2 font-semibold bg-gray-200 dark:bg-blue-950 dark:text-white'>
+      <div className='text-md flex items-center justify-between bg-gray-200 px-3 py-2 font-semibold dark:bg-blue-950 dark:text-white'>
         <div className='statement-bold '>{title}</div>
         <IconButton size='medium' onClick={handleOpen}>
           <IconifyIcon
