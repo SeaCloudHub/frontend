@@ -9,7 +9,7 @@ import Video from '../video/Video';
 
 const Viewer: React.FC<FileViewerProps> = (props) => {
   const { fileType } = props;
-    switch (fileType) {
+  switch (fileType) {
     case 'pdf': {
       return <Pdf {...props} />;
     }
@@ -22,8 +22,8 @@ const Viewer: React.FC<FileViewerProps> = (props) => {
     case 'text': {
       return <Text {...props} />;
     }
-    case 'video':{
-      return <Video {...props}/>
+    case 'video': {
+      return <Video {...props} />;
     }
     default: {
       return <UnSupportFile {...props} />;

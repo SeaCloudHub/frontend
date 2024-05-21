@@ -17,3 +17,19 @@ api.interceptors.request.use(
     return Promise.reject(error);
   },
 );
+
+export const notificationApi = axios.create({
+  baseURL: import.meta.env.VITE_NOTIFICATION_SERVICE_ENDPOINT + '/api',
+  headers: {},
+});
+
+notificationApi.interceptors.request.use(
+  async (config: AxiosRequestConfig): Promise<any> => {
+    const token = JSON.parse(getLocalStorage('sessionStore') as string)?.state?.token || null;
+    if (!token) return config;
+    return { ...config, headers: { Authorization: `Bearer ${token}` } };
+  },
+  (error: AxiosError): Promise<AxiosError> => {
+    return Promise.reject(error);
+  },
+);

@@ -1,11 +1,19 @@
+import { getUserDetailApi } from '@/apis/admin/user-management/user-management.api';
+import { getIdentitiesRESToUserManagementInfoDto } from '@/apis/admin/user-management/user-management.service';
+import ModalConfirmBlockOrUnBlock from '@/components/core/modal/ModalBlockConfirm';
+import ModalConfirmDelete from '@/components/core/modal/ModalConfirmDelete';
 import { ScreenMode } from '@/utils/enums/screen-mode.enum';
-import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { getFirstCharacters } from '@/utils/function/getFirstCharacter';
+import { getRandomColor } from '@/utils/function/getRandomColor';
+import { useQuery } from '@tanstack/react-query';
+import dayjs from 'dayjs';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import IconifyIcon from '../../../../components/core/Icon/IConCore';
 import ButtonContainer from '../../../../components/core/button/ButtonContainer';
 import { useScreenHook } from '../../../../hooks/useScreenHook';
 import { useScreenMode } from '../../../../store/responsive/screenMode';
-import { ADMIN_USER_MANAGEMENT } from '../../../../utils/constants/router.constant';
+import { ADMIN_USER_MANAGEMENT, AUTH_CHANGE_PASSWORD } from '../../../../utils/constants/router.constant';
 import StorageStatistic from '../../shared/StorageStatistic';
 import UserDetailAction from './components/action/UserDetailAction';
 import FileFolderFilter from './components/file-folder-detail/FileFolderFilter';
@@ -16,12 +24,36 @@ const UserManagementDetail = () => {
   const flex = !useScreenHook(1024);
   const divRef = useRef<HTMLDivElement>(null);
   const [divHeight, setDivHeight] = useState<number | null>(null);
+  const location = useLocation();
+  const userId = useMemo(() => {
+    const lastSlashIndex = location.pathname.lastIndexOf('/');
+    return location.pathname.substring(lastSlashIndex + 1);
+  }, [location]);
   useEffect(() => {
     if (divRef.current) {
       const height = divRef.current.clientHeight;
       setDivHeight(height);
     }
   }, []);
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [blockModal, setBlockModal] = useState(false);
+  const [isBlocked, setBlocked] = useState(false);
+  const {
+    data: identityData,
+    error: identityError,
+    isFetching: identityFetching,
+  } = useQuery({
+    queryKey: ['user-details', userId],
+    queryFn: () => getUserDetailApi({ identity_id: userId }),
+    staleTime: 0,
+  });
+  const userDto = useMemo(() => {
+    if (identityData) {
+      return getIdentitiesRESToUserManagementInfoDto(identityData);
+    }
+    return null;
+  }, [identityData]);
+  console.log('trieu ');
   return (
     <div className='h-full w-full overflow-y-auto overflow-x-hidden'>
       <div
@@ -35,40 +67,96 @@ const UserManagementDetail = () => {
           Users
         </p>
         <IconifyIcon fontSize={15} icon={'material-symbols:arrow-forward-ios-rounded'} />
-        <p className='statement-upper-medium'>Hung Phi Vo</p>
+        <p className='statement-upper-medium'>{userDto && userDto.name}</p>
       </div>
       <div className={`${flex ? ' flex h-full w-full items-start space-x-2' : ' overflow-y-auto'} pt-[28px]`}>
         {/* <!--section --> */}
         <div className={`${flex ? 'w-1/4' : ''} border-2`}>
           <div className='flex  flex-col space-y-2 border-b-2 p-4'>
-            <p className='flex bg-[#eee] p-1 dark:bg-blue-200 dark:text-black'>ADMIN</p>
+            <p className='flex bg-[#eee] p-1 dark:bg-blue-200 dark:text-black'>
+              {identityData && identityData.is_admin ? 'ADMIN' : 'USER'}
+            </p>
             <div className='flex items-start  space-x-3'>
-              <img
-                className='w-[70px] rounded-full object-contain'
-                src='https://student.hcmus.edu.vn/_next/image?url=%2Fhcmus-logo.png&w=384&q=75'
-              />
+              {identityData && identityData.avatar_url && (
+                <img className='w-[70px] rounded-full object-contain' src={identityData.avatar_url} />
+              )}
+              {identityData && !identityData.avatar_url && (
+                <div
+                  className=' flex h-[70px] w-[70px] items-center justify-center rounded-full  border-2 border-red-300 '
+                  style={{ backgroundColor: getRandomColor() }}>
+                  <p className='statement-bold truncate'>{getFirstCharacters(userDto.name)}</p>
+                </div>
+              )}
               <div className='space-y-2 '>
-                <p className='statement-upper-medium h3'> Hung Vo Phi</p>
-                <p className='statement-medium'>admin@phihungtf.me</p>
+                <p className='statement-upper-medium h3'> {identityData && userDto.name}</p>
+                <p className='statement-medium'>{identityData && identityData.email}</p>
                 <ul>
-                  <li className='text-green-500'>Active</li>
-                  <li>Last sign in 27 minutes ago</li>
-                  <li>Created: Mar 7,2024</li>
+                  <li className={`${identityData && identityData.blocked_at != null ? 'text-red-600' : 'text-green-500'}`}>
+                    Active
+                  </li>
+                  <li>
+                    Last signed at:{' '}
+                    {(identityData && identityData.last_sign_in_at && dayjs(identityData.last_sign_in_at).format('YYYY-MM-DD')) ||
+                      ''}{' '}
+                  </li>
+                  <li>
+                    Created at:{' '}
+                    {(identityData && identityData.created_at && dayjs(identityData.created_at).format('YYYY-MM-DD HH:mm:ss')) ||
+                      ''}{' '}
+                  </li>
                 </ul>
               </div>
             </div>
           </div>
           <div className='flex flex-col border-b-2 p-3'>
-            <UserDetailAction title='RESET PASSWORD' />
-            <UserDetailAction title='UPDATE USER' />
-            <UserDetailAction title='BLOCK USER' />
-            <UserDetailAction title='DELETE USER' />
+            <UserDetailAction
+              title='CHANGE PASSWORD'
+              onClick={() => {
+                navigate(AUTH_CHANGE_PASSWORD);
+              }}
+            />
+            <UserDetailAction title='UPDATE USER' onClick={() => {}} />
+            <UserDetailAction
+              title='BLOCK USER'
+              onClick={() => {
+                setBlockModal(true);
+              }}
+            />
+            {blockModal && (
+              <ModalConfirmBlockOrUnBlock
+                isBlock={isBlocked}
+                user={userDto}
+                message={isBlocked ? 'Do you want to block this user' : 'Do you want to un-block this user'}
+                title={isBlocked ? 'Block' : 'Un-block' + userDto.name}
+                isOpen={true}
+                handleConfirm={function (data?: boolean): void {
+                  setBlockModal(false);
+                }}
+              />
+            )}
+            <UserDetailAction
+              title='DELETE USER'
+              onClick={() => {
+                setDeleteModal(true);
+              }}
+            />
+            {deleteModal && (
+              <ModalConfirmDelete
+                user={userDto}
+                message={'Do you want to delete this User'}
+                title={'Delete ' + userDto.name}
+                isOpen={true}
+                handleConfirm={function (data?: boolean): void {
+                  setDeleteModal(false);
+                }}
+              />
+            )}
           </div>
         </div>
         {/* <!--section --> */}
         <div className={`flex  h-full flex-col space-y-4 overflow-y-auto pb-2 ${flex ? 'w-3/4 ' : ''}`}>
           <div className='w-full space-y-2 border p-3  shadow-md'>
-            <p className='statement-medium h4 '>Personal storage space of Hung Vo Phi</p>
+            <p className='statement-medium h4 '>{`Personal storage space of ${identityData && userDto.name}`} </p>
             <StorageStatistic />
           </div>
           <div className='z-0 w-full space-y-2 p-3 shadow-md'>

@@ -1,7 +1,7 @@
 import { FilerButton } from './FilerButton';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { Breadcrumb } from 'antd';
-import { FilerDataType, FilerTable } from './FilterTable';
+import { FilerDataDto, FilerTable } from './FilterTable';
 import { SetStateAction, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useUploadMutation } from '@/hooks/drive.hooks';
@@ -10,7 +10,7 @@ import { LinearProgress } from '@mui/material';
 import { Path } from '@/store/my-drive/myDrive.store';
 
 type FilerProps = {
-  data: FilerDataType[];
+  data: FilerDataDto[];
   setPath?: React.Dispatch<React.SetStateAction<Path>>;
   path: Path;
 };

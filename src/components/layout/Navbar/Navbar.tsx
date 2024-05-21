@@ -31,13 +31,13 @@ const Navbar = ({ isShrink, phoneMode }: NavbarProps) => {
 
   return (
     <div className={`z-20 ${phoneMode ? '!important pl-0' : ''} nav-bar  ${isShrink ? 'nav-bar-shrink' : ''}`}>
-      <header className='relative flex  w-screen items-center justify-between py-2  pl-3 pr-5'>
+      <header className='relative  flex w-screen items-center justify-between  py-1 pl-3 pr-5'>
         {phoneMode && (
           <div className='flex h-full duration-500'>
             <ButtonIcon icon={'radix-icons:hamburger-menu'} size={'1.4rem'} />
           </div>
         )}
-         <Search />
+        <Search />
         <div onClick={() => {}} className='ml-3  flex h-full  cursor-pointer items-center overflow-hidden rounded-full '>
           {!phoneMode && <Configuration />}
           {identity && identity.avatar_url && (

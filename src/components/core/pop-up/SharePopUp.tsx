@@ -17,7 +17,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
 import ButtonSuccess from '../button/ButtonSuccess';
 import CustomDropdown from '../drop-down/CustomDropdown';
@@ -27,6 +27,7 @@ import ListPeople from '../list-people/ListPeople';
 import PopUp from './PopUp';
 import { toastSuccess } from '@/utils/toast-options/toast-options';
 import { toast } from 'react-toastify';
+import { getEntryMetadata } from '@/apis/drive/drive.api';
 
 type SharePopUpProps = {
   open: boolean;
@@ -104,6 +105,14 @@ const SharePopUp: React.FC<SharePopUpProps> = ({ open, handleClose, title, fileI
       setApiData(mappedData);
     },
   });
+    const { data, error, isFetching } = useQuery({
+      queryKey: ['get-file-metadata-for-share', fileId],
+      queryFn: () => getEntryMetadata({ id: fileId }),
+      staleTime: 0,
+      select: (data) => {
+        return data.data;
+      },
+    });
 
   useEffect(() => {
     sharedUsersMutation.mutateAsync({ query: searchValue });

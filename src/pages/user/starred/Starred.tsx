@@ -51,14 +51,7 @@ const Starred = () => {
           </div>
           {arrSelected.length === 0 ? (
             <div className='mb-1.5 flex w-full items-center gap-3'>
-              <SharingPageFilter
-                setModifiedFilterItem={setModifiedFilterItem}
-                setPeopleFilterItem={setPeopleFilterItem}
-                setTypeFilterItem={setTypeFilterItem}
-                modifiedFilter={modifiedFilterItem}
-                peopleFilter={peopleFilterItem}
-                typeFilter={typeFilterItem}
-              />
+              <SharingPageFilter />
               {(typeFilterItem || peopleFilterItem || modifiedFilterItem) && (
                 <div className='flex h-7 items-center rounded-full px-[12px] py-[1px] hover:bg-[#ededed]'>
                   <div
@@ -89,11 +82,11 @@ const Starred = () => {
       bodyLeft={<StarredView entries={data} isLoading={isLoading} />}
       sidePanel={
         <SidePanel
-          id={arrSelected.length === 0 ? rootId : arrSelected.length === 1 ? arrSelected[0] : ''}
+          id={arrSelected.length === 0 ? rootId : arrSelected.length === 1 ? arrSelected[0].id : ''}
           title={
             arrSelected.length === 0
               ? 'Starred'
-              : data.find((item) => item.id === arrSelected[arrSelected.length - 1])?.title || ''
+              : data.find((item) => item.id === arrSelected[arrSelected.length - 1].id)?.title || ''
           }
         />
       }

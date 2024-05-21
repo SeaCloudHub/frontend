@@ -1,93 +1,49 @@
-import dayjs from 'dayjs';
-import IconifyIcon from '../../../components/core/Icon/IConCore';
-import ButtonContainer from '../../../components/core/button/ButtonContainer';
-import ButtonOutline from '../../../components/core/button/ButtonOutline';
-import DatePickerCore from '../../../components/core/input/DatePickerCore';
-import TextInputAdornment from '../../../components/core/input/TextInputAdornment';
-import TextInputCore from '../../../components/core/input/TextInputCore';
-const UserManagementFilter = () => {
+import IconifyIcon from '@/components/core/Icon/IConCore';
+import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import { AiOutlineSearch } from 'react-icons/ai';
+type UserManagementFilterProps = {
+  handleSearch(keyword: string);
+};
+const UserManagementFilter = ({ handleSearch }: UserManagementFilterProps) => {
+  const [keyword, setKeyword] = useState('');
+  const handleInputChange = (e) => {
+    setKeyword(e.target.value);
+  };
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch(keyword);
+    }
+  };
+
   return (
-    <div className='rounded-xl  p-2 dark:bg-black'>
-      <div className='flex flex-wrap items-center '>
-        <div className='mx-2 '>
-          <TextInputCore
-            onChange={(data?: string) => {
-              console.log(data);
-            }}
-            label='User ID'
-            labelDirection='vertical'
-            placeholder='User ID'
-          />
+    <div className='relative flex max-w-2xl  '>
+      <span
+        onClick={() => {
+          handleSearch(keyword);
+        }}
+        className=' absolute left-2 top-[5px] z-20 h-9 w-9 cursor-pointer rounded-full p-2 hover:bg-gray-100 dark:text-white hover:dark:bg-slate-800'>
+        <AiOutlineSearch className='stroke-textC h-full w-full' stroke='2' />
+      </span>
+      {keyword.length > 0 && (
+        <div
+          onClick={() => {
+            setKeyword('');
+          }}
+          className='absolute right-2  top-[5px] flex h-9 w-9 items-center justify-center   rounded-full hover:bg-gray-100 dark:text-white hover:dark:bg-slate-800'>
+          <IconifyIcon icon={'carbon:close-outline'} />
         </div>
-        <div className='mx-2 '>
-          <TextInputCore
-            onChange={(data?: string) => {
-              console.log(data);
-            }}
-            label='Name'
-            labelDirection='vertical'
-            placeholder='Name'
-          />
-        </div>
-        <div className='mx-2 mt-4 '>
-          <div>
-            <div className='flex items-center space-x-2'>
-              <div className='flex items-center '>
-                <DatePickerCore
-                  label='From'
-                  onChange={(newDate) => {
-                    console.log(newDate);
-                  }}
-                  defaultValue={dayjs()}
-                />
-              </div>
-              <div className='flex items-center '>
-                <DatePickerCore
-                  label='To'
-                  onChange={(newDate) => {
-                    console.log(newDate);
-                  }}
-                  defaultValue={dayjs()}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className='mx-2 mt-3 flex-grow'>
-          <div title='Memory used'>
-            <div className='flex items-center'>
-              <TextInputAdornment
-                onChange={(data?: string) => {
-                  console.log(data);
-                }}
-                labelDirection='horizontal'
-                sx={{ maxWidth: 100 }}
-                placeholder='0'
-                label='From'
-                type='number'
-                adornmentValue='%'
-                position={'end'}
-              />
-              <TextInputAdornment
-                onChange={(data?: string) => {
-                  console.log(data);
-                }}
-                labelDirection='horizontal'
-                sx={{ maxWidth: 100 }}
-                placeholder='100'
-                label='To'
-                type='number'
-                adornmentValue='%'
-                position={'end'}
-              />
-            </div>
-          </div>
-        </div>
-        <div className=' space-x-2'>
-          <ButtonContainer background='#02342' icon={<IconifyIcon icon={'bi:search'} />} title='Search' />
-          <ButtonOutline color='blue' title='Clear' />
-        </div>
-      </div>
+      )}
+      <input
+        value={keyword}
+        onKeyDown={handleKeyDown}
+        onChange={handleInputChange}
+        type='text'
+        placeholder='Search user by name or email'
+        className=' w-full  rounded-full bg-search-bg  px-2 py-[0.7rem] indent-11
+          focus:bg-white  focus:shadow-md focus:outline-none
+          dark:bg-search-bg-dark dark:text-icons-color-dark dark:placeholder-blue-50 dark:placeholder-opacity-60'
+      />
     </div>
   );
 };

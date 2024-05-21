@@ -17,6 +17,8 @@ import SharePopUp from '../../pop-up/SharePopUp';
 import Viewer from './Viewer';
 
 type FileViewerContainerProps = {
+  canDelete?: boolean;
+  canShare?: boolean;
   open: boolean;
   fileInfo: LocalEntry;
   isCloseOutside?: boolean;
@@ -55,7 +57,7 @@ const totalFileViewerActions: Record<string, MenuItemCoreProps> = {
     title: 'Download',
   },
 };
-const FileViewerContainer: React.FC<FileViewerContainerProps> = ({ isCloseOutside, closeOutside, open, fileInfo }) => {
+const FileViewerContainer: React.FC<FileViewerContainerProps> = ({ isCloseOutside, closeOutside, open, fileInfo,canDelete,canShare }) => {
   const [fileViewerActions, setFileViewerActions] = useState<MenuItemCoreProps[]>([]);
   const [fileIcon, setFileIcon] = useState<React.ReactNode | null>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -130,14 +132,17 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({ isCloseOutsid
           }}>
           <div className='z-10 flex w-1/3  flex-grow  items-center space-x-3'>
             {/* <ButtonCore type='contained' title='Edit' icon={<IconifyIcon icon='basil:edit-outline' />} /> */}
-            <div
-              className='flex  cursor-pointer  items-center space-x-2 rounded-md p-2 hover:bg-gray-100'
-              onClick={() => {
-                setOpenShare(true);
-              }}>
-              <IconifyIcon icon='codicon:share' fontSize={13} />
-              <p className='text-sm'>Share</p>
-            </div>
+            {
+            canShare &&
+              <div
+                className='flex  cursor-pointer  items-center space-x-2 rounded-md p-2 hover:bg-gray-100'
+                onClick={() => {
+                  setOpenShare(true);
+                }}>
+                <IconifyIcon icon='codicon:share' fontSize={13} />
+                <p className='text-sm'>Share</p>
+              </div>
+            }
             <div className='hidden cursor-pointer items-center space-x-2 rounded-md p-2 hover:bg-gray-100 xs:flex'>
               <IconifyIcon icon='ic:sharp-link' fontSize={16} />
               <p className='text-sm'>Copy link</p>
