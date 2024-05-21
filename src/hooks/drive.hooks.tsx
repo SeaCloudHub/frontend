@@ -642,7 +642,7 @@ export const transformEntries = (entries: EntryRESP[]): LocalEntry[] => {
   });
 };
 
-const transformSuggestedEntries = (entries: SuggestedEntriesRESP[]): SuggestedEntry[] => {
+ const transformSuggestedEntries = (entries: SuggestedEntriesRESP[]): SuggestedEntry[] => {
   // console.log('[transformSuggestedEntries] entries', entries);
   return entries.map((entry) => {
     if (entry.is_dir) {
@@ -685,4 +685,43 @@ const transformSuggestedEntries = (entries: SuggestedEntriesRESP[]): SuggestedEn
       log: { ...entry.log, ...{ created_at: new Date(entry.log.created_at) } } as LogEntry,
     } as SuggestedEntry;
   });
+};
+
+
+export const transformEntry = (entry: EntryRESP): LocalEntry => {
+    if (entry.is_dir) {
+      return {
+        isDir: true,
+        title: entry.name,
+        icon: <Icon icon='ic:baseline-folder' className='h-full w-full object-cover text-yellow-600' />,
+        preview: <Icon icon='ic:baseline-folder' className='h-32 w-32 text-yellow-600' />,
+        id: entry.id,
+        owner: entry.owner,
+        fileType: entry.type,
+        lastModified: new Date(entry.updated_at),
+        size: entry.size,
+      } as LocalEntry;
+    }
+    const ext = entry.name.split('.').pop() || 'any';
+    const icon = fileTypeIcons[ext] || fileTypeIcons.any;
+    return {
+      isDir: false,
+      title: entry.name,
+      icon: icon,
+      preview: entry.thumbnail ? (
+        <img
+          src={`${import.meta.env.VITE_BACKEND_API}${entry.thumbnail}`}
+          alt={entry.name}
+          className='h-full w-full object-cover'
+          draggable={false}
+        />
+      ) : (
+        <div className='h-16 w-16'>{icon}</div>
+      ),
+      id: entry.id,
+      owner: entry.owner,
+      lastModified: new Date(entry.updated_at),
+      fileType: entry.type,
+      size: entry.size,
+    } as LocalEntry;
 };

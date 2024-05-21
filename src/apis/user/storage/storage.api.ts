@@ -4,7 +4,7 @@ import { objectToFormData } from '@/utils/parser/http.parser';
 import { BaseResponse } from '@/utils/types/api-base-response.type';
 import { CreateFolderREQ, UploadFileREQ } from './request/create-storage.request';
 import { CreateFolderRES } from './response/create-storage.response';
-import { ShareFileREQ, SharedUsersSearchREQ } from './request/share.request';
+import { AccessFileREQ, ShareFileREQ, SharedUsersSearchREQ } from './request/share.request';
 import { SharedUsersSearchRESP } from './response/share.response';
 
 export const createFolderApi = async (body: CreateFolderREQ) => {
@@ -31,5 +31,10 @@ export const sharedUserApi = async (param: SharedUsersSearchREQ) => {
 
 export const shareFileAPi = async (body: ShareFileREQ) => {
   const res = await api.post<BaseResponse<SharedUsersSearchRESP>>('/files/share', body);
+  return res.data;
+};
+
+export const accessFileAPi = async (body: AccessFileREQ) => {
+  const res = await api.get<BaseResponse<void>>(`/files/${body.id}/access`);
   return res.data;
 };

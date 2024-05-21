@@ -41,6 +41,7 @@ const ModalConfirmBlockOrUnBlock = ({
       toast.success(isBlock ? 'User was blocked successfully' : 'Un-block user successfully', toastSuccess());
     },
   });
+  console.log('isBlock',isBlock);
   return (
     <ModalCore open={isOpen} width={'40%'} closeOutside={handleConfirm}>
       <div className='mb-3 flex w-full flex-col space-y-3 p-2'>

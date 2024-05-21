@@ -1,4 +1,6 @@
 import { paginationRESPToDto } from '@/apis/shared/shared.service';
+import ButtonContainer from '@/components/core/button/ButtonContainer';
+import MenuCore from '@/components/core/menu/MenuCore';
 import ModalConfirmBlockOrUnBlock from '@/components/core/modal/ModalBlockConfirm';
 import ModalConfirmDelete from '@/components/core/modal/ModalConfirmDelete';
 import { BlockOutlined, DeleteOutline, SettingsApplications, ViewDayOutlined } from '@mui/icons-material';
@@ -26,6 +28,7 @@ import { ApiGenericError } from '../../../utils/types/api-generic-error.type';
 import { PagingState, initialPagingState } from '../../../utils/types/paging-stage.type';
 import './UserManagement.css';
 import UserManagementFilter from './UserManagementFilter';
+import IconifyIcon from '@/components/core/Icon/IConCore';
 
 type ModalState = {
   isOpen: boolean;
@@ -262,9 +265,8 @@ const UserManagement = () => {
         <div className='mx-5'>
           <UserManagementFilter handleSearch={onSearchClick} />
         </div>
-        <div
-          className={`${shrinkMode ? 'shrink-mode' : 'none-shrink-mode'} ' '  fixed top-[4.3rem] mx-5  flex w-full bg-white dark:bg-transparent`}>
-          {/* <MenuCore menuItems={addUserOptions}>
+        <div className={`${shrinkMode ? 'shrink-mode' : 'none-shrink-mode'} ' '  mx-5  flex w-full bg-white dark:bg-transparent`}>
+          <MenuCore menuItems={addUserOptions}>
             <ButtonContainer
               color='063768'
               tooltip={'Add user'}
@@ -272,7 +274,7 @@ const UserManagement = () => {
               background='#063768'
               icon={<IconifyIcon icon={'gg:add'} />}
             />
-          </MenuCore> */}
+          </MenuCore>
           <ModalChooseFile
             fileIcon='grommet-icons:document-csv'
             fileType='.csv'
@@ -336,6 +338,7 @@ const UserManagement = () => {
           title={block ? 'Block' : 'Un-block' + user.name}
           isOpen={true}
           user={user}
+          isBlock={block}
           handleConfirm={(data: boolean) => {
             if (data) {
               queryClient.invalidateQueries({ queryKey: ['get-identities', paging.size, paging.page] });

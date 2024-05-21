@@ -7,3 +7,7 @@ export type ShareFileREQ = {
   id: string;
   role: 'viewer' | 'editor';
 };
+
+export type AccessFileREQ = {
+  id: string;
+};

@@ -53,7 +53,7 @@ const UserManagementDetail = () => {
     }
     return null;
   }, [identityData]);
-  console.log('trieu ')
+  console.log('trieu ');
   return (
     <div className='h-full w-full overflow-y-auto overflow-x-hidden'>
       <div
@@ -73,7 +73,9 @@ const UserManagementDetail = () => {
         {/* <!--section --> */}
         <div className={`${flex ? 'w-1/4' : ''} border-2`}>
           <div className='flex  flex-col space-y-2 border-b-2 p-4'>
-            <p className='flex bg-[#eee] p-1 dark:bg-blue-200 dark:text-black'>ADMIN</p>
+            <p className='flex bg-[#eee] p-1 dark:bg-blue-200 dark:text-black'>
+              {identityData && identityData.is_admin ? 'ADMIN' : 'USER'}
+            </p>
             <div className='flex items-start  space-x-3'>
               {identityData && identityData.avatar_url && (
                 <img className='w-[70px] rounded-full object-contain' src={identityData.avatar_url} />
@@ -126,7 +128,7 @@ const UserManagementDetail = () => {
                 user={userDto}
                 message={isBlocked ? 'Do you want to block this user' : 'Do you want to un-block this user'}
                 title={isBlocked ? 'Block' : 'Un-block' + userDto.name}
-                isOpen={false}
+                isOpen={true}
                 handleConfirm={function (data?: boolean): void {
                   setBlockModal(false);
                 }}
@@ -138,12 +140,12 @@ const UserManagementDetail = () => {
                 setDeleteModal(true);
               }}
             />
-            {true && userDto && (
+            {deleteModal && (
               <ModalConfirmDelete
                 user={userDto}
                 message={'Do you want to delete this User'}
-                title={'Delete' + ''}
-                isOpen={false}
+                title={'Delete ' + userDto.name}
+                isOpen={true}
                 handleConfirm={function (data?: boolean): void {
                   setDeleteModal(false);
                 }}
