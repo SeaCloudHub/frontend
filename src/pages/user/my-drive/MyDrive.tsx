@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import DriveLayout from '@/components/layout/DriveLayout';
-import { Path, useEntries, useLimit, useSelected, useTypeFilter, useViewMode } from '@/store/my-drive/myDrive.store';
+import { Path, useEntries, useLimit, useSelected, useFilter, useViewMode } from '@/store/my-drive/myDrive.store';
 import MyDriveHeader from './header/MyDriveHeader';
 import { DriveGridView } from './content/DriveGridView';
 import { DriveListView } from './content/DriveListView';
@@ -26,18 +26,15 @@ export type LocalEntry = {
 
 const MyDrive = () => {
   const [{ sort, order }, setSort] = useState<{ sort: string; order: string }>({ sort: 'Name', order: 'desc' });
-  const { typeFilter } = useTypeFilter();
-  const [peopleFilter, setPeopleFilter] = useState<string>('');
-  const [modifiedFilter, setModifiedFilter] = useState<string>('');
+  const { typeFilter, modifiedFilter } = useFilter();
   const [copiedIds, setCopiedIds] = useState<string[]>([]);
 
-  const { listEntries } = useEntries();
   const { arrSelected } = useSelected();
   const viewMode = useViewMode((state) => state.viewMode);
   const copyMutation = useCopyMutation();
   const { limit, increaseLimit } = useLimit();
 
-  const { parents, data, isLoading } = useListEntries(limit, typeFilter);
+  const { parents, data, isLoading } = useListEntries();
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -67,12 +64,8 @@ const MyDrive = () => {
       headerLeft={
         <MyDriveHeader
           path={parents}
-          modifiedFilter={modifiedFilter}
-          peopleFilter={peopleFilter}
           sort={sort}
           order={order}
-          setModifiedFilter={setModifiedFilter}
-          setPeopleFilter={setPeopleFilter}
           setSort={setSort}
         />
       }

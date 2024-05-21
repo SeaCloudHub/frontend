@@ -1,7 +1,7 @@
 import DriveLayout from '@/components/layout/DriveLayout';
 import React, { useState } from 'react';
 import MyDriveHeader from '../my-drive/header/MyDriveHeader';
-import { useEntries, useLimit, useSelected, useViewMode } from '@/store/my-drive/myDrive.store';
+import { useEntries, useLimit, useSelected, useFilter, useViewMode } from '@/store/my-drive/myDrive.store';
 import InfoButton from '../my-drive/header/InfoButton';
 import PriorityFilter from '../priority/priority-filter/PriorityFilter';
 import MultipleDriveHeader from '../my-drive/header/MultipleDriveHeader';
@@ -12,12 +12,18 @@ import SidePanel from '../my-drive/side-panel/SidePanel';
 import { LocalEntry, useQueries, useSearchEntries, useSearchEntriesPage } from '@/hooks/drive.hooks';
 import { DriveListView } from '../my-drive/content/DriveListView';
 import { useSubmit } from 'react-router-dom';
+import DriveFilter from '../my-drive/header/DriveFilter';
+import { Tooltip } from '@mui/material';
 
 const SearchPage = () => {
   const { rootId } = useStorageStore();
   const { viewMode, setViewMode } = useViewMode();
   const { arrSelected } = useSelected();
   const [isFileMode, setIsFileMode] = useState<boolean>(true);
+  const [peopleFilter, setPeopleFilter] = useState<string>('');
+
+  const { typeFilter, setTypeFilter } = useFilter();
+  const [modifiedFilter, setModifiedFilter] = useState<string>('');
   const { increaseLimit, limit } = useLimit();
 
   const {data, isLoading, refetch} = useSearchEntriesPage();
@@ -39,8 +45,24 @@ const SearchPage = () => {
             <InfoButton />
           </div>
           {arrSelected.length === 0 ? (
-            <PriorityFilter viewMode={viewMode} setViewMode={setViewMode} />
-          ) : (
+            <div className='flex gap-2 ml-5'>
+            <DriveFilter />
+            {(typeFilter || peopleFilter || modifiedFilter) && (
+              <div className='flex h-7 items-center rounded-full px-[12px] py-[1px] hover:bg-slate-200 active:brightness-90 dark:hover:bg-slate-500'>
+                <Tooltip title='Clear filters'>
+                  <div
+                    onClick={() => {
+                      setTypeFilter('');
+                      setPeopleFilter('');
+                      setModifiedFilter('');
+                    }}
+                    className='line-clamp-1 cursor-pointer text-sm font-medium'>
+                    Clear filters
+                  </div>
+                </Tooltip>
+              </div>
+            )}
+          </div>) : (
             <div className='overflow-x-auto px-4'>
               <MultipleDriveHeader parent='Priority' dir={{ id: rootId, name: 'Priority' }} />
             </div>

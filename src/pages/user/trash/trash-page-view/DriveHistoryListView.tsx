@@ -2,22 +2,21 @@ import { LocalEntry, useRestoreEntriesMutation } from '@/hooks/drive.hooks';
 import React, { useEffect, useRef } from 'react';
 import { DataRow } from '../../my-drive/content/DataRow';
 import Sort from '../../my-drive/content/Sort';
-import { LocalEntryToTimeEntry } from './DriveHistoryGridView';
+import { LocalEntryToTimeEntry, TimeEntry } from './DriveHistoryGridView';
 import { useSelected } from '@/store/my-drive/myDrive.store';
 
 type DriveHistoryListViewProps = {
   sort: string;
   order: string;
   setSort: ({ sort, order }: { sort: string; order: string }) => void;
-  entries: LocalEntry[];
+  entries: TimeEntry[];
   dir: { id: string; name: string };
 };
 
 const DriveHistoryListView: React.FC<DriveHistoryListViewProps> = ({ sort, order, setSort, entries, dir }) => {
-  const timeEntries = LocalEntryToTimeEntry(entries);
   const { setArrSelected, arrSelected } = useSelected();
 
-  timeEntries.sort((a, b) => {
+  entries.sort((a, b) => {
     if (sort === 'Name') {
       return a.time.localeCompare(b.time) * (order === 'asc' ? 1 : -1);
     } else {
@@ -54,12 +53,20 @@ const DriveHistoryListView: React.FC<DriveHistoryListViewProps> = ({ sort, order
           <div className='truncate font-medium max-[1000px]:hidden'>Last Modified</div>
           <div className='font-medium max-[1160px]:hidden'>File Size</div>
         </div>
-        {timeEntries.map((entry, index) => {
+        {entries.map((entry, index) => {
           return (
             <div key={index}>
               <div className='border-b py-1 font-medium'>{entry.time}</div>
               {entry.entries.map((item, index) => {
-                return <DataRow key={index} dir={dir} {...item} parent='trash' isSelected={arrSelected?.includes(item.id)} />;
+                return (
+                  <DataRow
+                    key={index}
+                    dir={dir}
+                    {...item}
+                    parent='trash'
+                    isSelected={arrSelected?.some((e)=>e.id === item.id)}
+                  />
+                )
               })}
             </div>
           );

@@ -27,9 +27,6 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
   curDir,
   parent,
 }) => {
-  // console.log('DriveGridView', entries);
-  // const files = entries.filter((entry) => !entry.isDir);
-  // const folders = entries.filter((entry) => entry.isDir);
   const showEntry = fileShow
     ? entries.filter((entry) => !entry.isDir)
     : folderShow
@@ -46,7 +43,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
     const folderCardRefs = document.querySelectorAll('.folder-card');
 
     const handleClickOutside = (event) => {
-      if (event.ctrlKey) return;
+      if (event.ctrlKey || event.metaKey) return;
       const clickedOutsideCards =
         Array.from(fileCardRefs).every((card) => !card.contains(event.target)) &&
         Array.from(folderCardRefs).every((card) => !card.contains(event.target));
@@ -75,27 +72,6 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
       ) : (
         <div ref={driveGridViewRef} className='pl-5 pr-3 pt-4'>
           <div className='relative flex min-w-40 flex-col space-y-2 overflow-hidden overflow-y-auto'>
-            {/* {folders.length !== 0 && (
-              <div className={!folderShow ? 'visible' : 'hidden'}>
-                <div className='pb-4 pt-2 text-sm font-medium'> Folders</div>
-                <div className={`grid grid-cols-1 gap-4 ${drawerOpen ? 'xl:grid-cols-3' : 'sm:grid-cols-2 xl:grid-cols-5'}`}>
-                  {folders.map((folder, index) => (
-                    <div key={index} className='w-auto'>
-                      <FolderCard
-                        title={folder.title}
-                        icon={folder.icon}
-                        id={folder.id}
-                        onDoubleClick={() => navigate(`${DRIVE_MY_DRIVE}/dir/${folder.id}`)}
-                        onClick={() => setArrSelected([folder.id])}
-                        isSelected={arrSelected?.includes(folder.id)}
-                        parent={parent}
-                        dir={curDir}
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )} */}
             {entries.length !== 0 && (
               <>
                 <div className='pb-4 text-sm font-medium'>{folderShow ? 'Folders' : fileShow ? 'Files' : 'All'}</div>

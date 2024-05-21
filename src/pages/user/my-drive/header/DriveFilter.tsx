@@ -2,90 +2,32 @@ import React from 'react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import FilterChip from '@/components/core/filter-chip/FilterChip';
 import { TypeEntry } from '@/apis/drive/drive.request';
-import { useTypeFilter } from '@/store/my-drive/myDrive.store';
+import { useFilter } from '@/store/my-drive/myDrive.store';
+import { modifiedFilterItems } from '@/utils/constants/modified-filter.constant';
+import { typeFilterItems } from '@/utils/constants/type-filter.constant';
 
-const typeFilterItems = [
-  {
-    label: 'Folder',
-    icon: <Icon icon='mdi:folder' />,
-  },
-  {
-    label: 'Text',
-    icon: <Icon icon='mdi:file-document' />,
-  },
-  {
-    label: 'Document',
-    icon: <Icon icon='simple-icons:googledocs' />,
-  },
-  {
-    label: 'Pdf',
-    icon: <Icon icon='mdi:file-pdf' />,
-  },
-  {
-    label: 'Json',
-    icon: <Icon icon='mdi:json' />,
-  },
-  {
-    label: 'Image',
-    icon: <Icon icon='mdi:image' />,
-  },
-  {
-    label: 'Video',
-    icon: <Icon icon='mdi:video' />,
-  },
-  {
-    label: 'Audio',
-    icon: <Icon icon='mdi:audio' />,
-  },
-  {
-    label: 'Archive',
-    icon: <Icon icon='mdi:archive' />,
-  },
-];
-
-const peopleFilterItems = [
-  { label: 'Documents', icon: <Icon icon='simple-icons:googledocs' /> },
-  { label: 'Spreadsheets', icon: <Icon icon='mdi:google-spreadsheet' /> },
-];
-
-const modifiedFilterItems = [
-  { label: 'Today', icon: null },
-  { label: 'Last 7 days', icon: null },
-  { label: 'This year (2024)', icon: null },
-];
-
-type FilterChipProps = {
-  // typeFilter: TypeEntry;
-  // peopleFilter: string;
-  modifiedFilter: string;
-  // setTypeFilter: (value: TypeEntry) => void;
-  // setPeopleFilter: (value: string) => void;
-  setModifiedFilter: (value: string) => void;
+type DriveFilterProps = {
+  page?: 'my-drive' | 'shared' | 'trash' | 'starred' | 'memory';
 };
 
-const DriveFilter: React.FC<FilterChipProps> = ({
-  // setTypeFilter,
-  // setPeopleFilter,
-  setModifiedFilter,
-  // typeFilter,
-  // peopleFilter,
-  modifiedFilter,
-}) => {
-  const { typeFilter, setTypeFilter } = useTypeFilter();
+const DriveFilter: React.FC<DriveFilterProps> = ({page}) => {
+  const { typeFilter, setTypeFilter, modifiedFilter, setModifiedFilter } = useFilter();
+  const typeFilterOptions = (page === 'memory') ?
+    typeFilterItems.filter((item) => item.label !== 'Folder') :
+    typeFilterItems;
   return (
     <div className='flex gap-2'>
       <FilterChip
         name='Type'
-        options={typeFilterItems}
+        options={typeFilterOptions.map((item) => ({ label: item.label, icon: <Icon icon={item.icon} /> }))}
         action={(value) => setTypeFilter(value as TypeEntry)}
-        value={typeFilter}
+        value={typeFilterItems.find((item) => item.label === typeFilter)?.label || ''}
       />
-      {/* <FilterChip name='People' options={peopleFilterItems} action={(value) => setPeopleFilter(value)} value={peopleFilter} /> */}
       <FilterChip
         name='Modified'
         options={modifiedFilterItems}
         action={(value) => setModifiedFilter(value)}
-        value={modifiedFilter}
+        value={modifiedFilterItems.find((item) => item?.value === modifiedFilter)?.label || ''}
       />
     </div>
   );

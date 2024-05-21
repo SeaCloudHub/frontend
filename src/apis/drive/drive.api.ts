@@ -10,6 +10,8 @@ import {
   SuggestedEntriesREQ,
   StarEntriesREQ,
   SearchREQ,
+  DownloadMultipleEntriesREQ,
+  GetListFileSizesREQ,
 } from './drive.request';
 import { BaseResponse } from '@/utils/types/api-base-response.type';
 import { MoveToTrashREQ } from './request/move-to-trash.request';
@@ -136,7 +138,29 @@ export const getStorage = async () => {
   const res = await api.get<BaseResponse<GetStorageRESP>>(`/files/storage`);
   return res.data;
 };
+
 export const searchEntriesApi = async (params: SearchREQ) => {
-  const res = await api.get<BaseResponse<SearchRESP>>(`/files/search`, { params });
+  console.log('[searchEntriesApi] params', params);
+  const res = await api.get<BaseResponse<SearchRESP>>(`/files/search`, {
+    params: { ...params, type: params.type?.toLowerCase() },
+  });
+  console.log('[searchEntriesApi] res', res);
+  return res.data;
+};
+
+export const downloadMultipleEntries = async (params: DownloadMultipleEntriesREQ) => {
+  const res = await api.post(`/files/download`, { params }, { responseType: 'blob' });
+  const url = window.URL.createObjectURL(new Blob([res.data]));
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute('download', 'multiple-files.zip');
+  document.body.appendChild(link);
+  link.click();
+};
+
+export const getListFileSizes = async (params: GetListFileSizesREQ) => {
+  const res = await api.get<BaseResponse<ListEntriesRESP>>(`/files/sizes`, {
+    params: { ...params, type: params.type?.toLowerCase() },
+  });
   return res.data;
 };

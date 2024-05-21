@@ -1,6 +1,7 @@
 import { TypeEntry } from '@/apis/drive/drive.request';
 import { EntryRESP, SuggestedEntriesRESP } from '@/apis/drive/drive.response';
 import { LocalEntry, SuggestedEntry } from '@/hooks/drive.hooks';
+import { TimeEntry } from '@/pages/user/trash/trash-page-view/DriveHistoryGridView';
 import React, { Dispatch, LegacyRef, MutableRefObject, SetStateAction, useRef } from 'react';
 import { create } from 'zustand';
 
@@ -50,9 +51,11 @@ export type ListEntriesState = {
   listEntries: LocalEntry[];
   listSuggestedEntries: SuggestedEntry[];
   searchEntries: SuggestedEntry[];
+  trashEntries: TimeEntry[];
   setListEntries: Dispatch<SetStateAction<LocalEntry[]>>;
   setListSuggestedEntries: Dispatch<SetStateAction<SuggestedEntry[]>>;
   setSearchEntries: Dispatch<SetStateAction<SuggestedEntry[]>>;
+  setTrashEntries: Dispatch<SetStateAction<TimeEntry[]>>;
   resetEntries: () => void;
 };
 
@@ -60,10 +63,12 @@ export const useEntries = create<ListEntriesState>((set) => ({
   listEntries: [],
   listSuggestedEntries: [],
   searchEntries: [],
+  trashEntries: [],
   setListEntries: (listEntries: SuggestedEntry[]) => set({ listEntries }),
   setListSuggestedEntries: (listSuggestedEntries: SuggestedEntry[]) => set({ listSuggestedEntries }),
   setSearchEntries: (searchEntries: SuggestedEntry[]) => set({ searchEntries }),
-  resetEntries: () => set({ listEntries: [], listSuggestedEntries: [], searchEntries: [] }),
+  setTrashEntries: (trashEntries: TimeEntry[]) => set({ trashEntries }),
+  resetEntries: () => set({ listEntries: [], listSuggestedEntries: [], searchEntries: [], trashEntries: [] }),
 }));
 
 export type LimitState = {
@@ -78,14 +83,20 @@ export const useLimit = create<LimitState>((set) => ({
   resetLimit: () => set({ limit: 15 }),
 }));
 
-export type TypeFilterState = {
+export type FilterState = {
   typeFilter: TypeEntry;
+  modifiedFilter: string;
   setTypeFilter: (type: TypeEntry) => void;
+  setModifiedFilter: (modified: string) => void;
+  resetFilter: () => void;
 };
 
-export const useTypeFilter = create<TypeFilterState>((set) => ({
+export const useFilter = create<FilterState>((set) => ({
   typeFilter: '',
+  modifiedFilter: '',
   setTypeFilter: (type: TypeEntry) => set({ typeFilter: type }),
+  setModifiedFilter: (modified: string) => set({ modifiedFilter: modified }),
+  resetFilter: () => set({ typeFilter: '', modifiedFilter: '' }),
 }));
 
 export type EntryModeState = {

@@ -76,6 +76,7 @@ const LoginEmail = () => {
             </div>
             <div className='flex min-w-80 flex-col gap-5'>
               <TextFieldCore
+                theme='light'
                 label='Email'
                 name='email'
                 value={formik.values.email}

@@ -166,7 +166,7 @@ const DataRowPriorityView: React.FC<SuggestedEntry & DataRowPriorityViewProps> =
   ].filter((e) => e.length != 0);
 
   const handleCtrlClick = () => {
-    setArrSelected(arrSelected.includes(id) ? arrSelected.filter((item) => item !== id) : [...arrSelected, id]);
+    setArrSelected(arrSelected.some(e=>e.id === id) ? arrSelected.filter((item) => item.id !== id) : [...arrSelected, { id, isDir}]);
   };
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -174,7 +174,7 @@ const DataRowPriorityView: React.FC<SuggestedEntry & DataRowPriorityViewProps> =
       handleCtrlClick();
       return;
     }
-    setArrSelected([id]);
+    setArrSelected([{ id, isDir }]);
   };
 
   const handleDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {

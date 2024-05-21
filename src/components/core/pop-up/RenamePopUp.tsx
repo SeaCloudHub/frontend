@@ -41,43 +41,8 @@ const RenamePopUp: React.FC<RenamePopUpProps> = ({ open, handleClose, name, id }
         </DialogTitle>
         <DialogContent>
           <TextFieldCore
-            sx={{
-              '.dark &': {
-                backgroundColor: '#031525',
-                color: 'white',
-                '& .MuiInputLabel-root': {
-                  color: 'white',
-                },
-                '& .MuiOutlinedInput-root.Mui-disabled .MuiOutlinedInput-notchedOutline': {
-                  borderColor: '#64748B',
-                },
-                '& .MuiFormHelperText-root': {
-                  color: '#64748B',
-                },
-                '& .MuiOutlinedInput-notchedOutline': {
-                  borderColor: 'rgba(255, 255, 255, 0.25)',
-                },
-                '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
-                  borderColor: 'rgba(255, 255, 255, 0.5)',
-                },
-                '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                  borderColor: 'rgba(255, 255, 255, 0.5)',
-                },
-                '& .MuiFormLabel-root': {
-                  color: 'white',
-                },
-                '& .MuiInputBase-input': {
-                  color: 'white',
-                },
-                '& .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline': {
-                  borderColor: '#F87171',
-                },
-                '& .MuiFormHelperText-root.Mui-error': {
-                  color: '#F87171',
-                },
-              },
-            }}
             name='name'
+            isFocused={true}
             value={formik.values.name}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}

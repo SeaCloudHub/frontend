@@ -8,7 +8,7 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import { MenuItem, classNames } from '../drop-down/Dropdown';
 import { downloadFile } from '@/apis/drive/drive.api';
 import { useCopyMutation, useRestoreEntriesMutation, useStarEntryMutation, useUnstarEntryMutation } from '@/hooks/drive.hooks';
-import { useDrawer, useEntries, useLimit, useSelected } from '@/store/my-drive/myDrive.store';
+import { useDrawer, useEntries, useFilter, useLimit, useSelected } from '@/store/my-drive/myDrive.store';
 import CustomDropdown from '../drop-down/CustomDropdown';
 import FileViewerContainer from '../file-viewers/file-viewer-container/FileViewerContainer';
 import DeletePopUp from '../pop-up/DeletePopUp';
@@ -55,6 +55,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
   const starEntryMutation = useStarEntryMutation();
   const unstarEntryMutation = useUnstarEntryMutation();
   const { setArrSelected, arrSelected } = useSelected();
+  const {resetFilter} = useFilter();
 
   const menuItems: MenuItem[][] = [
     [
@@ -172,7 +173,6 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
   ];
 
   const handleCtrlClick = () => {
-    // setArrSelected(arrSelected.includes(id) ? arrSelected.filter((item) => item !== id) : [...arrSelected, id]);
     setArrSelected(
       arrSelected.includes({id, isDir}) ?
       arrSelected.filter((item) => item.id !== id) :
@@ -181,7 +181,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
   };
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.ctrlKey) {
+    if (e.ctrlKey || e.metaKey) {
       handleCtrlClick();
       return;
     }
@@ -193,6 +193,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
     else {
       setArrSelected([]);
       setListEntries([]);
+      resetFilter();
       resetLimit();
       navigate(`${DRIVE_MY_DRIVE}/dir/${id}`);
     }

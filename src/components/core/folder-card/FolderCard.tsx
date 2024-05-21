@@ -119,7 +119,7 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick,
   };
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.ctrlKey) {
+    if (e.ctrlKey || e.metaKey) {
       handleCtrlClick();
       return;
     }

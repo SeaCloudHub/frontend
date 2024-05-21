@@ -33,7 +33,6 @@ const Priority = () => {
   };
 
   return (
-    // <div>
     <DriveLayout
       headerLeft={
         <div className='flex flex-col overflow-hidden'>
@@ -68,16 +67,15 @@ const Priority = () => {
       }
       sidePanel={
         <SidePanel
-          id={arrSelected.length === 0 ? rootId : arrSelected.length === 1 ? arrSelected[0] : ''}
+          id={arrSelected.length === 0 ? rootId : arrSelected.length === 1 ? arrSelected[0].id : ''}
           title={
             arrSelected.length === 0
               ? 'Priority'
-              : data.find((item) => item.id === arrSelected[arrSelected.length - 1])?.title || ''
+              : data.find((item) => item.id === arrSelected[arrSelected.length - 1].id)?.title || ''
           }
         />
       }
     />
-    // </div>
   );
 };
 

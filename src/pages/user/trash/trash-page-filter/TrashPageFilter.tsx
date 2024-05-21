@@ -1,34 +1,25 @@
+import { TypeEntry } from '@/apis/drive/drive.request';
 import FilterChip from '@/components/core/filter-chip/FilterChip';
+import { useFilter } from '@/store/my-drive/myDrive.store';
 import { modifiedFilterItems } from '@/utils/constants/modified-filter.constant';
 import { typeFilterItems } from '@/utils/constants/type-filter.constant';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import React from 'react';
 
-type TrashPageFilterProps = {
-  typeFilter: string;
-  setTypeFilterItem: (value: string) => void;
-  modifiedFilter: string;
-  setModifiedFilterItem: (value: string) => void;
-};
-
-const TrashPageFilter: React.FC<TrashPageFilterProps> = ({
-  setTypeFilterItem,
-  setModifiedFilterItem,
-  typeFilter,
-  modifiedFilter,
-}) => {
+const TrashPageFilter = () => {
+  const { modifiedFilter, setModifiedFilter, setTypeFilter, typeFilter } = useFilter();
   return (
     <div className='flex gap-2'>
       <FilterChip
         name='Type'
         options={typeFilterItems.map((item) => ({ label: item.label, icon: <Icon icon={item.icon} /> }))}
-        action={(value) => setTypeFilterItem(value)}
+        action={(value) => setTypeFilter(value as TypeEntry)}
         value={typeFilter}
       />
       <FilterChip
         name='Modified'
         options={modifiedFilterItems}
-        action={(value) => setModifiedFilterItem(value)}
+        action={(value) => setModifiedFilter(value as TypeEntry)}
         value={modifiedFilter}
       />
     </div>

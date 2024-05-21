@@ -1,4 +1,4 @@
-import { Path, useSelected, useTypeFilter } from '@/store/my-drive/myDrive.store';
+import { Path, useSelected, useFilter } from '@/store/my-drive/myDrive.store';
 import Sort from '../content/Sort';
 import DriveFilter from './DriveFilter';
 import DriveViewMode from './DriveViewMode';
@@ -11,12 +11,6 @@ import { TypeEntry } from '@/apis/drive/drive.request';
 
 type MyDriveHeaderProps = {
   path: Path;
-  // typeFilter: TypeEntry;
-  peopleFilter: string;
-  modifiedFilter: string;
-  // setTypeFilter?: (type: TypeEntry) => void;
-  setPeopleFilter: (people: string) => void;
-  setModifiedFilter: (modified: string) => void;
   sort: string;
   order: string;
   setSort: ({ sort, order }: { sort: string; order: string }) => void;
@@ -24,18 +18,12 @@ type MyDriveHeaderProps = {
 
 const MyDriveHeader: React.FC<MyDriveHeaderProps> = ({
   path,
-  modifiedFilter,
-  setModifiedFilter,
-  peopleFilter,
-  setPeopleFilter,
-  // typeFilter,
-  // setTypeFilter,
   sort,
   order,
   setSort,
 }) => {
   const { arrSelected } = useSelected();
-  const { setTypeFilter, typeFilter } = useTypeFilter();
+  const { setTypeFilter, typeFilter, modifiedFilter, setModifiedFilter } = useFilter();
 
   return (
     <div className='flex flex-col overflow-hidden'>
@@ -58,21 +46,13 @@ const MyDriveHeader: React.FC<MyDriveHeaderProps> = ({
         <div className='w-full pl-5'>
           <div className='flex items-center justify-between overflow-x-auto'>
             <div className='flex gap-3'>
-              <DriveFilter
-                setModifiedFilter={setModifiedFilter}
-                // setPeopleFilter={setPeopleFilter}
-                // setTypeFilter={setTypeFilter}
-                modifiedFilter={modifiedFilter}
-                // peopleFilter={peopleFilter}
-                // typeFilter={typeFilter}
-              />
-              {(typeFilter || peopleFilter || modifiedFilter) && (
+              <DriveFilter />
+              {(typeFilter || modifiedFilter) && (
                 <div className='flex h-7 items-center rounded-full px-[12px] py-[1px] hover:bg-slate-200 active:brightness-90 dark:hover:bg-slate-500'>
                   <Tooltip title='Clear filters'>
                     <div
                       onClick={() => {
                         setTypeFilter('');
-                        setPeopleFilter('');
                         setModifiedFilter('');
                       }}
                       className='line-clamp-1 cursor-pointer text-sm font-medium'>

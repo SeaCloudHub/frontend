@@ -1,26 +1,36 @@
-import { LocalEntry } from '@/hooks/drive.hooks';
+import { LocalEntry, useMemory } from '@/hooks/drive.hooks';
 import { DataRow } from './DataRow';
 import Sort from './Sort';
 import Statistics from './Statistics';
+import { useState } from 'react';
+import { LinearProgress } from '@mui/material';
 
-type MemoryViewProps = {
+export type Sort = {
   sort: string;
-  order: string;
-  setSort: ({ sort, order }: { sort: string; order: string }) => void;
-  entries: LocalEntry[];
+  order: 'asc' | 'desc';
 };
 
-export const MemoryView: React.FC<MemoryViewProps> = ({ order, setSort, sort, entries }) => {
+type MemoryViewProps = {
+  entries: LocalEntry[];
+  isLoading: boolean;
+  order: 'asc' | 'desc';
+  sort: string;
+  setSort: ({ sort, order }: { sort: string; order: 'asc' | 'desc' }) => void;
+};
+
+
+export const MemoryView: React.FC<MemoryViewProps> = ({entries, isLoading, order, setSort, sort}) => {
   const files = entries.filter((entry) => !entry.isDir);
   const folders = entries.filter((entry) => entry.isDir);
 
   return (
+    isLoading && entries.length < 15 ? <LinearProgress className='translate-y-1' /> :
     <div className='pl-5 pr-3'>
       <div className='relative flex flex-col'>
         <Statistics />
-        {/* <div className='sticky top-0 flex h-12 items-center space-x-3 border-b border-b-[#dadce0] pt-2 dark:bg-dashboard-dark'>
-          <div className='shrink grow basis-[304px] text-sm font-medium'>Files using Drive storage</div>
-          <div className='shrink-0 grow-0 basis-[140px] text-sm font-medium max-[1450px]:basis-[140px] max-[1050px]:hidden'>
+        <div className='sticky grid grid-cols-7 top-0 h-12 items-center space-x-3 border-b border-b-[#dadce0] pt-2 dark:bg-dashboard-dark bg-white'>
+          <div className='text-sm font-medium col-span-6 max-[500px]:col-span-7'>Files using Drive storage</div>
+          <div className='max-[500px]:hidden'>
             <Sort sort={sort} order={order} setSort={setSort} />
           </div>
         </div>
@@ -29,7 +39,7 @@ export const MemoryView: React.FC<MemoryViewProps> = ({ order, setSort, sort, en
         })}
         {files.map((entry, index) => {
           return <DataRow key={index} {...entry} />;
-        })} */}
+        })}
       </div>
     </div>
   );

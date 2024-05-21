@@ -1,5 +1,6 @@
 import { api } from '../../helpers/http/config.http';
 import { BaseResponse } from '../../utils/types/api-base-response.type';
+import { IdentityFileRESP } from '../admin/user-management/response/get-identities.response';
 import { AuthSignInREQ } from './request/auth-sign-in.request';
 import { AuthChangePasswordREQ } from './request/change-password.request';
 import { AuthCheckEmailRESP, AuthSignInRESP } from './response/auth.sign-in.response';
@@ -22,3 +23,8 @@ export const signOutApi = async () => {
   const res = await api.post<BaseResponse<void>>('/users/logout');
   return res.data;
 };
+
+export const getProfileApi = async () => {
+  const res = await api.get<BaseResponse<IdentityFileRESP>>('/users/me');
+  return res.data;
+}

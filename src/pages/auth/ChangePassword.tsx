@@ -89,6 +89,7 @@ const ChangePassword = () => {
               Current password
             </Typography>
             <TextFieldCore
+              theme='light'
               name={'old_password'}
               disabled={changPasswordMutation.isPending}
               type='password'
@@ -108,6 +109,7 @@ const ChangePassword = () => {
               New password
             </Typography>
             <TextFieldCore
+              theme='light'
               name={'new_password'}
               disabled={changPasswordMutation.isPending}
               type='password'
@@ -127,6 +129,7 @@ const ChangePassword = () => {
               Confirm password
             </Typography>
             <TextFieldCore
+              theme='light'
               type='password'
               name={'confirmPassword'}
               disabled={changPasswordMutation.isPending}

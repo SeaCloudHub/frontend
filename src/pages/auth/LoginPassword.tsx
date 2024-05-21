@@ -114,6 +114,7 @@ const LoginPassword = () => {
             <div className='flex min-w-56 flex-col gap-5'>
               <div className='input w-full'>
                 <TextFieldCore
+                  theme='light'
                   label='Enter your password'
                   name='password'
                   type={isShowPassword ? 'text' : 'password'}

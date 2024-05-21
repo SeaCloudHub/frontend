@@ -47,3 +47,11 @@ export type StarEntriesREQ = {
 };
 
 export type SearchREQ = Partial<ListEntriesREQ> & { query: string };
+
+export type DownloadMultipleEntriesREQ = {
+  ids: string[];
+  parent_id: string;
+};
+
+export type GetListFileSizesREQ = Pick<Partial<ListEntriesREQ>, 'after' | 'cursor' | 'limit' | 'type'> & { asc?: boolean };
+

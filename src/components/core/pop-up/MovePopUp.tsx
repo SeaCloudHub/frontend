@@ -27,8 +27,10 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
   const [curFolder, setCurFolder] = React.useState<{ id: string; name: string }>({ id: rootId, name: 'priority' });
   const [locateTo, setLocateTo] = React.useState<string>();
   const { theme } = useTheme();
+  const { setArrSelected } = useSelected();
   const { data, isLoading, parents } = useListFolders(volumn, curFolder?.id);
   console.log('[MovePopUp] volumn', volumn);
+  console.log(location, locateTo, curFolder);
 
   return (
     <PopUp open={open} handleClose={handleClose}>
@@ -103,13 +105,13 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
                   data.map((item, index) => (
                     <div
                       key={index}
-                      className={`flex items-center gap-3 px-3 py-1 ${locateTo === item.id ? 'bg-[#c2e7ff] dark:bg-blue-900' : ''} ${arrSelected.some(e=>e.id===item.id) ? 'brightness-75' : 'cursor-pointer hover:bg-gray-100 dark:hover:bg-blue-950'}`}
+                      className={`flex items-center gap-3 px-3 py-1 ${locateTo === item.id ? 'bg-[#c2e7ff] dark:bg-blue-900' : ''} ${arrSelected.some(e=> e.id === item.id) ? 'brightness-75' : 'cursor-pointer hover:bg-gray-100 dark:hover:bg-blue-950'}`}
                       onClick={() => {
-                        if (arrSelected.some(e=>e.id===item.id)) return;
+                        if (arrSelected.some(e=>e.id === item.id)) return;
                         setLocateTo(item.id);
                       }}
                       onDoubleClick={() => {
-                        if (arrSelected.some(e=>e.id===item.id)) return;
+                        if (arrSelected.some(e=>e.id === item.id)) return;
                         setCurFolder({ id: item.id, name: item.title });
                       }}>
                       <Icon icon='mdi:folder-multiple-outline' className='text-xl' />
@@ -173,6 +175,7 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
               if (arrSelected.length === 0) return;
               if (curFolder.id === location.id) return;
               moveEntriesMutation.mutate({ id: location.id, source_ids: arrSelected.map((e) => e.id), to: curFolder.id });
+              setArrSelected([]);
               handleClose();
             }}
             variant='contained'

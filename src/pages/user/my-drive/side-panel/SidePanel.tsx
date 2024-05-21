@@ -10,7 +10,6 @@ import React, { useEffect } from 'react';
 import { DriveLocationButton } from './DriveLocationButton';
 import SidePanelAction from './SidePanelAction';
 import { useStorageStore } from '@/store/storage/storage.store';
-import { useQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { ApiGenericError } from '@/utils/types/api-generic-error.type';
 import { toast } from 'react-toastify';

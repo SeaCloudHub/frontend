@@ -1,27 +1,8 @@
 import React from 'react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import FilterChip from '@/components/core/filter-chip/FilterChip';
-
-const typeFilterItems = [
-  {
-    label: 'Documents',
-    icon: <Icon icon='simple-icons:googledocs' />,
-  },
-  {
-    label: 'Spreadsheets',
-    icon: <Icon icon='mdi:google-spreadsheet' />,
-  },
-  {
-    label: 'Presentations',
-    icon: <Icon icon='mdi:file-presentation-box' />,
-  },
-];
-
-const modifiedFilterItems = [
-  { label: 'Today', icon: null },
-  { label: 'Last 7 days', icon: null },
-  { label: 'This year (2024)', icon: null },
-];
+import { typeFilterItems } from '@/utils/constants/type-filter.constant';
+import { modifiedFilterItems } from '@/utils/constants/modified-filter.constant';
 
 type MemoryFilterProps = {
   typeFilter: string;
@@ -33,12 +14,17 @@ type MemoryFilterProps = {
 const MemoryFilter: React.FC<MemoryFilterProps> = ({ setTypeFilter, setModifiedFilter, typeFilter, modifiedFilter }) => {
   return (
     <div className='flex gap-2'>
-      <FilterChip name='Type' options={typeFilterItems} action={(value) => setTypeFilter(value)} value={typeFilter} />
+      <FilterChip
+        name='Type'
+        options={typeFilterItems.map((item) => ({ label: item.label, icon: <Icon icon={item.icon} /> }))}
+        action={(value) => setTypeFilter(value)}
+        value={typeFilterItems.find((item) => item.label === typeFilter)?.label || ''}
+      />
       <FilterChip
         name='Modified'
         options={modifiedFilterItems}
         action={(value) => setModifiedFilter(value)}
-        value={modifiedFilter}
+        value={modifiedFilterItems.find((item) => item?.value === modifiedFilter)?.label || ''}
       />
     </div>
   );

@@ -67,12 +67,12 @@ export const DriveListView: React.FC<DriveListViewProps> = ({ order, setSort, so
                 onDoubleClick={() => {
                   navigate(`${DRIVE_MY_DRIVE}/dir/${entry.id}`);
                 }}
-                isSelected={arrSelected?.includes(entry.id)}
+                isSelected={arrSelected?.some((e) => e.id === entry.id)}
                 parent={parent}
               />
             ))}
             {files.map((entry, index) => (
-              <DataRow key={index} {...entry} dir={curDir} isSelected={arrSelected?.includes(entry.id)} parent={parent} />
+              <DataRow key={index} {...entry} dir={curDir} isSelected={arrSelected?.some((e) => e.id === entry.id)} parent={parent} />
             ))}
           </div>
         </div>

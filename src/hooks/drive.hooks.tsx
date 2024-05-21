@@ -9,7 +9,9 @@ import {
   getListEntriesPageStarred,
   getListEntriesSuggested,
   getListEntriesTrash,
+  getListFileSizes,
   getSharedEntries,
+  getStorage,
   moveEntries,
   moveToTrash,
   renameEntry,
@@ -37,7 +39,8 @@ import {
 } from '@/apis/drive/drive.response';
 import { MoveToTrashREQ } from '@/apis/drive/request/move-to-trash.request';
 import { downloadFileApi, uploadFilesApi } from '@/apis/user/storage/storage.api';
-import { Path, useDrawer, useEntries, useIsFileMode, useLimit } from '@/store/my-drive/myDrive.store';
+import { LocalEntryToTimeEntry } from '@/pages/user/trash/trash-page-view/DriveHistoryGridView';
+import { Path, useDrawer, useEntries, useIsFileMode, useLimit, useFilter } from '@/store/my-drive/myDrive.store';
 import { useProgressIndicator } from '@/store/storage/progressIndicator.store';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { fileTypeIcons } from '@/utils/constants/file-icons.constant';
@@ -51,10 +54,12 @@ import React, { useEffect } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-export const useListEntries = (limit: number, type: TypeEntry) => {
+export const useListEntries = () => {
   const { dirId } = useParams();
   const { rootId } = useStorageStore();
-  // console.log('[useListEntries] limit', limit);
+  const { typeFilter, modifiedFilter } = useFilter();
+  const { limit } = useLimit();
+
   const id = dirId || rootId;
   const { setListEntries, listEntries } = useEntries();
 
@@ -80,11 +85,12 @@ export const useListEntries = (limit: number, type: TypeEntry) => {
   }
 
   const { data, error, refetch, isLoading } = useQuery({
-    queryKey: ['mydrive-entries', id, limit, type],
+    queryKey: ['mydrive-entries', id, limit, typeFilter, modifiedFilter],
     queryFn: async () => {
-      const res = await getListEntries({ id, limit, type }).then((res) => res?.data);
-      // const entries = transformEntries(res?.entries || []);
-      // setListEntries(entries);
+      const res = await getListEntries({
+        ...{ id, limit, type: typeFilter },
+        ...(modifiedFilter ? { after: modifiedFilter } : {}),
+      }).then((res) => res?.data);
       return res?.entries || [];
     },
     staleTime: 1000,
@@ -94,8 +100,6 @@ export const useListEntries = (limit: number, type: TypeEntry) => {
   useEffect(() => {
     if (data) setListEntries(data);
   }, [data, setListEntries]);
-
-  // console.log('[useListEntries] data', data);
 
   if (isAxiosError<ApiGenericError>(error)) {
     toast.error(error.response?.data.message, toastError());
@@ -168,6 +172,7 @@ export const useSuggestedEntries = () => {
     queryKey: ['suggested-entries', limit, isFileMode ? 'File' : 'Folder'],
     queryFn: async () => {
       const res = await getListEntriesSuggested({ limit, dir: !isFileMode }).then((res) => res?.data);
+      console.log('[useSuggestedEntries] res', res);
       return res || [];
     },
     staleTime: 10 * 1000,
@@ -188,12 +193,16 @@ export const useSuggestedEntries = () => {
 export const useSearchEntries = (query: string, set?: boolean) => {
   const { limit } = useLimit();
   const { setListEntries, listEntries } = useEntries();
+  const { typeFilter, modifiedFilter } = useFilter();
 
   const { data, error, refetch, isLoading } = useQuery({
-    queryKey: ['search-entries', query, limit, set],
+    queryKey: ['search-entries', query, limit, set, typeFilter, modifiedFilter],
     queryFn: async () => {
       if (!query) return [];
-      const res = await searchEntriesApi({ query, limit }).then((res) => res?.data?.entries);
+      const res = await searchEntriesApi({
+        ...{ query, limit, type: typeFilter },
+        ...(modifiedFilter ? { after: modifiedFilter } : {}),
+      }).then((res) => res?.data?.entries);
       return res || [];
     },
     staleTime: 10 * 1000,
@@ -250,6 +259,7 @@ export const useSharedEntry = () => {
   const { dirId } = useParams();
   const { rootId } = useStorageStore();
   const id = dirId || rootId;
+  const {modifiedFilter, typeFilter} = useFilter();
 
   const { data: parents, error: parentsError } = useQuery({
     queryKey: ['entry-metadata', id],
@@ -275,7 +285,7 @@ export const useSharedEntry = () => {
   }
 
   const { data, error, refetch, isLoading } = useQuery({
-    queryKey: ['shared-entries', id],
+    queryKey: ['shared-entries', id, modifiedFilter, typeFilter],
     queryFn: async () => {
       return await getSharedEntries().then((res) => res?.data || []);
     },
@@ -294,21 +304,28 @@ export const useTrash = () => {
   const { dirId } = useParams();
   const { rootId } = useStorageStore();
   const id = dirId || rootId;
-  // console.log('[useTrash] id', id);
+  const {limit} = useLimit();
+  const {trashEntries, setTrashEntries} = useEntries();
+
   const { data, error, refetch, isLoading } = useQuery({
-    queryKey: ['Trash-entries', id],
+    queryKey: ['Trash-entries', id, limit],
     queryFn: async () => {
-      return await getListEntriesTrash().then((res) => res?.data?.entries || []);
+      const res = await getListEntriesTrash({ limit }).then((res) => res?.data?.entries || []);
+      return transformEntries(res);
     },
     staleTime: 10 * 1000,
-    select: transformEntries,
+    select: LocalEntryToTimeEntry,
   });
 
   if (isAxiosError<ApiGenericError>(error)) {
     toast.error(error.response?.data.message, toastError());
   }
 
-  return { data: data || [], refetch, isLoading };
+  useEffect(() => {
+    if(data) setTrashEntries(data);
+  }, [data, setTrashEntries]);
+
+  return { data: trashEntries, refetch, isLoading };
 };
 
 export const useCopyMutation = () => {
@@ -370,6 +387,7 @@ export const useMoveToTrashMutation = () => {
     },
   });
 };
+
 
 export const useDeleteMutation = () => {
   const queryClient = useQueryClient();
@@ -549,6 +567,61 @@ export const useUploadMutation = () => {
   });
 };
 
+export const useMemoryStatistics = () => {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['user-storage'],
+    queryFn: () => getStorage().then((res) => res?.data),
+    select: (data) => {
+      const types = [
+        { title: 'Text', value: data.text, color: '#2E02F2' },
+        { title: 'Document', value: data.document, color: '#33CC33' },
+        { title: 'PDF', value: data.pdf, color: '#F26B02' },
+        { title: 'Json', value: data.json, color: '#D30758' },
+        { title: 'Image', value: data.image, color: '#49369D' },
+        { title: 'Video', value: data.video, color: '#3B733B' },
+        { title: 'Audio', value: data.audio, color: '#73533B' },
+        { title: 'Archive', value: data.archive, color: '#B3735E' },
+        { title: 'Other', value: data.other, color: '#928B88' },
+      ];
+      types.sort((a, b) => b.value - a.value);
+      return { types, capacity: data.capacity };
+    },
+  });
+
+  if (isAxiosError<ApiGenericError>(error)) {
+    toast.error(error.response?.data.message, toastError());
+  }
+
+  return { data, isLoading };
+}
+
+export const useMemory = (asc: boolean) => {
+  const {limit} = useLimit();
+  const {typeFilter, modifiedFilter} = useFilter();
+  const {listEntries, setListEntries} = useEntries();
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['memory-entries', limit, typeFilter, modifiedFilter, asc],
+    queryFn: () => getListFileSizes({
+      limit,
+      asc,
+      type: typeFilter,
+      ...(modifiedFilter ? {after: modifiedFilter} : {}),
+    }).then((res) => res?.data?.entries || []),
+    select: transformEntries,
+  });
+
+  if (isAxiosError<ApiGenericError>(error)) {
+    toast.error(error.response?.data.message, toastError());
+  }
+
+  useEffect(() => {
+    if(data) setListEntries(data || []);
+  }, [data, setListEntries]);
+
+  return { data: listEntries, isLoading };
+}
+
 const transformMetadata = (data: EntryMetadataRES) => {
   data.parents?.sort((a, b) => a.path.localeCompare(b.path));
   if (data.file.is_dir && data.parents) {
@@ -655,7 +728,7 @@ const transformSuggestedEntries = (entries: SuggestedEntriesRESP[]): SuggestedEn
         lastModified: new Date(entry.updated_at),
         size: entry.size,
         parent: entry.parent,
-        // log: entry.log ? {...entry.log, ...{created_at: new Date(entry.log.created_at)}} : {created_at: new Date()},
+        log: entry.log ? {...entry.log, ...{created_at: new Date(entry.log.created_at)}} : {created_at: new Date()},
       } as SuggestedEntry;
     }
     const ext = entry.name.split('.').pop() || 'any';

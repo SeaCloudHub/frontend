@@ -1,7 +1,7 @@
 import { DRIVE_MY_DRIVE } from '@/utils/constants/router.constant';
 import { useLocation, useNavigate } from 'react-router-dom';
 import IconifyIcon from '../Icon/IConCore';
-import { useLimit, useSelected } from '@/store/my-drive/myDrive.store';
+import { useFilter, useLimit, useSelected } from '@/store/my-drive/myDrive.store';
 type SidebarItemProps = {
   icon: string;
   title: string;
@@ -14,11 +14,13 @@ const SidebarItem = ({ icon, title, link, shrink, tooltip }: SidebarItemProps) =
   const navigate = useNavigate();
   const { setArrSelected } = useSelected();
   const { resetLimit } = useLimit();
+  const { resetFilter } = useFilter();
 
   const onClick = () => {
     navigate(link);
     setArrSelected([]);
     resetLimit();
+    resetFilter();
   };
 
   const isMyDriveActive = () => {

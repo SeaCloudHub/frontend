@@ -4,6 +4,7 @@ import React, { Dispatch, SetStateAction, useEffect, useRef } from 'react';
 import Sort from '../../my-drive/content/Sort';
 import { FormatDateStrToDDMMYYYY } from '@/utils/function/formatDate.function';
 import { useDrawer, useSelected } from '@/store/my-drive/myDrive.store';
+import { LinearProgress } from '@mui/material';
 
 export type TimeEntry = {
   time: string;
@@ -14,8 +15,9 @@ type DriveHistoryViewProps = {
   sort?: string;
   order?: string;
   setSort?: ({ sort, order }: { sort: string; order: string }) => void;
-  entries: LocalEntry[];
+  entries: TimeEntry[];
   dir: { id: string; name: string };
+  isLoading?: boolean;
 };
 
 export const LocalEntryToTimeEntry = (entries: LocalEntry[]): TimeEntry[] => {
@@ -33,12 +35,9 @@ export const LocalEntryToTimeEntry = (entries: LocalEntry[]): TimeEntry[] => {
   return timeEntries;
 };
 
-const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({ sort, order, setSort, entries, dir }) => {
-  console.log(entries);
-  const timeEntries = LocalEntryToTimeEntry(entries);
+const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({ sort, order, setSort, entries, dir, isLoading }) => {
   const driveGridViewRef = useRef(null);
   const { drawerOpen } = useDrawer();
-
   const { setArrSelected, arrSelected } = useSelected();
 
   useEffect(() => {
@@ -59,12 +58,24 @@ const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({ sort, order, se
   }, [arrSelected, setArrSelected]);
 
   return (
+    isLoading && entries.map((item) => item.entries).flat().length < 15 ?
+    <LinearProgress className='translate-y-1' /> :
+    entries.length === 0 ?
+    <div className='flex h-96 items-center justify-center'>
+      <div className='text-center'>
+        <div className='text-3xl font-semibold'>Trash is empty</div>
+        <div className='line-clamp-2 text-gray-500'>
+          You can move files that you don't need to the trash. <br /> Files in the trash will be permanently deleted after
+          30 days.
+        </div>
+      </div>
+    </div> :
     <div className='mx-5 mt-2' ref={driveGridViewRef}>
       <div className='flex flex-col space-y-2'>
-        <div className='absolute right-4 top-3'>
+        <div className='absolute z-10 right-4 top-3'>
           <Sort sort={sort} order={order} setSort={setSort} />
         </div>
-        {timeEntries.length === 0 && (
+        {entries.length === 0 && (
           <div className='flex h-96 items-center justify-center'>
             <div className='text-center'>
               <div className='text-3xl font-semibold'>Trash is empty</div>
@@ -75,10 +86,10 @@ const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({ sort, order, se
             </div>
           </div>
         )}
-        {timeEntries.length &&
-          timeEntries.map((entry, index) => (
-            <div key={index}>
-              <div className='pb-4 pt-2 text-sm font-medium'>{entry.time}</div>
+        {entries.length &&
+          entries.map((entry, index) => (
+            <div key={index} className='relative'>
+              <div className='sticky top-0 pb-4 pt-2 text-sm font-medium bg-white dark:bg-dashboard-dark'>{entry.time}</div>
               {entry.entries.length !== 0 && (
                 <div className={`grid gap-4 ${drawerOpen ? 'xl:grid-cols-3' : 'sm:grid-cols-2 xl:grid-cols-5'}`}>
                   {entry.entries.map((file, index) => (
@@ -90,7 +101,7 @@ const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({ sort, order, se
                         id={file.id}
                         parent='trash'
                         fileType={file.fileType}
-                        isSelected={arrSelected.includes(file.id)}
+                        isSelected={arrSelected.some((e) => e.id === file.id)}
                         isDir={file.isDir}
                         dir={dir}
                       />
