@@ -63,7 +63,6 @@ const DashBoard = () => {
     staleTime: 0,
     select: (data) => data && data.logs.map((item, indext) => storageLogToDto(item)),
   });
-  console.log(logData);
   return (
     <div className='h-full w-full  space-y-2 overflow-y-auto overflow-x-hidden  lg:flex lg:space-y-0'>
       <div className='w-full overflow-y-auto lg:h-full  lg:w-3/4 '>

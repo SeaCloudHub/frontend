@@ -25,7 +25,7 @@ const Priority = () => {
   const { arrSelected } = useSelected();
   const { limit, increaseLimit } = useLimit();
   const { data, isLoading, refetch } = useSuggestedEntries();
-  console.log(data);
+  // console.log(data);
 
   const onScrollBottom = () => {
     if (data.length < limit) return;

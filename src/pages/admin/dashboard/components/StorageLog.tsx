@@ -15,6 +15,7 @@ const actionColors = {
   STAR: 'text-yellow-500',
   MOVE: 'text-purple-500',
   SHARE: 'text-blue-400',
+  UPDATE: 'text-orange-600',
 };
 const StorageLog = ({ logs, isFetching, moreClick }: StorageLogProps) => {
   const getActionColorClass = (action: string) => {
@@ -22,7 +23,7 @@ const StorageLog = ({ logs, isFetching, moreClick }: StorageLogProps) => {
   };
   return (
     <AccordionCore title='Storage Log'>
-      <div className='max-h-[400px] overflow-y-auto px-2 text-sm'>
+      <div className='max-h-[400px] overflow-y-auto  bg-content-bg px-2 text-sm dark:bg-content-bg-dark dark:text-content-bg'>
         {logs &&
           logs.map((log, index) => (
             <div className='flex space-x-2 truncate' key={index}>
@@ -37,7 +38,7 @@ const StorageLog = ({ logs, isFetching, moreClick }: StorageLogProps) => {
         onClick={() => {
           moreClick();
         }}
-        className='statement-bold cursor-pointer px-2 italic underline'>
+        className='  statement-bold cursor-pointer bg-content-bg px-2 text-sm italic underline dark:bg-content-bg-dark dark:text-content-bg'>
         See more
       </p>
     </AccordionCore>
