@@ -79,7 +79,7 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
       icon: 'mdi:link',
       label: 'Copy link',
       action: () => {
-        const links = arrSelected.map((e) => `${window.location.origin}/${e.isDir ? 'folder' : 'file'}/${e.id}`);
+        const links = arrSelected.map((e) => `${window.location.origin}/drive/${e.isDir ? 'folder' : 'file'}/${e.id}`);
         CopyToClipboard(links.join('; '));
       }
     },

@@ -84,3 +84,32 @@ export type SearchRESP = {
   entries: EntryRESP & { parent: ParentRES };
   cursor: string;
 };
+
+export type LogItem = {
+  action: string;
+  created_at: string;
+  file_id: string;
+  user: IdentityRESP;
+  user_id: string;
+};
+
+
+export type ActivityLogRESP = {
+  activities: LogItem[];
+  cursor: string;
+};
+
+
+export type DataSidePanelAction = {
+  id: string;
+  title: string;
+};
+
+export type LocalActivityLog = {
+  time: string;
+  data: {
+    action: string;
+    timeAction: Date;
+    actor: { name: string; avatar: string };
+  }[];
+}[];

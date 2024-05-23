@@ -7,8 +7,8 @@ import React, { useEffect, useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { MenuItem, classNames } from '../drop-down/Dropdown';
 import { downloadFile } from '@/apis/drive/drive.api';
-import { useCopyMutation, useRestoreEntriesMutation, useStarEntryMutation, useUnstarEntryMutation } from '@/hooks/drive.hooks';
-import { useDrawer, useEntries, useFilter, useLimit, useSelected } from '@/store/my-drive/myDrive.store';
+import { LocalEntry, useCopyMutation, useRestoreEntriesMutation, useStarEntryMutation, useUnstarEntryMutation } from '@/hooks/drive.hooks';
+import { useActivityLogStore, useCursor, useCursorActivity, useDrawer, useEntries, useFilter, useLimit, useSelected } from '@/store/my-drive/myDrive.store';
 import CustomDropdown from '../drop-down/CustomDropdown';
 import FileViewerContainer from '../file-viewers/file-viewer-container/FileViewerContainer';
 import DeletePopUp from '../pop-up/DeletePopUp';
@@ -19,6 +19,7 @@ import SharePopUp from '../pop-up/SharePopUp';
 import { DRIVE_MY_DRIVE } from '@/utils/constants/router.constant';
 import { useNavigate } from 'react-router-dom';
 import { useStorageStore } from '@/store/storage/storage.store';
+import { EntryRESP } from '@/apis/drive/drive.response';
 
 type FileCardProps = {
   title: string;
@@ -43,12 +44,14 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
   const [fileViewer, setFileViewer] = useState(false);
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
   const [type, setType] = useState<'move' | 'share' | 'rename' | 'move to trash' | null>(null);
-  const openDrawer = useDrawer((state) => state.openDrawer);
+  const {openDrawer, setTab} = useDrawer();
   const [result, setResult] = useState(false);
   const navigate = useNavigate();
-  const { resetLimit } = useLimit();
-  const { setListEntries } = useEntries();
-
+  // const { resetLimit } = useLimit();
+  const { resetCursorActivity } = useCursorActivity();
+  const { resetCursor } = useCursor();
+  const { setListEntries, listEntries } = useEntries();
+  const {setActivityLog} = useActivityLogStore();
   const copyMutation = useCopyMutation();
   // const renameMutation = useRenameMutation();
   const restoreMutation = useRestoreEntriesMutation();
@@ -97,7 +100,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
         icon: <Icon icon='material-symbols:link' />,
         action: () => {
           const domain = window.location.origin;
-          const link = `${domain}/${isDir?'folder':'file'}/${id}`
+          const link = `${domain}/drive/${isDir?'folder':'file'}/${id}`
           CopyToClipboard(link);
         },
       },
@@ -133,11 +136,19 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
         label: 'Detail',
         icon: <Icon icon='mdi:information-outline' />,
         action: () => {
-          console.log('[FileCard] detail ' + id);
+          console.log('[FileCard] Detail ' + id);
+          setTab('Details');
           openDrawer(id);
         },
       },
-      { label: 'Activity', icon: <Icon icon='mdi:graph-line-variant' />, action: () => {} },
+      {
+        label: 'Activity',
+        icon: <Icon icon='mdi:graph-line-variant' />,
+        action: () => {
+          setTab('Activity');
+          openDrawer(id);
+        }
+      },
       { label: 'Lock', icon: <Icon icon='mdi:lock-outline' />, action: () => {} },
     ],
     [
@@ -186,6 +197,9 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
       return;
     }
     setArrSelected([{ id, isDir}]);
+    if(arrSelected.find((item) => item.id === id)) return;
+    // setActivityLog([]);
+    resetCursorActivity();
   };
 
   const handleDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -193,8 +207,10 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
     else {
       setArrSelected([]);
       setListEntries([]);
+      // setActivityLog([]);
       resetFilter();
-      resetLimit();
+      resetCursor()
+      // resetCursorActivity();
       navigate(`${DRIVE_MY_DRIVE}/dir/${id}`);
     }
   };
@@ -260,7 +276,15 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
         {type === 'move' && (
           <MovePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} location={dir} />
         )}
-        {type === 'rename' && <RenamePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} name={title} id={id} />}
+        {type === 'rename' &&
+          <RenamePopUp
+            open={isPopUpOpen}
+            handleClose={() => setIsPopUpOpen(false)}
+            name={title}
+            id={id}
+            // setResult={setResult}
+          />
+        }
         {type === 'move to trash' && (
           <DeleteTempPopUp
             open={isPopUpOpen}

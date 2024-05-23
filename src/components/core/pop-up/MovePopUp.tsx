@@ -171,6 +171,7 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
             Cancel
           </Button>
           <ButtonSuccess
+            isInvisible={!locateTo}
             onClick={() => {
               if (arrSelected.length === 0) return;
               if (curFolder.id === location.id) return;

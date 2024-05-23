@@ -6,9 +6,10 @@ type ButtonSuccessProps = {
   type: 'submit' | 'button' | 'reset';
   children: React.ReactNode;
   variant?: 'contained' | 'outlined' | 'text';
+  isInvisible?: boolean;
 };
 
-const ButtonSuccess: React.FC<ButtonSuccessProps> = ({ children, type, onClick, variant }) => {
+const ButtonSuccess: React.FC<ButtonSuccessProps> = ({ children, type, onClick, variant, isInvisible }) => {
   return (
     <Button
       type='submit'
@@ -29,6 +30,9 @@ const ButtonSuccess: React.FC<ButtonSuccessProps> = ({ children, type, onClick, 
             backgroundColor: '#1E40AF',
           },
         },
+        // visibility: isInvisible ? 'hidden' : 'visible',
+        // none click effect
+        ...isInvisible ? { pointerEvents: 'none', opacity: 0.5 } : {},
       }}>
       {children}
     </Button>

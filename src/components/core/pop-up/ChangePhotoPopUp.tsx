@@ -3,30 +3,50 @@ import PopUp from './PopUp';
 import { Avatar, Button, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import {Close} from '@mui/icons-material';
 import {AddAPhoto, Done} from '@mui/icons-material';
+import { useUpDateAvatarMutation } from '@/hooks/auth.hooks';
+import { toast } from 'react-toastify';
 
 type ChangePhotoPopUpProps = {
   open: boolean;
   handleClose: () => void;
   setResult: React.Dispatch<React.SetStateAction<boolean>>;
+  name: {
+    first_name: string;
+    last_name: string;
+  };
 };
 
-const ChangePhotoPopUp: React.FC<ChangePhotoPopUpProps> = ({handleClose, open, setResult}) => {
+const ChangePhotoPopUp: React.FC<ChangePhotoPopUpProps> = ({handleClose, open, setResult, name}) => {
   const inputRef = React.useRef<HTMLInputElement>(null);
-  const [image, setImage] = React.useState<string>();
+  const [image, setImage] = React.useState<File>();
+
+  const uploadAvatar = useUpDateAvatarMutation();
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      setImage(reader.result as string);
-    };
-    reader.readAsDataURL(file);
+    setImage(file);
   };
+
+  const handleSubmit = () => {
+    if (!image) {
+      inputRef?.current?.click();
+      return;
+    }
+    uploadAvatar.mutate({ image, first_name: name.first_name, last_name: name.last_name }, {
+      onSuccess: () => {
+        setResult(true);
+        handleClose();
+      },
+    })
+  }
 
   return (
     <PopUp open={open} handleClose={handleClose}>
-      <div className='min-w-[400px] max-w-[450px] select-none'>
+      <form className='min-w-[400px] max-w-[450px] select-none' encType='multipart/form-data' onSubmit={(e) => {
+        e.preventDefault();
+        handleSubmit();
+      }}>
         <DialogTitle className='flex items-center'>
           <Close className='cursor-pointer absolute rounded-full left-4 transition-all hover:brightness-90 hover:bg-primaryContainer w-4 h-4 p-0.5 active:brightness-95' onClick={handleClose} />
           <div className='text-center w-full'>SeaCloudHub Account</div>
@@ -39,10 +59,11 @@ const ChangePhotoPopUp: React.FC<ChangePhotoPopUpProps> = ({handleClose, open, s
               inputRef.current?.click();
             }}
           >
-            <Avatar sx={{ width: 200, height: 200 }} src={image} />
+            <Avatar sx={{ width: 200, height: 200 }} src={image ? URL.createObjectURL(image) : ''} />
           </div>
           <input
             type='file'
+            name='image'
             accept={ 'image/png, image/jpeg, image/jpg' }
             className='w-full mt-5 hidden'
             ref={inputRef}
@@ -54,11 +75,12 @@ const ChangePhotoPopUp: React.FC<ChangePhotoPopUpProps> = ({handleClose, open, s
             root: 'flex justify-center pb-5'
           }}
         >
-          <Button variant='contained'
+          <Button
+            variant='contained'
+            {...uploadAvatar.isPending && {disabled: true}}
+            // {...image && {type: 'submit'}}
             color='primary'
-            onClick={(e)=>{
-              !image ?  inputRef.current?.click() : handleClose();
-            }}
+            onClick={handleSubmit}
             classes={{
               root: 'w-full rounded-full',
             }}
@@ -79,7 +101,7 @@ const ChangePhotoPopUp: React.FC<ChangePhotoPopUpProps> = ({handleClose, open, s
             }
           </Button>
         </DialogActions>
-      </div>
+      </form>
     </PopUp>
   );
 };

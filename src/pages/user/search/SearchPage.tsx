@@ -1,7 +1,7 @@
 import DriveLayout from '@/components/layout/DriveLayout';
 import React, { useState } from 'react';
 import MyDriveHeader from '../my-drive/header/MyDriveHeader';
-import { useEntries, useLimit, useSelected, useFilter, useViewMode } from '@/store/my-drive/myDrive.store';
+import { useEntries, useLimit, useSelected, useFilter, useViewMode, useCursor } from '@/store/my-drive/myDrive.store';
 import InfoButton from '../my-drive/header/InfoButton';
 import PriorityFilter from '../priority/priority-filter/PriorityFilter';
 import MultipleDriveHeader from '../my-drive/header/MultipleDriveHeader';
@@ -25,15 +25,22 @@ const SearchPage = () => {
   const { typeFilter, setTypeFilter } = useFilter();
   const [modifiedFilter, setModifiedFilter] = useState<string>('');
   const { increaseLimit, limit } = useLimit();
+  const { setCurrentCursor, nextCursor, currentCursor } = useCursor();
+  const [isScrolling, setIsScrolling] = useState(false);
 
   const {data, isLoading, refetch} = useSearchEntriesPage();
-  console.log('SearchPage', data);
-  console.log('SearchPage', isLoading);
-  console.log('SearchPage', limit);
+  // console.log('SearchPage', data);
+  // console.log('SearchPage', isLoading);
+  // console.log('SearchPage', limit);
 
   const onScollBottom = () => {
-    if (data.length < limit) return;
-    increaseLimit();
+    if(nextCursor && nextCursor !== currentCursor) {
+      setIsScrolling(true);
+      setTimeout(() => {
+        setIsScrolling(false);
+        setCurrentCursor(nextCursor);
+      }, 1000);
+    }
   };
 
   return (
@@ -72,9 +79,9 @@ const SearchPage = () => {
       onScrollBottom={onScollBottom}
       bodyLeft={
         viewMode === 'grid' ? (
-          <DriveGridView entries={data} isLoading={isLoading} />
+          <DriveGridView entries={data} isLoading={isLoading} isScrolling={isScrolling} />
         ) : (
-          <DriveListView entries={data} isLoading={isLoading} />
+          <DriveListView entries={data} isLoading={isLoading} isScrolling={isScrolling} />
         )
       }
       sidePanel={

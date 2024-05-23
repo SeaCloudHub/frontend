@@ -32,14 +32,6 @@ const PriorityView: React.FC<PriorityViewProps> = ({ entries, sort, order, setSo
       curDir={{ id: rootId, name: 'Priority' }}
     />
   ) : (
-    // <DriveListView
-    //   isLoading={isLoading}
-    //   order={order}
-    //   sort={sort}
-    //   setSort={setSort}
-    //   entries={localEntries}
-    //   curDir={{ id: rootId, name: 'Priority' }}
-    // />
     <PriorityListView
       entries={localEntries}
       isLoading={isLoading}

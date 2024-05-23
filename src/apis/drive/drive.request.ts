@@ -55,3 +55,4 @@ export type DownloadMultipleEntriesREQ = {
 
 export type GetListFileSizesREQ = Pick<Partial<ListEntriesREQ>, 'after' | 'cursor' | 'limit' | 'type'> & { asc?: boolean };
 
+export type GetActivityLogREQ = Pick<ListEntriesREQ, 'id' | 'cursor' | 'limit'>;

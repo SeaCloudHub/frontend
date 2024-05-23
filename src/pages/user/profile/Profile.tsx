@@ -82,11 +82,27 @@ export const Profile: React.FC<ProfileProps> = () => {
         }
         headerLeft={<></>}
       />
-      {open && <ChangePhotoPopUp open={open} handleClose={() => setOpen(false)} setResult={() => {}} />}
-      {renameOpen && <RenameProfilePopUp open={renameOpen} handleClose={() => setRenameOpen(false)} values={{
-          first_name: identity.first_name,
-          last_name: identity.last_name,
-        }}/>}
+      {open &&
+        <ChangePhotoPopUp
+        open={open}
+        handleClose={() => setOpen(false)}
+        setResult={() => {}}
+        name={{
+          first_name: data?.first_name||'',
+          last_name: data?.last_name||'',
+        }}
+       />}
+      {renameOpen &&
+        <RenameProfilePopUp
+          open={renameOpen}
+          handleClose={() => setRenameOpen(false)}
+          values={{
+            first_name: data?.first_name,
+            last_name: data?.last_name,
+          }}
+          avatar_url={data?.avatar_url}
+        />
+      }
       {changePasswordOpen &&
         <ChangePasswordPopUp open={changePasswordOpen} handleClose={() => setChangePasswordOpen(false)} />
       }

@@ -1,9 +1,9 @@
 import FileCard from '@/components/core/file-card/FileCard';
 import FolderCard from '@/components/core/folder-card/FolderCard';
 import { LocalEntry } from '@/hooks/drive.hooks';
-import { Path, useDrawer, useEntries, useSelected } from '@/store/my-drive/myDrive.store';
+import { Path, useCursor, useDrawer, useEntries, useSelected } from '@/store/my-drive/myDrive.store';
 import { DRIVE_MY_DRIVE } from '@/utils/constants/router.constant';
-import { LinearProgress } from '@mui/material';
+import { CircularProgress, LinearProgress } from '@mui/material';
 import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -16,6 +16,7 @@ type DriveGridViewProps = {
   fileShow?: boolean;
   folderShow?: boolean;
   isLoading?: boolean;
+  isScrolling?: boolean;
   parent?: 'priority' | 'my-drive' | 'shared' | 'trash' | 'starred';
 };
 
@@ -26,6 +27,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
   isLoading,
   curDir,
   parent,
+  isScrolling,
 }) => {
   const showEntry = fileShow
     ? entries.filter((entry) => !entry.isDir)
@@ -37,6 +39,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
   const navigate = useNavigate();
   const { drawerOpen } = useDrawer();
   const { setArrSelected, arrSelected } = useSelected();
+  const { nextCursor } = useCursor();
 
   useEffect(() => {
     const fileCardRefs = document.querySelectorAll('.file-card');
@@ -53,14 +56,12 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+    return () =>  document.removeEventListener('mousedown', handleClickOutside);
   }, [arrSelected, setArrSelected]);
 
   return (
     <>
-      {isLoading && entries.length < 15 ? (
+      {isLoading && !nextCursor ? (
         <LinearProgress className='translate-y-1' />
       ) : entries.length === 0 ? (
         <div className='flex h-96 items-center justify-center'>
@@ -70,8 +71,8 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
           </div>
         </div>
       ) : (
-        <div ref={driveGridViewRef} className='pl-5 pr-3 pt-4'>
-          <div className='relative flex min-w-40 flex-col space-y-2 overflow-hidden overflow-y-auto'>
+        <div ref={driveGridViewRef} className='pl-5 pr-3 pt-4 h-full'>
+          <div className='relative flex min-w-40 flex-col space-y-2 overflow-hidden'>
             {entries.length !== 0 && (
               <>
                 <div className='pb-4 text-sm font-medium'>{folderShow ? 'Folders' : fileShow ? 'Files' : 'All'}</div>
@@ -109,6 +110,11 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
                 </div>
               </>
             )}
+            {isScrolling &&
+              <div className='h-fit text-center'>
+                <CircularProgress className='mx-auto font-semibold' />
+              </div>
+            }
           </div>
         </div>
       )}

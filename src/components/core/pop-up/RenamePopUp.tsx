@@ -8,6 +8,7 @@ import * as Yup from 'yup';
 import TextFieldCore from '../form/TextFieldCore';
 import ButtonSuccess from '../button/ButtonSuccess';
 import ButtonCancel from '../button/ButtonCancel';
+import { useEntries } from '@/store/my-drive/myDrive.store';
 
 type RenamePopUpProps = {
   open: boolean;
@@ -52,7 +53,7 @@ const RenamePopUp: React.FC<RenamePopUpProps> = ({ open, handleClose, name, id }
         </DialogContent>
         <DialogActions>
           <ButtonCancel onClick={handleClose}>Cancel</ButtonCancel>
-          <ButtonSuccess type='submit'> Save </ButtonSuccess>
+          <ButtonSuccess type='submit' isInvisible={!formik.isValid}> Save </ButtonSuccess>
         </DialogActions>
       </form>
     </PopUp>

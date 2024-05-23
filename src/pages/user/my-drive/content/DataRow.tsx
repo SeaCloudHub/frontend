@@ -302,7 +302,14 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
         {type === 'move' && (
           <MovePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} location={dir} />
         )}
-        {type === 'rename' && <RenamePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} name={title} id={id} />}
+        {type === 'rename' &&
+          <RenamePopUp
+            open={isPopUpOpen}
+            handleClose={() => setIsPopUpOpen(false)}
+            name={title}
+            id={id}
+          />
+        }
         {parent === 'trash' && (
           <DeletePopUp
             open={isPopUpOpen}

@@ -12,10 +12,12 @@ import {
   SearchREQ,
   DownloadMultipleEntriesREQ,
   GetListFileSizesREQ,
+  GetActivityLogREQ,
 } from './drive.request';
 import { BaseResponse } from '@/utils/types/api-base-response.type';
 import { MoveToTrashREQ } from './request/move-to-trash.request';
 import {
+  ActivityLogRESP,
   EntryMetadataRES,
   EntryRESP,
   ListEntriesPageRESP,
@@ -46,8 +48,10 @@ export const getListEntriesSuggested = async (params: SuggestedEntriesREQ) => {
   return res.data;
 };
 
-export const getListEntriesPageStarred = async () => {
-  const res = await api.get<BaseResponse<EntryRESP[]>>(`/files/starred`);
+export const getListEntriesPageStarred = async (params?: Pick<ListEntriesREQ,'after'|'cursor'|'limit'|'type'>) => {
+  const res = await api.get<BaseResponse<ListEntriesRESP>>(`/files/starred`,{
+    params: { ...params, type: params.type?.toLowerCase() },
+  });
   return res.data;
 };
 
@@ -164,3 +168,9 @@ export const getListFileSizes = async (params: GetListFileSizesREQ) => {
   });
   return res.data;
 };
+
+export const getActivityLog = async (params: GetActivityLogREQ) => {
+  const res = await api.get<BaseResponse<ActivityLogRESP>>(`/files/${params.id}/activities`, { params });
+  return res.data;
+};
+

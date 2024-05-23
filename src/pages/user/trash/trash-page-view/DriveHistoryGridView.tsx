@@ -4,7 +4,7 @@ import React, { Dispatch, SetStateAction, useEffect, useRef } from 'react';
 import Sort from '../../my-drive/content/Sort';
 import { FormatDateStrToDDMMYYYY } from '@/utils/function/formatDate.function';
 import { useDrawer, useSelected } from '@/store/my-drive/myDrive.store';
-import { LinearProgress } from '@mui/material';
+import { CircularProgress, LinearProgress } from '@mui/material';
 
 export type TimeEntry = {
   time: string;
@@ -18,6 +18,7 @@ type DriveHistoryViewProps = {
   entries: TimeEntry[];
   dir: { id: string; name: string };
   isLoading?: boolean;
+  isScrolling?: boolean;
 };
 
 export const LocalEntryToTimeEntry = (entries: LocalEntry[]): TimeEntry[] => {
@@ -35,7 +36,7 @@ export const LocalEntryToTimeEntry = (entries: LocalEntry[]): TimeEntry[] => {
   return timeEntries;
 };
 
-const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({ sort, order, setSort, entries, dir, isLoading }) => {
+const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({ sort, order, setSort, entries, dir, isLoading, isScrolling }) => {
   const driveGridViewRef = useRef(null);
   const { drawerOpen } = useDrawer();
   const { setArrSelected, arrSelected } = useSelected();
@@ -110,7 +111,13 @@ const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({ sort, order, se
                 </div>
               )}
             </div>
-          ))}
+          ))
+        }
+        {isScrolling &&
+          <div className='h-fit text-center'>
+            <CircularProgress className='translate-y-1' />
+          </div>
+        }
       </div>
     </div>
   );

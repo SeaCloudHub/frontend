@@ -70,7 +70,7 @@ const ChangePasswordPopUp: React.FC<ChangePasswordPopUpProps> = ({handleClose, o
         </DialogContent>
         <DialogActions>
           <ButtonCancel onClick={handleClose}>Cancel</ButtonCancel>
-          <ButtonSuccess type='submit'>Save </ButtonSuccess>
+          <ButtonSuccess type='submit' isInvisible={!formik.isValid}>Save </ButtonSuccess>
         </DialogActions>
       </form>
     </PopUp>

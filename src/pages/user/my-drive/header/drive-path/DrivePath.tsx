@@ -1,7 +1,7 @@
 import { Icon } from '@iconify/react/dist/iconify.js';
 import DrivePathButton from './DrivePathButton';
 import DrivePathMenuButton from './DrivePathMenuButton';
-import { Path, useLimit, useSelected } from '@/store/my-drive/myDrive.store';
+import { Path, useCursor, useCursorActivity, useLimit, useSelected } from '@/store/my-drive/myDrive.store';
 import { MenuItem } from '@/components/core/drop-down/Dropdown';
 import { useNavigate } from 'react-router-dom';
 import { DRIVE_MY_DRIVE } from '@/utils/constants/router.constant';
@@ -18,6 +18,8 @@ const DrivePath: React.FC<DrivePathProps> = ({ path, type }) => {
   const { rootId } = useStorageStore();
   const { setArrSelected } = useSelected();
   const { resetLimit } = useLimit();
+  const { resetCursor } = useCursor();
+  const { resetCursorActivity } = useCursorActivity();
 
   if (path.length > 3) {
     const restDirs = path.slice(0, path.length - 2);
@@ -28,7 +30,9 @@ const DrivePath: React.FC<DrivePathProps> = ({ path, type }) => {
           label: d.name,
           action: () => {
             setArrSelected([]);
-            resetLimit();
+            // resetLimit();
+            resetCursor();
+            resetCursorActivity();
             d.id === rootId ? navigate(`${DRIVE_MY_DRIVE}`) : navigate(`${DRIVE_MY_DRIVE}/dir/${d.id}`);
           },
           icon: <Icon icon='ic:baseline-folder' />,

@@ -4,6 +4,7 @@ import { Button, DialogActions, DialogContent, DialogTitle } from '@mui/material
 import { useMoveToTrashMutation } from '@/hooks/drive.hooks';
 import ButtonSuccess from '../button/ButtonSuccess';
 import ButtonCancel from '../button/ButtonCancel';
+import { useEntries } from '@/store/my-drive/myDrive.store';
 
 type DeleteTempPopUpProps = {
   open: boolean;
@@ -15,6 +16,8 @@ type DeleteTempPopUpProps = {
 };
 
 const DeleteTempPopUp: React.FC<DeleteTempPopUpProps> = ({ open, handleClose, title, id, source_ids, setResult }) => {
+  const { listEntries, setListEntries} = useEntries();
+
   const deleteTemp = useMoveToTrashMutation();
 
   return (
@@ -25,6 +28,7 @@ const DeleteTempPopUp: React.FC<DeleteTempPopUpProps> = ({ open, handleClose, ti
         <ButtonCancel onClick={handleClose}> Cancel </ButtonCancel>
         <ButtonSuccess
           type='button'
+          isInvisible={deleteTemp.isPending}
           onClick={() => {
             deleteTemp.mutate({ id, source_ids });
             setResult(true);

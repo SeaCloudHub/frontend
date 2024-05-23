@@ -4,6 +4,7 @@ import React, { useEffect, useRef } from 'react';
 import { DataRow } from './DataRow';
 import { useNavigate } from 'react-router-dom';
 import { DRIVE_MY_DRIVE } from '@/utils/constants/router.constant';
+import { CircularProgress } from '@mui/material';
 
 type DriveListViewProps = {
   sort?: string;
@@ -12,10 +13,11 @@ type DriveListViewProps = {
   entries: LocalEntry[];
   isLoading?: boolean;
   curDir?: { id: string; name: string };
+  isScrolling?: boolean;
   parent?: 'priority' | 'my-drive' | 'shared' | 'trash' | 'starred';
 };
 
-export const DriveListView: React.FC<DriveListViewProps> = ({ order, setSort, sort, entries, curDir, parent }) => {
+export const DriveListView: React.FC<DriveListViewProps> = ({ order, setSort, sort, entries, curDir, parent, isScrolling }) => {
   const files = entries.filter((entry) => !entry.isDir);
   const folders = entries.filter((entry) => entry.isDir);
 
@@ -74,6 +76,11 @@ export const DriveListView: React.FC<DriveListViewProps> = ({ order, setSort, so
             {files.map((entry, index) => (
               <DataRow key={index} {...entry} dir={curDir} isSelected={arrSelected?.some((e) => e.id === entry.id)} parent={parent} />
             ))}
+            {isScrolling && (
+              <div className='h-fit text-center'>
+                <CircularProgress />
+              </div>
+            )}
           </div>
         </div>
       )}

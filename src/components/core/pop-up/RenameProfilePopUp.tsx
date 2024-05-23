@@ -7,14 +7,18 @@ import ButtonCancel from '../button/ButtonCancel';
 import ButtonSuccess from '../button/ButtonSuccess';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { useUpDateAvatarMutation, useUpdateNameProfileMutation } from '@/hooks/auth.hooks';
 
 type RenameProfilePopUpProps = {
   open: boolean;
   handleClose: () => void;
   values: { first_name: string; last_name: string };
+  avatar_url: string;
 };
 
-const RenameProfilePopUp: React.FC<RenameProfilePopUpProps> = ({open, handleClose, values}) => {
+const RenameProfilePopUp: React.FC<RenameProfilePopUpProps> = ({open, handleClose, values, avatar_url}) => {
+  const updateNameProfile = useUpdateNameProfileMutation();
+
   const formik = useFormik({
     initialValues: values,
     validationSchema: Yup.object({
@@ -22,7 +26,8 @@ const RenameProfilePopUp: React.FC<RenameProfilePopUpProps> = ({open, handleClos
       last_name: Yup.string().required('Last name is required'),
     }),
     onSubmit: (values) => {
-      console.log(values);
+      updateNameProfile.mutate({ ...values, avatar_url });
+      handleClose();
     }
   });
   return (
@@ -55,7 +60,7 @@ const RenameProfilePopUp: React.FC<RenameProfilePopUpProps> = ({open, handleClos
         </DialogContent>
         <DialogActions>
           <ButtonCancel onClick={handleClose}>Cancel</ButtonCancel>
-          <ButtonSuccess type='submit'> Save </ButtonSuccess>
+          <ButtonSuccess type='submit' isInvisible={!formik.isValid}> Save </ButtonSuccess>
         </DialogActions>
       </form>
     </PopUp>

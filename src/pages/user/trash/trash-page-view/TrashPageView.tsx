@@ -8,14 +8,23 @@ type TrashPageViewProps = {
   entries: TimeEntry[];
   dir: { id: string; name: string };
   isLoading?: boolean;
+  isScrolling?: boolean;
 };
 
-const TrashPageView: React.FC<TrashPageViewProps> = ({ entries, dir, isLoading }) => {
+const TrashPageView: React.FC<TrashPageViewProps> = ({ entries, dir, isLoading, isScrolling }) => {
   const { viewMode } = useViewMode();
   const [{ sort, order }, setSort] = useState<{ sort: string; order: string }>({ sort: 'Name', order: 'desc' });
 
   return viewMode === 'grid' ? (
-    <DriveHistoryGridView sort={sort} order={order} setSort={setSort} entries={entries} dir={dir} isLoading={isLoading} />
+    <DriveHistoryGridView
+      sort={sort}
+      order={order}
+      setSort={setSort}
+      entries={entries}
+      dir={dir}
+      isLoading={isLoading}
+      isScrolling={isScrolling}
+    />
   ) : (
     <DriveHistoryListView order={order} sort={sort} setSort={setSort} entries={entries} dir={dir} />
   );

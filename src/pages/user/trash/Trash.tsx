@@ -1,5 +1,5 @@
 import DriveLayout from '@/components/layout/DriveLayout';
-import { useDrawer, useFilter, useLimit, useSelected, useViewMode } from '@/store/my-drive/myDrive.store';
+import { useCursor, useDrawer, useFilter, useLimit, useSelected, useViewMode } from '@/store/my-drive/myDrive.store';
 import { useState } from 'react';
 import SharingPageViewMode from '../shared/sharing-page-view/SharingPageViewMode';
 import { Icon } from '@iconify/react/dist/iconify.js';
@@ -14,20 +14,27 @@ import { useStorageStore } from '@/store/storage/storage.store';
 import TrashPageHeader from './TrashPageHeader';
 
 const Trash = () => {
-  const { viewMode, setViewMode } = useViewMode();
-  const {modifiedFilter, setModifiedFilter, setTypeFilter, typeFilter} = useFilter();
+  // const { viewMode, setViewMode } = useViewMode();
+  // const {modifiedFilter, setModifiedFilter, setTypeFilter, typeFilter} = useFilter();
   const { rootId } = useStorageStore();
-  const {limit, increaseLimit} = useLimit();
+  // const {limit, increaseLimit} = useLimit();
+  const { nextCursor, currentCursor, setCurrentCursor } = useCursor();
+  const [isScrolling, setIsScrolling] = useState(false);
 
-  const { arrSelected, setArrSelected } = useSelected();
+  const { arrSelected } = useSelected();
   console.log('[Trash] arrSelected', arrSelected);
 
   const { data, isLoading, refetch } = useTrash();
   console.log('[Trash] data', data);
 
   const onScollBottom = () => {
-    if(data.map((timeEntry) => timeEntry.entries).flat().length < limit) return;
-    increaseLimit();
+    if(nextCursor && nextCursor !== currentCursor) {
+      setIsScrolling(true);
+      setTimeout(() => {
+        setIsScrolling(false);
+        setCurrentCursor(nextCursor);
+      }, 1000);
+    }
   };
 
   return (

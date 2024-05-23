@@ -1,5 +1,6 @@
 import { useDrawer } from '@/store/my-drive/myDrive.store';
-import React, { useEffect, useRef } from 'react';
+import { CircularProgress } from '@mui/material';
+import React, { useEffect, useRef, useState } from 'react';
 
 type DriveLayoutProps = {
   headerLeft: React.ReactNode;
@@ -17,7 +18,7 @@ const DriveLayout: React.FC<DriveLayoutProps> = ({ headerLeft, bodyLeft, sidePan
       if (ref.current) {
         const { scrollTop, clientHeight, scrollHeight } = ref.current;
         if (Math.ceil(scrollTop + clientHeight) >= scrollHeight) {
-          onScrollBottom && onScrollBottom();
+          onScrollBottom?.();
         }
       }
     };

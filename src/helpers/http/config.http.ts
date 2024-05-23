@@ -25,7 +25,8 @@ export const notificationApi = axios.create({
 
 notificationApi.interceptors.request.use(
   async (config: AxiosRequestConfig): Promise<any> => {
-    const token = JSON.parse(getLocalStorage('sessionStore') as string)?.state?.token || null;
+    const token = getCookie('token') || null;
+    // const token = JSON.parse(getLocalStorage('sessionStore') as string)?.state?.token || null;
     if (!token) return config;
     return { ...config, headers: { Authorization: `Bearer ${token}` } };
   },

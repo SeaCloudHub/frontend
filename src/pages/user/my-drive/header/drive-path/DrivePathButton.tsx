@@ -1,4 +1,4 @@
-import { Path, useEntries, useLimit, useSelected } from '@/store/my-drive/myDrive.store';
+import { Path, useCursor, useEntries, useLimit, useSelected } from '@/store/my-drive/myDrive.store';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { DRIVE_MY_DRIVE, DRIVE_PRIORITY, DRIVE_SHARED, DRIVE_STARRED } from '@/utils/constants/router.constant';
 import { useNavigate } from 'react-router-dom';
@@ -15,6 +15,7 @@ const DrivePathButton: React.FC<DrivePathButtonProps> = ({ id, name, type }) => 
   const navigate = useNavigate();
   const { rootId } = useStorageStore();
   const { resetLimit } = useLimit();
+  const { resetCursor } = useCursor();
   const { setListEntries } = useEntries();
   const { setArrSelected } = useSelected();
 
@@ -37,7 +38,8 @@ const DrivePathButton: React.FC<DrivePathButtonProps> = ({ id, name, type }) => 
       onClick={() => {
         setArrSelected && setArrSelected([]);
         setListEntries([]);
-        resetLimit();
+        // resetLimit();
+        resetCursor();
         id === rootId ? navigate(navigateLink(type)) : navigate(`${DRIVE_MY_DRIVE}/dir/${id}`);
       }}>
       <div className='pb-1 text-2xl'>{name}</div>
