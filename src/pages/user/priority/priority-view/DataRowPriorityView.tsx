@@ -51,6 +51,7 @@ const DataRowPriorityView: React.FC<SuggestedEntry & DataRowPriorityViewProps> =
   size,
   log,
   parent,
+  userRoles,
 }) => {
   const [type, setType] = useState<'move' | 'share' | 'rename' | 'move to trash' | null>(null);
   const [fileViewer, setFileViewer] = useState(false);
@@ -166,7 +167,7 @@ const DataRowPriorityView: React.FC<SuggestedEntry & DataRowPriorityViewProps> =
   ].filter((e) => e.length != 0);
 
   const handleCtrlClick = () => {
-    setArrSelected(arrSelected.includes(id) ? arrSelected.filter((item) => item !== id) : [...arrSelected, id]);
+    setArrSelected(arrSelected.some(e=>e.id === id) ? arrSelected.filter((item) => item.id !== id) : [...arrSelected, { id, isDir, userRoles}]);
   };
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -174,7 +175,7 @@ const DataRowPriorityView: React.FC<SuggestedEntry & DataRowPriorityViewProps> =
       handleCtrlClick();
       return;
     }
-    setArrSelected([id]);
+    setArrSelected([{ id, isDir, userRoles }]);
   };
 
   const handleDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -218,6 +219,7 @@ const DataRowPriorityView: React.FC<SuggestedEntry & DataRowPriorityViewProps> =
             lastModified: new Date(),
             size: size,
             fileType: fileType,
+            userRoles,
           }}
         />
       )}

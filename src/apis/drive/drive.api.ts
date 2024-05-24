@@ -10,10 +10,14 @@ import {
   SuggestedEntriesREQ,
   StarEntriesREQ,
   SearchREQ,
+  DownloadMultipleEntriesREQ,
+  GetListFileSizesREQ,
+  GetActivityLogREQ,
 } from './drive.request';
 import { BaseResponse } from '@/utils/types/api-base-response.type';
 import { MoveToTrashREQ } from './request/move-to-trash.request';
 import {
+  ActivityLogRESP,
   EntryMetadataRES,
   EntryRESP,
   ListEntriesPageRESP,
@@ -40,12 +44,14 @@ export const getListEntriesPageMyDrive = async (param: ListEntriesPageREQ) => {
 };
 
 export const getListEntriesSuggested = async (params: SuggestedEntriesREQ) => {
-  const res = await api.get<BaseResponse<SuggestedEntriesRESP>>(`/files/suggested`, { params });
+  const res = await api.get<BaseResponse<SuggestedEntriesRESP[]>>(`/files/suggested`, { params });
   return res.data;
 };
 
-export const getListEntriesPageStarred = async () => {
-  const res = await api.get<BaseResponse<EntryRESP[]>>(`/files/starred`);
+export const getListEntriesPageStarred = async (params?: Pick<ListEntriesREQ,'after'|'cursor'|'limit'|'type'>) => {
+  const res = await api.get<BaseResponse<ListEntriesRESP>>(`/files/starred`,{
+    params: { ...params, type: params.type?.toLowerCase() },
+  });
   return res.data;
 };
 
@@ -54,8 +60,10 @@ export const getListEntriesTrash = async (params?: Pick<ListEntriesREQ, 'limit' 
   return res.data;
 };
 
-export const getSharedEntries = async () => {
-  const res = await api.get<BaseResponse<SharedEntriesRESP>>(`/files/share`);
+export const getSharedEntries = async (params: Pick<ListEntriesREQ, 'after' | 'cursor' | 'limit' | 'type'>) => {
+  const res = await api.get<BaseResponse<SharedEntriesRESP>>(`/files/share`, {
+    params: { ...params, type: params.type?.toLowerCase() },
+  });
   return res.data;
 };
 
@@ -136,7 +144,35 @@ export const getStorage = async () => {
   const res = await api.get<BaseResponse<GetStorageRESP>>(`/files/storage`);
   return res.data;
 };
+
 export const searchEntriesApi = async (params: SearchREQ) => {
-  const res = await api.get<BaseResponse<SearchRESP>>(`/files/search`, { params });
+  console.log('[searchEntriesApi] params', params);
+  const res = await api.get<BaseResponse<SearchRESP>>(`/files/search`, {
+    params: { ...params, type: params.type?.toLowerCase() },
+  });
+  console.log('[searchEntriesApi] res', res);
   return res.data;
 };
+
+export const downloadMultipleEntries = async (params: DownloadMultipleEntriesREQ) => {
+  const res = await api.post(`/files/download`, { params }, { responseType: 'blob' });
+  const url = window.URL.createObjectURL(new Blob([res.data]));
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute('download', 'multiple-files.zip');
+  document.body.appendChild(link);
+  link.click();
+};
+
+export const getListFileSizes = async (params: GetListFileSizesREQ) => {
+  const res = await api.get<BaseResponse<ListEntriesRESP>>(`/files/sizes`, {
+    params: { ...params, type: params.type?.toLowerCase() },
+  });
+  return res.data;
+};
+
+export const getActivityLog = async (params: GetActivityLogREQ) => {
+  const res = await api.get<BaseResponse<ActivityLogRESP>>(`/files/${params.id}/activities`, { params });
+  return res.data;
+};
+

@@ -1,14 +1,11 @@
+import { useFilter } from '@/store/my-drive/myDrive.store';
 import InfoButton from '../../my-drive/header/InfoButton';
 import MemoryFilter from './MemoryFilter';
+import DriveFilter from '../../my-drive/header/DriveFilter';
 
-type MemoryHeaderProps = {
-  typeFilter: string;
-  modifiedFilter: string;
-  setTypeFilter: (type: string) => void;
-  setModifiedFilter: (modified: string) => void;
-};
+const MemoryHeader = () => {
+  const { typeFilter, setTypeFilter, modifiedFilter, setModifiedFilter } = useFilter();
 
-const MemoryHeader: React.FC<MemoryHeaderProps> = ({ modifiedFilter, typeFilter, setModifiedFilter, setTypeFilter }) => {
   return (
     <div className='flex flex-col pr-3'>
       <div className='flex justify-between'>
@@ -20,12 +17,7 @@ const MemoryHeader: React.FC<MemoryHeaderProps> = ({ modifiedFilter, typeFilter,
         </div>
       </div>
       <div className='flex items-center gap-3 pl-5'>
-        {/* <MemoryFilter
-          setModifiedFilter={setModifiedFilter}
-          setTypeFilter={setTypeFilter}
-          modifiedFilter={modifiedFilter}
-          typeFilter={typeFilter}
-        /> */}
+        <DriveFilter page='memory' />
         {(typeFilter || modifiedFilter) && (
           <div className='flex h-7 items-center rounded-full px-[12px] py-[1px] hover:bg-[#ededed]'>
             <div

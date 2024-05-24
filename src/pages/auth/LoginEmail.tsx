@@ -16,24 +16,26 @@ import { toastError } from '../../utils/toast-options/toast-options';
 import { ApiGenericError } from '../../utils/types/api-generic-error.type';
 import AuthFooter from './AuthFooter';
 import { default as AuthLink } from './auth-link/AuthLink';
+import { useCookies } from 'react-cookie';
 
 const LoginEmail = () => {
   const location = useLocation();
+  const [cookies, setCookie] = useCookies(['token']);
   const from = location.state?.from?.pathname;
   const [currentValue, setCurrentValue] = React.useState('');
   const onEmailValid = useSession((state) => state.onEmailValid);
   const navigate = useNavigate();
-  const { token: authenticated, role } = useSession();
+  const { role } = useSession();
   const handleChange = (e: { target: { value: React.SetStateAction<string> } }) => setCurrentValue(e.target.value);
 
   useEffect(() => {
-    if (!authenticated) return;
+    if (!cookies.token) return;
     if (from) {
       navigate(from);
     } else {
       navigate(accountAuthorityCallback[role!]);
     }
-  }, [authenticated, role]);
+  }, [cookies.token, from, navigate, role]);
 
   const formik = useFormik({
     initialValues: loginInitialValue,
@@ -74,6 +76,7 @@ const LoginEmail = () => {
             </div>
             <div className='flex min-w-80 flex-col gap-5'>
               <TextFieldCore
+                theme='light'
                 label='Email'
                 name='email'
                 value={formik.values.email}

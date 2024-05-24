@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { getLocalStorage } from '../../utils/function/auth.function';
+import { getCookie } from '@/utils/function/cookie.function';
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_API_ENDPOINT,
@@ -8,7 +9,7 @@ export const api = axios.create({
 
 api.interceptors.request.use(
   async (config: AxiosRequestConfig): Promise<any> => {
-    const token = JSON.parse(getLocalStorage('sessionStore') as string)?.state?.token || null;
+    const token = getCookie('token')|| null;
     if (!token) return config;
     return { ...config, headers: { Authorization: `Bearer ${token}` } };
   },
@@ -24,7 +25,8 @@ export const notificationApi = axios.create({
 
 notificationApi.interceptors.request.use(
   async (config: AxiosRequestConfig): Promise<any> => {
-    const token = JSON.parse(getLocalStorage('sessionStore') as string)?.state?.token || null;
+    const token = getCookie('token') || null;
+    // const token = JSON.parse(getLocalStorage('sessionStore') as string)?.state?.token || null;
     if (!token) return config;
     return { ...config, headers: { Authorization: `Bearer ${token}` } };
   },

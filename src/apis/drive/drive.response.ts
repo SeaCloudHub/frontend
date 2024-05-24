@@ -18,10 +18,11 @@ export type EntryRESP = {
   created_at: string;
   updated_at: string;
   type: string;
+  userRoles?: ('owner' | 'editor' | 'viewer')[];
 };
 
 export type SuggestedEntriesRESP = EntryRESP & {
-  parent: Pick<EntryRESP, 'id' & 'name' & 'path'>;
+  parent: Pick<EntryRESP, 'id' & 'name' & 'path' >;
   log?: LogEntry;
 };
 
@@ -58,7 +59,10 @@ export type RenameRESP = {
   id: string;
 };
 
-export type SharedEntriesRESP = EntryRESP[];
+export type SharedEntriesRESP = {
+  entries: EntryRESP[];
+  cursor: string;
+};
 
 export type DeleteFilesRESP = EntryRESP[];
 
@@ -84,3 +88,32 @@ export type SearchRESP = {
   entries: EntryRESP & { parent: ParentRES };
   cursor: string;
 };
+
+export type LogItem = {
+  action: string;
+  created_at: string;
+  file_id: string;
+  user: IdentityRESP;
+  user_id: string;
+};
+
+
+export type ActivityLogRESP = {
+  activities: LogItem[];
+  cursor: string;
+};
+
+
+export type DataSidePanelAction = {
+  id: string;
+  title: string;
+};
+
+export type LocalActivityLog = {
+  time: string;
+  data: {
+    action: string;
+    timeAction: Date;
+    actor: { name: string; avatar: string };
+  }[];
+}[];

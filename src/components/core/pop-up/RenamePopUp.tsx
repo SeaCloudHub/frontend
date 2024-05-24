@@ -8,6 +8,7 @@ import * as Yup from 'yup';
 import TextFieldCore from '../form/TextFieldCore';
 import ButtonSuccess from '../button/ButtonSuccess';
 import ButtonCancel from '../button/ButtonCancel';
+import { useEntries } from '@/store/my-drive/myDrive.store';
 
 type RenamePopUpProps = {
   open: boolean;
@@ -41,43 +42,8 @@ const RenamePopUp: React.FC<RenamePopUpProps> = ({ open, handleClose, name, id }
         </DialogTitle>
         <DialogContent>
           <TextFieldCore
-            sx={{
-              '.dark &': {
-                backgroundColor: '#031525',
-                color: 'white',
-                '& .MuiInputLabel-root': {
-                  color: 'white',
-                },
-                '& .MuiOutlinedInput-root.Mui-disabled .MuiOutlinedInput-notchedOutline': {
-                  borderColor: '#64748B',
-                },
-                '& .MuiFormHelperText-root': {
-                  color: '#64748B',
-                },
-                '& .MuiOutlinedInput-notchedOutline': {
-                  borderColor: 'rgba(255, 255, 255, 0.25)',
-                },
-                '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
-                  borderColor: 'rgba(255, 255, 255, 0.5)',
-                },
-                '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                  borderColor: 'rgba(255, 255, 255, 0.5)',
-                },
-                '& .MuiFormLabel-root': {
-                  color: 'white',
-                },
-                '& .MuiInputBase-input': {
-                  color: 'white',
-                },
-                '& .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline': {
-                  borderColor: '#F87171',
-                },
-                '& .MuiFormHelperText-root.Mui-error': {
-                  color: '#F87171',
-                },
-              },
-            }}
             name='name'
+            isFocused={true}
             value={formik.values.name}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -87,7 +53,7 @@ const RenamePopUp: React.FC<RenamePopUpProps> = ({ open, handleClose, name, id }
         </DialogContent>
         <DialogActions>
           <ButtonCancel onClick={handleClose}>Cancel</ButtonCancel>
-          <ButtonSuccess type='submit'> Save </ButtonSuccess>
+          <ButtonSuccess type='submit' isInvisible={!formik.isValid}> Save </ButtonSuccess>
         </DialogActions>
       </form>
     </PopUp>

@@ -46,6 +46,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
   size,
   onDoubleClick,
   parent,
+  userRoles,
   onChanged,
   dir,
   fileType,
@@ -164,76 +165,6 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
     ],
   ].filter((e) => e.length != 0);
 
-  // const folderMenu = [
-  //   [
-  //     { label: 'Download', icon: <Icon icon='ic:outline-file-download' /> },
-  //     {
-  //       label: 'Rename',
-  //       icon: <Icon icon='ic:round-drive-file-rename-outline' />,
-  //       action: () => {
-  //         setType('rename');
-  //         setIsPopUpOpen(true);
-  //       },
-  //     },
-  //   ],
-  //   [
-  //     {
-  //       label: 'Copy link',
-  //       icon: <Icon icon='material-symbols:link' />,
-  //       action: () => {
-  //         CopyToClipboard(window.location.origin + CUSTOMER_MY_DRIVE + `/dir/${id}`);
-  //       },
-  //     },
-  //     {
-  //       label: 'Share',
-  //       icon: <Icon icon='lucide:user-plus' />,
-  //       action: () => {
-  //         setType('share');
-  //         setIsPopUpOpen(true);
-  //       },
-  //     },
-  //   ],
-  //   [
-  //     {
-  //       label: 'Move',
-  //       icon: <Icon icon='mdi:folder-move-outline' />,
-  //       action: () => {
-  //         setType('move');
-  //         setIsPopUpOpen(true);
-  //       },
-  //     },
-  //     {
-  //       label: 'Add shortcut',
-  //       icon: <Icon icon='material-symbols:add-to-drive' />,
-  //     },
-  //     {
-  //       label: parent !== 'starred' ? 'Add to starred' : 'Remove from starred',
-  //       icon: parent !== 'starred' ? <Icon icon='material-symbols:star-outline' /> : <Icon icon='mdi:star-off-outline' />,
-  //       action: () => {
-  //         parent !== 'starred' ? starEntryMutation.mutate({ id }) : unstarEntryMutation.mutate({ id });
-  //       },
-  //     },
-  //   ],
-  //   [
-  //     {
-  //       label: 'Detail',
-  //       icon: <Icon icon='mdi:information-outline' />,
-  //       action: () => openDrawer(id),
-  //     },
-  //     { label: 'Activity', icon: <Icon icon='mdi:graph-line-variant' /> },
-  //   ],
-  //   [
-  //     {
-  //       label: 'Move to trash',
-  //       icon: <Icon icon='fa:trash-o' />,
-  //       action: () => {
-  //         setType('move to trash');
-  //         setIsPopUpOpen(true);
-  //       },
-  //     },
-  //   ],
-  // ];
-
   const menuItemsTrash: MenuItem[] = [
     {
       label: 'Restore',
@@ -255,7 +186,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
   ];
 
   const handleCtrlClick = () => {
-    setArrSelected(arrSelected.includes(id) ? arrSelected.filter((item) => item !== id) : [...arrSelected, id]);
+    setArrSelected(arrSelected.some(e=>e.id === id) ? arrSelected.filter((item) => item.id !== id) : [...arrSelected, { id, isDir, userRoles}]);
   };
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -263,7 +194,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
       handleCtrlClick();
       return;
     }
-    setArrSelected([id]);
+    setArrSelected([{ id, isDir, userRoles}]);
   };
 
   const handleDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -307,12 +238,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
             lastModified: new Date(),
             size: size,
             fileType: fileType,
-            // onDoubleClick: function (): void {
-            //   throw new Error('Function not implemented.');
-            // },
-            // onChanged: function (): void {
-            //   throw new Error('Function not implemented.');
-            // },
+            userRoles: userRoles,
           }}
         />
       )}
@@ -320,12 +246,12 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
         onClick={handleClick}
         onDoubleClick={handleDoubleClick}
         className={classNames(
-          'data-row grid cursor-pointer grid-cols-7 gap-3 truncate border-b border-b-[#dadce0] py-2 max-[1160px]:grid-cols-7 max-[1150px]:grid-cols-6 max-[1000px]:grid-cols-5',
+          'data-row font-medium grid cursor-pointer grid-cols-7 gap-3 truncate border-b border-b-[#dadce0] py-2 max-[1160px]:grid-cols-7 max-[1150px]:grid-cols-6 max-[1000px]:grid-cols-5',
           isSelected
             ? 'bg-[#c2e7ff]  dark:bg-blue-900'
             : 'hover:bg-[#dfe3e7] dark:bg-slate-600 dark:text-white dark:hover:bg-slate-700',
         )}>
-        <div className='col-span-4 flex'>
+        <div className='col-span-4 flex items-center'>
           <div className='px-4'>
             <div className='h-6 w-6'>{icon}</div>
           </div>
@@ -356,12 +282,12 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
             <span className='truncate'>{owner?.id === identity.id ? 'me' : owner?.last_name}</span>
           </div>
         </div>
-        <div className='truncate max-[1000px]:hidden'>{formatDate(lastModified)}</div>
-        <div className='flex justify-between max-[1160px]:justify-end'>
+        <div className='truncate max-[1000px]:hidden flex items-center'>{formatDate(lastModified)}</div>
+        <div className='flex items-center justify-between max-[1160px]:justify-end'>
           <div className='truncate max-[1160px]:hidden'>{isDir ? '---' : numToSize(size)}</div>
-          <div className='text-end'>
+          <div className='text-end hover:bg-slate-300 dark:hover:bg-slate-500 rounded-full'>
             <CustomDropdown
-              button={<Icon icon='ic:baseline-more-vert' className='h-7 w-7 rounded-full p-1 hover:bg-surfaceContainerLow' />}
+              button={<Icon icon='ic:baseline-more-vert' className='h-7 w-7 rounded-full p-1 dark:hover:text-white' />}
               items={parent === 'trash' ? [menuItemsTrash] : entryMenu}
             />
           </div>
@@ -372,7 +298,14 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
         {type === 'move' && (
           <MovePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} location={dir} />
         )}
-        {type === 'rename' && <RenamePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} name={title} id={id} />}
+        {type === 'rename' &&
+          <RenamePopUp
+            open={isPopUpOpen}
+            handleClose={() => setIsPopUpOpen(false)}
+            name={title}
+            id={id}
+          />
+        }
         {parent === 'trash' && (
           <DeletePopUp
             open={isPopUpOpen}

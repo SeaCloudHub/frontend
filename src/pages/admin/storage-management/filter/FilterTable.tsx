@@ -1,5 +1,6 @@
 import { Path } from '@/store/my-drive/myDrive.store';
 import { FilerRow } from './FilerRow';
+import { UserRole } from '@/utils/types/user-role.type';
 
 type FilerTableProps = {
   data: FilerDataDto[];
@@ -14,6 +15,7 @@ export type FilerDataDto = {
   size?: number;
   created: Date;
   is_root?: boolean;
+  userRoles?: UserRole[];
 };
 
 export const FilerTable: React.FC<FilerTableProps> = ({ data, setPath }) => {

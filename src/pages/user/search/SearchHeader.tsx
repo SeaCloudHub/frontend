@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import SharingPageViewMode from '../shared/sharing-page-view/SharingPageViewMode';
-import { useDrawer, useSelected, useTypeFilter, useViewMode } from '@/store/my-drive/myDrive.store';
+import { useDrawer, useSelected, useFilter, useViewMode } from '@/store/my-drive/myDrive.store';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import SharingPageFilter from '../shared/sharing-page-filter/SharingPageFilter';
 import MultipleDriveHeader from '../my-drive/header/MultipleDriveHeader';
@@ -13,7 +13,7 @@ const SearchHeader = () => {
   const { arrSelected } = useSelected();
   const [modifiedFilter, setModifiedFilter] = useState<string>('');
   const [peopleFilter, setPeopleFilter] = useState<string>('');
-  const { typeFilter, setTypeFilter } = useTypeFilter();
+  const { typeFilter, setTypeFilter } = useFilter();
 
   return (
     <div className='flex flex-col overflow-hidden'>
@@ -42,7 +42,7 @@ const SearchHeader = () => {
         <div className='w-full pl-5'>
           <div className='flex items-center justify-between overflow-x-auto'>
             <div className='flex gap-3'>
-              <DriveFilter setModifiedFilter={setModifiedFilter} modifiedFilter={modifiedFilter} />
+              <DriveFilter />
               {(typeFilter || peopleFilter || modifiedFilter) && (
                 <div className='flex h-7 items-center rounded-full px-[12px] py-[1px] hover:bg-slate-200 active:brightness-90 dark:hover:bg-slate-500'>
                   <Tooltip title='Clear filters'>

@@ -5,11 +5,13 @@ import { useScreenMode } from '../../store/responsive/screenMode';
 import { ADMIN_HOME, AUTH_LOGIN_EMAIL, DRIVE_HOME } from '../../utils/constants/router.constant';
 import { Role } from '../../utils/enums/role.enum';
 import { ScreenMode } from '../../utils/enums/screen-mode.enum';
+import { useCookies } from 'react-cookie';
 
 const ErrorPage = () => {
-  const { token, role } = useSession();
+  const { role } = useSession();
+  const [cookies, setCookie] = useCookies(['token']);
   console.log(role);
-  const to = !token ? AUTH_LOGIN_EMAIL : role == Role.ADMIN ? ADMIN_HOME : DRIVE_HOME;
+  const to = !cookies.token ? AUTH_LOGIN_EMAIL : role == Role.ADMIN ? ADMIN_HOME : DRIVE_HOME;
   const screenMode = useScreenMode((state) => state.screenMode);
   return (
     <div className='relative flex h-screen justify-center'>

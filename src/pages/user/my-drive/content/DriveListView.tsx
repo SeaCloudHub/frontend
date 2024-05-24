@@ -1,9 +1,10 @@
 import { LocalEntry } from '@/hooks/drive.hooks';
-import { Path, useSelected } from '@/store/my-drive/myDrive.store';
+import { Path, useCursor, useCursorActivity, useSelected } from '@/store/my-drive/myDrive.store';
 import React, { useEffect, useRef } from 'react';
 import { DataRow } from './DataRow';
 import { useNavigate } from 'react-router-dom';
 import { DRIVE_MY_DRIVE } from '@/utils/constants/router.constant';
+import { CircularProgress, LinearProgress } from '@mui/material';
 
 type DriveListViewProps = {
   sort?: string;
@@ -12,16 +13,20 @@ type DriveListViewProps = {
   entries: LocalEntry[];
   isLoading?: boolean;
   curDir?: { id: string; name: string };
+  isScrolling?: boolean;
   parent?: 'priority' | 'my-drive' | 'shared' | 'trash' | 'starred';
 };
 
-export const DriveListView: React.FC<DriveListViewProps> = ({ order, setSort, sort, entries, curDir, parent }) => {
+export const DriveListView: React.FC<DriveListViewProps> = ({ order, setSort, sort, entries, curDir, parent, isScrolling, isLoading }) => {
   const files = entries.filter((entry) => !entry.isDir);
   const folders = entries.filter((entry) => entry.isDir);
 
   const navigate = useNavigate();
   const { setArrSelected, arrSelected } = useSelected();
+  const { nextCursor } = useCursor();
+  const { resetCursorActivity } = useCursorActivity();
   const driveListViewRef = useRef(null);
+
 
   useEffect(() => {
     const DataRows = document.querySelectorAll('.data-row');
@@ -32,6 +37,7 @@ export const DriveListView: React.FC<DriveListViewProps> = ({ order, setSort, so
 
       if (driveListViewRef.current && driveListViewRef.current.contains(event.target) && clickedOutsideRows) {
         setArrSelected([]);
+        resetCursorActivity();
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -43,7 +49,9 @@ export const DriveListView: React.FC<DriveListViewProps> = ({ order, setSort, so
 
   return (
     <>
-      {entries.length === 0 ? (
+    {isLoading && !nextCursor ? (
+        <LinearProgress className='translate-y-1' />
+      ) : entries.length === 0 ? (
         <div className='flex h-96 items-center justify-center'>
           <div className='text-center'>
             <div className='text-3xl font-semibold'>No files or folders here</div>
@@ -67,13 +75,18 @@ export const DriveListView: React.FC<DriveListViewProps> = ({ order, setSort, so
                 onDoubleClick={() => {
                   navigate(`${DRIVE_MY_DRIVE}/dir/${entry.id}`);
                 }}
-                isSelected={arrSelected?.includes(entry.id)}
+                isSelected={arrSelected?.some((e) => e.id === entry.id)}
                 parent={parent}
               />
             ))}
             {files.map((entry, index) => (
-              <DataRow key={index} {...entry} dir={curDir} isSelected={arrSelected?.includes(entry.id)} parent={parent} />
+              <DataRow key={index} {...entry} dir={curDir} isSelected={arrSelected?.some((e) => e.id === entry.id)} parent={parent} userRoles={entry.userRoles} />
             ))}
+            {isScrolling && (
+              <div className='h-fit text-center'>
+                <CircularProgress />
+              </div>
+            )}
           </div>
         </div>
       )}

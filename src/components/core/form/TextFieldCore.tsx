@@ -1,6 +1,7 @@
 import { TextField } from '@mui/material';
 import React from 'react';
 import { Error } from '@mui/icons-material';
+import { useTheme } from '@/providers/theme-provider';
 
 type TextFieldCoreProps = {
   label?: string;
@@ -14,6 +15,8 @@ type TextFieldCoreProps = {
   error?: boolean | undefined;
   helperText?: React.ReactNode;
   sx?: any;
+  isFocused?: boolean;
+  theme?: 'light' | 'dark';
 };
 
 const TextFieldCore = ({
@@ -28,17 +31,20 @@ const TextFieldCore = ({
   type,
   value,
   sx,
+  theme: themeProp,
+  isFocused,
 }: TextFieldCoreProps) => {
+  const {theme} = useTheme();
   return (
     <TextField
       autoComplete='off'
-      autoFocus={true}
+      autoFocus={isFocused}
       name={name}
       disabled={disabled}
       type={type}
       variant='outlined'
       label={label}
-      className={`bg-white ${className}`}
+      className={`bg-white ${themeProp === 'light'? '':  (theme==='dark') ? 'input-dark':''} ${className}`}
       fullWidth
       value={value}
       onChange={onChange}

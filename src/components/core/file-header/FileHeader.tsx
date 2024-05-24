@@ -41,16 +41,7 @@ const FileHeader: React.FC<FileHeaderProps> = ({ headerName }) => {
       icon: <Icon icon='mdi:file-presentation-box' />,
     },
   ];
-  const peopleFilterItems = [
-    {
-      label: 'Documents',
-      icon: <Icon icon='simple-icons:googledocs' />,
-    },
-    {
-      label: 'Spreadsheets',
-      icon: <Icon icon='mdi:google-spreadsheet' />,
-    },
-  ];
+
   const modifiedFilterItems = [
     { label: 'Today', icon: null },
     { label: 'Last 7 days', icon: null },
@@ -129,20 +120,20 @@ const FileHeader: React.FC<FileHeaderProps> = ({ headerName }) => {
           <FilterChip
             name='Type'
             options={typeFilterItems}
-            value={typeFilterItem}
+            value={typeFilterItems.find((item) => item.label === typeFilterItem)?.label || ''}
             action={(value: string) => setTypeFilterItem(value)}
           />
-          <FilterChip
+          {/* <FilterChip
             name='People'
             options={peopleFilterItems}
             action={(value: string) => setPeopleFilterItem(value)}
-            value={peopleFilterItem}
-          />
+            value={peopleFilterItem.find((item) => item.label === peopleFilterItem)?.label || ''}
+          /> */}
           <FilterChip
             name='Modified'
             options={modifiedFilterItems}
             action={(value: string) => setModifiedFilterItem(value)}
-            value={modifiedFilterItem}
+            value={modifiedFilterItems.find((item) => item.label === modifiedFilterItem)?.label || ''}
           />
         </div>
         <div className='flex flex-row items-center'>

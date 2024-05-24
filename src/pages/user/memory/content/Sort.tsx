@@ -3,15 +3,15 @@ import { Tooltip } from '@mui/material';
 
 type SortProps = {
   sort: string;
-  order: string;
-  setSort: ({ sort, order }: { sort: string; order: string }) => void;
+  order: 'asc' | 'desc';
+  setSort: ({ sort, order }: { sort: string; order: 'asc' | 'desc' }) => void;
 };
 
 const Sort: React.FC<SortProps> = ({ sort, order, setSort }) => {
   return (
     <Tooltip title='Sort by'>
-      <div className='flex flex-row items-center'>
-        <div className='my-0.5 flex h-9 cursor-pointer items-center rounded-full py-1 pl-4 pr-3 hover:bg-[#ededed]'>
+      <div className='flex flex-row items-center gap-3'>
+        <div className='my-0.5 flex h-9 cursor-pointer items-center rounded-full py-1 hover:bg-[#ededed]'>
           <div className='pb-1 text-sm font-medium'>{sort}</div>
         </div>
         <div

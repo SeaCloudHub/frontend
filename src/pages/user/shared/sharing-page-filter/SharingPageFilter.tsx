@@ -2,48 +2,25 @@ import React from 'react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import FilterChip from '@/components/core/filter-chip/FilterChip';
 import { typeFilterItems } from '@/utils/constants/type-filter.constant';
-import { peopleFilterItems } from '@/utils/constants/people-filter-constant';
 import { modifiedFilterItems } from '@/utils/constants/modified-filter.constant';
+import { useFilter } from '@/store/my-drive/myDrive.store';
+import { TypeEntry } from '@/apis/drive/drive.request';
 
-type SharingPageFilterProps = {
-  typeFilter: string;
-  setTypeFilterItem: (value: string) => void;
-  peopleFilter: string;
-  setPeopleFilterItem: (value: string) => void;
-  modifiedFilter: string;
-  setModifiedFilterItem: (value: string) => void;
-};
-
-const SharingPageFilter: React.FC<SharingPageFilterProps> = ({
-  setTypeFilterItem,
-  setPeopleFilterItem,
-  setModifiedFilterItem,
-  typeFilter,
-  peopleFilter,
-  modifiedFilter,
-}) => {
+const SharingPageFilter = () => {
+  const {modifiedFilter, setModifiedFilter, setTypeFilter, typeFilter} = useFilter();
   return (
     <div className='flex gap-2'>
-      {/* type fillter */}
       <FilterChip
         name='Type'
         options={typeFilterItems.map((item) => ({ label: item.label, icon: <Icon icon={item.icon} /> }))}
-        action={(value) => setTypeFilterItem(value)}
+        action={(value) => setTypeFilter(value as TypeEntry)}
         value={typeFilter}
       />
-      {/* people filter */}
-      <FilterChip
-        name='People'
-        options={peopleFilterItems.map((item) => ({ label: item.label, icon: <Icon icon={item.icon} /> }))}
-        action={(value) => setPeopleFilterItem(value)}
-        value={peopleFilter}
-      />
-      {/* modified filter */}
       <FilterChip
         name='Modified'
         options={modifiedFilterItems}
-        action={(value) => setModifiedFilterItem(value)}
-        value={modifiedFilter}
+        action={(value) => setModifiedFilter(value)}
+        value={modifiedFilterItems.find((item) => item?.value === modifiedFilter)?.label || ''}
       />
     </div>
   );

@@ -14,12 +14,14 @@ import { AiOutlineClose } from 'react-icons/ai';
 import { PiSignOutBold } from 'react-icons/pi';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useCookies } from 'react-cookie';
 
 type UserInfoProps = {
   onClose: () => void;
 };
 function UserInfo({ onClose }: UserInfoProps) {
   const navigate = useNavigate();
+  const [cookies, setCookie, removeCookie] = useCookies(['token']);
   const { signOut, identity } = useSession();
   const modalRef = useRef(null);
   const role = useSession((state) => state.role);
@@ -35,7 +37,10 @@ function UserInfo({ onClose }: UserInfoProps) {
     },
     onSuccess: () => {
       signOut();
-      navigate(AUTH_LOGIN_EMAIL);
+      removeCookie('token', {path: '/'});
+      setTimeout(() => { // navigate after remove cookie
+        navigate(AUTH_LOGIN_EMAIL);
+      }, 0);
     },
   });
 
@@ -44,6 +49,7 @@ function UserInfo({ onClose }: UserInfoProps) {
   };
 
   const onUserProfileClick = () => {
+    modalRef.current.style.display = 'none';
     navigate(DRIVE_PROFILE);
   };
 
@@ -87,7 +93,7 @@ function UserInfo({ onClose }: UserInfoProps) {
         <button
           disabled={logoutMutation.isPending}
           onClick={onSignOutClick}
-          className='tablet:w-44 hover:bg-darkC mt-2 flex w-36 items-center justify-center space-x-2 rounded-full  py-3 hover:bg-gray-300  dark:text-white hover:dark:bg-black'>
+          className='tablet:w-44 hover:bg-darkC mt-2 flex w-36 items-center justify-center space-x-2 rounded-full  py-3 hover:bg-gray-300  hover:dark:bg-slate-800 dark:text-white'>
           <PiSignOutBold className='h-6 w-6' />
           <span>Sign out</span>
         </button>

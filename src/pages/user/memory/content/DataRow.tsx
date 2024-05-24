@@ -1,24 +1,60 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Tooltip } from '@mui/material';
 import { LocalEntry } from '@/hooks/drive.hooks';
+import { useSelected } from '@/store/my-drive/myDrive.store';
 
-export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModified, owner, size }) => {
+export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModified, owner, size, userRoles }) => {
+  const {arrSelected, setArrSelected} = useSelected();
+
+  const handleCtrlClick = () => {
+    setArrSelected(arrSelected.some(e=>e.id === id) ? arrSelected.filter((item) => item.id !== id) : [...arrSelected, { id, isDir, userRoles }]);
+  };
+
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.ctrlKey) {
+      handleCtrlClick();
+      return;
+    }
+    setArrSelected([{ id, isDir, userRoles}]);
+  };
+
+  const handleDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.ctrlKey) {
+      handleCtrlClick();
+      return;
+    }
+    if (isDir) {
+      setArrSelected && setArrSelected([]);
+      // onDoubleClick && onDoubleClick();
+    } else {
+      // parent !== 'trash' && setFileViewer(true);
+    }
+  };
+
+  // useEffect(() => {
+  //   if (result) {
+  //     setResult(false);
+  //     setArrSelected([]);
+  //   }
+  // }, [result, setArrSelected]);
+
   return (
-    <div className='flex h-8 items-center space-x-3 border-b border-b-[#dadce0] hover:bg-[#f0f1f1]'>
-      <div className='flex shrink grow basis-[304px] items-center text-sm font-medium'>
+    <div className='grid grid-cols-7 max-[500px]:grid-cols-6 items-center space-x-3 py-2 border-b border-b-[#dadce0] hover:bg-[#f0f1f1] select-none cursor-pointer'>
+      <div className='col-span-6 flex items-center text-sm font-medium'>
         <div className='px-4'>
-          <div className='h-6 w-6'>{icon}</div>
+          <div className='h-6 w-6'> {icon} </div>
         </div>
         <Tooltip title={title}>
-          <div
-            className='line-clamp-1 w-96 max-2xl:w-72 max-lg:w-48 max-md:w-36 max-sm:w-28 max-xs:w-20
-          '>
-            {title}
-          </div>
+          <div className='line-clamp-1'> {title} </div>
         </Tooltip>
       </div>
-      <div className='shrink-0 grow-0 basis-[140px] pr-4 text-sm font-medium max-[1450px]:basis-[65px] max-[1050px]:hidden'>
-        {size}
+      <div className='col-span-1 max-[500px]:hidden truncate'>
+        {size ?
+          <Tooltip title={`${size} bytes `}>
+            <span>{size}</span>
+          </Tooltip>:
+          <span>---</span>
+        }
       </div>
     </div>
   );

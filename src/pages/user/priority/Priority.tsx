@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Path, useDrawer, useIsFileMode, useLimit, useSelected, useViewMode } from '@/store/my-drive/myDrive.store';
+import { Path, useDrawer, useIsFileMode, useSelected, useViewMode } from '@/store/my-drive/myDrive.store';
 import DriveLayout from '@/components/layout/DriveLayout';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import PriorityFilter from './priority-filter/PriorityFilter';
@@ -23,17 +23,11 @@ const Priority = () => {
   const { isFileMode, setIsFileMode } = useIsFileMode();
   const { rootId } = useStorageStore();
   const { arrSelected } = useSelected();
-  const { limit, increaseLimit } = useLimit();
+  // const { limit, increaseLimit } = useLimit();
   const { data, isLoading, refetch } = useSuggestedEntries();
   // console.log(data);
 
-  const onScrollBottom = () => {
-    if (data.length < limit) return;
-    increaseLimit();
-  };
-
   return (
-    // <div>
     <DriveLayout
       headerLeft={
         <div className='flex flex-col overflow-hidden'>
@@ -55,7 +49,6 @@ const Priority = () => {
           )}
         </div>
       }
-      onScrollBottom={onScrollBottom}
       bodyLeft={
         <PriorityView
           isLoading={isLoading}
@@ -68,16 +61,15 @@ const Priority = () => {
       }
       sidePanel={
         <SidePanel
-          id={arrSelected.length === 0 ? rootId : arrSelected.length === 1 ? arrSelected[0] : ''}
+          id={arrSelected.length === 0 ? rootId : arrSelected.length === 1 ? arrSelected[0].id : ''}
           title={
             arrSelected.length === 0
               ? 'Priority'
-              : data.find((item) => item.id === arrSelected[arrSelected.length - 1])?.title || ''
+              : data.find((item) => item.id === arrSelected[arrSelected.length - 1].id)?.title || ''
           }
         />
       }
     />
-    // </div>
   );
 };
 

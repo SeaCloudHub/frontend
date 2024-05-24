@@ -5,16 +5,11 @@ import DriveLayout from '@/components/layout/DriveLayout';
 import ButtonCore from '@/components/core/button/ButtonCore';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { Entry } from '@/utils/types/entry.type';
-import { Path, useDrawer, useSelected, useViewMode } from '@/store/my-drive/myDrive.store';
+import { Path, useDrawer, useFilter, useSelected, useViewMode } from '@/store/my-drive/myDrive.store';
 import SidePanel from '../my-drive/side-panel/SidePanel';
 import { DriveGridView } from '../my-drive/content/DriveGridView';
 import { transformEntries, useListEntries, useSharedEntry } from '@/hooks/drive.hooks';
 import { DriveListView } from '../my-drive/content/DriveListView';
-import { useSession } from '@/store/auth/session';
-import { useQuery } from '@tanstack/react-query';
-import { getSharedEntries } from '@/apis/drive/drive.api';
-import { LocalEntry } from '@/hooks/drive.hooks';
-import { toast } from 'react-toastify';
 import DrivePath from '../my-drive/header/drive-path/DrivePath';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { ListEntriesRESP } from '@/apis/drive/drive.response';
@@ -22,9 +17,10 @@ import MultipleDriveHeader from '../my-drive/header/MultipleDriveHeader';
 
 const Shared = () => {
   const { viewMode, setViewMode } = useViewMode();
-  const [typeFilterItem, setTypeFilterItem] = useState<string>('');
-  const [peopleFilterItem, setPeopleFilterItem] = useState<string>('');
-  const [modifiedFilterItem, setModifiedFilterItem] = useState<string>('');
+  // const [typeFilterItem, setTypeFilterItem] = useState<string>('');
+  const {modifiedFilter, typeFilter, setModifiedFilter, setTypeFilter} = useFilter();
+  // const [peopleFilterItem, setPeopleFilterItem] = useState<string>('');
+  // const [modifiedFilterItem, setModifiedFilterItem] = useState<string>('');
   const { drawerOpen, openDrawer, closeDrawer } = useDrawer();
   // const [{ sort, order }, setSort] = useState<{ sort: string; order: string }>({ sort: 'Name', order: 'desc' });
   const { arrSelected } = useSelected();
@@ -58,21 +54,13 @@ const Shared = () => {
           {arrSelected.length === 0 ? (
             <>
               <div className='flex items-center gap-3 px-5'>
-                <SharingPageFilter
-                  setModifiedFilterItem={setModifiedFilterItem}
-                  setPeopleFilterItem={setPeopleFilterItem}
-                  setTypeFilterItem={setTypeFilterItem}
-                  modifiedFilter={modifiedFilterItem}
-                  peopleFilter={peopleFilterItem}
-                  typeFilter={typeFilterItem}
-                />
-                {(typeFilterItem || peopleFilterItem || modifiedFilterItem) && (
+                <SharingPageFilter />
+                {(typeFilter || modifiedFilter) && (
                   <div className='flex h-7 items-center rounded-full px-[12px] py-[1px] hover:bg-[#ededed]'>
                     <div
                       onClick={() => {
-                        setTypeFilterItem('');
-                        setPeopleFilterItem('');
-                        setModifiedFilterItem('');
+                        setTypeFilter('');
+                        setModifiedFilter('');
                       }}
                       className='cursor-pointer text-sm font-medium'>
                       Clear filters
@@ -86,8 +74,8 @@ const Shared = () => {
               <MultipleDriveHeader
                 parent='SharedWithMe'
                 dir={{
-                  id: arrSelected.length === 1 ? arrSelected[0] : '',
-                  name: arrSelected.length === 1 ? data.find((item) => item.id === arrSelected[0])?.title || '' : '',
+                  id: arrSelected.length === 1 ? arrSelected[0].id : '',
+                  name: arrSelected.length === 1 ? data.find((item) => item.id === arrSelected[0].id)?.title || '' : '',
                 }}
               />
             </div>
@@ -103,11 +91,12 @@ const Shared = () => {
       }
       sidePanel={
         <SidePanel
-          id={arrSelected.length === 0 ? rootId : arrSelected.length === 1 ? arrSelected[0] : ''}
+          isHidden={arrSelected.length === 0}
+          id={arrSelected.length === 0 ? rootId : arrSelected.length === 1 ? arrSelected[0].id : ''}
           title={
             arrSelected.length === 0
               ? 'Shared'
-              : data.find((item) => item.id === arrSelected[arrSelected.length - 1])?.title || ''
+              : data.find((item) => item.id === arrSelected[arrSelected.length - 1].id)?.title || ''
           }
         />
       }

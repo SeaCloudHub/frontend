@@ -10,8 +10,8 @@ const InfoButton: React.FC = () => {
     <Tooltip title='Info'>
       <div
         className={classNames(
-          'flex h-10 w-10 cursor-pointer items-center justify-center rounded-full transition-all',
-          drawerOpen ? 'bg-[#c2e7ff] text-black hover:brightness-95' : 'hover:bg-slate-500 ',
+          'flex h-10 w-10 cursor-pointer items-center justify-center rounded-full transition-all dark:hover:bg-slate-500  hover:bg-[#c2e7ff] active:brightness-95',
+          drawerOpen ? 'dark:bg-slate-500 ' : '',
         )}
         onClick={() => {
           if (!drawerOpen) {

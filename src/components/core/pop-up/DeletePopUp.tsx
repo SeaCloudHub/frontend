@@ -4,6 +4,7 @@ import { Button, DialogActions, DialogContent, DialogTitle } from '@mui/material
 import { useDeleteMutation } from '@/hooks/drive.hooks';
 import ButtonSuccess from '../button/ButtonSuccess';
 import ButtonCancel from '../button/ButtonCancel';
+import { useEntries } from '@/store/my-drive/myDrive.store';
 
 type DeletePopUpProps = {
   open: boolean;
@@ -26,6 +27,7 @@ const DeletePopUp: React.FC<DeletePopUpProps> = ({ open, handleClose, title, sou
       <DialogActions>
         <ButtonCancel onClick={handleClose}> Cancel </ButtonCancel>
         <ButtonSuccess
+          isInvisible={deleteMutation.isPending}
           onClick={() => {
             handleClose();
             setResult(true);

@@ -20,15 +20,17 @@ import { toastError } from '../../utils/toast-options/toast-options';
 import { ApiGenericError } from '../../utils/types/api-generic-error.type';
 import AuthFooter from './AuthFooter';
 import AuthLink from './auth-link/AuthLink';
-import { initializeSocket } from '@/helpers/socket/socket.io';
+import { useCookies } from 'react-cookie'
+
 
 const LoginPassword = () => {
   // const [currentValue, setCurrentValue] = React.useState('');
   const [isShowPassword, setIsShowPassword] = React.useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const [cookies, setCookie] = useCookies(['token']);
   const from = location.state?.from?.pathname;
-  const { token: authenticated, role, signIn, firstLogin, identity } = useSession();
+  const { role, signIn, firstLogin, identity } = useSession();
   const updateStorageStore = useStorageStore((state) => state.update);
   // const handleChange = (e: { target: { value: React.SetStateAction<string> } }) => setCurrentValue(e.target.value);
   console.log(firstLogin);
@@ -54,9 +56,9 @@ const LoginPassword = () => {
       if (firstSignin) {
         navigate(AUTH_CHANGE_PASSWORD);
       }
+      setCookie('token', data.data.session_token, { path: '/', expires: new Date(data.data.session_expires_at) });
       updateStorageStore(data.data.identity.storage_usage, data.data.identity.storage_capacity, data.data.identity.root_id);
-      initializeSocket(authenticated);
-      signIn(data.data.session_token, data.data.identity.is_admin ? Role.ADMIN : Role.USER, firstSignin, data.data.identity);
+      signIn(data.data.identity.is_admin ? Role.ADMIN : Role.USER, firstSignin, data.data.identity);
     },
   });
 
@@ -65,7 +67,7 @@ const LoginPassword = () => {
       navigate(AUTH_LOGIN_EMAIL);
       return;
     }
-    if (!authenticated) return;
+    if (!cookies.token) return;
     if (!firstLogin) {
       if (from) {
         navigate(from);
@@ -73,7 +75,7 @@ const LoginPassword = () => {
         navigate(accountAuthorityCallback[role!]);
       }
     }
-  }, [authenticated, role, firstLogin, identity]);
+  }, [role, firstLogin, identity, cookies.token, navigate, from]);
 
   return (
     <div className='flex h-screen items-center justify-center bg-[#f0f4f9] px-10'>
@@ -112,6 +114,7 @@ const LoginPassword = () => {
             <div className='flex min-w-56 flex-col gap-5'>
               <div className='input w-full'>
                 <TextFieldCore
+                  theme='light'
                   label='Enter your password'
                   name='password'
                   type={isShowPassword ? 'text' : 'password'}

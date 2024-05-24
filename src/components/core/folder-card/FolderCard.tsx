@@ -13,8 +13,9 @@ import MovePopUp from '../pop-up/MovePopUp';
 import RenamePopUp from '../pop-up/RenamePopUp';
 import SharePopUp from '../pop-up/SharePopUp';
 import { useStarEntryMutation, useUnstarEntryMutation } from '@/hooks/drive.hooks';
+import { isPermission } from '@/utils/function/permisstion.function';
 
-interface FolderCardProps {
+type FolderCardProps = {
   title: string;
   icon: React.ReactNode;
   id: string;
@@ -23,10 +24,10 @@ interface FolderCardProps {
   isSelected?: boolean;
   parent?: 'priority' | 'my-drive' | 'shared' | 'trash' | 'starred';
   dir: { id: string; name: string };
-  // setArrSelected?: Dispatch<SetStateAction<string[]>>;
+  userRoles?: ('owner' | 'editor' | 'viewer')[];
 }
 
-const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick, onClick, isSelected, parent, dir }) => {
+const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick, onClick, isSelected, parent, dir, userRoles }) => {
   const setDrawerOpen = useDrawer((state) => state.openDrawer);
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
   const [type, setType] = useState<'move' | 'share' | 'rename' | 'move to trash' | null>();
@@ -46,14 +47,16 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick,
           setType('rename');
           setIsPopUpOpen(true);
         },
+        isHidden: isPermission(userRoles) <= 1,
       },
     ],
     [
       {
         label: 'Copy link',
         icon: <Icon icon='material-symbols:link' />,
-        action: (text: string) => {
-          CopyToClipboard(text);
+        action: () => {
+          const link = `${window.location.origin}/folder/${id}`;
+          CopyToClipboard(link);
         },
       },
       {
@@ -63,6 +66,7 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick,
           setType('share');
           setIsPopUpOpen(true);
         },
+        isHidden: isPermission(userRoles) <= 1,
       },
     ],
     [
@@ -73,6 +77,7 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick,
           setType('move');
           setIsPopUpOpen(true);
         },
+        isHidden: isPermission(userRoles) <= 1,
       },
       {
         label: parent !== 'starred' ? 'Add to starred' : 'Remove from starred',
@@ -98,6 +103,7 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick,
           setType('move to trash');
           setIsPopUpOpen(true);
         },
+        isHidden: isPermission(userRoles) <= 1,
       },
     ],
   ];
@@ -110,13 +116,15 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick,
   }, [result, setArrSelected]);
 
   const handleCtrlClick = () => {
-    if (setArrSelected) {
-      setArrSelected(arrSelected.includes(id) ? arrSelected.filter((item) => item !== id) : [...arrSelected, id]);
-    }
+    setArrSelected(
+      arrSelected.some((item) => item.id === id && item.isDir === true) ?
+      arrSelected.filter((item) => item.id !== id) :
+      [...arrSelected, {id, isDir:true, userRoles}]
+    );
   };
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.ctrlKey) {
+    if (e.ctrlKey || e.metaKey) {
       handleCtrlClick();
       return;
     }

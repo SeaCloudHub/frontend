@@ -7,7 +7,7 @@ import SearchResult from './SearchResult';
 import { useSearchEntries } from '@/hooks/drive.hooks';
 import { useNavigate } from 'react-router-dom';
 import { DRIVE_SEARCH } from '@/utils/constants/router.constant';
-import { useEntries, useLimit } from '@/store/my-drive/myDrive.store';
+import { useCursor, useCursorSearch, useEntries, useSelected } from '@/store/my-drive/myDrive.store';
 import { useSession } from '@/store/auth/session';
 
 function Search() {
@@ -15,37 +15,55 @@ function Search() {
   const [keyWord, setKeyWord] = useState<string>('');
   const [onFocus, setOnFocus] = useState<boolean>(false);
   const ref = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
-  const { submited, setSubmited } = useEntries();
-  const { resetLimit } = useLimit();
+  // const { resetCursor } = useCursor();
+  const {resetCursorSearch} = useCursorSearch();
+  const {setArrSelected} = useSelected();
 
   const searchValue = useDebounce({ delay: 260, value: keyWord });
-  const { data, isLoading, refetch } = useSearchEntries(searchValue);
+  const {data, isLoading, refetch} = useSearchEntries(searchValue);
+
+  const { theme } = useTheme();
+  const fill = theme === 'dark' ? 'white' : '';
+
+  // click outside
+  useMemo(() => {
+    const handleClickOutside = (event) => {
+      if (event.ctrlKey || event.metaKey) return;
+      if (ref.current && ref.current.contains(event.target)) return;
+      if (onFocus) {
+        setOnFocus(false);
+        resetCursorSearch();
+        setArrSelected([]);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [onFocus, resetCursorSearch, setArrSelected]);
+
   return (
-    <div
-      className={`${identity.is_admin ? 'pointer-events-none opacity-0' : ''} relative max-w-2xl flex-1`}
-      onFocus={() => {
-        setOnFocus(true);
-        setSubmited(false);
-        resetLimit();
-      }}>
+    <div className='relative max-w-2xl flex-1 ' ref={ref} onClick={() => {
+      setOnFocus(true)
+      // resetCursorSearch();
+    }}>
       <span
         onClick={() => {}}
         className=' absolute left-2 top-[5px] h-9 w-9 cursor-pointer rounded-full p-2 hover:bg-gray-100 dark:text-white hover:dark:bg-slate-800'>
         <AiOutlineSearch className='stroke-textC h-full w-full' stroke='2' />
       </span>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          setOnFocus(false);
-          setSubmited(true);
-          resetLimit();
-          ref.current.blur();
-          navigate(`${DRIVE_SEARCH}?q=${searchValue}`);
-        }}>
+      <form onSubmit={(e)=>{
+        e.preventDefault()
+        setOnFocus(false);
+        resetCursorSearch();
+        inputRef.current.blur();
+        navigate(`${DRIVE_SEARCH}?q=${searchValue}`)
+      }}>
         <input
-          ref={ref}
-          onBlur={() => setOnFocus(false)}
+          ref={inputRef}
           onChange={(e) => setKeyWord(e.target.value)}
           type='text'
           placeholder='Search file'
@@ -54,7 +72,7 @@ function Search() {
           dark:bg-search-bg-dark dark:text-icons-color-dark dark:placeholder-blue-50 dark:placeholder-opacity-60'
         />
       </form>
-      {onFocus && <SearchResult data={data} />}
+      {onFocus && <SearchResult data={data} loading={isLoading}/>}
     </div>
   );
 }

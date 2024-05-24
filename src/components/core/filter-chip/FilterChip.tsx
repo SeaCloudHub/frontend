@@ -3,24 +3,27 @@ import Dropdown from '../drop-down/Dropdown';
 import React from 'react';
 import CustomDropdown from '../drop-down/CustomDropdown';
 import { Tooltip } from '@mui/material';
-import { useLimit } from '@/store/my-drive/myDrive.store';
+import { useCursor } from '@/store/my-drive/myDrive.store';
 
 type FilterChipProps = {
   name: string;
-  options: { label: string; icon: React.ReactNode }[];
+  options: { label: string; icon: React.ReactNode, value?: string }[];
   action?: (value: string) => void;
   value?: string;
 };
 
 const FilterChip: React.FC<FilterChipProps> = ({ name, options, action, value }) => {
-  const { resetLimit } = useLimit();
+  // const { resetLimit } = useLimit();
+  const {resetCursor} = useCursor();
   const items = options.map((item) => ({
     label: item.label,
     icon: item.icon,
     action: () => {
       console.log(item.label);
-      resetLimit();
-      action && action(item.label);
+      console.log(new Date().toISOString());
+      // resetLimit();
+      resetCursor();
+      action && action(item?.value || item.label);
     },
   }));
   return (
@@ -34,9 +37,9 @@ const FilterChip: React.FC<FilterChipProps> = ({ name, options, action, value })
         ) : (
           <div className='flex h-[30px]'>
             <div className='flex cursor-pointer items-center space-x-2 rounded-l-lg border-0 bg-primaryContainer px-4 py-1 text-sm font-medium hover:bg-primaryFixedDim active:brightness-90 dark:bg-blue-900 dark:hover:bg-slate-500 dark:hover:text-content-bg'>
-              <Tooltip title={value}>
+              {/* <Tooltip title={value}> */}
                 <span className='line-clamp-1 select-none'>{value}</span>
-              </Tooltip>
+              {/* </Tooltip> */}
               <Icon icon='mdi:caret-down' />
             </div>
             <div

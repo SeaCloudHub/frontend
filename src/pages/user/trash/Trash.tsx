@@ -1,5 +1,5 @@
 import DriveLayout from '@/components/layout/DriveLayout';
-import { useDrawer, useSelected, useViewMode } from '@/store/my-drive/myDrive.store';
+import { useCursor, useDrawer, useFilter, useSelected, useViewMode } from '@/store/my-drive/myDrive.store';
 import { useState } from 'react';
 import SharingPageViewMode from '../shared/sharing-page-view/SharingPageViewMode';
 import { Icon } from '@iconify/react/dist/iconify.js';
@@ -14,33 +14,40 @@ import { useStorageStore } from '@/store/storage/storage.store';
 import TrashPageHeader from './TrashPageHeader';
 
 const Trash = () => {
-  const { viewMode, setViewMode } = useViewMode();
-  const [typeFilterItem, setTypeFilterItem] = useState<string>('');
-  const [modifiedFilterItem, setModifiedFilterItem] = useState<string>('');
+  // const { viewMode, setViewMode } = useViewMode();
+  // const {modifiedFilter, setModifiedFilter, setTypeFilter, typeFilter} = useFilter();
   const { rootId } = useStorageStore();
+  // const {limit, increaseLimit} = useLimit();
+  const { nextCursor, currentCursor, setCurrentCursor } = useCursor();
+  const [isScrolling, setIsScrolling] = useState(false);
 
-  const { arrSelected, setArrSelected } = useSelected();
+  const { arrSelected } = useSelected();
   console.log('[Trash] arrSelected', arrSelected);
 
   const { data, isLoading, refetch } = useTrash();
   console.log('[Trash] data', data);
 
+  const onScollBottom = () => {
+    if(nextCursor && nextCursor !== currentCursor) {
+      setIsScrolling(true);
+      setTimeout(() => {
+        setIsScrolling(false);
+        setCurrentCursor(nextCursor);
+      }, 1000);
+    }
+  };
+
   return (
     <DriveLayout
-      headerLeft={
-        <TrashPageHeader
-          modifiedFilterItem={modifiedFilterItem}
-          setModifiedFilterItem={setModifiedFilterItem}
-          setTypeFilterItem={setTypeFilterItem}
-          typeFilterItem={typeFilterItem}
-        />
-      }
-      bodyLeft={<TrashPageView entries={data} dir={{ id: rootId, name: 'Trash' }} />}
+      headerLeft= { <TrashPageHeader /> }
+      onScrollBottom={onScollBottom}
+      bodyLeft={<TrashPageView entries={data} dir={{ id: rootId, name: 'Trash' }} isLoading={isLoading}/>}
       sidePanel={
         <SidePanel
-          id={arrSelected.length === 0 ? rootId : arrSelected.length === 1 ? arrSelected[0] : ''}
+          isHidden={arrSelected.length === 0}
+          id={arrSelected.length === 0 ? rootId : arrSelected.length === 1 ? arrSelected[0].id : ''}
           title={
-            arrSelected.length === 0 ? 'Trash' : data.find((item) => item.id === arrSelected[arrSelected.length - 1])?.title || ''
+            arrSelected.length === 0 ? 'Trash' : data.map((timeEntry) => timeEntry.entries).flat().find((entry) => entry.id === arrSelected[0].id)?.title || ''
           }
         />
       }

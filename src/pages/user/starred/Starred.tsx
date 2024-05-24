@@ -5,7 +5,7 @@ import { Icon } from '@iconify/react/dist/iconify.js';
 import ButtonCore from '@/components/core/button/ButtonCore';
 import StarredView from './stared-view/StarredView';
 import DriveLayout from '@/components/layout/DriveLayout';
-import { useDrawer, useSelected, useViewMode } from '@/store/my-drive/myDrive.store';
+import { useCursor, useDrawer, useFilter, useSelected, useViewMode } from '@/store/my-drive/myDrive.store';
 import SidePanel from '../my-drive/side-panel/SidePanel';
 import { useSession } from '@/store/auth/session';
 import { useQuery } from '@tanstack/react-query';
@@ -17,16 +17,23 @@ import MultipleDriveHeader from '../my-drive/header/MultipleDriveHeader';
 import { useStarred } from '@/hooks/drive.hooks';
 
 const Starred = () => {
-  const [typeFilterItem, setTypeFilterItem] = useState<string>('');
-  const [peopleFilterItem, setPeopleFilterItem] = useState<string>('');
-  const [modifiedFilterItem, setModifiedFilterItem] = useState<string>('');
-
+  // const [typeFilterItem, setTypeFilterItem] = useState<string>('');
+  // const [peopleFilterItem, setPeopleFilterItem] = useState<string>('');
+  // const [modifiedFilterItem, setModifiedFilterItem] = useState<string>('');
+  const {modifiedFilter, typeFilter, setModifiedFilter, setTypeFilter} = useFilter();
+  const {currentCursor, nextCursor, setCurrentCursor} = useCursor();
   const { viewMode, setViewMode } = useViewMode();
   const { arrSelected } = useSelected();
   const { drawerOpen, openDrawer, closeDrawer } = useDrawer();
   const { rootId } = useStorageStore();
 
   const { data, isLoading } = useStarred();
+
+  console.log(isLoading);
+
+  const onScrollBottom = () => {
+    if (nextCursor) setCurrentCursor(nextCursor);
+  }
 
   return (
     <DriveLayout
@@ -51,21 +58,13 @@ const Starred = () => {
           </div>
           {arrSelected.length === 0 ? (
             <div className='mb-1.5 flex w-full items-center gap-3'>
-              <SharingPageFilter
-                setModifiedFilterItem={setModifiedFilterItem}
-                setPeopleFilterItem={setPeopleFilterItem}
-                setTypeFilterItem={setTypeFilterItem}
-                modifiedFilter={modifiedFilterItem}
-                peopleFilter={peopleFilterItem}
-                typeFilter={typeFilterItem}
-              />
-              {(typeFilterItem || peopleFilterItem || modifiedFilterItem) && (
+              <SharingPageFilter />
+              {(typeFilter || modifiedFilter) && (
                 <div className='flex h-7 items-center rounded-full px-[12px] py-[1px] hover:bg-[#ededed]'>
                   <div
                     onClick={() => {
-                      setTypeFilterItem('');
-                      setPeopleFilterItem('');
-                      setModifiedFilterItem('');
+                      setTypeFilter('');
+                      setModifiedFilter('');
                     }}
                     className='cursor-pointer text-sm font-medium'>
                     Clear filters
@@ -86,14 +85,15 @@ const Starred = () => {
           )}
         </div>
       }
+      onScrollBottom={onScrollBottom}
       bodyLeft={<StarredView entries={data} isLoading={isLoading} />}
       sidePanel={
         <SidePanel
-          id={arrSelected.length === 0 ? rootId : arrSelected.length === 1 ? arrSelected[0] : ''}
+          id={arrSelected.length === 0 ? rootId : arrSelected.length === 1 ? arrSelected[0].id : ''}
           title={
             arrSelected.length === 0
               ? 'Starred'
-              : data.find((item) => item.id === arrSelected[arrSelected.length - 1])?.title || ''
+              : data.find((item) => item.id === arrSelected[arrSelected.length - 1].id)?.title || ''
           }
         />
       }

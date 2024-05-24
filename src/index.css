@@ -90,3 +90,41 @@ html {
     @apply text-0.67em font-bold;
   }
 }
+
+.input-dark {
+  background-color: #031525;
+  color: white;
+}
+.input-dark.MuiInputLabel-root {
+  color: white;
+}
+.input-dark .MuiOutlinedInput-root.Mui-disabled .MuiOutlinedInput-notchedOutline {
+  border-color: #64748B;
+}
+.input-dark .MuiFormHelperText-root {
+  color: #64748B;
+}
+.input-dark .MuiOutlinedInput-notchedOutline {
+  border-color: rgba(255, 255, 255, 0.25);
+}
+.input-dark .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: rgba(255, 255, 255, 0.5);
+}
+.input-dark .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: rgba(255, 255, 255, 0.5);
+}
+.input-dark .MuiFormLabel-root {
+  color: white;
+}
+.input-dark .MuiFormLabel-root.Mui-focused {
+  color: white;
+}
+.input-dark .MuiInputBase-input {
+  color: white;
+}
+.input-dark .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline {
+  border-color: #F87171;
+}
+.input-dark .MuiFormHelperText-root.Mui-error {
+  color: #F87171;
+}

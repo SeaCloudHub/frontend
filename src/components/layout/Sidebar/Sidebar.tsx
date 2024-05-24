@@ -51,12 +51,16 @@ const Sidebar = ({ role, shrinkMode }: SidebarProps) => {
             <div className='flex w-full  flex-col '>
               <div
                 className='flex h-16 w-full cursor-pointer items-center justify-around gap-2 p-3 pl-6'
-                onClick={() => {
-                  setArrSelected([]);
-                  navigate(role === Role.USER ? DRIVE_HOME : ADMIN_HOME);
-                }}>
-                <img src={(import.meta.env.BASE_URL + 'logo.png') as string} alt='placeholder' className='h-9  rounded-full' />
-                <p className='h4'>SEACLOUD</p>
+              >
+                <div className='flex gap-2 items-center'
+                  onClick={() => {
+                    setArrSelected([]);
+                    navigate(role === Role.ADMIN ? ADMIN_HOME : DRIVE_HOME);
+                  }}
+                >
+                  <img src={(import.meta.env.BASE_URL + 'logo.png') as string} alt='placeholder' className='h-9  rounded-full' />
+                  <p className='h4'>SEACLOUD</p>
+                </div>
                 <ButtonIcon onClick={() => updateShrinkMode(true)} icon='ion:caret-back' size={'25px'} />
               </div>
             </div>

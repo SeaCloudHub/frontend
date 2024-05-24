@@ -4,28 +4,27 @@ import MemoryHeader from './header/MemoryHeader';
 import { useState } from 'react';
 import { MemoryView } from './content/MemoryView';
 import { fakeEntries } from '@/utils/dumps/entries';
-import { transformEntries } from '@/hooks/drive.hooks';
+import { transformEntries, useMemory } from '@/hooks/drive.hooks';
 import { EntryRESP } from '@/apis/drive/drive.response';
+import { useCursor } from '@/store/my-drive/myDrive.store';
 
 const Memory = () => {
-  const [typeFilter, setTypeFilter] = useState<string>('');
-  const [modifiedFilter, setModifiedFilter] = useState<string>('');
-  const [{ sort, order }, setSort] = useState<{ sort: string; order: string }>({ sort: 'Name', order: 'desc' });
+  const [{ sort, order }, setSort] = useState<{ sort: string; order: 'asc' | 'desc' }>({ sort: 'Size', order: 'desc' });
+  const {setCurrentCursor, currentCursor, nextCursor} = useCursor();
 
-  const entries = fakeEntries as unknown;
-  const localEntries = transformEntries(entries as EntryRESP[]);
+  const {data, isLoading} = useMemory(order === 'asc' ? true: false);
+
+  const onScrollBottom = () => {
+    if(nextCursor && nextCursor !== currentCursor) {
+      setCurrentCursor(nextCursor);
+    }
+  };
 
   return (
     <DriveLayout
-      headerLeft={
-        <MemoryHeader
-          typeFilter={typeFilter}
-          modifiedFilter={modifiedFilter}
-          setTypeFilter={setTypeFilter}
-          setModifiedFilter={setModifiedFilter}
-        />
-      }
-      bodyLeft={<MemoryView entries={localEntries} order={order} setSort={setSort} sort={sort} />}
+      headerLeft={<MemoryHeader />}
+      onScrollBottom={onScrollBottom}
+      bodyLeft={<MemoryView entries={data} isLoading={isLoading} order={order} setSort={setSort} sort={sort} />}
       sidePanel={<SidePanel />}
     />
   );
