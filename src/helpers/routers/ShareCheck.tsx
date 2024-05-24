@@ -8,7 +8,6 @@ import { ApiGenericError } from '@/utils/types/api-generic-error.type';
 import { FileShareRole } from '@/utils/types/file-share-role.type';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
-import { locale } from 'dayjs';
 import { useEffect, useMemo, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
@@ -21,7 +20,7 @@ const ShareCheck = () => {
   }, [location]);
   const [checking, setChecking] = useState(true);
   const { data, error, isFetching } = useQuery({
-    queryKey: ['get-file-metadata', fileId],
+    queryKey: ['get-file-metadata-viewFileContainer', fileId],
     queryFn: () => accessFileAPi({ id: fileId }),
     staleTime: 0,
   });
@@ -39,22 +38,23 @@ const ShareCheck = () => {
         } else {
           setErrorMessage(error.response.data.message);
         }
-        setChecking(false);
       } else {
         setErrorMessage(error.message);
-        setChecking(false);
       }
+      setChecking(false);
     },
     onSuccess: (data) => {
       const localEntry = transformEntry(data.data.file);
       const role = data.data.users.find((user) => user.user_id === userId)?.role as FileShareRole;
-      if(localEntry.isDir&&location.pathname.includes('file')){
-            setErrorMessage('File or Folder is not existed. Please check it again ');
-      }
-      else{
+      if (
+        (localEntry.isDir && location.pathname.includes('file')) ||
+        (!localEntry.isDir && location.pathname.includes('folder'))
+      ) {
+        setErrorMessage('File or Folder is not existed. Please check it again ');
+      } else {
         setFileInfo(localEntry, role);
-        setChecking(false);
       }
+      setChecking(false);
     },
   });
   const [ErrorMessage, setErrorMessage] = useState<string | null>(null);
@@ -73,13 +73,19 @@ const ShareCheck = () => {
       }
       setChecking(false);
     } else {
-      fileMetadataMutation.mutateAsync();
+      setTimeout(() => {
+        fileMetadataMutation.mutateAsync();
+      }, 1000);
     }
   }, [error]);
   return (
     <>
       {!checking && (ErrorMessage ? <ShareError message={ErrorMessage} /> : <Outlet />)}
-      {checking && <img src={(import.meta.env.BASE_URL + 'loader.svg') as string} className='mx-auto  h-[50px] w-[50px]' />}
+      {checking && (
+        <div className='flex h-[calc(100vh-4rem)] items-center justify-center px-2 py-2'>
+          <img src={(import.meta.env.BASE_URL + 'loader.svg') as string} className='mx-auto  h-[50px] w-[50px]' />
+        </div>
+      )}
     </>
   );
 };

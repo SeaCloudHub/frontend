@@ -1,7 +1,7 @@
 import { classNames } from '@/components/core/drop-down/Dropdown';
 import { useEntryAccess, useEntryMetadata } from '@/hooks/drive.hooks';
 import { useSession } from '@/store/auth/session';
-import { useActivityLogStore, useCursor, useCursorActivity, useDrawer, useLimit } from '@/store/my-drive/myDrive.store';
+import { useActivityLogStore, useCursor, useCursorActivity, useDrawer } from '@/store/my-drive/myDrive.store';
 import { numToSize } from '@/utils/function/numbertToSize';
 import { Tab } from '@headlessui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
@@ -13,67 +13,14 @@ import SidePanelDetail from './SidePanelDetail';
 type SidePanelProps = {
   id?: string;
   title?: string;
+  isHidden?: boolean;
 };
 
-const fakeDataSidePanelAction = [
-  {
-    time: new Date(),
-    data: [
-      {
-        action: 'created',
-        timeAction: new Date(),
-        actor: { name: 'daccong', avatar: 'https://picsum.photos/200/300' },
-        // root: { id: 'id', title: 'root' },
-        entry: [
-          { id: 'id', title: 'entry.pdf' },
-          { id: 'id', title: 'entry.docx' },
-        ],
-      },
-      {
-        action: 'opened',
-        timeAction: new Date(),
-        actor: { name: 'daccong', avatar: 'https://picsum.photos/200/300' },
-        root: { id: 'id', title: 'root' },
-        entry: [
-          { id: 'id', title: 'entry' },
-          { id: 'id', title: 'entry' },
-        ],
-      },
-    ],
-  },
-  {
-    time: new Date(),
-    data: [
-      {
-        action: 'created',
-        timeAction: new Date(),
-        actor: { name: 'daccong', avatar: 'https://picsum.photos/200/300' },
-        root: { id: 'id', title: 'root asdfasd addfasdf dsgsdg dfasf' },
-        entry: [
-          { id: 'id', title: 'entry 111111 111111111 1111111111 11111111111' },
-          { id: 'id', title: 'entry' },
-        ],
-      },
-      {
-        action: 'opened',
-        timeAction: new Date(),
-        actor: { name: 'daccong', avatar: 'https://picsum.photos/200/300' },
-        root: { id: 'id', title: 'root' },
-        entry: [
-          { id: 'id', title: 'entry' },
-          { id: 'id', title: 'entry' },
-        ],
-      },
-    ],
-  },
-];
-
-const SidePanel: React.FC<SidePanelProps> = ({ id, title }) => {
+const SidePanel: React.FC<SidePanelProps> = ({ id, title, isHidden }) => {
   const tabs = ['Details', 'Activity'];
   const { closeDrawer, tab, setTab } = useDrawer();
   console.log('SidePanel render', tab);
   const scrollRef = React.useRef<HTMLDivElement>(null);
-  const { increaseLimit, limit } = useLimit();
   const {currentCursorActivity, nextCursorActivity, setCurrentCursorActivity} = useCursorActivity();
   const { data: details, isLoading, isFetching } = useEntryMetadata(id);
   const {activityLog, setActivityLog} = useActivityLogStore();
@@ -99,75 +46,88 @@ const SidePanel: React.FC<SidePanelProps> = ({ id, title }) => {
         scrollRef.current?.removeEventListener('scroll', handleScroll);
       };
     }
-  }, [activityLog, currentCursorActivity, increaseLimit, setCurrentCursorActivity, nextCursorActivity]);
+  }, [activityLog, currentCursorActivity, setCurrentCursorActivity, nextCursorActivity]);
 
   return (
-    <div className='flex h-full w-[360px] flex-col overflow-hidden border-l'>
-      <div className='mb-4 mt-6 flex min-h-9 w-full items-center justify-between px-6 pr-2'>
-        {id ? (
-          <div className='flex items-center space-x-4'>
-            <div className='w-6'>
-              {details ? details.icon : <Icon icon='mdi:folder-google-drive' className='h-full w-full' />}
-            </div>
-            <div className='text-wrap font-medium'>{!isLoading ? (details ? details.name : title) : title}</div>
-          </div>
-        ) : (
-          <div></div>
-        )}
-        <Icon
-          className='h-10 w-10 cursor-pointer rounded-full p-2 hover:bg-surfaceContainerLow dark:hover:bg-slate-400 dark:active:brightness-90'
-          icon='ic:baseline-close'
-          onClick={() => closeDrawer()}
-        />
+    isHidden ? (
+      <div className='w-[360px] relative'>
+        <div className='flex justify-end mt-6 mb-4'>
+          <Icon
+            className='h-10 w-10 cursor-pointer rounded-full p-2 hover:bg-surfaceContainerLow dark:hover:bg-slate-400 dark:active:brightness-90'
+            icon='ic:baseline-close'
+            onClick={() => closeDrawer()}
+            />
+        </div>
+        <DefaultTabPanel/>
       </div>
-      {id ? (
-        <Tab.Group
-          defaultIndex={tabs.indexOf(tab)}
-          selectedIndex={tabs.indexOf(tab)}
-          onChange={(index) => setTab(tabs[index] as 'Details' | 'Activity')}>
-          <Tab.List className='flex border-b border-[#cbcbcb] pb-4'>
-            {tabs.map((tab, index) => (
-              <Tab key={index} className='flex basis-1/2 focus:outline-none'>
-                {({ selected }) => (
-                  <div
-                    className={classNames(
-                      'flex grow justify-center active:bg-[#c7d8f4] dark:hover:bg-blue-950',
-                      selected ? 'hover:bg-[#f5f8fd] ' : 'hover:bg-[#f5f8fd]',
-                    )}>
+    ) : (
+      <div className='flex h-full w-[360px] flex-col overflow-hidden border-l'>
+        <div className='mb-4 mt-6 flex min-h-9 w-full items-center justify-between px-6 pr-2'>
+          {id ? (
+            <div className='flex items-center space-x-4'>
+              <div className='w-6'>
+                {details ? details.icon : <Icon icon='mdi:folder-google-drive' className='h-full w-full' />}
+              </div>
+              <div className='text-wrap font-medium'>{!isLoading ? (details ? details.name : title) : title}</div>
+            </div>
+          ) : (
+            <div></div>
+          )}
+          <Icon
+            className='h-10 w-10 cursor-pointer rounded-full p-2 hover:bg-surfaceContainerLow dark:hover:bg-slate-400 dark:active:brightness-90'
+            icon='ic:baseline-close'
+            onClick={() => closeDrawer()}
+          />
+        </div>
+        {id ? (
+          <Tab.Group
+            defaultIndex={tabs.indexOf(tab)}
+            selectedIndex={tabs.indexOf(tab)}
+            onChange={(index) => setTab(tabs[index] as 'Details' | 'Activity')}>
+            <Tab.List className='flex border-b border-[#cbcbcb] pb-4'>
+              {tabs.map((tab, index) => (
+                <Tab key={index} className='flex basis-1/2 focus:outline-none'>
+                  {({ selected }) => (
                     <div
                       className={classNames(
-                        'w-14 py-3 text-sm font-medium',
-                        selected ? 'border-b-[3px] border-[#0B57D0] text-[#4f86dd]' : '',
+                        'flex grow justify-center active:bg-[#c7d8f4] dark:hover:bg-blue-950',
+                        selected ? 'hover:bg-[#f5f8fd] ' : 'hover:bg-[#f5f8fd]',
                       )}>
-                      {tab}
+                      <div
+                        className={classNames(
+                          'w-14 py-3 text-sm font-medium',
+                          selected ? 'border-b-[3px] border-[#0B57D0] text-[#4f86dd]' : '',
+                        )}>
+                        {tab}
+                      </div>
                     </div>
+                  )}
+                </Tab>
+              ))}
+            </Tab.List>
+            <Tab.Panels className='relative h-full w-full overflow-y-auto' ref={scrollRef}>
+              <Tab.Panel>
+                <SidePanelDetail id={id} title={title} details={details} isLoading={isLoading}/>
+              </Tab.Panel>
+              <Tab.Panel>
+                <SidePanelAction />
+                {isScrolling &&
+                  <div className='h-fit text-center'>
+                    <CircularProgress className='translate-y-1' />
                   </div>
-                )}
-              </Tab>
-            ))}
-          </Tab.List>
-          <Tab.Panels className='relative h-full w-full overflow-y-auto' ref={scrollRef}>
-            <Tab.Panel>
-              <SidePanelDetail id={id} title={title} details={details} isLoading={isLoading}/>
-            </Tab.Panel>
-            <Tab.Panel>
-              <SidePanelAction />
-              {isScrolling &&
-                <div className='h-fit text-center'>
-                  <CircularProgress className='translate-y-1' />
-                </div>
-              }
-            </Tab.Panel>
-          </Tab.Panels>
-        </Tab.Group>
-      ) : (
-        <DefaultTabPanel />
-      )}
-    </div>
+                }
+              </Tab.Panel>
+            </Tab.Panels>
+          </Tab.Group>
+        ) : (
+          <DefaultTabPanel />
+        )}
+      </div>
+    )
   );
 };
 
-export const DefaultTabPanel: React.FC = () => {
+export const DefaultTabPanel = () => {
   return (
     <div className='flex flex-col items-center'>
       <img className='mb-4 h-60 w-full object-cover' src={(import.meta.env.BASE_URL + 'guide1.png') as string} alt='Guide1' />

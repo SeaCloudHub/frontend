@@ -44,7 +44,7 @@ import {
 import { MoveToTrashREQ } from '@/apis/drive/request/move-to-trash.request';
 import { downloadFileApi, uploadFilesApi } from '@/apis/user/storage/storage.api';
 import { LocalEntryToTimeEntry } from '@/pages/user/trash/trash-page-view/DriveHistoryGridView';
-import { Path, useDrawer, useEntries, useIsFileMode, useLimit, useFilter, useSelected, useActivityLogStore, useCursor, useCursorActivity } from '@/store/my-drive/myDrive.store';
+import { Path, useDrawer, useEntries, useIsFileMode, useFilter, useSelected, useActivityLogStore, useCursor, useCursorActivity, useCursorSearch } from '@/store/my-drive/myDrive.store';
 import { useProgressIndicator } from '@/store/storage/progressIndicator.store';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { fileTypeIcons } from '@/utils/constants/file-icons.constant';
@@ -155,7 +155,7 @@ export const useListFolders = (volumn?: 'Priority' | 'My Drive' | 'Starred' | 'S
             .filter((e) => e.is_dir)
             .filter((e) => !e.name.includes('.trash'));
         case 'Shared':
-          return (await getSharedEntries().then((res) => res?.data || []))
+          return (await getSharedEntries({}).then((res) => res?.data?.entries || []))
             .filter((e) => e.is_dir)
             .filter((e) => !e.name.includes('.trash'));
         default:
@@ -182,8 +182,8 @@ export const useSuggestedEntries = () => {
   const { data, error, refetch, isLoading } = useQuery({
     queryKey: ['suggested-entries', isFileMode ? 'File' : 'Folder'],
     queryFn: async () => {
-      const res = await getListEntriesSuggested({ limit: 30, dir: !isFileMode }).then((res) => res?.data);
-      // console.log('[useSuggestedEntries] res', res);
+      const res = await getListEntriesSuggested({ limit: 30, dir: !isFileMode })
+        .then((res) => res?.data?.filter(e=>e.name!=='.trash'))
       return res || [];
     },
     staleTime: 10 * 1000,
@@ -201,47 +201,55 @@ export const useSuggestedEntries = () => {
   return { data: listSuggestedEntries || [], refetch, isLoading };
 };
 
-export const useSearchEntries = (query: string, set?: boolean) => {
-  const { setNextCursor, currentCursor } = useCursor();
-  const { setListEntries, listEntries } = useEntries();
-  const { typeFilter, modifiedFilter } = useFilter();
-
+export const useSearchEntries = (query: string) => {
   const { data, error, refetch, isLoading } = useQuery({
-    queryKey: ['search-entries', query, currentCursor, set, typeFilter, modifiedFilter],
+    queryKey: ['search-entries', query],
+    queryFn: () => {
+      if(!query) return [];
+      return searchEntriesApi({query, limit: 10}).then((res) => res?.data?.entries || []);
+    },
+    staleTime: 10 * 1000,
+    select: transformSuggestedEntries,
+  });
+
+  if (isAxiosError<ApiGenericError>(error)) {
+    toast.error(error.response?.data.message, toastError());
+  }
+
+  return { data: data || [], refetch, isLoading };
+}
+
+export const useSearchEntriesPage = () => {
+  const query = useQueries().get('q') || '';
+  const {currentCursorSearch, setNextCursorSearch} = useCursorSearch();
+  const { typeFilter, modifiedFilter } = useFilter();
+  const {entriesSearchPage, setEntriesSearchPage} = useEntries();
+
+  const { data, refetch, isLoading } = useQuery({
+    queryKey: ['search-entries-Page', query, typeFilter, modifiedFilter],
     queryFn: async () => {
       if(!query) return {entries: [], cursor: ''}
       const res = await searchEntriesApi({
         ...{ query, limit: 15, type: typeFilter },
-        ...(currentCursor ? { cursor: currentCursor } : {}),
+        ...(currentCursorSearch ? {cursor: currentCursorSearch}:{}),
         ...(modifiedFilter ? { after: modifiedFilter } : {}),
       }).then((res) => res?.data);
-      return res;
+      return res || {entries: [], cursor: ''};
     },
     staleTime: 10 * 1000,
   });
 
   useEffect(() => {
     if(data){
-      data.cursor && setNextCursor(data.cursor);
-      const entries = transformEntries((data?.entries || []) as EntryRESP[]);
-      if(!currentCursor) setListEntries(entries);
-      else setListEntries(listEntries.concat(entries.filter((entry) => !listEntries.find((e) => e.id === entry.id))));
+      data.cursor && setNextCursorSearch(data.cursor);
+      const entries = transformSuggestedEntries((data.entries || []) as SuggestedEntriesRESP[]);
+      if(!currentCursorSearch)
+        setEntriesSearchPage(entries);
+      else setEntriesSearchPage(entriesSearchPage.concat(entries.filter((entry) => !entriesSearchPage.find((e) => e.id === entry.id))));
     }
-  }, [currentCursor, data, set, setListEntries, setNextCursor]);
+  }, [data, setEntriesSearchPage]);
 
-  if (isAxiosError<ApiGenericError>(error)) {
-    toast.error(error.response?.data.message, toastError());
-  }
-
-  return { data: listEntries, refetch, isLoading };
-}
-
-export const useSearchEntriesPage = () => {
-  const query = useQueries().get('q') || '';
-
-  const { data, refetch, isLoading } = useSearchEntries(query, true);
-
-  return { data: data, refetch, isLoading };
+  return { data: entriesSearchPage, refetch, isLoading };
 }
 
 ////////////////////////////////////////////////////
@@ -278,6 +286,8 @@ export const useSharedEntry = () => {
   const { rootId } = useStorageStore();
   const id = dirId || rootId;
   const {modifiedFilter, typeFilter} = useFilter();
+  const { setNextCursor, currentCursor } = useCursor();
+  const {listEntries, setListEntries} = useEntries();
 
   const { data: parents, error: parentsError } = useQuery({
     queryKey: ['entry-metadata', id],
@@ -305,17 +315,32 @@ export const useSharedEntry = () => {
   const { data, error, refetch, isLoading } = useQuery({
     queryKey: ['shared-entries', id, modifiedFilter, typeFilter],
     queryFn: async () => {
-      return await getSharedEntries().then((res) => res?.data || []);
+      const res = await getSharedEntries({
+        limit: 15,
+        type: typeFilter,
+        ...(modifiedFilter ? { after: modifiedFilter } : {}),
+        ...(currentCursor ? { cursor: currentCursor } : {}),
+      }).then((res) => res?.data);
+
+      return res;
     },
     staleTime: 10 * 1000,
-    select: transformEntries,
+    // select: transformEntries,
   });
 
   if (isAxiosError<ApiGenericError>(error)) {
     toast.error(error.response?.data.message, toastError());
   }
 
-  return { parents: parents || [{ id, name: 'Shared' }], data: data || [], refetch, isLoading };
+  useEffect(() => {
+    if(data){
+      data?.cursor && setNextCursor(data.cursor);
+      if(!currentCursor) setListEntries(transformEntries(data.entries));
+      else setListEntries(listEntries.concat(transformEntries(data.entries).filter((entry) => !listEntries.find((e) => e.id === entry.id))));
+    }
+  }, [data, setNextCursor]);
+
+  return { parents: parents || [{ id, name: 'Shared' }], data: listEntries || [], refetch, isLoading };
 };
 
 export const useTrash = () => {
@@ -681,19 +706,20 @@ export const useMemoryStatistics = () => {
 }
 
 export const useMemory = (asc: boolean) => {
-  const {limit} = useLimit();
+  // const {limit} = useLimit();
+  const {currentCursor, setNextCursor} = useCursor();
   const {typeFilter, modifiedFilter} = useFilter();
   const {listEntries, setListEntries} = useEntries();
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ['memory-entries', limit, typeFilter, modifiedFilter, asc],
-    queryFn: () => getListFileSizes({
-      limit,
-      asc,
-      type: typeFilter,
-      ...(modifiedFilter ? {after: modifiedFilter} : {}),
-    }).then((res) => res?.data?.entries || []),
-    select: transformEntries,
+    queryKey: ['memory-entries', currentCursor, typeFilter, modifiedFilter, asc],
+    queryFn: async () => {
+      const res = await getListFileSizes({ limit: 15, asc, type: typeFilter,
+        ...(currentCursor ? {cursor: currentCursor} : {}),
+        ...(modifiedFilter ? {after: modifiedFilter} : {}),
+      }).then((res) => res?.data);
+      return res;
+    }
   });
 
   if (isAxiosError<ApiGenericError>(error)) {
@@ -701,7 +727,11 @@ export const useMemory = (asc: boolean) => {
   }
 
   useEffect(() => {
-    if(data) setListEntries(data || []);
+    if(data) {
+      data.cursor && setNextCursor(data.cursor);
+      if(!currentCursor) setListEntries(transformEntries(data.entries));
+      else setListEntries(listEntries.concat(transformEntries(data.entries.filter((entry) => !listEntries.find((e) => e.id === entry.id)))));
+    }
   }, [data, setListEntries]);
 
   return { data: listEntries, isLoading };
@@ -798,54 +828,19 @@ export type LocalEntry = {
   owner: IdentityRESP;
   lastModified: Date;
   size: number;
+  userRoles: ('owner' | 'editor' | 'viewer')[];
   fileType?: string;
 };
 
 export type SuggestedEntry = LocalEntry & { parent: ParentRES } & { log?: LogEntry };
 
 export const transformEntries = (entries: EntryRESP[]): LocalEntry[] => {
-  // console.log('[transformEntries] entries', entries);
   return entries.map((entry) => {
-    if (entry.is_dir) {
-      return {
-        isDir: true,
-        title: entry.name,
-        icon: <Icon icon='ic:baseline-folder' className='h-full w-full object-cover text-yellow-600' />,
-        preview: <Icon icon='ic:baseline-folder' className='h-32 w-32 text-yellow-600' />,
-        id: entry.id,
-        owner: entry.owner,
-        fileType: entry.type,
-        lastModified: new Date(entry.updated_at),
-        size: entry.size,
-      } as LocalEntry;
-    }
-    const ext = entry.name.split('.').pop() || 'any';
-    const icon = fileTypeIcons[ext] || fileTypeIcons.any;
-    return {
-      isDir: false,
-      title: entry.name,
-      icon: icon,
-      preview: entry.thumbnail ? (
-        <img
-          src={`${import.meta.env.VITE_BACKEND_API}${entry.thumbnail}`}
-          alt={entry.name}
-          className='h-full w-full object-cover'
-          draggable={false}
-        />
-      ) : (
-        <div className='h-16 w-16'>{icon}</div>
-      ),
-      id: entry.id,
-      owner: entry.owner,
-      lastModified: new Date(entry.updated_at),
-      fileType: entry.type,
-      size: entry.size,
-    } as LocalEntry;
+    return transformEntry(entry);
   });
 };
 
  const transformSuggestedEntries = (entries: SuggestedEntriesRESP[]): SuggestedEntry[] => {
-  // console.log('[transformSuggestedEntries] entries', entries);
   return entries.map((entry) => {
     if (entry.is_dir) {
       return {
@@ -858,8 +853,9 @@ export const transformEntries = (entries: EntryRESP[]): LocalEntry[] => {
         fileType: entry.mime_type,
         lastModified: new Date(entry.updated_at),
         size: entry.size,
+        userRoles: entry.userRoles,
         parent: entry.parent,
-        log: entry.log ? {...entry.log, ...{created_at: new Date(entry.log.created_at)}} : {created_at: new Date()},
+        ...{log: entry.log && {...entry.log, ...{created_at: new Date(entry.log.created_at)}}},
       } as SuggestedEntry;
     }
     const ext = entry.name.split('.').pop() || 'any';
@@ -883,8 +879,9 @@ export const transformEntries = (entries: EntryRESP[]): LocalEntry[] => {
       lastModified: new Date(entry.updated_at),
       fileType: entry.type,
       size: entry.size,
+      userRoles: entry.userRoles,
       parent: entry.parent,
-      log: { ...entry.log, ...{ created_at: new Date(entry.log.created_at) } } as LogEntry,
+      ...{log: entry.log && {...entry.log, ...{created_at: new Date(entry.log.created_at)}}},
     } as SuggestedEntry;
   });
 };
@@ -902,6 +899,7 @@ export const transformEntry = (entry: EntryRESP): LocalEntry => {
         fileType: entry.type,
         lastModified: new Date(entry.updated_at),
         size: entry.size,
+        userRoles: entry.userRoles,
       } as LocalEntry;
     }
     const ext = entry.name.split('.').pop() || 'any';
@@ -925,6 +923,7 @@ export const transformEntry = (entry: EntryRESP): LocalEntry => {
       lastModified: new Date(entry.updated_at),
       fileType: entry.type,
       size: entry.size,
+      userRoles: entry.userRoles,
     } as LocalEntry;
 };
 

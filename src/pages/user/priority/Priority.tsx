@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Path, useDrawer, useIsFileMode, useLimit, useSelected, useViewMode } from '@/store/my-drive/myDrive.store';
+import { Path, useDrawer, useIsFileMode, useSelected, useViewMode } from '@/store/my-drive/myDrive.store';
 import DriveLayout from '@/components/layout/DriveLayout';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import PriorityFilter from './priority-filter/PriorityFilter';
@@ -23,14 +23,9 @@ const Priority = () => {
   const { isFileMode, setIsFileMode } = useIsFileMode();
   const { rootId } = useStorageStore();
   const { arrSelected } = useSelected();
-  const { limit, increaseLimit } = useLimit();
+  // const { limit, increaseLimit } = useLimit();
   const { data, isLoading, refetch } = useSuggestedEntries();
-  console.log(data);
-
-  const onScrollBottom = () => {
-    if (data.length < limit) return;
-    increaseLimit();
-  };
+  // console.log(data);
 
   return (
     <DriveLayout
@@ -54,7 +49,6 @@ const Priority = () => {
           )}
         </div>
       }
-      onScrollBottom={onScrollBottom}
       bodyLeft={
         <PriorityView
           isLoading={isLoading}

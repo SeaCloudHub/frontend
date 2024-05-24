@@ -1,7 +1,7 @@
 import FileCard from '@/components/core/file-card/FileCard';
 import FolderCard from '@/components/core/folder-card/FolderCard';
 import { LocalEntry } from '@/hooks/drive.hooks';
-import { Path, useCursor, useDrawer, useEntries, useSelected } from '@/store/my-drive/myDrive.store';
+import { Path, useCursor, useCursorActivity, useDrawer, useEntries, useSelected } from '@/store/my-drive/myDrive.store';
 import { DRIVE_MY_DRIVE } from '@/utils/constants/router.constant';
 import { CircularProgress, LinearProgress } from '@mui/material';
 import React, { useEffect, useRef } from 'react';
@@ -40,6 +40,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
   const { drawerOpen } = useDrawer();
   const { setArrSelected, arrSelected } = useSelected();
   const { nextCursor } = useCursor();
+  const {resetCursorActivity} = useCursorActivity();
 
   useEffect(() => {
     const fileCardRefs = document.querySelectorAll('.file-card');
@@ -53,6 +54,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
 
       if (driveGridViewRef.current && driveGridViewRef.current.contains(event.target) && clickedOutsideCards) {
         setArrSelected([]);
+        resetCursorActivity();
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -85,10 +87,11 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
                           icon={entry.icon}
                           id={entry.id}
                           onDoubleClick={() => navigate(`${DRIVE_MY_DRIVE}/dir/${entry.id}`)}
-                          onClick={() => setArrSelected([{ id: entry.id, isDir: entry.isDir }])}
+                          onClick={() => setArrSelected([{ id: entry.id, isDir: entry.isDir, userRoles: entry.userRoles}])}
                           isSelected={arrSelected.some((item) => item.id === entry.id)}
                           parent={parent}
                           dir={curDir}
+                          userRoles={entry.userRoles}
                         />
                       </div>
                     ) : (
@@ -103,6 +106,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
                           isSelected={arrSelected.some((item) => item.id === entry.id)}
                           fileType={entry.fileType}
                           parent={parent}
+                          userRoles={entry.userRoles}
                         />
                       </div>
                     ),

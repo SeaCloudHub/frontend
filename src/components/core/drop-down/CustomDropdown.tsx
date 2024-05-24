@@ -39,8 +39,9 @@ const CustomDropdown: React.FC<DropdownProps> = ({ button, items, minWidth }) =>
         }}>
         {items.map((group, ind) => (
           <div key={ind}>
-            {group.map(({ label, icon, action }) => (
+            {group.map(({ label, icon, action, isHidden }) => (
               <MenuItem
+                disabled={isHidden}
                 key={ind + ' ' + label}
                 onClick={() => {
                   action && action();

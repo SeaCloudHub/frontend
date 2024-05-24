@@ -1,28 +1,12 @@
 import { useEffect, useState } from 'react';
 import DriveLayout from '@/components/layout/DriveLayout';
-import { Path, useEntries, useLimit, useSelected, useFilter, useViewMode, useCursor } from '@/store/my-drive/myDrive.store';
+import { Path, useEntries, useSelected, useFilter, useViewMode, useCursor } from '@/store/my-drive/myDrive.store';
 import MyDriveHeader from './header/MyDriveHeader';
 import { DriveGridView } from './content/DriveGridView';
 import { DriveListView } from './content/DriveListView';
 import SidePanel from '@/pages/user/my-drive/side-panel/SidePanel';
 import { LocalEntry, useCopyMutation, useListEntries } from '@/hooks/drive.hooks';
 import { toast } from 'react-toastify';
-import { TypeEntry } from '@/apis/drive/drive.request';
-
-// export type LocalEntry = {
-//   isDir: boolean;
-//   title: string;
-//   icon: React.ReactNode;
-//   preview: React.ReactNode;
-//   id: string;
-//   extra: string;
-//   owner: string;
-//   lastModified: string;
-//   size: string;
-
-//   onDoubleClick?: () => void;
-//   onChanged?: () => void;
-// };
 
 const MyDrive = () => {
   const [{ sort, order }, setSort] = useState<{ sort: string; order: string }>({ sort: 'Name', order: 'desc' });
@@ -31,11 +15,10 @@ const MyDrive = () => {
 
   const { arrSelected } = useSelected();
   const viewMode = useViewMode((state) => state.viewMode);
+  const { nextCursor, setCurrentCursor, currentCursor } = useCursor();
 
   const copyMutation = useCopyMutation();
 
-  //load more
-  const { nextCursor, setCurrentCursor, currentCursor } = useCursor();
 
   const { parents, data, isLoading } = useListEntries();
 

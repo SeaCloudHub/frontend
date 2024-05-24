@@ -67,6 +67,7 @@ export const FilerRow: React.FC<FilerRowProps> = ({ data, onDoubleClick }) => {
             lastModified: new Date(),
             size: 0,
             fileType: data.type,
+            userRoles: data.userRoles,
           }}
         />
       )}

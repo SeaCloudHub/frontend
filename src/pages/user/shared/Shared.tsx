@@ -91,6 +91,7 @@ const Shared = () => {
       }
       sidePanel={
         <SidePanel
+          isHidden={arrSelected.length === 0}
           id={arrSelected.length === 0 ? rootId : arrSelected.length === 1 ? arrSelected[0].id : ''}
           title={
             arrSelected.length === 0

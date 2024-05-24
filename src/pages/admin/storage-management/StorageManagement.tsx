@@ -150,6 +150,7 @@ const StorageManagement = () => {
               lastModified: new Date(), // TODO
               size: 0,
               fileType: selected.type,
+              userRoles: null,
             }}
           />
         )}

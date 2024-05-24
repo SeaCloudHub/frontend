@@ -6,17 +6,18 @@ import { MemoryView } from './content/MemoryView';
 import { fakeEntries } from '@/utils/dumps/entries';
 import { transformEntries, useMemory } from '@/hooks/drive.hooks';
 import { EntryRESP } from '@/apis/drive/drive.response';
-import { useLimit } from '@/store/my-drive/myDrive.store';
+import { useCursor } from '@/store/my-drive/myDrive.store';
 
 const Memory = () => {
   const [{ sort, order }, setSort] = useState<{ sort: string; order: 'asc' | 'desc' }>({ sort: 'Size', order: 'desc' });
-  const {limit, increaseLimit} = useLimit();
+  const {setCurrentCursor, currentCursor, nextCursor} = useCursor();
 
   const {data, isLoading} = useMemory(order === 'asc' ? true: false);
 
   const onScrollBottom = () => {
-    if(data.length < limit) return;
-    increaseLimit();
+    if(nextCursor && nextCursor !== currentCursor) {
+      setCurrentCursor(nextCursor);
+    }
   };
 
   return (

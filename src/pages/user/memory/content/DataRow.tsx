@@ -3,11 +3,11 @@ import { Tooltip } from '@mui/material';
 import { LocalEntry } from '@/hooks/drive.hooks';
 import { useSelected } from '@/store/my-drive/myDrive.store';
 
-export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModified, owner, size }) => {
+export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModified, owner, size, userRoles }) => {
   const {arrSelected, setArrSelected} = useSelected();
 
   const handleCtrlClick = () => {
-    setArrSelected(arrSelected.some(e=>e.id === id) ? arrSelected.filter((item) => item.id !== id) : [...arrSelected, { id, isDir}]);
+    setArrSelected(arrSelected.some(e=>e.id === id) ? arrSelected.filter((item) => item.id !== id) : [...arrSelected, { id, isDir, userRoles }]);
   };
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -15,7 +15,7 @@ export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModi
       handleCtrlClick();
       return;
     }
-    setArrSelected([{ id, isDir}]);
+    setArrSelected([{ id, isDir, userRoles}]);
   };
 
   const handleDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {

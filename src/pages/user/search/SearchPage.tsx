@@ -1,7 +1,7 @@
 import DriveLayout from '@/components/layout/DriveLayout';
 import React, { useState } from 'react';
 import MyDriveHeader from '../my-drive/header/MyDriveHeader';
-import { useEntries, useLimit, useSelected, useFilter, useViewMode, useCursor } from '@/store/my-drive/myDrive.store';
+import { useEntries, useSelected, useFilter, useViewMode, useCursor } from '@/store/my-drive/myDrive.store';
 import InfoButton from '../my-drive/header/InfoButton';
 import PriorityFilter from '../priority/priority-filter/PriorityFilter';
 import MultipleDriveHeader from '../my-drive/header/MultipleDriveHeader';
@@ -24,9 +24,9 @@ const SearchPage = () => {
 
   const { typeFilter, setTypeFilter } = useFilter();
   const [modifiedFilter, setModifiedFilter] = useState<string>('');
-  const { increaseLimit, limit } = useLimit();
   const { setCurrentCursor, nextCursor, currentCursor } = useCursor();
   const [isScrolling, setIsScrolling] = useState(false);
+  const [search, setSearch] = useState<boolean>(false);
 
   const {data, isLoading, refetch} = useSearchEntriesPage();
   // console.log('SearchPage', data);

@@ -2,6 +2,7 @@ import { TypeEntry } from '@/apis/drive/drive.request';
 import { EntryRESP, LocalActivityLog, SuggestedEntriesRESP } from '@/apis/drive/drive.response';
 import { LocalEntry, SuggestedEntry } from '@/hooks/drive.hooks';
 import { TimeEntry } from '@/pages/user/trash/trash-page-view/DriveHistoryGridView';
+import { UserRole } from '@/utils/types/user-role.type';
 import React, { Dispatch, LegacyRef, MutableRefObject, SetStateAction, useRef } from 'react';
 import { create } from 'zustand';
 
@@ -41,24 +42,26 @@ export const useViewMode = create<ViewModeState>((set) => ({
   setViewMode: (mode: string) => set({ viewMode: mode }),
 }));
 
+export type SelectedType = { id: string; isDir: boolean, userRoles: UserRole[] };
+
 export type ArrSelectedState = {
-  arrSelected: {id: string; isDir: boolean}[];
-  setArrSelected: (arrSelected: {id: string; isDir: boolean}[]) => void;
+  arrSelected: SelectedType[];
+  setArrSelected: (arrSelected: SelectedType[]) => void;
 };
 
 export const useSelected = create<ArrSelectedState>((set) => ({
   arrSelected: [],
-  setArrSelected: (arrSelected: {id: string; isDir: boolean}[]) => set({ arrSelected }),
+  setArrSelected: (arrSelected: SelectedType[]) => set({ arrSelected }),
 }));
 
 export type ListEntriesState = {
   listEntries: LocalEntry[];
   listSuggestedEntries: SuggestedEntry[];
-  searchEntries: SuggestedEntry[];
+  entriesSearchPage: SuggestedEntry[];
   trashEntries: TimeEntry[];
   setListEntries: Dispatch<SetStateAction<LocalEntry[]>>;
   setListSuggestedEntries: Dispatch<SetStateAction<SuggestedEntry[]>>;
-  setSearchEntries: Dispatch<SetStateAction<SuggestedEntry[]>>;
+  setEntriesSearchPage: Dispatch<SetStateAction<SuggestedEntry[]>>;
   setTrashEntries: Dispatch<SetStateAction<TimeEntry[]>>;
   resetEntries: () => void;
 };
@@ -66,26 +69,27 @@ export type ListEntriesState = {
 export const useEntries = create<ListEntriesState>((set) => ({
   listEntries: [],
   listSuggestedEntries: [],
-  searchEntries: [],
   trashEntries: [],
-  setListEntries: (listEntries: SuggestedEntry[]) => set({ listEntries }),
+  entriesSearchPage: [],
+  setListEntries: (listEntries: LocalEntry[]) => set({ listEntries }),
   setListSuggestedEntries: (listSuggestedEntries: SuggestedEntry[]) => set({ listSuggestedEntries }),
-  setSearchEntries: (searchEntries: SuggestedEntry[]) => set({ searchEntries }),
   setTrashEntries: (trashEntries: TimeEntry[]) => set({ trashEntries }),
-  resetEntries: () => set({ listEntries: [], listSuggestedEntries: [], searchEntries: [], trashEntries: [] }),
+  setEntriesSearchPage: (entriesSearchPage: SuggestedEntry[]) => set({ entriesSearchPage }),
+  resetEntries: () =>
+    set({ listEntries: [], listSuggestedEntries: [], trashEntries: [], entriesSearchPage: [] }),
 }));
 
-export type LimitState = {
-  limit: number;
-  increaseLimit: () => void;
-  resetLimit: () => void;
-};
+// export type LimitState = {
+//   limit: number;
+//   increaseLimit: () => void;
+//   resetLimit: () => void;
+// };
 
-export const useLimit = create<LimitState>((set) => ({
-  limit: 15,
-  increaseLimit: () => set((state) => ({ limit: state.limit + 15 })),
-  resetLimit: () => set({ limit: 15 }),
-}));
+// export const useLimit = create<LimitState>((set) => ({
+//   limit: 15,
+//   increaseLimit: () => set((state) => ({ limit: state.limit + 15 })),
+//   resetLimit: () => set({ limit: 15 }),
+// }));
 
 export type CursorState = {
   nextCursor: string;
@@ -103,7 +107,7 @@ export const useCursor = create<CursorState>((set) => ({
   resetCursor: () => set({ nextCursor: '', currentCursor: '' }),
 }));
 
-export type cursorActivityState = {
+export type CursorActivityState = {
   nextCursorActivity: string;
   currentCursorActivity: string;
   setNextCursorActivity: (cursor: string) => void;
@@ -111,12 +115,28 @@ export type cursorActivityState = {
   resetCursorActivity: () => void;
 };
 
-export const useCursorActivity = create<cursorActivityState>((set) => ({
+export const useCursorActivity = create<CursorActivityState>((set) => ({
   nextCursorActivity: '',
   currentCursorActivity: '',
   setNextCursorActivity: (cursor: string) => set({ nextCursorActivity: cursor }),
   setCurrentCursorActivity: (cursor: string) => set({ currentCursorActivity: cursor }),
   resetCursorActivity: () => set({ nextCursorActivity: '', currentCursorActivity: '' }),
+}));
+
+export type CursorSearchState = {
+  nextCursorSearch: string;
+  currentCursorSearch: string;
+  setNextCursorSearch: (cursor: string) => void;
+  setCurrentCursorSearch: (cursor: string) => void;
+  resetCursorSearch: () => void;
+};
+
+export const useCursorSearch = create<CursorSearchState>((set) => ({
+  nextCursorSearch: '',
+  currentCursorSearch: '',
+  setNextCursorSearch: (cursor: string) => set({ nextCursorSearch: cursor }),
+  setCurrentCursorSearch: (cursor: string) => set({ currentCursorSearch: cursor }),
+  resetCursorSearch: () => set({ nextCursorSearch: '', currentCursorSearch: '' }),
 }));
 
 export type FilterState = {

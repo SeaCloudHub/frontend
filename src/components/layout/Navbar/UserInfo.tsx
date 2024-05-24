@@ -1,6 +1,7 @@
 import { signOutApi } from '@/apis/auth/auth.api';
 import { useSession } from '@/store/auth/session';
 import { AUTH_LOGIN_EMAIL, DRIVE_PROFILE } from '@/utils/constants/router.constant';
+import { Role } from '@/utils/enums/role.enum';
 import { getFirstCharacters } from '@/utils/function/getFirstCharacter';
 import { getRandomColor } from '@/utils/function/getRandomColor';
 import { toastError } from '@/utils/toast-options/toast-options';
@@ -8,7 +9,7 @@ import { ApiGenericError } from '@/utils/types/api-generic-error.type';
 import { LinearProgress } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import { PiSignOutBold } from 'react-icons/pi';
 import { useNavigate } from 'react-router-dom';
@@ -23,6 +24,7 @@ function UserInfo({ onClose }: UserInfoProps) {
   const [cookies, setCookie, removeCookie] = useCookies(['token']);
   const { signOut, identity } = useSession();
   const modalRef = useRef(null);
+  const role = useSession((state) => state.role);
 
   const logoutMutation = useMutation({
     mutationFn: () => {
@@ -81,11 +83,13 @@ function UserInfo({ onClose }: UserInfoProps) {
       <h2 className='tablet:text-2xl w-full truncate text-center text-xl font-normal'>{`Hi, ${identity.first_name}!`}</h2>
 
       <div className='flex flex-col items-center justify-center'>
-        <button
-          onClick={onUserProfileClick}
-          className='tablet:w-44 hover:bg-darkC flex w-48 items-center justify-center space-x-2 rounded-full border bg-white py-3  hover:bg-gray-200 dark:text-black'>
-          <span className='text-[#2e6ed6]'>Manage your account</span>
-        </button>
+        {role==Role.USER && (
+          <button
+            onClick={onUserProfileClick}
+            className='tablet:w-44 hover:bg-darkC flex w-48 items-center justify-center space-x-2 rounded-full border bg-white py-3  hover:bg-gray-200 dark:text-black'>
+            <span className='text-[#2e6ed6]'>Manage your account</span>
+          </button>
+        )}
         <button
           disabled={logoutMutation.isPending}
           onClick={onSignOutClick}

@@ -1,7 +1,7 @@
 import { DRIVE_MY_DRIVE } from '@/utils/constants/router.constant';
 import { useLocation, useNavigate } from 'react-router-dom';
 import IconifyIcon from '../Icon/IConCore';
-import { useCursor, useEntries, useFilter, useLimit, useSelected } from '@/store/my-drive/myDrive.store';
+import { useCursor, useEntries, useFilter, useSelected } from '@/store/my-drive/myDrive.store';
 type SidebarItemProps = {
   icon: string;
   title: string;

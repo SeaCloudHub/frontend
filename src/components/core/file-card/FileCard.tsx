@@ -8,7 +8,7 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import { MenuItem, classNames } from '../drop-down/Dropdown';
 import { downloadFile } from '@/apis/drive/drive.api';
 import { LocalEntry, useCopyMutation, useRestoreEntriesMutation, useStarEntryMutation, useUnstarEntryMutation } from '@/hooks/drive.hooks';
-import { useActivityLogStore, useCursor, useCursorActivity, useDrawer, useEntries, useFilter, useLimit, useSelected } from '@/store/my-drive/myDrive.store';
+import { useActivityLogStore, useCursor, useCursorActivity, useDrawer, useEntries, useFilter, useSelected } from '@/store/my-drive/myDrive.store';
 import CustomDropdown from '../drop-down/CustomDropdown';
 import FileViewerContainer from '../file-viewers/file-viewer-container/FileViewerContainer';
 import DeletePopUp from '../pop-up/DeletePopUp';
@@ -20,6 +20,9 @@ import { DRIVE_MY_DRIVE } from '@/utils/constants/router.constant';
 import { useNavigate } from 'react-router-dom';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { EntryRESP } from '@/apis/drive/drive.response';
+import { isPermission } from '@/utils/function/permisstion.function';
+import { UserRole } from '@/utils/types/user-role.type';
+
 
 type FileCardProps = {
   title: string;
@@ -31,6 +34,7 @@ type FileCardProps = {
   fileType?: string;
   parent?: 'priority' | 'my-drive' | 'shared' | 'trash' | 'starred';
   isDir: boolean;
+  userRoles: UserRole[];
 };
 
 export const FileOperation = [
@@ -40,7 +44,7 @@ export const FileOperation = [
   { icon: <TrashIcon />, label: 'Delete file' },
 ];
 
-const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelected, dir, fileType, parent, isDir }) => {
+const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelected, dir, fileType, parent, isDir, userRoles }) => {
   const [fileViewer, setFileViewer] = useState(false);
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
   const [type, setType] = useState<'move' | 'share' | 'rename' | 'move to trash' | null>(null);
@@ -59,6 +63,8 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
   const unstarEntryMutation = useUnstarEntryMutation();
   const { setArrSelected, arrSelected } = useSelected();
   const {resetFilter} = useFilter();
+
+  // console.log('[FileCard] id: ', id, userRoles);
 
   const menuItems: MenuItem[][] = [
     [
@@ -85,6 +91,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
           setType('rename');
           setIsPopUpOpen(true);
         },
+        isHidden: isPermission(userRoles) <= 1,
       },
       {
         label: 'Make a copy',
@@ -92,6 +99,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
         action: () => {
           copyMutation.mutate({ ids: [id], to: dir.id });
         },
+        isHidden: isPermission(userRoles) <= 1,
       },
     ],
     [
@@ -111,6 +119,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
           setType('share');
           setIsPopUpOpen(true);
         },
+        isHidden: isPermission(userRoles) <= 1,
       },
     ],
     [
@@ -122,6 +131,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
           setType('move');
           setIsPopUpOpen(true);
         },
+        isHidden: isPermission(userRoles) <= 1,
       },
       {
         label: parent !== 'starred' ? 'Add to starred' : 'Remove from starred',
@@ -159,9 +169,10 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
           setType('move to trash');
           setIsPopUpOpen(true);
         },
+        isHidden: isPermission(userRoles) <= 1,
       },
     ],
-  ];
+  ].filter((item) => item.length > 0);
 
   const menuItemsTrash: MenuItem[][] = [
     [
@@ -185,9 +196,9 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
 
   const handleCtrlClick = () => {
     setArrSelected(
-      arrSelected.includes({id, isDir}) ?
+      arrSelected.includes({id, isDir, userRoles}) ?
       arrSelected.filter((item) => item.id !== id) :
-      [...arrSelected, {id, isDir}]
+      [...arrSelected, {id, isDir, userRoles}]
     );
   };
 
@@ -196,7 +207,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
       handleCtrlClick();
       return;
     }
-    setArrSelected([{ id, isDir}]);
+    setArrSelected([{ id, isDir, userRoles}]);
     if(arrSelected.find((item) => item.id === id)) return;
     // setActivityLog([]);
     resetCursorActivity();
@@ -240,6 +251,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
             lastModified: new Date(),
             size: 0,
             fileType: fileType,
+            userRoles: userRoles,
           }}
         />
       )}
@@ -256,7 +268,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
           <div className='flex max-w-[calc(100%-1.5rem)] items-center space-x-4'>
             <div className='h-6 w-6 min-w-fit'>{icon}</div>
             <Tooltip title={title}>
-              <div className='select-none truncate text-sm font-medium'>{title}</div>
+              <div className='select-none truncate font-medium'>{title}</div>
             </Tooltip>
           </div>
           <div className='h-6 w-6 rounded-full p-1 hover:bg-slate-300 dark:hover:bg-slate-500'>

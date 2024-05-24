@@ -2,7 +2,7 @@ import FileCard from '@/components/core/file-card/FileCard';
 import { LocalEntry } from '@/hooks/drive.hooks';
 import React, { Dispatch, SetStateAction, useEffect, useRef } from 'react';
 import Sort from '../../my-drive/content/Sort';
-import { FormatDateStrToDDMMYYYY } from '@/utils/function/formatDate.function';
+import { FormatDateStrToDDMMYYYY, formatDate } from '@/utils/function/formatDate.function';
 import { useDrawer, useSelected } from '@/store/my-drive/myDrive.store';
 import { CircularProgress, LinearProgress } from '@mui/material';
 
@@ -25,7 +25,7 @@ export const LocalEntryToTimeEntry = (entries: LocalEntry[]): TimeEntry[] => {
   const timeEntries: TimeEntry[] = [];
   entries.sort((a, b) => new Date(b.lastModified).getTime() - new Date(a.lastModified).getTime());
   entries.forEach((entry) => {
-    const time = FormatDateStrToDDMMYYYY(entry.lastModified.toString());
+    const time = formatDate(entry.lastModified);
     const timeEntry = timeEntries.find((timeEntry) => timeEntry.time === time);
     if (timeEntry) {
       timeEntry.entries.push(entry);
@@ -71,7 +71,7 @@ const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({ sort, order, se
         </div>
       </div>
     </div> :
-    <div className='mx-5 mt-2' ref={driveGridViewRef}>
+    <div className='mx-5 mt-2 h-full' ref={driveGridViewRef}>
       <div className='flex flex-col space-y-2'>
         <div className='absolute z-10 right-4 top-3'>
           <Sort sort={sort} order={order} setSort={setSort} />
@@ -105,6 +105,7 @@ const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({ sort, order, se
                         isSelected={arrSelected.some((e) => e.id === file.id)}
                         isDir={file.isDir}
                         dir={dir}
+                        userRoles={file.userRoles}
                       />
                     </div>
                   ))}

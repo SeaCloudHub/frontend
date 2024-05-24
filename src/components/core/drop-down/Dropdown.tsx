@@ -5,14 +5,12 @@ export function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
 
-type MenuItem = {
+export type MenuItem = {
   label: string;
   icon: React.ReactNode;
   action?: (param?: any) => void;
   isHidden?: boolean;
 };
-
-export type { MenuItem };
 
 type DropdownProps = {
   button: React.ReactNode;

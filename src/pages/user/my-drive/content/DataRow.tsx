@@ -46,6 +46,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
   size,
   onDoubleClick,
   parent,
+  userRoles,
   onChanged,
   dir,
   fileType,
@@ -185,7 +186,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
   ];
 
   const handleCtrlClick = () => {
-    setArrSelected(arrSelected.some(e=>e.id === id) ? arrSelected.filter((item) => item.id !== id) : [...arrSelected, { id, isDir}]);
+    setArrSelected(arrSelected.some(e=>e.id === id) ? arrSelected.filter((item) => item.id !== id) : [...arrSelected, { id, isDir, userRoles}]);
   };
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -193,7 +194,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
       handleCtrlClick();
       return;
     }
-    setArrSelected([{ id, isDir}]);
+    setArrSelected([{ id, isDir, userRoles}]);
   };
 
   const handleDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -237,12 +238,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
             lastModified: new Date(),
             size: size,
             fileType: fileType,
-            // onDoubleClick: function (): void {
-            //   throw new Error('Function not implemented.');
-            // },
-            // onChanged: function (): void {
-            //   throw new Error('Function not implemented.');
-            // },
+            userRoles: userRoles,
           }}
         />
       )}
@@ -250,12 +246,12 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
         onClick={handleClick}
         onDoubleClick={handleDoubleClick}
         className={classNames(
-          'data-row grid cursor-pointer grid-cols-7 gap-3 truncate border-b border-b-[#dadce0] py-2 max-[1160px]:grid-cols-7 max-[1150px]:grid-cols-6 max-[1000px]:grid-cols-5',
+          'data-row font-medium grid cursor-pointer grid-cols-7 gap-3 truncate border-b border-b-[#dadce0] py-2 max-[1160px]:grid-cols-7 max-[1150px]:grid-cols-6 max-[1000px]:grid-cols-5',
           isSelected
             ? 'bg-[#c2e7ff]  dark:bg-blue-900'
             : 'hover:bg-[#dfe3e7] dark:bg-slate-600 dark:text-white dark:hover:bg-slate-700',
         )}>
-        <div className='col-span-4 flex'>
+        <div className='col-span-4 flex items-center'>
           <div className='px-4'>
             <div className='h-6 w-6'>{icon}</div>
           </div>
@@ -286,12 +282,12 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
             <span className='truncate'>{owner?.id === identity.id ? 'me' : owner?.last_name}</span>
           </div>
         </div>
-        <div className='truncate max-[1000px]:hidden'>{formatDate(lastModified)}</div>
-        <div className='flex justify-between max-[1160px]:justify-end'>
+        <div className='truncate max-[1000px]:hidden flex items-center'>{formatDate(lastModified)}</div>
+        <div className='flex items-center justify-between max-[1160px]:justify-end'>
           <div className='truncate max-[1160px]:hidden'>{isDir ? '---' : numToSize(size)}</div>
-          <div className='text-end'>
+          <div className='text-end hover:bg-slate-300 dark:hover:bg-slate-500 rounded-full'>
             <CustomDropdown
-              button={<Icon icon='ic:baseline-more-vert' className='h-7 w-7 rounded-full p-1 hover:bg-surfaceContainerLow' />}
+              button={<Icon icon='ic:baseline-more-vert' className='h-7 w-7 rounded-full p-1 dark:hover:text-white' />}
               items={parent === 'trash' ? [menuItemsTrash] : entryMenu}
             />
           </div>

@@ -1,5 +1,5 @@
 import { LocalEntry, SuggestedEntry } from '@/hooks/drive.hooks';
-import { useSelected } from '@/store/my-drive/myDrive.store';
+import { useCursorActivity, useSelected } from '@/store/my-drive/myDrive.store';
 import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DataRowPriorityView from './DataRowPriorityView';
@@ -17,10 +17,11 @@ type PriorityListViewProps = {
 const PriorityListView: React.FC<PriorityListViewProps> = ({ entries, curDir, isLoading, order, setSort, sort }) => {
   const files = entries.filter((entry) => !entry.isDir);
   const folders = entries.filter((entry) => entry.isDir);
+  const driveListViewRef = useRef(null);
 
   const navigate = useNavigate();
   const { setArrSelected, arrSelected } = useSelected();
-  const driveListViewRef = useRef(null);
+  const { resetCursorActivity } = useCursorActivity();
 
   useEffect(() => {
     const DataRows = document.querySelectorAll('.data-row');
@@ -31,6 +32,7 @@ const PriorityListView: React.FC<PriorityListViewProps> = ({ entries, curDir, is
 
       if (driveListViewRef.current && driveListViewRef.current.contains(event.target) && clickedOutsideRows) {
         setArrSelected([]);
+        resetCursorActivity();
       }
     };
     document.addEventListener('mousedown', handleClickOutside);

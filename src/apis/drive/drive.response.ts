@@ -18,10 +18,11 @@ export type EntryRESP = {
   created_at: string;
   updated_at: string;
   type: string;
+  userRoles?: ('owner' | 'editor' | 'viewer')[];
 };
 
 export type SuggestedEntriesRESP = EntryRESP & {
-  parent: Pick<EntryRESP, 'id' & 'name' & 'path'>;
+  parent: Pick<EntryRESP, 'id' & 'name' & 'path' >;
   log?: LogEntry;
 };
 
@@ -58,7 +59,10 @@ export type RenameRESP = {
   id: string;
 };
 
-export type SharedEntriesRESP = EntryRESP[];
+export type SharedEntriesRESP = {
+  entries: EntryRESP[];
+  cursor: string;
+};
 
 export type DeleteFilesRESP = EntryRESP[];
 

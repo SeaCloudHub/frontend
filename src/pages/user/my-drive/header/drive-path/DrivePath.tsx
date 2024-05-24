@@ -1,7 +1,7 @@
 import { Icon } from '@iconify/react/dist/iconify.js';
 import DrivePathButton from './DrivePathButton';
 import DrivePathMenuButton from './DrivePathMenuButton';
-import { Path, useCursor, useCursorActivity, useLimit, useSelected } from '@/store/my-drive/myDrive.store';
+import { Path, useCursor, useCursorActivity, useSelected } from '@/store/my-drive/myDrive.store';
 import { MenuItem } from '@/components/core/drop-down/Dropdown';
 import { useNavigate } from 'react-router-dom';
 import { DRIVE_MY_DRIVE } from '@/utils/constants/router.constant';
@@ -17,7 +17,7 @@ const DrivePath: React.FC<DrivePathProps> = ({ path, type }) => {
   const navigate = useNavigate();
   const { rootId } = useStorageStore();
   const { setArrSelected } = useSelected();
-  const { resetLimit } = useLimit();
+  // const { resetLimit } = useLimit();
   const { resetCursor } = useCursor();
   const { resetCursorActivity } = useCursorActivity();
 

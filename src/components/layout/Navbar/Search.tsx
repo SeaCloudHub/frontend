@@ -7,7 +7,7 @@ import SearchResult from './SearchResult';
 import { useSearchEntries } from '@/hooks/drive.hooks';
 import { useNavigate } from 'react-router-dom';
 import { DRIVE_SEARCH } from '@/utils/constants/router.constant';
-import { useEntries, useLimit, useSelected } from '@/store/my-drive/myDrive.store';
+import { useCursor, useCursorSearch, useEntries, useSelected } from '@/store/my-drive/myDrive.store';
 import { useSession } from '@/store/auth/session';
 
 function Search() {
@@ -15,20 +15,40 @@ function Search() {
   const [keyWord, setKeyWord] = useState<string>('');
   const [onFocus, setOnFocus] = useState<boolean>(false);
   const ref = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
-  const {resetLimit} = useLimit();
+  // const { resetCursor } = useCursor();
+  const {resetCursorSearch} = useCursorSearch();
   const {setArrSelected} = useSelected();
 
   const searchValue = useDebounce({ delay: 260, value: keyWord });
-  const {data, isLoading, refetch} = useSearchEntries(searchValue, false);
+  const {data, isLoading, refetch} = useSearchEntries(searchValue);
 
   const { theme } = useTheme();
   const fill = theme === 'dark' ? 'white' : '';
+
+  // click outside
+  useMemo(() => {
+    const handleClickOutside = (event) => {
+      if (event.ctrlKey || event.metaKey) return;
+      if (ref.current && ref.current.contains(event.target)) return;
+      if (onFocus) {
+        setOnFocus(false);
+        resetCursorSearch();
+        setArrSelected([]);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [onFocus, resetCursorSearch, setArrSelected]);
+
   return (
-    <div className='relative max-w-2xl flex-1 ' onFocus={() => {
+    <div className='relative max-w-2xl flex-1 ' ref={ref} onClick={() => {
       setOnFocus(true)
-      setArrSelected([]);
-      resetLimit();
+      // resetCursorSearch();
     }}>
       <span
         onClick={() => {}}
@@ -38,13 +58,12 @@ function Search() {
       <form onSubmit={(e)=>{
         e.preventDefault()
         setOnFocus(false);
-        resetLimit();
-        ref.current.blur();
+        resetCursorSearch();
+        inputRef.current.blur();
         navigate(`${DRIVE_SEARCH}?q=${searchValue}`)
       }}>
         <input
-          ref={ref}
-          onBlur={() => setOnFocus(false)}
+          ref={inputRef}
           onChange={(e) => setKeyWord(e.target.value)}
           type='text'
           placeholder='Search file'

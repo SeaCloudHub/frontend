@@ -23,7 +23,6 @@ const Video: React.FC<FileViewerProps> = ({ file }) => {
 
     fetchText();
   }, [file]);
-  console.log(src);
   return (
     <div>
       <video controls src={src}>

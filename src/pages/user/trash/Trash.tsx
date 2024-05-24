@@ -1,5 +1,5 @@
 import DriveLayout from '@/components/layout/DriveLayout';
-import { useCursor, useDrawer, useFilter, useLimit, useSelected, useViewMode } from '@/store/my-drive/myDrive.store';
+import { useCursor, useDrawer, useFilter, useSelected, useViewMode } from '@/store/my-drive/myDrive.store';
 import { useState } from 'react';
 import SharingPageViewMode from '../shared/sharing-page-view/SharingPageViewMode';
 import { Icon } from '@iconify/react/dist/iconify.js';
@@ -44,6 +44,7 @@ const Trash = () => {
       bodyLeft={<TrashPageView entries={data} dir={{ id: rootId, name: 'Trash' }} isLoading={isLoading}/>}
       sidePanel={
         <SidePanel
+          isHidden={arrSelected.length === 0}
           id={arrSelected.length === 0 ? rootId : arrSelected.length === 1 ? arrSelected[0].id : ''}
           title={
             arrSelected.length === 0 ? 'Trash' : data.map((timeEntry) => timeEntry.entries).flat().find((entry) => entry.id === arrSelected[0].id)?.title || ''

@@ -14,9 +14,6 @@ const RequireAuth = ({ allowedRole }: RequireAuthProps) => {
   const role = useSession((state) => state.role);
   const location = useLocation();
 
-  console.log('cookies', cookies);
-  console.log('role', role);
-
   return cookies?.token ? (
     allowedRole.find((allow) => allow == role) ? (
       <Outlet />

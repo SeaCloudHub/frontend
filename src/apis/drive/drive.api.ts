@@ -44,7 +44,7 @@ export const getListEntriesPageMyDrive = async (param: ListEntriesPageREQ) => {
 };
 
 export const getListEntriesSuggested = async (params: SuggestedEntriesREQ) => {
-  const res = await api.get<BaseResponse<SuggestedEntriesRESP>>(`/files/suggested`, { params });
+  const res = await api.get<BaseResponse<SuggestedEntriesRESP[]>>(`/files/suggested`, { params });
   return res.data;
 };
 
@@ -60,8 +60,10 @@ export const getListEntriesTrash = async (params?: Pick<ListEntriesREQ, 'limit' 
   return res.data;
 };
 
-export const getSharedEntries = async () => {
-  const res = await api.get<BaseResponse<SharedEntriesRESP>>(`/files/share`);
+export const getSharedEntries = async (params: Pick<ListEntriesREQ, 'after' | 'cursor' | 'limit' | 'type'>) => {
+  const res = await api.get<BaseResponse<SharedEntriesRESP>>(`/files/share`, {
+    params: { ...params, type: params.type?.toLowerCase() },
+  });
   return res.data;
 };
 

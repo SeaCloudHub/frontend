@@ -3,7 +3,7 @@ import Dropdown from '../drop-down/Dropdown';
 import React from 'react';
 import CustomDropdown from '../drop-down/CustomDropdown';
 import { Tooltip } from '@mui/material';
-import { useLimit } from '@/store/my-drive/myDrive.store';
+import { useCursor } from '@/store/my-drive/myDrive.store';
 
 type FilterChipProps = {
   name: string;
@@ -13,14 +13,16 @@ type FilterChipProps = {
 };
 
 const FilterChip: React.FC<FilterChipProps> = ({ name, options, action, value }) => {
-  const { resetLimit } = useLimit();
+  // const { resetLimit } = useLimit();
+  const {resetCursor} = useCursor();
   const items = options.map((item) => ({
     label: item.label,
     icon: item.icon,
     action: () => {
       console.log(item.label);
       console.log(new Date().toISOString());
-      resetLimit();
+      // resetLimit();
+      resetCursor();
       action && action(item?.value || item.label);
     },
   }));
