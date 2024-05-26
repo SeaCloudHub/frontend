@@ -42,7 +42,7 @@ export const useViewMode = create<ViewModeState>((set) => ({
   setViewMode: (mode: string) => set({ viewMode: mode }),
 }));
 
-export type SelectedType = { id: string; isDir: boolean, userRoles: UserRole[] };
+export type SelectedType = { id: string; isDir: boolean; userRoles: UserRole[] };
 
 export type ArrSelectedState = {
   arrSelected: SelectedType[];
@@ -75,8 +75,7 @@ export const useEntries = create<ListEntriesState>((set) => ({
   setListSuggestedEntries: (listSuggestedEntries: SuggestedEntry[]) => set({ listSuggestedEntries }),
   setTrashEntries: (trashEntries: TimeEntry[]) => set({ trashEntries }),
   setEntriesSearchPage: (entriesSearchPage: SuggestedEntry[]) => set({ entriesSearchPage }),
-  resetEntries: () =>
-    set({ listEntries: [], listSuggestedEntries: [], trashEntries: [], entriesSearchPage: [] }),
+  resetEntries: () => set({ listEntries: [], listSuggestedEntries: [], trashEntries: [], entriesSearchPage: [] }),
 }));
 
 // export type LimitState = {

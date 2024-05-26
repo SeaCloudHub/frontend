@@ -9,7 +9,7 @@ export const api = axios.create({
 
 api.interceptors.request.use(
   async (config: AxiosRequestConfig): Promise<any> => {
-    const token = getCookie('token')|| null;
+    const token = getCookie('token') || null;
     if (!token) return config;
     return { ...config, headers: { Authorization: `Bearer ${token}` } };
   },

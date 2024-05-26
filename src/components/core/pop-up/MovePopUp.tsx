@@ -105,13 +105,13 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
                   data.map((item, index) => (
                     <div
                       key={index}
-                      className={`flex items-center gap-3 px-3 py-1 ${locateTo === item.id ? 'bg-[#c2e7ff] dark:bg-blue-900' : ''} ${arrSelected.some(e=> e.id === item.id) ? 'brightness-75' : 'cursor-pointer hover:bg-gray-100 dark:hover:bg-blue-950'}`}
+                      className={`flex items-center gap-3 px-3 py-1 ${locateTo === item.id ? 'bg-[#c2e7ff] dark:bg-blue-900' : ''} ${arrSelected.some((e) => e.id === item.id) ? 'brightness-75' : 'cursor-pointer hover:bg-gray-100 dark:hover:bg-blue-950'}`}
                       onClick={() => {
-                        if (arrSelected.some(e=>e.id === item.id)) return;
+                        if (arrSelected.some((e) => e.id === item.id)) return;
                         setLocateTo(item.id);
                       }}
                       onDoubleClick={() => {
-                        if (arrSelected.some(e=>e.id === item.id)) return;
+                        if (arrSelected.some((e) => e.id === item.id)) return;
                         setCurFolder({ id: item.id, name: item.title });
                       }}>
                       <Icon icon='mdi:folder-multiple-outline' className='text-xl' />

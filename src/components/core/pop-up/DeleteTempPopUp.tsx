@@ -16,7 +16,7 @@ type DeleteTempPopUpProps = {
 };
 
 const DeleteTempPopUp: React.FC<DeleteTempPopUpProps> = ({ open, handleClose, title, id, source_ids, setResult }) => {
-  const { listEntries, setListEntries} = useEntries();
+  const { listEntries, setListEntries } = useEntries();
 
   const deleteTemp = useMoveToTrashMutation();
 

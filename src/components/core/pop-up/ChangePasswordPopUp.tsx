@@ -15,7 +15,7 @@ type ChangePasswordPopUpProps = {
   handleClose: () => void;
 };
 
-const ChangePasswordPopUp: React.FC<ChangePasswordPopUpProps> = ({handleClose, open}) => {
+const ChangePasswordPopUp: React.FC<ChangePasswordPopUpProps> = ({ handleClose, open }) => {
   const changePasswordMutation = useChangePasswordMutation();
 
   const formik = useFormik({
@@ -40,7 +40,7 @@ const ChangePasswordPopUp: React.FC<ChangePasswordPopUpProps> = ({handleClose, o
             label='Current password'
             name='old_password'
             type='password'
-            sx={{mt: '5px'}}
+            sx={{ mt: '5px' }}
             value={formik.values.old_password}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -70,7 +70,9 @@ const ChangePasswordPopUp: React.FC<ChangePasswordPopUpProps> = ({handleClose, o
         </DialogContent>
         <DialogActions>
           <ButtonCancel onClick={handleClose}>Cancel</ButtonCancel>
-          <ButtonSuccess type='submit' isInvisible={!formik.isValid}>Save </ButtonSuccess>
+          <ButtonSuccess type='submit' isInvisible={!formik.isValid}>
+            Save{' '}
+          </ButtonSuccess>
         </DialogActions>
       </form>
     </PopUp>

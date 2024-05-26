@@ -19,7 +19,6 @@ const MyDrive = () => {
 
   const copyMutation = useCopyMutation();
 
-
   const { parents, data, isLoading } = useListEntries();
 
   useEffect(() => {
@@ -27,7 +26,7 @@ const MyDrive = () => {
       if ((event.ctrlKey || event.metaKey) && event.key === 'c') {
         if (arrSelected.length !== 0 && JSON.stringify(arrSelected) !== JSON.stringify(copiedIds)) {
           toast.info(`Copied ${arrSelected.length}` + (arrSelected.length > 1 ? ' items' : ' item') + ` to clipboard`);
-          setCopiedIds(arrSelected.map(e => e.id));
+          setCopiedIds(arrSelected.map((e) => e.id));
         }
       } else if ((event.ctrlKey || event.metaKey) && event.key === 'v' && copiedIds.length !== 0) {
         copyMutation.mutate({ ids: copiedIds, to: parents[parents.length - 1].id });
@@ -42,8 +41,8 @@ const MyDrive = () => {
 
   // scroll to load more
   const onScollBottom = () => {
-    console.log('currentCursor', currentCursor, 'nextCursor', nextCursor)
-    if(nextCursor!=='' && currentCursor !== nextCursor) {
+    console.log('currentCursor', currentCursor, 'nextCursor', nextCursor);
+    if (nextCursor !== '' && currentCursor !== nextCursor) {
       setIsScrolling(true);
       setTimeout(() => {
         setIsScrolling(false);
@@ -54,14 +53,7 @@ const MyDrive = () => {
 
   return (
     <DriveLayout
-      headerLeft={
-        <MyDriveHeader
-          path={parents}
-          sort={sort}
-          order={order}
-          setSort={setSort}
-        />
-      }
+      headerLeft={<MyDriveHeader path={parents} sort={sort} order={order} setSort={setSort} />}
       onScrollBottom={onScollBottom}
       bodyLeft={
         viewMode === 'grid' ? (

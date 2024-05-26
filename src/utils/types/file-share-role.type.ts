@@ -1,1 +1,1 @@
-export type FileShareRole = 'viewer'|'editor'|'owner';
+export type FileShareRole = 'viewer' | 'editor' | 'owner';

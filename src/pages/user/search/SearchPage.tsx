@@ -28,13 +28,13 @@ const SearchPage = () => {
   const [isScrolling, setIsScrolling] = useState(false);
   const [search, setSearch] = useState<boolean>(false);
 
-  const {data, isLoading, refetch} = useSearchEntriesPage();
+  const { data, isLoading, refetch } = useSearchEntriesPage();
   // console.log('SearchPage', data);
   // console.log('SearchPage', isLoading);
   // console.log('SearchPage', limit);
 
   const onScollBottom = () => {
-    if(nextCursor && nextCursor !== currentCursor) {
+    if (nextCursor && nextCursor !== currentCursor) {
       setIsScrolling(true);
       setTimeout(() => {
         setIsScrolling(false);
@@ -52,24 +52,25 @@ const SearchPage = () => {
             <InfoButton />
           </div>
           {arrSelected.length === 0 ? (
-            <div className='flex gap-2 ml-5'>
-            <DriveFilter />
-            {(typeFilter || peopleFilter || modifiedFilter) && (
-              <div className='flex h-7 items-center rounded-full px-[12px] py-[1px] hover:bg-slate-200 active:brightness-90 dark:hover:bg-slate-500'>
-                <Tooltip title='Clear filters'>
-                  <div
-                    onClick={() => {
-                      setTypeFilter('');
-                      setPeopleFilter('');
-                      setModifiedFilter('');
-                    }}
-                    className='line-clamp-1 cursor-pointer text-sm font-medium'>
-                    Clear filters
-                  </div>
-                </Tooltip>
-              </div>
-            )}
-          </div>) : (
+            <div className='ml-5 flex gap-2'>
+              <DriveFilter />
+              {(typeFilter || peopleFilter || modifiedFilter) && (
+                <div className='flex h-7 items-center rounded-full px-[12px] py-[1px] hover:bg-slate-200 active:brightness-90 dark:hover:bg-slate-500'>
+                  <Tooltip title='Clear filters'>
+                    <div
+                      onClick={() => {
+                        setTypeFilter('');
+                        setPeopleFilter('');
+                        setModifiedFilter('');
+                      }}
+                      className='line-clamp-1 cursor-pointer text-sm font-medium'>
+                      Clear filters
+                    </div>
+                  </Tooltip>
+                </div>
+              )}
+            </div>
+          ) : (
             <div className='overflow-x-auto px-4'>
               <MultipleDriveHeader parent='Priority' dir={{ id: rootId, name: 'Priority' }} />
             </div>
@@ -86,8 +87,12 @@ const SearchPage = () => {
       }
       sidePanel={
         <SidePanel
-          id={arrSelected.length === 0 ?  '' : arrSelected.length === 1 ? arrSelected[0].id : ''}
-          title={arrSelected.length === 0 ? 'Search' : data.find((item) => item.id === arrSelected[arrSelected.length - 1].id)?.title || ''}
+          id={arrSelected.length === 0 ? '' : arrSelected.length === 1 ? arrSelected[0].id : ''}
+          title={
+            arrSelected.length === 0
+              ? 'Search'
+              : data.find((item) => item.id === arrSelected[arrSelected.length - 1].id)?.title || ''
+          }
         />
       }
     />

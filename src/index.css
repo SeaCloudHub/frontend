@@ -99,10 +99,10 @@ html {
   color: white;
 }
 .input-dark .MuiOutlinedInput-root.Mui-disabled .MuiOutlinedInput-notchedOutline {
-  border-color: #64748B;
+  border-color: #64748b;
 }
 .input-dark .MuiFormHelperText-root {
-  color: #64748B;
+  color: #64748b;
 }
 .input-dark .MuiOutlinedInput-notchedOutline {
   border-color: rgba(255, 255, 255, 0.25);
@@ -123,8 +123,8 @@ html {
   color: white;
 }
 .input-dark .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline {
-  border-color: #F87171;
+  border-color: #f87171;
 }
 .input-dark .MuiFormHelperText-root.Mui-error {
-  color: #F87171;
+  color: #f87171;
 }

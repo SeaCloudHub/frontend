@@ -21,9 +21,9 @@ const SidePanel: React.FC<SidePanelProps> = ({ id, title, isHidden }) => {
   const { closeDrawer, tab, setTab } = useDrawer();
   console.log('SidePanel render', tab);
   const scrollRef = React.useRef<HTMLDivElement>(null);
-  const {currentCursorActivity, nextCursorActivity, setCurrentCursorActivity} = useCursorActivity();
+  const { currentCursorActivity, nextCursorActivity, setCurrentCursorActivity } = useCursorActivity();
   const { data: details, isLoading, isFetching } = useEntryMetadata(id);
-  const {activityLog, setActivityLog} = useActivityLogStore();
+  const { activityLog, setActivityLog } = useActivityLogStore();
   const [isScrolling, setIsScrolling] = React.useState(false);
 
   useEffect(() => {
@@ -31,7 +31,7 @@ const SidePanel: React.FC<SidePanelProps> = ({ id, title, isHidden }) => {
       const handleScroll = () => {
         const { scrollTop, clientHeight, scrollHeight } = scrollRef.current;
         if (Math.ceil(scrollTop + clientHeight) >= scrollHeight) {
-          if(nextCursorActivity !== '' && currentCursorActivity !== nextCursorActivity) {
+          if (nextCursorActivity !== '' && currentCursorActivity !== nextCursorActivity) {
             setIsScrolling(true);
             setTimeout(() => {
               setIsScrolling(false);
@@ -48,82 +48,80 @@ const SidePanel: React.FC<SidePanelProps> = ({ id, title, isHidden }) => {
     }
   }, [activityLog, currentCursorActivity, setCurrentCursorActivity, nextCursorActivity]);
 
-  return (
-    isHidden ? (
-      <div className='w-[360px] relative'>
-        <div className='flex justify-end mt-6 mb-4'>
-          <Icon
-            className='h-10 w-10 cursor-pointer rounded-full p-2 hover:bg-surfaceContainerLow dark:hover:bg-slate-400 dark:active:brightness-90'
-            icon='ic:baseline-close'
-            onClick={() => closeDrawer()}
-            />
-        </div>
-        <DefaultTabPanel/>
+  return isHidden ? (
+    <div className='relative w-[360px]'>
+      <div className='mb-4 mt-6 flex justify-end'>
+        <Icon
+          className='h-10 w-10 cursor-pointer rounded-full p-2 hover:bg-surfaceContainerLow dark:hover:bg-slate-400 dark:active:brightness-90'
+          icon='ic:baseline-close'
+          onClick={() => closeDrawer()}
+        />
       </div>
-    ) : (
-      <div className='flex h-full w-[360px] flex-col overflow-hidden border-l'>
-        <div className='mb-4 mt-6 flex min-h-9 w-full items-center justify-between px-6 pr-2'>
-          {id ? (
-            <div className='flex items-center space-x-4'>
-              <div className='w-6'>
-                {details ? details.icon : <Icon icon='mdi:folder-google-drive' className='h-full w-full' />}
-              </div>
-              <div className='text-wrap font-medium'>{!isLoading ? (details ? details.name : title) : title}</div>
-            </div>
-          ) : (
-            <div></div>
-          )}
-          <Icon
-            className='h-10 w-10 cursor-pointer rounded-full p-2 hover:bg-surfaceContainerLow dark:hover:bg-slate-400 dark:active:brightness-90'
-            icon='ic:baseline-close'
-            onClick={() => closeDrawer()}
-          />
-        </div>
+      <DefaultTabPanel />
+    </div>
+  ) : (
+    <div className='flex h-full w-[360px] flex-col overflow-hidden border-l'>
+      <div className='mb-4 mt-6 flex min-h-9 w-full items-center justify-between px-6 pr-2'>
         {id ? (
-          <Tab.Group
-            defaultIndex={tabs.indexOf(tab)}
-            selectedIndex={tabs.indexOf(tab)}
-            onChange={(index) => setTab(tabs[index] as 'Details' | 'Activity')}>
-            <Tab.List className='flex border-b border-[#cbcbcb] pb-4'>
-              {tabs.map((tab, index) => (
-                <Tab key={index} className='flex basis-1/2 focus:outline-none'>
-                  {({ selected }) => (
+          <div className='flex items-center space-x-4'>
+            <div className='w-6'>
+              {details ? details.icon : <Icon icon='mdi:folder-google-drive' className='h-full w-full' />}
+            </div>
+            <div className='text-wrap font-medium'>{!isLoading ? (details ? details.name : title) : title}</div>
+          </div>
+        ) : (
+          <div></div>
+        )}
+        <Icon
+          className='h-10 w-10 cursor-pointer rounded-full p-2 hover:bg-surfaceContainerLow dark:hover:bg-slate-400 dark:active:brightness-90'
+          icon='ic:baseline-close'
+          onClick={() => closeDrawer()}
+        />
+      </div>
+      {id ? (
+        <Tab.Group
+          defaultIndex={tabs.indexOf(tab)}
+          selectedIndex={tabs.indexOf(tab)}
+          onChange={(index) => setTab(tabs[index] as 'Details' | 'Activity')}>
+          <Tab.List className='flex border-b border-[#cbcbcb] pb-4'>
+            {tabs.map((tab, index) => (
+              <Tab key={index} className='flex basis-1/2 focus:outline-none'>
+                {({ selected }) => (
+                  <div
+                    className={classNames(
+                      'flex grow justify-center active:bg-[#c7d8f4] dark:hover:bg-blue-950',
+                      selected ? 'hover:bg-[#f5f8fd] ' : 'hover:bg-[#f5f8fd]',
+                    )}>
                     <div
                       className={classNames(
-                        'flex grow justify-center active:bg-[#c7d8f4] dark:hover:bg-blue-950',
-                        selected ? 'hover:bg-[#f5f8fd] ' : 'hover:bg-[#f5f8fd]',
+                        'w-14 py-3 text-sm font-medium',
+                        selected ? 'border-b-[3px] border-[#0B57D0] text-[#4f86dd]' : '',
                       )}>
-                      <div
-                        className={classNames(
-                          'w-14 py-3 text-sm font-medium',
-                          selected ? 'border-b-[3px] border-[#0B57D0] text-[#4f86dd]' : '',
-                        )}>
-                        {tab}
-                      </div>
+                      {tab}
                     </div>
-                  )}
-                </Tab>
-              ))}
-            </Tab.List>
-            <Tab.Panels className='relative h-full w-full overflow-y-auto' ref={scrollRef}>
-              <Tab.Panel>
-                <SidePanelDetail id={id} title={title} details={details} isLoading={isLoading}/>
-              </Tab.Panel>
-              <Tab.Panel>
-                <SidePanelAction />
-                {isScrolling &&
-                  <div className='h-fit text-center'>
-                    <CircularProgress className='translate-y-1' />
                   </div>
-                }
-              </Tab.Panel>
-            </Tab.Panels>
-          </Tab.Group>
-        ) : (
-          <DefaultTabPanel />
-        )}
-      </div>
-    )
+                )}
+              </Tab>
+            ))}
+          </Tab.List>
+          <Tab.Panels className='relative h-full w-full overflow-y-auto' ref={scrollRef}>
+            <Tab.Panel>
+              <SidePanelDetail id={id} title={title} details={details} isLoading={isLoading} />
+            </Tab.Panel>
+            <Tab.Panel>
+              <SidePanelAction />
+              {isScrolling && (
+                <div className='h-fit text-center'>
+                  <CircularProgress className='translate-y-1' />
+                </div>
+              )}
+            </Tab.Panel>
+          </Tab.Panels>
+        </Tab.Group>
+      ) : (
+        <DefaultTabPanel />
+      )}
+    </div>
   );
 };
 

@@ -48,8 +48,8 @@ export const getListEntriesSuggested = async (params: SuggestedEntriesREQ) => {
   return res.data;
 };
 
-export const getListEntriesPageStarred = async (params?: Pick<ListEntriesREQ,'after'|'cursor'|'limit'|'type'>) => {
-  const res = await api.get<BaseResponse<ListEntriesRESP>>(`/files/starred`,{
+export const getListEntriesPageStarred = async (params?: Pick<ListEntriesREQ, 'after' | 'cursor' | 'limit' | 'type'>) => {
+  const res = await api.get<BaseResponse<ListEntriesRESP>>(`/files/starred`, {
     params: { ...params, type: params.type?.toLowerCase() },
   });
   return res.data;
@@ -175,4 +175,3 @@ export const getActivityLog = async (params: GetActivityLogREQ) => {
   const res = await api.get<BaseResponse<ActivityLogRESP>>(`/files/${params.id}/activities`, { params });
   return res.data;
 };
-

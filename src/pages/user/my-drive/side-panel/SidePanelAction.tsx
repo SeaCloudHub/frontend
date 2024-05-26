@@ -7,25 +7,22 @@ import { useActivityLog } from '@/hooks/drive.hooks';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { useCursor, useCursorActivity } from '@/store/my-drive/myDrive.store';
 
-
-
 const SidePanelAction = () => {
-  const {data, isLoading} = useActivityLog();
-  const {nextCursorActivity} = useCursorActivity();
+  const { data, isLoading } = useActivityLog();
+  const { nextCursorActivity } = useCursorActivity();
 
-  return (
-    isLoading && !nextCursorActivity  ? (
-      <LinearProgress className=' translate-y-1' />
-    ) :
-    <div className='px-2 h-full overflow-hidden overscroll-y-auto overflow-x-hidden' >
+  return isLoading && !nextCursorActivity ? (
+    <LinearProgress className=' translate-y-1' />
+  ) : (
+    <div className='h-full overflow-hidden overflow-x-hidden overscroll-y-auto px-2'>
       {data.map((item, index) => {
         return (
-          <div key={index} className='flex flex-col relative'>
-            <div className={`sticky top-0 py-3 text-sm font-semibold bg-white dark:bg-dashboard-dark z-10`}>{item.time}</div>
+          <div key={index} className='relative flex flex-col'>
+            <div className={`sticky top-0 z-10 bg-white py-3 text-sm font-semibold dark:bg-dashboard-dark`}>{item.time}</div>
             <ActionItem key={index} time={item.time} data={item.data} />
           </div>
-        )}
-      )}
+        );
+      })}
     </div>
   );
 };

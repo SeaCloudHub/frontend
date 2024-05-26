@@ -36,7 +36,15 @@ export const LocalEntryToTimeEntry = (entries: LocalEntry[]): TimeEntry[] => {
   return timeEntries;
 };
 
-const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({ sort, order, setSort, entries, dir, isLoading, isScrolling }) => {
+const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({
+  sort,
+  order,
+  setSort,
+  entries,
+  dir,
+  isLoading,
+  isScrolling,
+}) => {
   const driveGridViewRef = useRef(null);
   const { drawerOpen } = useDrawer();
   const { setArrSelected, arrSelected } = useSelected();
@@ -58,22 +66,22 @@ const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({ sort, order, se
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [arrSelected, setArrSelected]);
 
-  return (
-    isLoading && entries.map((item) => item.entries).flat().length < 15 ?
-    <LinearProgress className='translate-y-1' /> :
-    entries.length === 0 ?
+  return isLoading && entries.map((item) => item.entries).flat().length < 15 ? (
+    <LinearProgress className='translate-y-1' />
+  ) : entries.length === 0 ? (
     <div className='flex h-96 items-center justify-center'>
       <div className='text-center'>
         <div className='text-3xl font-semibold'>Trash is empty</div>
         <div className='line-clamp-2 text-gray-500'>
-          You can move files that you don't need to the trash. <br /> Files in the trash will be permanently deleted after
-          30 days.
+          You can move files that you don't need to the trash. <br /> Files in the trash will be permanently deleted after 30
+          days.
         </div>
       </div>
-    </div> :
+    </div>
+  ) : (
     <div className='mx-5 mt-2 h-full' ref={driveGridViewRef}>
       <div className='flex flex-col space-y-2'>
-        <div className='absolute z-10 right-4 top-3'>
+        <div className='absolute right-4 top-3 z-10'>
           <Sort sort={sort} order={order} setSort={setSort} />
         </div>
         {entries.length === 0 && (
@@ -90,7 +98,7 @@ const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({ sort, order, se
         {entries.length &&
           entries.map((entry, index) => (
             <div key={index} className='relative'>
-              <div className='sticky top-0 pb-4 pt-2 text-sm font-medium bg-white dark:bg-dashboard-dark'>{entry.time}</div>
+              <div className='sticky top-0 bg-white pb-4 pt-2 text-sm font-medium dark:bg-dashboard-dark'>{entry.time}</div>
               {entry.entries.length !== 0 && (
                 <div className={`grid gap-4 ${drawerOpen ? 'xl:grid-cols-3' : 'sm:grid-cols-2 xl:grid-cols-5'}`}>
                   {entry.entries.map((file, index) => (
@@ -112,13 +120,12 @@ const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({ sort, order, se
                 </div>
               )}
             </div>
-          ))
-        }
-        {isScrolling &&
+          ))}
+        {isScrolling && (
           <div className='h-fit text-center'>
             <CircularProgress className='translate-y-1' />
           </div>
-        }
+        )}
       </div>
     </div>
   );

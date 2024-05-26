@@ -18,7 +18,7 @@ import MultipleDriveHeader from '../my-drive/header/MultipleDriveHeader';
 const Shared = () => {
   const { viewMode, setViewMode } = useViewMode();
   // const [typeFilterItem, setTypeFilterItem] = useState<string>('');
-  const {modifiedFilter, typeFilter, setModifiedFilter, setTypeFilter} = useFilter();
+  const { modifiedFilter, typeFilter, setModifiedFilter, setTypeFilter } = useFilter();
   // const [peopleFilterItem, setPeopleFilterItem] = useState<string>('');
   // const [modifiedFilterItem, setModifiedFilterItem] = useState<string>('');
   const { drawerOpen, openDrawer, closeDrawer } = useDrawer();

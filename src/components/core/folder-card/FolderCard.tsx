@@ -25,9 +25,19 @@ type FolderCardProps = {
   parent?: 'priority' | 'my-drive' | 'shared' | 'trash' | 'starred';
   dir: { id: string; name: string };
   userRoles?: ('owner' | 'editor' | 'viewer')[];
-}
+};
 
-const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick, onClick, isSelected, parent, dir, userRoles }) => {
+const FolderCard: React.FC<FolderCardProps> = ({
+  title,
+  icon,
+  id,
+  onDoubleClick,
+  onClick,
+  isSelected,
+  parent,
+  dir,
+  userRoles,
+}) => {
   const setDrawerOpen = useDrawer((state) => state.openDrawer);
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
   const [type, setType] = useState<'move' | 'share' | 'rename' | 'move to trash' | null>();
@@ -117,9 +127,9 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick,
 
   const handleCtrlClick = () => {
     setArrSelected(
-      arrSelected.some((item) => item.id === id && item.isDir === true) ?
-      arrSelected.filter((item) => item.id !== id) :
-      [...arrSelected, {id, isDir:true, userRoles}]
+      arrSelected.some((item) => item.id === id && item.isDir === true)
+        ? arrSelected.filter((item) => item.id !== id)
+        : [...arrSelected, { id, isDir: true, userRoles }],
     );
   };
 

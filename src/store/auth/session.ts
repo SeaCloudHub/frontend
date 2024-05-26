@@ -3,7 +3,7 @@ import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 import { Role } from '../../utils/enums/role.enum';
 import { getLocalStorage } from '../../utils/function/auth.function';
-import { useCookies } from 'react-cookie'
+import { useCookies } from 'react-cookie';
 
 const initIdentityValue = {
   id: null,
@@ -39,7 +39,7 @@ export const useSession = create<SessionState>()(
         role: value.role || null,
         firstLogin: true,
         identity: value.identity || initIdentityValue,
-        signIn: ( role: Role | null, firstLogin: boolean, identity: Identity) => {
+        signIn: (role: Role | null, firstLogin: boolean, identity: Identity) => {
           set({ role, identity: identity, firstLogin: firstLogin });
         },
         onEmailValid: (email, avatar_url: string, first_name: string, last_name: string, password_changed_at: string) =>
