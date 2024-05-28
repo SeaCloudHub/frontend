@@ -7,7 +7,7 @@ import { useProgressIndicator } from '@/store/storage/progressIndicator.store';
 import React, { useRef, useState } from 'react';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { useStorageStore } from '@/store/storage/storage.store';
-import { uploadFiles } from '@/apis/drive/drive.api';
+import { downloadMultipleEntries, uploadFiles } from '@/apis/drive/drive.api';
 import { api } from '@/helpers/http/config.http';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
@@ -15,20 +15,28 @@ import { ApiGenericError } from '@/utils/types/api-generic-error.type';
 import { toast } from 'react-toastify';
 import { toastError } from '@/utils/toast-options/toast-options';
 import { uploadFilesApi } from '@/apis/user/storage/storage.api';
+import { UserRole } from '@/utils/types/user-role.type';
+import { isPermission } from '@/utils/function/permisstion.function';
+import { UserRoleEnum } from '@/utils/enums/user-role.enum';
+import { useEntries, useSelected } from '@/store/my-drive/myDrive.store';
+import RenamePopUp from '@/components/core/pop-up/RenamePopUp';
+import { CopyToClipboard } from '@/utils/function/copy.function';
+import { useStarEntryMutation, useUnstarEntryMutation } from '@/hooks/drive.hooks';
 
 type DrivePathMenuButtonProps = {
-  dirId: string;
-  dirName: string;
+  path: { id: string; name: string, userRoles: UserRole[], is_starred: boolean};
   type?: 'MyDrive' | 'Shared' | 'Starred' | 'Trash' | 'Priority';
 };
 
-const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ dirId, dirName, type }) => {
+const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ path, type }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   // const folderInputRef = useRef<HTMLInputElement>(null);
-  const [createModal, setCreateModal] = useState<boolean>(false);
+  const [openPopUp, setOpenPopUp] = useState<boolean>(false);
+  const [typePopUp, setTypePopUp] = useState<string>('');
   const { setFileNames } = useProgressIndicator();
   const { rootId } = useStorageStore();
   const queryClient = useQueryClient();
+  const { listEntries } = useEntries();
   const uploadFilesMutation = useMutation({
     mutationFn: (body: { files: File[]; id: string }) => {
       return uploadFilesApi(body);
@@ -42,6 +50,9 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ dirId, dirNam
       setFileNames(data.data.map((item) => item.name));
     },
   });
+
+  const starEntryMutation = useStarEntryMutation();
+  const unStarEntryMutation = useUnstarEntryMutation();
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, curDirId: string) => {
     const fileList = e.currentTarget.files;
@@ -82,7 +93,10 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ dirId, dirNam
       {
         label: 'New Folder',
         icon: <IconifyIcon icon={'lets-icons:folder-add-light'} />,
-        action: () => setCreateModal(true),
+        action: () => {
+          setOpenPopUp(true),
+          setTypePopUp('Create');
+        },
       },
     ],
     [
@@ -95,15 +109,6 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ dirId, dirNam
           }
         },
       },
-      // {
-      //   label: 'Folder Upload',
-      //   icon: <IconifyIcon icon={'uil:folder-upload'} />,
-      //   action: () => {
-      //     if (folderInputRef.current) {
-      //       folderInputRef.current.click();
-      //     }
-      //   },
-      // },
     ],
   ];
 
@@ -112,64 +117,85 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ dirId, dirNam
       {
         label: 'New folder',
         icon: <Icon icon='ic:outline-create-new-folder' />,
-        action: () => setCreateModal(true),
-        isHidden: type !== 'MyDrive',
+        action: () => {
+          console.log('Create new folder');
+          setOpenPopUp(true),
+          setTypePopUp('Create');
+        },
+        isHidden: isPermission(path.userRoles) < UserRoleEnum.EDITOR,
       },
     ],
     [
       {
         label: 'Download',
         icon: <Icon icon='ic:outline-file-download' />,
-        action: () => {},
+        action: () => {
+          downloadMultipleEntries({
+            ids: listEntries.map((entry) => entry.id),
+            parent_id: path.id,
+          });
+        },
       },
       {
         label: 'Rename',
         icon: <Icon icon='ic:round-drive-file-rename-outline' />,
-        action: () => {},
-        isHidden: type !== 'MyDrive',
+        action: () => {
+          setOpenPopUp(true),
+          setTypePopUp('Rename');
+        },
+        isHidden: isPermission(path.userRoles) < UserRoleEnum.EDITOR,
       },
     ],
     [
       {
         label: 'Copy link',
         icon: <Icon icon='material-symbols:link' />,
-        action: (text: string) => {},
+        action: () => {
+          const link = `${window.location.origin}/drive/folder/${path.id}`;
+          CopyToClipboard(link);
+        },
       },
       {
         label: 'Share',
         icon: <Icon icon='lucide:user-plus' />,
         action: () => {},
+        isHidden: isPermission(path.userRoles) < UserRoleEnum.EDITOR,
       },
       {
         label: 'Move',
         icon: <Icon icon='mdi:folder-move-outline' />,
         action: () => {},
+        isHidden: isPermission(path.userRoles) < UserRoleEnum.EDITOR,
       },
-      {
-        label: 'Add to starred',
-        icon: <Icon icon='material-symbols:star-outline' />,
-        action: () => {},
-      },
+      ...(path.is_starred ? [
+        {
+          label: 'Remove from starred',
+          icon: <Icon icon='material-symbols:star' />,
+          action: () => {
+            unStarEntryMutation.mutate({ file_ids: [path.id] });
+          },
+        },
+      ] : [
+        {
+          label: 'Add to starred',
+          icon: <Icon icon='material-symbols:star-outline' />,
+          action: () => {
+            starEntryMutation.mutate({ file_ids: [path.id] });
+          },
+        },
+      ]),
     ],
     [
       {
         label: 'File upload',
         icon: <Icon icon='ic:baseline-upload-file' />,
         action: () => {
-          if (fileInputRef.current) {
-            fileInputRef.current.click();
-          }
+          // if (fileInputRef.current) {
+            fileInputRef?.current.click();
+          // }
         },
+        isHidden: isPermission(path.userRoles) < UserRoleEnum.EDITOR,
       },
-      // {
-      //   label: 'Folder upload',
-      //   icon: <Icon icon='mdi:folder-upload-outline' />,
-      //   action: () => {
-      //     if (folderInputRef.current) {
-      //       folderInputRef.current.click();
-      //     }
-      //   },
-      // },
     ],
   ];
 
@@ -178,11 +204,11 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ dirId, dirNam
       <CustomDropdown
         button={
           <div className='my-0.5 flex h-9 cursor-pointer items-center rounded-full py-1 pl-4 pr-3 hover:bg-[#ededed] active:brightness-90 dark:hover:bg-slate-500'>
-            <div className='pb-1 text-2xl'>{dirName}</div>
+            <div className='pb-1 text-2xl truncate max-w-fit'>{path.name}</div>
             <Icon icon='mdi:caret-down' className='h-5 w-5' />
           </div>
         }
-        items={dirId === rootId ? rootMenuItems : dirMenuItems}
+        items={path.id === rootId ? rootMenuItems : dirMenuItems}
       />
       <input
         ref={fileInputRef}
@@ -190,17 +216,27 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ dirId, dirNam
         type='file'
         style={{ display: 'none' }}
         onChange={(e) => {
-          handleFileUpload(e, dirId);
+          handleFileUpload(e, path.id);
         }}
         multiple
       />
-      {createModal && (
+      {openPopUp && typePopUp === 'Create' && (
         <ModalCreateFolder
-          dirId={dirId}
-          isOpen={createModal}
+          dirId={path.id}
+          isOpen={openPopUp}
           handleConfirm={() => {
-            setCreateModal(false);
+            setOpenPopUp(false);
           }}
+        />
+      )}
+      {openPopUp && typePopUp === 'Rename' && (
+        <RenamePopUp
+          open={openPopUp}
+          handleClose={() => {
+            setOpenPopUp(false);
+          }}
+          id={path.id}
+          name={path.name}
         />
       )}
     </>

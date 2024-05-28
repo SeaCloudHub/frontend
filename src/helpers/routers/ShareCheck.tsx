@@ -6,6 +6,7 @@ import { useSession } from '@/store/auth/session';
 import { useSharedFileInfo } from '@/store/storage/file-share-info.store';
 import { ApiGenericError } from '@/utils/types/api-generic-error.type';
 import { FileShareRole } from '@/utils/types/file-share-role.type';
+import { CircularProgress } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { useEffect, useMemo, useState } from 'react';
@@ -83,7 +84,7 @@ const ShareCheck = () => {
       {!checking && (ErrorMessage ? <ShareError message={ErrorMessage} /> : <Outlet />)}
       {checking && (
         <div className='flex h-[calc(100vh-4rem)] items-center justify-center px-2 py-2'>
-          <img src={(import.meta.env.BASE_URL + 'loader.svg') as string} className='mx-auto  h-[50px] w-[50px]' />
+          <CircularProgress />
         </div>
       )}
     </>

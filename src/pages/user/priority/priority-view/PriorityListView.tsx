@@ -12,9 +12,10 @@ type PriorityListViewProps = {
   entries: SuggestedEntry[];
   isLoading?: boolean;
   curDir?: { id: string; name: string };
+  parrent?: 'priority' | 'my-drive' | 'shared' | 'trash' | 'starred';
 };
 
-const PriorityListView: React.FC<PriorityListViewProps> = ({ entries, curDir, isLoading, order, setSort, sort }) => {
+const PriorityListView: React.FC<PriorityListViewProps> = ({ entries, curDir, isLoading, order, setSort, sort, parrent }) => {
   const files = entries.filter((entry) => !entry.isDir);
   const folders = entries.filter((entry) => entry.isDir);
   const driveListViewRef = useRef(null);

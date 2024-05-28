@@ -53,7 +53,7 @@ export const DriveListView: React.FC<DriveListViewProps> = ({
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [arrSelected, setArrSelected]);
+  }, [arrSelected, resetCursorActivity, setArrSelected]);
 
   return (
     <>

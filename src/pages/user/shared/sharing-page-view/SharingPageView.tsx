@@ -16,9 +16,9 @@ const SharingPageView: React.FC<SharingPageViewProps> = ({ entries }) => {
   const [{ sort, order }, setSort] = useState<{ sort: string; order: string }>({ sort: 'Name', order: 'desc' });
 
   return viewMode === 'grid' ? (
-    <DriveGridView sort={sort} order={order} setSort={setSort} entries={processedEntries} />
+    <DriveGridView sort={sort} parent='shared' order={order} setSort={setSort} entries={processedEntries} />
   ) : (
-    <DriveListView order={order} sort={sort} setSort={setSort} entries={processedEntries} />
+    <DriveListView order={order} parent='shared' sort={sort} setSort={setSort} entries={processedEntries} />
   );
 };
 

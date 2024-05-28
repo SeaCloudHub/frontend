@@ -29,6 +29,7 @@ const PriorityView: React.FC<PriorityViewProps> = ({ entries, sort, order, setSo
       entries={localEntries}
       fileShow={isFileMode}
       folderShow={!isFileMode}
+      parent='priority'
       curDir={{ id: rootId, name: 'Priority' }}
     />
   ) : (

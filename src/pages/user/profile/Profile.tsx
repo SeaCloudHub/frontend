@@ -83,14 +83,15 @@ export const Profile: React.FC<ProfileProps> = () => {
       />
       {open && (
         <ChangePhotoPopUp
-          open={open}
-          handleClose={() => setOpen(false)}
-          setResult={() => {}}
-          name={{
-            first_name: data?.first_name || '',
-            last_name: data?.last_name || '',
-          }}
-        />
+        open={open}
+        handleClose={() => setOpen(false)}
+        setResult={() => {}}
+        name={{
+          first_name: data?.first_name||'',
+          last_name: data?.last_name||'',
+          avatar_url: data?.avatar_url||'',
+        }}
+       />
       )}
       {renameOpen && (
         <RenameProfilePopUp

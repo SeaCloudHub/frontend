@@ -2,7 +2,7 @@ import Dropdown, { MenuItem, classNames } from '@/components/core/drop-down/Drop
 import { Icon } from '@iconify/react/dist/iconify.js';
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Avatar, Tooltip } from '@mui/material';
-import { useDrawer, useSelected } from '@/store/my-drive/myDrive.store';
+import { useCursor, useDrawer, useEntries, useFilter, useSelected } from '@/store/my-drive/myDrive.store';
 import {
   LocalEntry,
   useCopyMutation,
@@ -24,8 +24,11 @@ import { numToSize } from '@/utils/function/numbertToSize';
 import FileViewerContainer from '@/components/core/file-viewers/file-viewer-container/FileViewerContainer';
 import { downloadFile } from '@/apis/drive/drive.api';
 import { CopyToClipboard } from '@/utils/function/copy.function';
-import { DRIVE_MY_DRIVE, DRIVE_SHARED_DIR } from '@/utils/constants/router.constant';
+import { DRIVE_MY_DRIVE, DRIVE_SHARED, DRIVE_SHARED_DIR } from '@/utils/constants/router.constant';
 import DeleteTempPopUp from '@/components/core/pop-up/DeleteTempPopUp';
+import { isPermission } from '@/utils/function/permisstion.function';
+import { Star } from '@mui/icons-material';
+import { useStorageStore } from '@/store/storage/storage.store';
 
 type DataRowProps = {
   // dirId?: string;
@@ -51,6 +54,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
   dir,
   fileType,
   isSelected,
+  is_starred,
 }) => {
   const [type, setType] = useState<'move' | 'share' | 'rename' | 'move to trash' | null>(null);
   const [fileViewer, setFileViewer] = useState(false);
@@ -66,6 +70,10 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
   const { setArrSelected, arrSelected } = useSelected();
   const starEntryMutation = useStarEntryMutation();
   const unstarEntryMutation = useUnstarEntryMutation();
+  const { setListEntries } = useEntries();
+  const { resetFilter } = useFilter();
+  const { resetCursor } = useCursor();
+  const { rootId } = useStorageStore();
 
   const entryMenu: MenuItem[][] = [
     // chỉ !isdir mới có preview
@@ -87,6 +95,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
         action: () => {
           downloadFile({ id, name: title });
         },
+        isHidden: isDir,
       },
       {
         label: 'Rename',
@@ -136,13 +145,23 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
         icon: <Icon icon='material-symbols:add-to-drive' />,
         action: () => {},
       },
-      {
-        label: parent !== 'starred' ? 'Add to starred' : 'Remove from starred',
-        icon: parent !== 'starred' ? <Icon icon='material-symbols:star-outline' /> : <Icon icon='mdi:star-off-outline' />,
-        action: () => {
-          parent !== 'starred' ? starEntryMutation.mutate({ file_ids: [id] }) : unstarEntryMutation.mutate({ file_ids: [id] });
+      ... is_starred ? [
+        {
+          label: 'Remove from starred',
+          icon: <Icon icon='mdi:star-off-outline' />,
+          action: () => {
+            unstarEntryMutation.mutate({ file_ids: [id] });
+          },
         },
-      },
+      ] : [
+        {
+          label: 'Add to starred',
+          icon: <Icon icon='material-symbols:star-outline' />,
+          action: () => {
+            starEntryMutation.mutate({ file_ids: [id] });
+          },
+        },
+      ],
     ],
     [
       {
@@ -208,10 +227,15 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
     }
     if (isDir) {
       setArrSelected && setArrSelected([]);
+      setListEntries([]);
+      // setActivityLog([]);
+      resetFilter();
+      resetCursor()
       if (parent === 'shared') {
-        navigate(`${DRIVE_SHARED_DIR}/dir/${id}`);
+        id === rootId ? navigate(DRIVE_SHARED) : navigate(`/drive/folder/${id}`);
       }
-      onDoubleClick && onDoubleClick();
+      // onDoubleClick && onDoubleClick();
+      else id === rootId ? navigate(DRIVE_MY_DRIVE) : navigate(`${DRIVE_MY_DRIVE}/dir/${id}`);
     } else {
       parent !== 'trash' && setFileViewer(true);
     }
@@ -253,7 +277,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
           'data-row grid cursor-pointer grid-cols-7 gap-3 truncate border-b border-b-[#dadce0] py-2 font-medium max-[1160px]:grid-cols-7 max-[1150px]:grid-cols-6 max-[1000px]:grid-cols-5',
           isSelected
             ? 'bg-[#c2e7ff]  dark:bg-blue-900'
-            : 'hover:bg-[#dfe3e7] dark:bg-slate-600 dark:text-white dark:hover:bg-slate-700',
+            : 'hover:bg-[#dfe3e7] dark:text-white dark:hover:bg-slate-700',
         )}>
         <div className='col-span-4 flex items-center'>
           <div className='px-4'>
@@ -262,6 +286,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
           <Tooltip title={title}>
             <div className='truncate'>{title}</div>
           </Tooltip>
+          {is_starred && (<Star className='dark:text-yellow-400' />)}
         </div>
         <div className='max-[1150px]:hidden'>
           <div className='flex items-center gap-x-2'>
@@ -286,10 +311,13 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
             <span className='truncate'>{owner?.id === identity.id ? 'me' : owner?.last_name}</span>
           </div>
         </div>
-        <div className='flex items-center truncate max-[1000px]:hidden'>{formatDate(lastModified)}</div>
+        <div className='truncate max-[1000px]:hidden my-auto'>{formatDate(lastModified)}</div>
         <div className='flex items-center justify-between max-[1160px]:justify-end'>
           <div className='truncate max-[1160px]:hidden'>{isDir ? '---' : numToSize(size)}</div>
-          <div className='rounded-full text-end hover:bg-slate-300 dark:hover:bg-slate-500'>
+          <div className='text-end hover:bg-slate-300 dark:hover:bg-slate-500 rounded-full'
+            // onClick={(e) => e.stopPropagation()}
+            onDoubleClick={(e) => e.stopPropagation()}
+          >
             <CustomDropdown
               button={<Icon icon='ic:baseline-more-vert' className='h-7 w-7 rounded-full p-1 dark:hover:text-white' />}
               items={parent === 'trash' ? [menuItemsTrash] : entryMenu}
@@ -300,7 +328,13 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
           <SharePopUp fileId={id} open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} />
         )}
         {type === 'move' && (
-          <MovePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} location={dir} />
+          <MovePopUp
+            open={isPopUpOpen}
+            handleClose={() => setIsPopUpOpen(false)}
+            title={title}
+            location={dir}
+            ids={arrSelected.map((item) => item.id) || [id]}
+          />
         )}
         {type === 'rename' && <RenamePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} name={title} id={id} />}
         {parent === 'trash' && (

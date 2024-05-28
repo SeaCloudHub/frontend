@@ -2,9 +2,18 @@ import React, { useEffect } from 'react';
 import { Tooltip } from '@mui/material';
 import { LocalEntry } from '@/hooks/drive.hooks';
 import { useSelected } from '@/store/my-drive/myDrive.store';
+import { Star } from '@mui/icons-material';
+import FileViewerContainer from '@/components/core/file-viewers/file-viewer-container/FileViewerContainer';
+import { useNavigate } from 'react-router-dom';
 
-export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModified, owner, size, userRoles }) => {
-  const { arrSelected, setArrSelected } = useSelected();
+type DataRowProps = LocalEntry & {
+  isSelected?: boolean;
+};
+
+export const DataRow: React.FC<DataRowProps> = ({ id, isDir, title, icon, lastModified, owner, size, userRoles, is_starred, fileType, isSelected }) => {
+  const {arrSelected, setArrSelected} = useSelected();
+  const [fileViewer, setFileViewer] = React.useState(false);
+  const navigate = useNavigate();
 
   const handleCtrlClick = () => {
     setArrSelected(
@@ -30,7 +39,9 @@ export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModi
     if (isDir) {
       setArrSelected && setArrSelected([]);
       // onDoubleClick && onDoubleClick();
+      navigate(`/drive/my-drive/dir/${id}`);
     } else {
+      setFileViewer(true);
       // parent !== 'trash' && setFileViewer(true);
     }
   };
@@ -43,24 +54,49 @@ export const DataRow: React.FC<LocalEntry> = ({ id, isDir, title, icon, lastModi
   // }, [result, setArrSelected]);
 
   return (
-    <div className='grid cursor-pointer select-none grid-cols-7 items-center space-x-3 border-b border-b-[#dadce0] py-2 hover:bg-[#f0f1f1] max-[500px]:grid-cols-6'>
-      <div className='col-span-6 flex items-center text-sm font-medium'>
-        <div className='px-4'>
-          <div className='h-6 w-6'> {icon} </div>
-        </div>
-        <Tooltip title={title}>
-          <div className='line-clamp-1'> {title} </div>
-        </Tooltip>
-      </div>
-      <div className='col-span-1 truncate max-[500px]:hidden'>
-        {size ? (
-          <Tooltip title={`${size} bytes `}>
-            <span>{size}</span>
+    <>
+      {fileViewer && (
+        <FileViewerContainer
+          open={fileViewer}
+          closeOutside={() => {
+            setFileViewer(false);
+          }}
+          fileInfo={{
+            isDir: false,
+            title: title,
+            icon: icon,
+            preview: '',
+            id: id,
+            owner: null,
+            lastModified: new Date(),
+            size: size,
+            fileType: fileType,
+            userRoles: userRoles,
+          }}
+        />
+      )}
+      <div className={`grid grid-cols-7 items-center space-x-3 py-2 border-b border-b-[#dadce0] hover:bg-slate-700 select-none cursor-pointer ${isSelected ? 'bg-[#c2e7ff]  dark:bg-blue-900' : 'hover:bg-[#dfe3e7] dark:text-white dark:hover:bg-slate-700'}`}
+        onClick={handleClick}
+        onDoubleClick={handleDoubleClick}
+      >
+        <div className='col-span-6 max-[500px]:grid-cols-7 flex items-center text-sm font-medium'>
+          <div className='px-4'>
+            <div className='h-6 w-6'> {icon} </div>
+          </div>
+          <Tooltip title={title}>
+            <div className='line-clamp-1'> {title} </div>
           </Tooltip>
-        ) : (
-          <span>---</span>
-        )}
+          {is_starred && <Star className='dark:text-yellow-400' />}
+        </div>
+        <div className='col-span-1 max-[500px]:hidden truncate'>
+          {size ?
+            <Tooltip title={`${size} bytes `}>
+              <span>{size}</span>
+            </Tooltip>:
+            <span>---</span>
+          }
+        </div>
       </div>
-    </div>
+    </>
   );
 };

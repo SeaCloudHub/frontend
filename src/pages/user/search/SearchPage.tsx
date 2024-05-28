@@ -80,9 +80,9 @@ const SearchPage = () => {
       onScrollBottom={onScollBottom}
       bodyLeft={
         viewMode === 'grid' ? (
-          <DriveGridView entries={data} isLoading={isLoading} isScrolling={isScrolling} />
+          <DriveGridView entries={data} isLoading={isLoading} isScrolling={isScrolling} parent='priority' />
         ) : (
-          <DriveListView entries={data} isLoading={isLoading} isScrolling={isScrolling} />
+          <DriveListView entries={data} isLoading={isLoading} isScrolling={isScrolling} parent='priority' />
         )
       }
       sidePanel={

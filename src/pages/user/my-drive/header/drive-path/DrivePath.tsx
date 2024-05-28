@@ -4,12 +4,14 @@ import DrivePathMenuButton from './DrivePathMenuButton';
 import { Path, useCursor, useCursorActivity, useSelected } from '@/store/my-drive/myDrive.store';
 import { MenuItem } from '@/components/core/drop-down/Dropdown';
 import { useNavigate } from 'react-router-dom';
-import { DRIVE_MY_DRIVE } from '@/utils/constants/router.constant';
+import { DRIVE_MY_DRIVE, DRIVE_SHARED, DRIVE_SHARED_DIR } from '@/utils/constants/router.constant';
 import { useStorageStore } from '@/store/storage/storage.store';
 import CustomDropdown from '@/components/core/drop-down/CustomDropdown';
+import { UserRole } from '@/utils/types/user-role.type';
+import { isPermission } from '@/utils/function/permisstion.function';
 
 type DrivePathProps = {
-  path: Path;
+  path: { id: string; name: string, userRoles: UserRole[], is_starred: boolean }[];
   type?: 'MyDrive' | 'Shared' | 'Starred' | 'Trash' | 'Priority';
 };
 
@@ -30,9 +32,10 @@ const DrivePath: React.FC<DrivePathProps> = ({ path, type }) => {
           label: d.name,
           action: () => {
             setArrSelected([]);
-            // resetLimit();
             resetCursor();
             resetCursorActivity();
+            if(isPermission(d.userRoles) <= 2)
+              d.id === rootId ? navigate(`${DRIVE_SHARED}`) : navigate(`/drive/folder/${DRIVE_SHARED_DIR}`);
             d.id === rootId ? navigate(`${DRIVE_MY_DRIVE}`) : navigate(`${DRIVE_MY_DRIVE}/dir/${d.id}`);
           },
           icon: <Icon icon='ic:baseline-folder' />,
@@ -51,26 +54,26 @@ const DrivePath: React.FC<DrivePathProps> = ({ path, type }) => {
           items={driveMenuItems}
         />
         <Icon icon='ic:baseline-keyboard-arrow-right' className='h-6 w-6' />
-        <DrivePathButton id={path[path.length - 2].id} name={path[path.length - 2].name} type={type} />
+        <DrivePathButton type={type} path={path[path.length - 2]}/>
         <Icon icon='ic:baseline-keyboard-arrow-right' className='h-6 w-6' />
-        <DrivePathMenuButton dirName={path[path.length - 1].name} dirId={path[path.length - 1].id} type={type} />
+        <DrivePathMenuButton path={path[path.length - 1]} type={type} />
       </div>
     );
   }
 
   return (
-    <div className='flex items-center'>
+    <div className='flex items-center select-none'>
       {path.map((d, index) => {
         if (index === path.length - 1) {
-          return type === 'MyDrive' ? (
-            <DrivePathMenuButton dirName={d.name} dirId={d.id} key={d.id} type={type} />
+          return isPermission(d.userRoles) >= 1 ? (
+            <DrivePathMenuButton path={path[path.length - 1]} key={d.id} type={type} />
           ) : (
-            <DrivePathButton id={d.id} name={d.name} key={d.id} type={type} />
+            <DrivePathButton path={d} key={d.id} type={type} />
           );
         }
         return (
           <div className='flex items-center' key={d.id}>
-            <DrivePathButton id={d.id} name={d.name} />
+            <DrivePathButton path={d} key={index} type={type} />
             <Icon icon='ic:baseline-keyboard-arrow-right' className='h-6 w-6' />
           </div>
         );

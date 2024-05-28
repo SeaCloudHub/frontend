@@ -27,7 +27,7 @@ export const initializeSocket = (token) => {
     });
 
     socket.on('authenticated', (data) => {
-      console.log('data: ', data);
+      // console.log('data: ', data);
     });
   }
   return socket;

@@ -59,10 +59,12 @@ export type ListEntriesState = {
   listSuggestedEntries: SuggestedEntry[];
   entriesSearchPage: SuggestedEntry[];
   trashEntries: TimeEntry[];
+  folderEntries: LocalEntry[];
   setListEntries: Dispatch<SetStateAction<LocalEntry[]>>;
   setListSuggestedEntries: Dispatch<SetStateAction<SuggestedEntry[]>>;
   setEntriesSearchPage: Dispatch<SetStateAction<SuggestedEntry[]>>;
   setTrashEntries: Dispatch<SetStateAction<TimeEntry[]>>;
+  setFolderEntries: Dispatch<SetStateAction<LocalEntry[]>>;
   resetEntries: () => void;
 };
 
@@ -71,24 +73,14 @@ export const useEntries = create<ListEntriesState>((set) => ({
   listSuggestedEntries: [],
   trashEntries: [],
   entriesSearchPage: [],
+  folderEntries: [],
   setListEntries: (listEntries: LocalEntry[]) => set({ listEntries }),
   setListSuggestedEntries: (listSuggestedEntries: SuggestedEntry[]) => set({ listSuggestedEntries }),
   setTrashEntries: (trashEntries: TimeEntry[]) => set({ trashEntries }),
   setEntriesSearchPage: (entriesSearchPage: SuggestedEntry[]) => set({ entriesSearchPage }),
-  resetEntries: () => set({ listEntries: [], listSuggestedEntries: [], trashEntries: [], entriesSearchPage: [] }),
+  setFolderEntries: (folderEntries: LocalEntry[]) => set({ folderEntries }),
+  resetEntries: () => set({ listEntries: [], listSuggestedEntries: [], trashEntries: [], entriesSearchPage: [], folderEntries: [] }),
 }));
-
-// export type LimitState = {
-//   limit: number;
-//   increaseLimit: () => void;
-//   resetLimit: () => void;
-// };
-
-// export const useLimit = create<LimitState>((set) => ({
-//   limit: 15,
-//   increaseLimit: () => set((state) => ({ limit: state.limit + 15 })),
-//   resetLimit: () => set({ limit: 15 }),
-// }));
 
 export type CursorState = {
   nextCursor: string;

@@ -21,9 +21,9 @@ const SidePanel: React.FC<SidePanelProps> = ({ id, title, isHidden }) => {
   const { closeDrawer, tab, setTab } = useDrawer();
   console.log('SidePanel render', tab);
   const scrollRef = React.useRef<HTMLDivElement>(null);
-  const { currentCursorActivity, nextCursorActivity, setCurrentCursorActivity } = useCursorActivity();
-  const { data: details, isLoading, isFetching } = useEntryMetadata(id);
-  const { activityLog, setActivityLog } = useActivityLogStore();
+  const {currentCursorActivity, nextCursorActivity, setCurrentCursorActivity} = useCursorActivity();
+  const { data: details, isLoading, isFetching } = useEntryMetadata(id||'');
+  const {activityLog, setActivityLog} = useActivityLogStore();
   const [isScrolling, setIsScrolling] = React.useState(false);
 
   useEffect(() => {
@@ -127,7 +127,7 @@ const SidePanel: React.FC<SidePanelProps> = ({ id, title, isHidden }) => {
 
 export const DefaultTabPanel = () => {
   return (
-    <div className='flex flex-col items-center'>
+    <div className='flex flex-col items-center overflow-hidden'>
       <img className='mb-4 h-60 w-full object-cover' src={(import.meta.env.BASE_URL + 'guide1.png') as string} alt='Guide1' />
       <div>Select item to see the details</div>
     </div>

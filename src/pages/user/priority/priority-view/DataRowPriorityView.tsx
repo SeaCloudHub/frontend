@@ -17,13 +17,15 @@ import {
 import { useSession } from '@/store/auth/session';
 import { useDrawer, useSelected } from '@/store/my-drive/myDrive.store';
 import { useStorageStore } from '@/store/storage/storage.store';
-import { DRIVE_HOME } from '@/utils/constants/router.constant';
+import { DRIVE_HOME, DRIVE_MY_DRIVE_DIR, DRIVE_SHARED, HOME } from '@/utils/constants/router.constant';
 import { CopyToClipboard } from '@/utils/function/copy.function';
 import { formatDate } from '@/utils/function/formatDate.function';
 import { getFirstCharacters } from '@/utils/function/getFirstCharacter';
 import { getRandomColor } from '@/utils/function/getRandomColor';
 import { numToSize } from '@/utils/function/numbertToSize';
+import { isPermission } from '@/utils/function/permisstion.function';
 import { Icon } from '@iconify/react/dist/iconify.js';
+import { Star } from '@mui/icons-material';
 import { Avatar, Tooltip } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -52,6 +54,7 @@ const DataRowPriorityView: React.FC<SuggestedEntry & DataRowPriorityViewProps> =
   log,
   parent,
   userRoles,
+  is_starred,
 }) => {
   const [type, setType] = useState<'move' | 'share' | 'rename' | 'move to trash' | null>(null);
   const [fileViewer, setFileViewer] = useState(false);
@@ -189,9 +192,7 @@ const DataRowPriorityView: React.FC<SuggestedEntry & DataRowPriorityViewProps> =
     }
     if (isDir) {
       setArrSelected && setArrSelected([]);
-      // if (parent === 'shared') {
-      //   navigate(`${DRIVE_SHARED_DIR}/dir/${id}`);
-      // }
+
       onDoubleClick && onDoubleClick();
     } else {
       setFileViewer(true);
@@ -234,7 +235,7 @@ const DataRowPriorityView: React.FC<SuggestedEntry & DataRowPriorityViewProps> =
           'data-row grid cursor-pointer grid-cols-8 gap-3 truncate border-b border-b-[#dadce0] py-2 max-[1160px]:grid-cols-7 max-[1150px]:grid-cols-6 max-[1000px]:grid-cols-5',
           isSelected
             ? 'bg-[#c2e7ff]  dark:bg-blue-900'
-            : 'hover:bg-[#dfe3e7] dark:bg-slate-600 dark:text-white dark:hover:bg-slate-700',
+            : 'hover:bg-[#dfe3e7] dark:text-white dark:hover:bg-slate-700',
         )}>
         <div className='col-span-4 flex'>
           <div className='px-4'>
@@ -243,6 +244,7 @@ const DataRowPriorityView: React.FC<SuggestedEntry & DataRowPriorityViewProps> =
           <Tooltip title={title}>
             <div className='truncate'>{title}</div>
           </Tooltip>
+          {is_starred && <Star className='h-5 w-5 dark:text-yellow-400' />}
         </div>
         <div className='col-span-2 max-[1150px]:hidden'>
           <span className='truncate'>
@@ -276,7 +278,13 @@ const DataRowPriorityView: React.FC<SuggestedEntry & DataRowPriorityViewProps> =
 
         <div className='flex justify-between max-[1160px]:justify-end'>
           <div className='truncate max-[1160px]:hidden'>
-            <div onClick={() => navigate(`${DRIVE_HOME}/my-drive/dir/${parent.id}`)}>
+            <div onClick={() => {
+              if(isPermission(userRoles) <= 2) {
+                id === rootId ? navigate(`/drive/folder/${parent.id}`) : navigate(DRIVE_SHARED);
+              } else {
+                id === rootId ? navigate(`${DRIVE_HOME}/my-drive/dir/${parent.id}`) : navigate(DRIVE_HOME);
+              }
+            }}>
               {parent.id === rootId ? 'My Drive' : parent.name}
             </div>
           </div>
@@ -289,7 +297,13 @@ const DataRowPriorityView: React.FC<SuggestedEntry & DataRowPriorityViewProps> =
         </div>
         {type === 'share' && <SharePopUp fileId='' open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} />}
         {type === 'move' && (
-          <MovePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} location={dir} />
+          <MovePopUp
+            open={isPopUpOpen}
+            handleClose={() => setIsPopUpOpen(false)}
+            title={title}
+            location={dir}
+            ids={arrSelected.map((item) => item.id) || [id]}
+          />
         )}
         {type === 'rename' && <RenamePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} name={title} id={id} />}
         {type === 'move to trash' && (

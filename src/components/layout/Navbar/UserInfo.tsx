@@ -37,9 +37,8 @@ function UserInfo({ onClose }: UserInfoProps) {
     },
     onSuccess: () => {
       signOut();
-      removeCookie('token', { path: '/' });
+      removeCookie('token', {path: '/'});
       setTimeout(() => {
-        // navigate after remove cookie
         navigate(AUTH_LOGIN_EMAIL);
       }, 0);
     },
@@ -57,7 +56,7 @@ function UserInfo({ onClose }: UserInfoProps) {
   return (
     <div
       ref={modalRef}
-      className='bg-darkC2 z-100 relative z-10 flex max-w-[250px] flex-col items-center justify-center space-y-3 rounded-2xl bg-white px-5 py-3 text-sm font-medium shadow-md shadow-[#b4bebb] dark:bg-dashboard-dark dark:text-white'>
+      className='bg-darkC2 z-100 relative z-10 flex max-w-[250px] flex-col items-center justify-center space-y-3 rounded-2xl bg-white px-5 py-3 text-sm font-medium shadow-md shadow-[#b4bebb] dark:bg-dashboard-dark dark:text-white select-none'>
       <button onClick={onClose} className='bg-darkC2 hover:bg-dark absolute right-3 top-3 rounded-full p-1'>
         <AiOutlineClose className='h-5 w-5 rounded-full stroke-2' />
       </button>
