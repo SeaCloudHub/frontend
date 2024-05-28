@@ -10,14 +10,17 @@ type DataRowProps = LocalEntry & {
   isSelected?: boolean;
 };
 
-
 export const DataRow: React.FC<DataRowProps> = ({ id, isDir, title, icon, lastModified, owner, size, userRoles, is_starred, fileType, isSelected }) => {
   const {arrSelected, setArrSelected} = useSelected();
   const [fileViewer, setFileViewer] = React.useState(false);
   const navigate = useNavigate();
 
   const handleCtrlClick = () => {
-    setArrSelected(arrSelected.some(e=>e.id === id) ? arrSelected.filter((item) => item.id !== id) : [...arrSelected, { id, isDir, userRoles }]);
+    setArrSelected(
+      arrSelected.some((e) => e.id === id)
+        ? arrSelected.filter((item) => item.id !== id)
+        : [...arrSelected, { id, isDir, userRoles }],
+    );
   };
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -25,7 +28,6 @@ export const DataRow: React.FC<DataRowProps> = ({ id, isDir, title, icon, lastMo
       handleCtrlClick();
       return;
     }
-    console.log('handleClick', id);
     setArrSelected([{ id, isDir, userRoles }]);
   };
 

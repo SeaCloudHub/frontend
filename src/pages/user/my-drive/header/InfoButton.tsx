@@ -10,7 +10,7 @@ const InfoButton: React.FC = () => {
     <Tooltip title='Info'>
       <div
         className={classNames(
-          'flex h-10 w-10 cursor-pointer items-center justify-center rounded-full transition-all dark:hover:bg-slate-500  hover:bg-[#c2e7ff] active:brightness-95',
+          'flex h-10 w-10 cursor-pointer items-center justify-center rounded-full transition-all hover:bg-[#c2e7ff]  active:brightness-95 dark:hover:bg-slate-500',
           drawerOpen ? 'dark:bg-slate-500 ' : '',
         )}
         onClick={() => {

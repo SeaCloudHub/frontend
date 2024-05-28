@@ -17,12 +17,7 @@ type MyDriveHeaderProps = {
   setSort: ({ sort, order }: { sort: string; order: string }) => void;
 };
 
-const MyDriveHeader: React.FC<MyDriveHeaderProps> = ({
-  path,
-  sort,
-  order,
-  setSort,
-}) => {
+const MyDriveHeader: React.FC<MyDriveHeaderProps> = ({ path, sort, order, setSort }) => {
   const { arrSelected } = useSelected();
   const { setTypeFilter, typeFilter, modifiedFilter, setModifiedFilter } = useFilter();
 

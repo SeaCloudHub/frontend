@@ -17,7 +17,7 @@ import DriveFilter from '../my-drive/header/DriveFilter';
 const TrashPageHeader = () => {
   const { drawerOpen, openDrawer, closeDrawer } = useDrawer();
   const { setViewMode, viewMode } = useViewMode();
-  const {modifiedFilter, typeFilter, setModifiedFilter, setTypeFilter} = useFilter();
+  const { modifiedFilter, typeFilter, setModifiedFilter, setTypeFilter } = useFilter();
   const { arrSelected, setArrSelected } = useSelected();
   const { rootId } = useStorageStore();
   console.log('[TrashPageHeader] arrSelected', arrSelected);

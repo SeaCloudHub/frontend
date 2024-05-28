@@ -19,14 +19,14 @@ type MemoryViewProps = {
   setSort: ({ sort, order }: { sort: string; order: 'asc' | 'desc' }) => void;
 };
 
-
-export const MemoryView: React.FC<MemoryViewProps> = ({entries, isLoading, order, setSort, sort}) => {
+export const MemoryView: React.FC<MemoryViewProps> = ({ entries, isLoading, order, setSort, sort }) => {
   const files = entries.filter((entry) => !entry.isDir);
   const folders = entries.filter((entry) => entry.isDir);
   const {arrSelected, setArrSelected} = useSelected();
 
-  return (
-    isLoading && entries.length < 15 ? <LinearProgress className='translate-y-1' /> :
+  return isLoading && entries.length < 15 ? (
+    <LinearProgress className='translate-y-1' />
+  ) : (
     <div className='pl-5 pr-3'>
       <div className='relative flex flex-col'>
         <Statistics />

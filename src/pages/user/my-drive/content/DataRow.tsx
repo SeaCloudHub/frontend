@@ -205,7 +205,11 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
   ];
 
   const handleCtrlClick = () => {
-    setArrSelected(arrSelected.some(e=>e.id === id) ? arrSelected.filter((item) => item.id !== id) : [...arrSelected, { id, isDir, userRoles}]);
+    setArrSelected(
+      arrSelected.some((e) => e.id === id)
+        ? arrSelected.filter((item) => item.id !== id)
+        : [...arrSelected, { id, isDir, userRoles }],
+    );
   };
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -213,7 +217,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
       handleCtrlClick();
       return;
     }
-    setArrSelected([{ id, isDir, userRoles}]);
+    setArrSelected([{ id, isDir, userRoles }]);
   };
 
   const handleDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -270,7 +274,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
         onClick={handleClick}
         onDoubleClick={handleDoubleClick}
         className={classNames(
-          'data-row font-medium grid cursor-pointer grid-cols-7 gap-3 truncate border-b border-b-[#dadce0] py-2 max-[1160px]:grid-cols-7 max-[1150px]:grid-cols-6 max-[1000px]:grid-cols-5',
+          'data-row grid cursor-pointer grid-cols-7 gap-3 truncate border-b border-b-[#dadce0] py-2 font-medium max-[1160px]:grid-cols-7 max-[1150px]:grid-cols-6 max-[1000px]:grid-cols-5',
           isSelected
             ? 'bg-[#c2e7ff]  dark:bg-blue-900'
             : 'hover:bg-[#dfe3e7] dark:text-white dark:hover:bg-slate-700',
@@ -332,14 +336,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
             ids={arrSelected.map((item) => item.id) || [id]}
           />
         )}
-        {type === 'rename' &&
-          <RenamePopUp
-            open={isPopUpOpen}
-            handleClose={() => setIsPopUpOpen(false)}
-            name={title}
-            id={id}
-          />
-        }
+        {type === 'rename' && <RenamePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} name={title} id={id} />}
         {parent === 'trash' && (
           <DeletePopUp
             open={isPopUpOpen}

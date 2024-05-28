@@ -83,7 +83,7 @@ function UserInfo({ onClose }: UserInfoProps) {
       <h2 className='tablet:text-2xl w-full truncate text-center text-xl font-normal'>{`Hi, ${identity.first_name}!`}</h2>
 
       <div className='flex flex-col items-center justify-center'>
-        {role==Role.USER && (
+        {role == Role.USER && (
           <button
             onClick={onUserProfileClick}
             className='tablet:w-44 hover:bg-darkC flex w-48 items-center justify-center space-x-2 rounded-full border bg-white py-3  hover:bg-gray-200 dark:text-black'>
@@ -93,7 +93,7 @@ function UserInfo({ onClose }: UserInfoProps) {
         <button
           disabled={logoutMutation.isPending}
           onClick={onSignOutClick}
-          className='tablet:w-44 hover:bg-darkC mt-2 flex w-36 items-center justify-center space-x-2 rounded-full  py-3 hover:bg-gray-300  hover:dark:bg-slate-800 dark:text-white'>
+          className='tablet:w-44 hover:bg-darkC mt-2 flex w-36 items-center justify-center space-x-2 rounded-full  py-3 hover:bg-gray-300  dark:text-white hover:dark:bg-slate-800'>
           <PiSignOutBold className='h-6 w-6' />
           <span>Sign out</span>
         </button>

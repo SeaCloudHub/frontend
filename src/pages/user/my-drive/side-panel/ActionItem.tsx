@@ -19,7 +19,7 @@ export type ActionItemProps = {
 
 const ActionItem: React.FC<ActionItemProps> = ({ time, data }) => {
   return data.map((action, index) => (
-    <div className={`${index < data.length-1?'border-b border-gray-300 pb-2 mb-2':''} flex gap-5 `} key={index}>
+    <div className={`${index < data.length - 1 ? 'mb-2 border-b border-gray-300 pb-2' : ''} flex gap-5 `} key={index}>
       <Avatar src={action.actor.avatar} sx={{ width: '30px', height: '30px' }} />
       <div>
         <div className='text-sm font-semibold'>

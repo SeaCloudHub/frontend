@@ -16,10 +16,10 @@ const Memory = () => {
   // const {} = useEntries();
   const { arrSelected } = useSelected();
 
-  const {data, isLoading} = useMemory(order === 'asc' ? true: false);
+  const { data, isLoading } = useMemory(order === 'asc' ? true : false);
 
   const onScrollBottom = () => {
-    if(nextCursor && nextCursor !== currentCursor) {
+    if (nextCursor && nextCursor !== currentCursor) {
       setCurrentCursor(nextCursor);
     }
   };

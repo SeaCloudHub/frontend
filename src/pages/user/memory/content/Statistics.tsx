@@ -33,16 +33,17 @@ const files: { type: string; color: string; width: number }[] = [
 ];
 
 const Statistics = () => {
-  const { data, isLoading } = useMemoryStatistics()
+  const { data, isLoading } = useMemoryStatistics();
   // total not is capacity
   const total = data?.types.reduce((acc, type) => acc + type.value, 0);
 
-  return (
-    isLoading ? <LinearProgress className='translate-y-1' /> :
+  return isLoading ? (
+    <LinearProgress className='translate-y-1' />
+  ) : (
     <div>
       <div className='flex items-center space-x-3'>
-        <p className='h3'>{(total/data.capacity*100).toFixed(3)} %</p>
-        <p className='stat statement-upper-medium text-gray-500'>of {data.capacity/1024/1024/1024}GB used</p>
+        <p className='h3'>{((total / data.capacity) * 100).toFixed(3)} %</p>
+        <p className='stat statement-upper-medium text-gray-500'>of {data.capacity / 1024 / 1024 / 1024}KB used</p>
       </div>
       <div className='mt-2 flex h-2 w-full items-center rounded-full bg-slate-300'>
         {data &&
@@ -56,8 +57,7 @@ const Statistics = () => {
                 >
               </div>
             </Tooltip>
-          ))
-        }
+          ))}
       </div>
       <div className='flex flex-wrap space-x-3'>
         {data &&

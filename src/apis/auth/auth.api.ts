@@ -31,7 +31,7 @@ export const signOutApi = async () => {
 export const getProfileApi = async () => {
   const res = await api.get<BaseResponse<IdentityFileRESP>>('/users/me');
   return res.data;
-}
+};
 
 export const uploadAvatarApi = async (body: AuthUploadAvatarREQ) => {
   const formData = new FormData();
@@ -41,9 +41,9 @@ export const uploadAvatarApi = async (body: AuthUploadAvatarREQ) => {
     headers: HTTP_HEADER.FORM_DATA,
   });
   return res.data;
-}
+};
 
 export const updateProfileApi = async (body: Partial<AuthUpdateProfileREQ>) => {
-  const res = await api.patch<BaseResponse<{id: string}>>('/users/profile', body);
+  const res = await api.patch<BaseResponse<{ id: string }>>('/users/profile', body);
   return res.data;
-}
+};

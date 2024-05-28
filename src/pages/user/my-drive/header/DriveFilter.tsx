@@ -10,12 +10,10 @@ type DriveFilterProps = {
   page?: 'my-drive' | 'shared' | 'trash' | 'starred' | 'memory';
 };
 
-const DriveFilter: React.FC<DriveFilterProps> = ({page}) => {
+const DriveFilter: React.FC<DriveFilterProps> = ({ page }) => {
   const { typeFilter, setTypeFilter, modifiedFilter, setModifiedFilter } = useFilter();
-  const {nextCursor, resetCursor} = useCursor();
-  const typeFilterOptions = (page === 'memory') ?
-    typeFilterItems.filter((item) => item.label !== 'Folder') :
-    typeFilterItems;
+  const { nextCursor, resetCursor } = useCursor();
+  const typeFilterOptions = page === 'memory' ? typeFilterItems.filter((item) => item.label !== 'Folder') : typeFilterItems;
   return (
     <div className='flex gap-2'>
       <FilterChip
@@ -23,7 +21,7 @@ const DriveFilter: React.FC<DriveFilterProps> = ({page}) => {
         options={typeFilterOptions.map((item) => ({ label: item.label, icon: <Icon icon={item.icon} /> }))}
         action={(value) => {
           resetCursor();
-          setTypeFilter(value as TypeEntry)
+          setTypeFilter(value as TypeEntry);
         }}
         value={typeFilterItems.find((item) => item.label === typeFilter)?.label || ''}
       />
@@ -32,7 +30,7 @@ const DriveFilter: React.FC<DriveFilterProps> = ({page}) => {
         options={modifiedFilterItems}
         action={(value) => {
           resetCursor();
-          setModifiedFilter(value)
+          setModifiedFilter(value);
         }}
         value={modifiedFilterItems.find((item) => item?.value === modifiedFilter)?.label || ''}
       />

@@ -32,7 +32,7 @@ const ButtonSuccess: React.FC<ButtonSuccessProps> = ({ children, type, onClick, 
         },
         // visibility: isInvisible ? 'hidden' : 'visible',
         // none click effect
-        ...isInvisible ? { pointerEvents: 'none', opacity: 0.5 } : {},
+        ...(isInvisible ? { pointerEvents: 'none', opacity: 0.5 } : {}),
       }}>
       {children}
     </Button>

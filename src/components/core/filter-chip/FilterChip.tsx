@@ -7,14 +7,14 @@ import { useCursor } from '@/store/my-drive/myDrive.store';
 
 type FilterChipProps = {
   name: string;
-  options: { label: string; icon: React.ReactNode, value?: string }[];
+  options: { label: string; icon: React.ReactNode; value?: string }[];
   action?: (value: string) => void;
   value?: string;
 };
 
 const FilterChip: React.FC<FilterChipProps> = ({ name, options, action, value }) => {
   // const { resetLimit } = useLimit();
-  const {resetCursor} = useCursor();
+  const { resetCursor } = useCursor();
   const items = options.map((item) => ({
     label: item.label,
     icon: item.icon,
@@ -35,7 +35,7 @@ const FilterChip: React.FC<FilterChipProps> = ({ name, options, action, value })
           <div className='flex h-[30px]'>
             <div className='flex cursor-pointer items-center space-x-2 rounded-l-lg border-0 bg-primaryContainer px-4 py-1 text-sm font-medium hover:bg-primaryFixedDim active:brightness-90 dark:bg-blue-900 dark:hover:bg-slate-500 dark:hover:text-content-bg'>
               {/* <Tooltip title={value}> */}
-                <span className='line-clamp-1 select-none'>{value}</span>
+              <span className='line-clamp-1 select-none'>{value}</span>
               {/* </Tooltip> */}
               <Icon icon='mdi:caret-down' />
             </div>

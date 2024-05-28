@@ -66,12 +66,12 @@ const PriorityListView: React.FC<PriorityListViewProps> = ({ entries, curDir, is
                 dir={curDir}
                 key={index}
                 {...entry}
-                isSelected={arrSelected?.some((e)=>e.id===entry.id)}
+                isSelected={arrSelected?.some((e) => e.id === entry.id)}
                 onDoubleClick={() => navigate(`${DRIVE_MY_DRIVE}/dir/${entry.id}`)}
               />
             ))}
             {files.map((entry, index) => (
-              <DataRowPriorityView key={index} {...entry} dir={curDir} isSelected={arrSelected?.some((e)=>e.id===entry.id)} />
+              <DataRowPriorityView key={index} {...entry} dir={curDir} isSelected={arrSelected?.some((e) => e.id === entry.id)} />
             ))}
           </div>
         </div>

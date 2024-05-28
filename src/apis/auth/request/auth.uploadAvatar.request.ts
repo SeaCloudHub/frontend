@@ -1,3 +1,3 @@
 export type AuthUploadAvatarREQ = {
-  image: File,
+  image: File;
 };

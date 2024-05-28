@@ -58,7 +58,9 @@ const DriveHistoryListView: React.FC<DriveHistoryListViewProps> = ({ sort, order
         {entries.map((entry, index) => {
           return (
             <div key={index} className='relative'>
-              <div className='border-b py-2 text-sm font-medium sticky z-10 top-0 bg-white dark:bg-dashboard-dark'>{entry.time}</div>
+              <div className='sticky top-0 z-10 border-b bg-white py-2 text-sm font-medium dark:bg-dashboard-dark'>
+                {entry.time}
+              </div>
               {entry.entries.map((item, index) => {
                 return (
                   <DataRow
@@ -66,9 +68,9 @@ const DriveHistoryListView: React.FC<DriveHistoryListViewProps> = ({ sort, order
                     dir={dir}
                     {...item}
                     parent='trash'
-                    isSelected={arrSelected?.some((e)=>e.id === item.id)}
+                    isSelected={arrSelected?.some((e) => e.id === item.id)}
                   />
-                )
+                );
               })}
             </div>
           );

@@ -105,14 +105,14 @@ const SharePopUp: React.FC<SharePopUpProps> = ({ open, handleClose, title, fileI
       setApiData(mappedData);
     },
   });
-    const { data, error, isFetching } = useQuery({
-      queryKey: ['get-file-metadata-for-share', fileId],
-      queryFn: () => getEntryMetadata({ id: fileId }),
-      staleTime: 0,
-      select: (data) => {
-        return data.data;
-      },
-    });
+  const { data, error, isFetching } = useQuery({
+    queryKey: ['get-file-metadata-for-share', fileId],
+    queryFn: () => getEntryMetadata({ id: fileId }),
+    staleTime: 0,
+    select: (data) => {
+      return data.data;
+    },
+  });
 
   useEffect(() => {
     sharedUsersMutation.mutateAsync({ query: searchValue });

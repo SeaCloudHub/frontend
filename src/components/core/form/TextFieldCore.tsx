@@ -34,7 +34,7 @@ const TextFieldCore = ({
   theme: themeProp,
   isFocused,
 }: TextFieldCoreProps) => {
-  const {theme} = useTheme();
+  const { theme } = useTheme();
   return (
     <TextField
       autoComplete='off'
@@ -44,7 +44,7 @@ const TextFieldCore = ({
       type={type}
       variant='outlined'
       label={label}
-      className={`bg-white ${themeProp === 'light'? '':  (theme==='dark') ? 'input-dark':''} ${className}`}
+      className={`bg-white ${themeProp === 'light' ? '' : theme === 'dark' ? 'input-dark' : ''} ${className}`}
       fullWidth
       value={value}
       onChange={onChange}

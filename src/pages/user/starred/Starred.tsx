@@ -20,8 +20,8 @@ const Starred = () => {
   // const [typeFilterItem, setTypeFilterItem] = useState<string>('');
   // const [peopleFilterItem, setPeopleFilterItem] = useState<string>('');
   // const [modifiedFilterItem, setModifiedFilterItem] = useState<string>('');
-  const {modifiedFilter, typeFilter, setModifiedFilter, setTypeFilter} = useFilter();
-  const {currentCursor, nextCursor, setCurrentCursor} = useCursor();
+  const { modifiedFilter, typeFilter, setModifiedFilter, setTypeFilter } = useFilter();
+  const { currentCursor, nextCursor, setCurrentCursor } = useCursor();
   const { viewMode, setViewMode } = useViewMode();
   const { arrSelected } = useSelected();
   const { drawerOpen, openDrawer, closeDrawer } = useDrawer();
@@ -33,7 +33,7 @@ const Starred = () => {
 
   const onScrollBottom = () => {
     if (nextCursor) setCurrentCursor(nextCursor);
-  }
+  };
 
   return (
     <DriveLayout

@@ -18,11 +18,11 @@ function Search() {
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   // const { resetCursor } = useCursor();
-  const {resetCursorSearch} = useCursorSearch();
-  const {setArrSelected} = useSelected();
+  const { resetCursorSearch } = useCursorSearch();
+  const { setArrSelected } = useSelected();
 
   const searchValue = useDebounce({ delay: 260, value: keyWord });
-  const {data, isLoading, refetch} = useSearchEntries(searchValue);
+  const { data, isLoading, refetch } = useSearchEntries(searchValue);
 
   const { theme } = useTheme();
   const fill = theme === 'dark' ? 'white' : '';
@@ -52,13 +52,14 @@ function Search() {
         className=' absolute left-2 top-[5px] h-9 w-9 cursor-pointer rounded-full p-2 hover:bg-gray-100 dark:text-white hover:dark:bg-slate-800'>
         <AiOutlineSearch className='stroke-textC h-full w-full' stroke='2' />
       </span>
-      <form onSubmit={(e)=>{
-        e.preventDefault()
-        setOnFocus(false);
-        resetCursorSearch();
-        inputRef.current.blur();
-        navigate(`${DRIVE_SEARCH}?q=${searchValue}`)
-      }}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          setOnFocus(false);
+          resetCursorSearch();
+          inputRef.current.blur();
+          navigate(`${DRIVE_SEARCH}?q=${searchValue}`);
+        }}>
         <input
           ref={inputRef}
           onFocus={() => setOnFocus(true)}

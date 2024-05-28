@@ -7,7 +7,7 @@ import { useFilter } from '@/store/my-drive/myDrive.store';
 import { TypeEntry } from '@/apis/drive/drive.request';
 
 const SharingPageFilter = () => {
-  const {modifiedFilter, setModifiedFilter, setTypeFilter, typeFilter} = useFilter();
+  const { modifiedFilter, setModifiedFilter, setTypeFilter, typeFilter } = useFilter();
   return (
     <div className='flex gap-2'>
       <FilterChip

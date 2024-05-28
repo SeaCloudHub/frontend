@@ -34,9 +34,9 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
   const starEntryMutation = useStarEntryMutation();
   const unstarEntryMutation = useUnstarEntryMutation();
 
-  console.log('TEST: ',parent , isSelectedPermission(arrSelected, UserRoleEnum.EDITOR))
+  console.log('TEST: ', parent, isSelectedPermission(arrSelected, UserRoleEnum.EDITOR));
 
-  const multipleDriveHeaderMenu: { icon: string; label: string; action: () => void, isHidden?: boolean }[] = [
+  const multipleDriveHeaderMenu: { icon: string; label: string; action: () => void; isHidden?: boolean }[] = [
     {
       icon: 'mdi:account-multiple-plus',
       label: 'Share',
@@ -73,28 +73,30 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
       action: () => {
         setType('move to trash');
         setIsOpened(true);
-      }
-    },
-    parent === 'Starred' ? {
-      label: 'Unstar',
-      icon: 'mdi:star-off-outline',
-      action: () => {
-        unstarEntryMutation.mutate({ file_ids: arrSelected.map((e) => e.id) });
       },
-    } : {
-      label: 'Star',
-      icon: 'mdi:star',
-      action: () => {
-        starEntryMutation.mutate({ file_ids: arrSelected.map((e) => e.id) });
-      }
     },
+    parent === 'Starred'
+      ? {
+          label: 'Unstar',
+          icon: 'mdi:star-off-outline',
+          action: () => {
+            unstarEntryMutation.mutate({ file_ids: arrSelected.map((e) => e.id) });
+          },
+        }
+      : {
+          label: 'Star',
+          icon: 'mdi:star',
+          action: () => {
+            starEntryMutation.mutate({ file_ids: arrSelected.map((e) => e.id) });
+          },
+        },
     {
       icon: 'mdi:link',
       label: 'Copy link',
       action: () => {
         const links = arrSelected.map((e) => `${window.location.origin}/drive/${e.isDir ? 'folder' : 'file'}/${e.id}`);
         CopyToClipboard(links.join('; '));
-      }
+      },
     },
     {
       icon: 'mdi:rename-box',
@@ -143,13 +145,14 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
           />
         </>
       ) : (
-        multipleDriveHeaderMenu.map(({label, icon, action, isHidden}, index) => (
+        multipleDriveHeaderMenu.map(({ label, icon, action, isHidden }, index) => (
           <Tooltip key={index} title={label}>
             <div>
               <IconifyIcon
                 icon={icon}
                 className={`h-8 w-8 rounded-full p-1 ${
-                  isHidden || (parent === 'SharedWithMe' && label === 'Move to trash') ||
+                  isHidden ||
+                  (parent === 'SharedWithMe' && label === 'Move to trash') ||
                   (label === 'Rename' && arrSelected.length > 1)
                     ? 'text-gray-400 dark:brightness-75'
                     : 'cursor-pointer hover:bg-gray-200 dark:hover:bg-slate-500 dark:hover:text-white'
