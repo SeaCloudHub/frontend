@@ -8,7 +8,7 @@ import { Entry } from '@/utils/types/entry.type';
 import { Path, useDrawer, useFilter, useSelected, useViewMode } from '@/store/my-drive/myDrive.store';
 import SidePanel from '../my-drive/side-panel/SidePanel';
 import { DriveGridView } from '../my-drive/content/DriveGridView';
-import { transformEntries, useListEntries, useSharedEntry } from '@/hooks/drive.hooks';
+import { transformEntries, useSharedEntry } from '@/hooks/drive.hooks';
 import { DriveListView } from '../my-drive/content/DriveListView';
 import DrivePath from '../my-drive/header/drive-path/DrivePath';
 import { useStorageStore } from '@/store/storage/storage.store';
@@ -31,11 +31,9 @@ const Shared = () => {
   return (
     <DriveLayout
       headerLeft={
-        <div className='flex flex-col overflow-hidden'>
+        <div className='flex flex-col overflow-hidden select-none'>
           <div className='flex justify-between space-x-2 text-2xl'>
-            <div className='w-full pb-[14px] pt-[15px]'>
-              <DrivePath path={parents} type='Shared' />
-            </div>
+            <div className='w-full pb-[20px] pt-[15px] px-4'> Shared with me </div>
             <div className='flex items-center gap-2'>
               <SharingPageViewMode setViewMode={setViewMode} viewMode={viewMode} />
               <Icon
@@ -84,9 +82,9 @@ const Shared = () => {
       }
       bodyLeft={
         viewMode === 'grid' ? (
-          <DriveGridView entries={data} isLoading={isLoading} curDir={parents[parents.length - 1]} />
+          <DriveGridView entries={data} parent='shared' isLoading={isLoading} curDir={parents[parents.length - 1]} />
         ) : (
-          <DriveListView entries={data} curDir={parents[parents.length - 1]} isLoading={isLoading} />
+          <DriveListView entries={data} parent='shared' curDir={parents[parents.length - 1]} isLoading={isLoading} />
         )
       }
       sidePanel={

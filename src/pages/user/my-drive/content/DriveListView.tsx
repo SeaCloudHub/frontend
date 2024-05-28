@@ -45,7 +45,7 @@ export const DriveListView: React.FC<DriveListViewProps> = ({ order, setSort, so
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [arrSelected, setArrSelected]);
+  }, [arrSelected, resetCursorActivity, setArrSelected]);
 
   return (
     <>

@@ -22,7 +22,7 @@ const SidePanel: React.FC<SidePanelProps> = ({ id, title, isHidden }) => {
   console.log('SidePanel render', tab);
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const {currentCursorActivity, nextCursorActivity, setCurrentCursorActivity} = useCursorActivity();
-  const { data: details, isLoading, isFetching } = useEntryMetadata(id);
+  const { data: details, isLoading, isFetching } = useEntryMetadata(id||'');
   const {activityLog, setActivityLog} = useActivityLogStore();
   const [isScrolling, setIsScrolling] = React.useState(false);
 
@@ -50,7 +50,7 @@ const SidePanel: React.FC<SidePanelProps> = ({ id, title, isHidden }) => {
 
   return (
     isHidden ? (
-      <div className='w-[360px] relative'>
+      <div className='flex h-full w-[360px] flex-col border-l bg-white dark:bg-dashboard-dark'>
         <div className='flex justify-end mt-6 mb-4'>
           <Icon
             className='h-10 w-10 cursor-pointer rounded-full p-2 hover:bg-surfaceContainerLow dark:hover:bg-slate-400 dark:active:brightness-90'
@@ -129,7 +129,7 @@ const SidePanel: React.FC<SidePanelProps> = ({ id, title, isHidden }) => {
 
 export const DefaultTabPanel = () => {
   return (
-    <div className='flex flex-col items-center'>
+    <div className='flex flex-col items-center overflow-hidden'>
       <img className='mb-4 h-60 w-full object-cover' src={(import.meta.env.BASE_URL + 'guide1.png') as string} alt='Guide1' />
       <div>Select item to see the details</div>
     </div>

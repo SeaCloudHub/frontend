@@ -38,7 +38,7 @@ const DriveLayout: React.FC<DriveLayoutProps> = ({ headerLeft, bodyLeft, sidePan
             {bodyLeft}
           </div>
         </div>
-        <span className='row-span-2 mb-4'>{drawerOpen && sidePanel}</span>
+        <span className='row-span-2'>{drawerOpen && sidePanel}</span>
       </div>
     </div>
   );

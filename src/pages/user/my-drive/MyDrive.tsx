@@ -5,7 +5,7 @@ import MyDriveHeader from './header/MyDriveHeader';
 import { DriveGridView } from './content/DriveGridView';
 import { DriveListView } from './content/DriveListView';
 import SidePanel from '@/pages/user/my-drive/side-panel/SidePanel';
-import { LocalEntry, useCopyMutation, useListEntries } from '@/hooks/drive.hooks';
+import { LocalEntry, useCopyMutation, useListEntries, usePathParents } from '@/hooks/drive.hooks';
 import { toast } from 'react-toastify';
 
 const MyDrive = () => {
@@ -19,8 +19,8 @@ const MyDrive = () => {
 
   const copyMutation = useCopyMutation();
 
-
-  const { parents, data, isLoading } = useListEntries();
+  const { parents } = usePathParents();
+  const { data, isLoading } = useListEntries();
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -42,8 +42,7 @@ const MyDrive = () => {
 
   // scroll to load more
   const onScollBottom = () => {
-    console.log('currentCursor', currentCursor, 'nextCursor', nextCursor)
-    if(nextCursor!=='' && currentCursor !== nextCursor) {
+    if(nextCursor !== '' && currentCursor !== nextCursor) {
       setIsScrolling(true);
       setTimeout(() => {
         setIsScrolling(false);
@@ -65,9 +64,9 @@ const MyDrive = () => {
       onScrollBottom={onScollBottom}
       bodyLeft={
         viewMode === 'grid' ? (
-          <DriveGridView entries={data} isLoading={isLoading} curDir={parents[parents.length - 1]} isScrolling={isScrolling} />
+          <DriveGridView entries={data} parent='my-drive' isLoading={isLoading} curDir={parents[parents.length - 1]} isScrolling={isScrolling} />
         ) : (
-          <DriveListView entries={data} isLoading={isLoading} curDir={parents[parents.length - 1]} isScrolling={isScrolling} />
+          <DriveListView entries={data} parent='my-drive' isLoading={isLoading} curDir={parents[parents.length - 1]} isScrolling={isScrolling} />
         )
       }
       sidePanel={

@@ -1,39 +1,68 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PopUp from './PopUp';
 import { Tab } from '@headlessui/react';
-import { Button, Chip, DialogActions, LinearProgress, Link, Stack, Tooltip } from '@mui/material';
+import { Button, Chip, CircularProgress, DialogActions, LinearProgress, Link, Stack, Tooltip } from '@mui/material';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import ButtonSuccess from '../button/ButtonSuccess';
 import { useListFolders, useMoveEntriesMutation } from '@/hooks/drive.hooks';
 import CustomBreadcums from './CustomBreadcums';
 import { useTheme } from '@/providers/theme-provider';
 import { useStorageStore } from '@/store/storage/storage.store';
-import { useSelected } from '@/store/my-drive/myDrive.store';
+import { useCursorSearch, useEntries, useSelected } from '@/store/my-drive/myDrive.store';
 
 type MovePopUpProps = {
   open: boolean;
   handleClose: () => void;
   title: string;
+  ids: string[];
   location: { id: string; name: string };
 };
 
 const tab = ['Priority', 'My Drive', 'Starred', 'Shared'];
 
-const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, location }) => {
+const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, location, ids }) => {
   const { rootId } = useStorageStore();
-  const moveEntriesMutation = useMoveEntriesMutation();
-  const { arrSelected } = useSelected();
   const [volumn, setvolumn] = React.useState<'Priority' | 'My Drive' | 'Starred' | 'Shared'>('Priority');
   const [curFolder, setCurFolder] = React.useState<{ id: string; name: string }>({ id: rootId, name: 'priority' });
   const [locateTo, setLocateTo] = React.useState<string>();
+  const [isScrolling, setIsScrolling] = React.useState(false);
+  const ref = React.useRef<HTMLDivElement>(null);
+
+  const moveEntriesMutation = useMoveEntriesMutation();
+  const { nextCursorSearch, currentCursorSearch, setCurrentCursorSearch, resetCursorSearch } = useCursorSearch();
   const { theme } = useTheme();
-  const { setArrSelected } = useSelected();
-  const { data, isLoading, parents } = useListFolders(volumn, curFolder?.id);
-  console.log('[MovePopUp] volumn', volumn);
-  console.log(location, locateTo, curFolder);
+  const { setArrSelected, arrSelected } = useSelected();
+  const { data, isLoading, parents } = useListFolders(volumn, curFolder.id);
+
+  useEffect(() => {
+    const onScrollBottom = () => {
+      if (ref.current) {
+        const { scrollTop, clientHeight, scrollHeight } = ref.current;
+        if (Math.ceil(scrollTop + clientHeight) >= scrollHeight) {
+          if (nextCursorSearch !== '' && currentCursorSearch !== nextCursorSearch) {
+            setIsScrolling(true);
+            setTimeout(() => {
+              setIsScrolling(false);
+              setCurrentCursorSearch(nextCursorSearch);
+            }, 1000);
+          }
+        }
+      }
+    };
+
+    if (ref.current) {
+      ref.current.addEventListener('scroll', onScrollBottom);
+    }
+    return () => {
+      if (ref.current) {
+        ref.current.removeEventListener('scroll', onScrollBottom);
+      }
+      resetCursorSearch();
+    };
+  }, [currentCursorSearch, nextCursorSearch, resetCursorSearch, setCurrentCursorSearch]);
 
   return (
-    <PopUp open={open} handleClose={handleClose}>
+    <PopUp open={open} handleClose={()=>  handleClose()}>
       <div className='h-[450px] max-w-[600px] font-semibold'>
         <div className='p-3'>
           <Tooltip title={title}>
@@ -82,6 +111,7 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
                           if (item === curFolder.name) return;
                           setvolumn(item as 'Priority' | 'My Drive' | 'Starred' | 'Shared');
                           setLocateTo('');
+                          resetCursorSearch();
                         }}>
                         <div
                           className={`w-14 min-w-max py-3 text-sm font-medium ${
@@ -95,29 +125,36 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
                 ))}
               </Tab.List>
               <hr className='border-t-[1px] border-gray-600' />
-              <Tab.Panels className='mt-3 h-[200px] w-full overflow-y-auto font-normal'>
+              <Tab.Panels className='mt-3 h-[200px] w-full overflow-y-auto font-normal' ref={ref} >
                 {isLoading && <LinearProgress />}
                 {data.length === 0 ? (
                   <div className='flex h-full items-center justify-center'>
                     <span>No folder in this location</span>
                   </div>
                 ) : (
-                  data.map((item, index) => (
-                    <div
-                      key={index}
-                      className={`flex items-center gap-3 px-3 py-1 ${locateTo === item.id ? 'bg-[#c2e7ff] dark:bg-blue-900' : ''} ${arrSelected.some(e=> e.id === item.id) ? 'brightness-75' : 'cursor-pointer hover:bg-gray-100 dark:hover:bg-blue-950'}`}
-                      onClick={() => {
-                        if (arrSelected.some(e=>e.id === item.id)) return;
-                        setLocateTo(item.id);
-                      }}
-                      onDoubleClick={() => {
-                        if (arrSelected.some(e=>e.id === item.id)) return;
-                        setCurFolder({ id: item.id, name: item.title });
-                      }}>
-                      <Icon icon='mdi:folder-multiple-outline' className='text-xl' />
-                      <span className='select-none'>{item.title}</span>
-                    </div>
-                  ))
+                  <>
+                    {data.map((item, index) => (
+                      <div
+                        key={index}
+                        className={`flex items-center gap-3 px-3 py-1 ${locateTo === item.id ? 'bg-[#c2e7ff] dark:bg-blue-900' : ''} ${arrSelected.some(e=> e.id === item.id) ? 'brightness-75' : 'cursor-pointer hover:bg-gray-100 dark:hover:bg-blue-950'}`}
+                        onClick={() => {
+                          if (arrSelected.some(e=>e.id === item.id)) return;
+                          setLocateTo(item.id);
+                        }}
+                        onDoubleClick={() => {
+                          if (arrSelected.some(e=>e.id === item.id)) return;
+                          setCurFolder({ id: item.id, name: item.title });
+                        }}>
+                        <Icon icon='mdi:folder-multiple-outline' className='text-xl' />
+                        <span className='select-none'>{item.title}</span>
+                      </div>
+                    ))}
+                    {isScrolling &&
+                      <div className='h-3 text-center'>
+                        <CircularProgress />
+                      </div>
+                    }
+                  </>
                 )}
               </Tab.Panels>
             </div>
@@ -175,7 +212,7 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
             onClick={() => {
               if (arrSelected.length === 0) return;
               if (curFolder.id === location.id) return;
-              moveEntriesMutation.mutate({ id: location.id, source_ids: arrSelected.map((e) => e.id), to: curFolder.id });
+              moveEntriesMutation.mutate({ id: location.id, source_ids: ids, to: curFolder.id });
               setArrSelected([]);
               handleClose();
             }}

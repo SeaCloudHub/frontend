@@ -46,10 +46,7 @@ function Search() {
   }, [onFocus, resetCursorSearch, setArrSelected]);
 
   return (
-    <div className='relative max-w-2xl flex-1 ' ref={ref} onClick={() => {
-      setOnFocus(true)
-      // resetCursorSearch();
-    }}>
+    <div className='relative max-w-2xl flex-1 ' ref={ref} >
       <span
         onClick={() => {}}
         className=' absolute left-2 top-[5px] h-9 w-9 cursor-pointer rounded-full p-2 hover:bg-gray-100 dark:text-white hover:dark:bg-slate-800'>
@@ -64,15 +61,16 @@ function Search() {
       }}>
         <input
           ref={inputRef}
+          onFocus={() => setOnFocus(true)}
           onChange={(e) => setKeyWord(e.target.value)}
           type='text'
           placeholder='Search file'
-          className=' w-full  rounded-full bg-search-bg  px-2 py-[0.7rem] indent-11 focus:rounded-b-none
+          className=' w-full rounded-full bg-search-bg  px-2 py-[0.7rem] indent-11 focus:rounded-b-none
           focus:rounded-t-2xl focus:bg-white  focus:shadow-md focus:outline-none
           dark:bg-search-bg-dark dark:text-icons-color-dark dark:placeholder-blue-50 dark:placeholder-opacity-60'
         />
       </form>
-      {onFocus && <SearchResult data={data} loading={isLoading}/>}
+      {onFocus && <SearchResult data={data} loading={isLoading} onSelected={()=> setOnFocus(false)} />}
     </div>
   );
 }

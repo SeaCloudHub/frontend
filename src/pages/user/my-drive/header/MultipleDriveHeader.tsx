@@ -1,4 +1,4 @@
-import { downloadFile } from '@/apis/drive/drive.api';
+import { downloadFile, downloadMultipleEntries } from '@/apis/drive/drive.api';
 import IconifyIcon from '@/components/core/Icon/IConCore';
 import ButtonIcon from '@/components/core/button/ButtonIcon';
 import CustomDropdown from '@/components/core/drop-down/CustomDropdown';
@@ -9,7 +9,7 @@ import MovePopUp from '@/components/core/pop-up/MovePopUp';
 import RenamePopUp from '@/components/core/pop-up/RenamePopUp';
 import SharePopUp from '@/components/core/pop-up/SharePopUp';
 import { useDeleteMutation, useRestoreEntriesMutation, useStarEntryMutation, useUnstarEntryMutation } from '@/hooks/drive.hooks';
-import { useSelected } from '@/store/my-drive/myDrive.store';
+import { useEntries, useSelected } from '@/store/my-drive/myDrive.store';
 import { UserRoleEnum } from '@/utils/enums/user-role.enum';
 import { CopyToClipboard } from '@/utils/function/copy.function';
 import { isSelectedPermission } from '@/utils/function/permisstion.function';
@@ -26,6 +26,8 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
   const { setArrSelected, arrSelected } = useSelected();
   const [result, setResult] = useState(false);
   const [type, setType] = useState<'move' | 'share' | 'rename' | 'move to trash' | null>();
+
+  const { listEntries, setListEntries } = useEntries();
 
   const deleteMutation = useDeleteMutation();
   const restoreMutation = useRestoreEntriesMutation();
@@ -48,8 +50,12 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
       icon: 'mdi:download',
       label: 'Download',
       action: () => {
-        // downloadFile({ id, name: title });
+        downloadMultipleEntries({
+          ids: arrSelected.map((e) => e.id),
+          parent_id: dir.id,
+        });
       },
+      isHidden: parent === 'Priority',
     },
     {
       icon: 'mdi:folder-move',
@@ -145,10 +151,15 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
                 className={`h-8 w-8 rounded-full p-1 ${
                   isHidden || (parent === 'SharedWithMe' && label === 'Move to trash') ||
                   (label === 'Rename' && arrSelected.length > 1)
-                    ? 'text-gray-400 dark:brightness-75 cursor-not-allowed'
+                    ? 'text-gray-400 dark:brightness-75'
                     : 'cursor-pointer hover:bg-gray-200 dark:hover:bg-slate-500 dark:hover:text-white'
-                }`}
-                onClick={action}
+                } `}
+                onClick={
+                  isHidden || (parent === 'SharedWithMe' && label === 'Move to trash') ||
+                  (label === 'Rename' && arrSelected.length > 1)
+                    ? () => {}
+                    : action
+                }
               />
             </div>
           </Tooltip>
@@ -158,7 +169,13 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
         <SharePopUp fileId='' open={isOpened} handleClose={() => setIsOpened(false)} title={`${arrSelected.length} items`} />
       )}
       {type === 'move' && (
-        <MovePopUp open={isOpened} handleClose={() => setIsOpened(false)} title={`${arrSelected.length} items`} location={dir} />
+        <MovePopUp
+          open={isOpened}
+          handleClose={() => setIsOpened(false)}
+          title={`${arrSelected.length} items`}
+          location={dir}
+          ids={arrSelected.map((e) => e.id)}
+        />
       )}
       {type === 'move to trash' && (
         <DeleteTempPopUp

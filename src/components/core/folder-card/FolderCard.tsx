@@ -1,5 +1,5 @@
 import { RenameREQ } from '@/apis/drive/drive.request';
-import { useDrawer, useSelected } from '@/store/my-drive/myDrive.store';
+import { useDrawer, useEntries, useSelected } from '@/store/my-drive/myDrive.store';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { CopyToClipboard } from '@/utils/function/copy.function';
 import { Icon } from '@iconify/react/dist/iconify.js';
@@ -12,8 +12,10 @@ import DeleteTempPopUp from '../pop-up/DeleteTempPopUp';
 import MovePopUp from '../pop-up/MovePopUp';
 import RenamePopUp from '../pop-up/RenamePopUp';
 import SharePopUp from '../pop-up/SharePopUp';
-import { useStarEntryMutation, useUnstarEntryMutation } from '@/hooks/drive.hooks';
+import { LocalEntry, SuggestedEntry, useStarEntryMutation, useUnstarEntryMutation } from '@/hooks/drive.hooks';
 import { isPermission } from '@/utils/function/permisstion.function';
+import { useNavigate } from 'react-router-dom';
+import { Star } from '@mui/icons-material';
 
 type FolderCardProps = {
   title: string;
@@ -25,13 +27,16 @@ type FolderCardProps = {
   parent?: 'priority' | 'my-drive' | 'shared' | 'trash' | 'starred';
   dir: { id: string; name: string };
   userRoles?: ('owner' | 'editor' | 'viewer')[];
+  is_starred: boolean;
 }
 
-const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick, onClick, isSelected, parent, dir, userRoles }) => {
+const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onClick, isSelected, parent, dir, userRoles, is_starred }) => {
   const setDrawerOpen = useDrawer((state) => state.openDrawer);
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
   const [type, setType] = useState<'move' | 'share' | 'rename' | 'move to trash' | null>();
   const { rootId } = useStorageStore();
+  const navigate = useNavigate();
+  const { listSuggestedEntries, setListSuggestedEntries } = useEntries();
   const { arrSelected, setArrSelected } = useSelected();
   const [result, setResult] = useState(false);
   const starEntryMutation = useStarEntryMutation();
@@ -79,13 +84,43 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick,
         },
         isHidden: isPermission(userRoles) <= 1,
       },
-      {
-        label: parent !== 'starred' ? 'Add to starred' : 'Remove from starred',
-        icon: parent !== 'starred' ? <Icon icon='material-symbols:star-outline' /> : <Icon icon='mdi:star-off-outline' />,
-        action: () => {
-          parent !== 'starred' ? starEntryMutation.mutate({ file_ids: [id] }) : unstarEntryMutation.mutate({ file_ids: [id] });
+      ... is_starred ? [
+        {
+          label: 'Remove from starred',
+          icon: <Icon icon='mdi:star-off-outline' />,
+          action: () => {
+            unstarEntryMutation.mutate({ file_ids: [id] }, {
+              onSuccess: () => {
+                const newState = listSuggestedEntries.map((entry: SuggestedEntry) => {
+                  if (entry.id === id) {
+                    return { ...entry, is_starred: false };
+                  }
+                  return entry;
+                });
+                setListSuggestedEntries(newState);
+              }
+            });
+          },
         },
-      },
+      ] : [
+        {
+          label: 'Add to starred',
+          icon: <Icon icon='material-symbols:star-outline' />,
+          action: () => {
+            starEntryMutation.mutate({ file_ids: [id] }, {
+              onSuccess: () => {
+                const newState = listSuggestedEntries.map((entry: SuggestedEntry) => {
+                  if (entry.id === id) {
+                    return { ...entry, is_starred: true };
+                  }
+                  return entry;
+                });
+                setListSuggestedEntries(newState);
+              }
+            });
+          },
+        },
+      ],
     ],
     [
       {
@@ -133,7 +168,11 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick,
 
   const handleDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     setArrSelected([]);
-    onDoubleClick && onDoubleClick();
+
+    isPermission(userRoles) >= 1 && isPermission(userRoles) < 3 &&
+    navigate(`/drive/folder/${id}`);
+    //my-drive
+    isPermission(userRoles) === 3 && navigate (`/drive/my-drive/dir/${id}`);
   };
 
   return (
@@ -151,12 +190,24 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onDoubleClick,
         <Tooltip title={title}>
           <div className='select-none truncate text-sm font-medium'>{title}</div>
         </Tooltip>
+        {is_starred && <Star />}
       </div>
-      <div className='h-6 w-6 rounded-full p-1 hover:bg-slate-300 dark:hover:bg-slate-500'>
+      <div
+        className='h-6 w-6 rounded-full p-1 hover:bg-slate-300 dark:hover:bg-slate-500'
+        onDoubleClick={(e) => e.stopPropagation()}
+      >
         <CustomDropdown button={<BsThreeDotsVertical className='dark:hover:text-white' />} items={folderOps} />
       </div>
 
-      {type === 'move' && <MovePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} location={dir} />}
+      {type === 'move' &&
+        <MovePopUp
+          open={isPopUpOpen}
+          handleClose={() => setIsPopUpOpen(false)}
+          title={title}
+          location={dir}
+          ids={arrSelected.map((item) => item.id) || [id]}
+        />
+      }
       {type === 'share' && <SharePopUp fileId={id} open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} />}
       {type === 'rename' && <RenamePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} name={title} id={id} />}
       {type === 'move to trash' && (

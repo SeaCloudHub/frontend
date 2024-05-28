@@ -67,7 +67,6 @@ const helpItems: MenuItemCustom[] = [
 const typeShareItems = ['Viewer', 'Editor'];
 
 const SharePopUp: React.FC<SharePopUpProps> = ({ open, handleClose, title, fileId }) => {
-  console.log(fileId);
   const [values, setValues] = React.useState([]);
   const [typeShare, setTypeShare] = React.useState('Viewer');
   const [typeView, setTypeView] = React.useState(fakelistPeople.map((item) => item.type));

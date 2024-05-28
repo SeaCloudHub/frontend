@@ -47,7 +47,7 @@ export const DRIVE_TRASH = `${DRIVE_HOME}/trash`;
 export const DRIVE_MEMORY = `${DRIVE_HOME}/memory`;
 export const DRIVE_PROFILE = `${DRIVE_HOME}/profile`;
 export const DRIVE_SHARED_VIEW_FILE = `${DRIVE_HOME}/file/:fileId`;
-export const DRIVE_SHARED_VIEW_FOLDER = `${DRIVE_HOME}/folder/:folderId`;
+export const DRIVE_SHARED_VIEW_FOLDER = `${DRIVE_HOME}/folder/:dirId`;
 
 export const routes = {
   auth: [
@@ -69,7 +69,7 @@ export const routes = {
   customer: [
     { path: DRIVE_HOME, component: Priority },
     { path: DRIVE_SHARED, component: Shared },
-    { path: DRIVE_SHARED_DIR, component: Shared },
+    // { path: DRIVE_SHARED_DIR, component: Shared },
     { path: DRIVE_MY_DRIVE, component: MyDrive },
     { path: DRIVE_SEARCH, component: SearchPage },
     { path: DRIVE_MY_DRIVE_DIR, component: MyDrive },

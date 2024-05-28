@@ -95,13 +95,11 @@ export const downloadFile = async (param: { id: string; name?: string }) => {
 export const uploadFiles = async (body: UploadFileREQ) => {
   const formData = new FormData();
   for (const key in body) {
-    console.log('[uploadFiles] key', key, body[key]);
     formData.append(key, body[key]);
   }
   const res = await api.post<BaseResponse<EntryRESP[]>>('/files', formData, {
     headers: HTTP_HEADER.FORM_DATA,
   });
-  console.log('[uploadFiles] res', res);
   return res.data;
 };
 
@@ -146,20 +144,18 @@ export const getStorage = async () => {
 };
 
 export const searchEntriesApi = async (params: SearchREQ) => {
-  console.log('[searchEntriesApi] params', params);
   const res = await api.get<BaseResponse<SearchRESP>>(`/files/search`, {
     params: { ...params, type: params.type?.toLowerCase() },
   });
-  console.log('[searchEntriesApi] res', res);
   return res.data;
 };
 
-export const downloadMultipleEntries = async (params: DownloadMultipleEntriesREQ) => {
-  const res = await api.post(`/files/download`, { params }, { responseType: 'blob' });
+export const downloadMultipleEntries = async (body: DownloadMultipleEntriesREQ) => {
+  const res = await api.post(`/files/download`, body, { responseType: 'blob' });
   const url = window.URL.createObjectURL(new Blob([res.data]));
   const link = document.createElement('a');
   link.href = url;
-  link.setAttribute('download', 'multiple-files.zip');
+  link.setAttribute('download', `${body.parent_id}.zip`);
   document.body.appendChild(link);
   link.click();
 };

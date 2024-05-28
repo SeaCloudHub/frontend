@@ -42,18 +42,17 @@ const Statistics = () => {
     <div>
       <div className='flex items-center space-x-3'>
         <p className='h3'>{(total/data.capacity*100).toFixed(3)} %</p>
-        <p className='stat statement-upper-medium text-gray-500'>of {data.capacity/1024/1024/1024}KB used</p>
+        <p className='stat statement-upper-medium text-gray-500'>of {data.capacity/1024/1024/1024}GB used</p>
       </div>
       <div className='mt-2 flex h-2 w-full items-center rounded-full bg-slate-300'>
         {data &&
           data.types.map((type) => (
             <Tooltip title={`${type.title}: ${type.value} bytes`} key={type.title}>
               <div
-                className={classNames(
-                  `h-2 rounded-full border-2 p-1 hover:z-20 hover:border-2 hover:p-1.5`,
-                  `w-[${(type.value / data.capacity) * 100}%]`,
-                )}
-                style={{ backgroundColor: type.color }}
+                className={`h-2 rounded-full border-2 p-1 hover:z-20 hover:border-2 hover:p-1.5`}
+                style={{ backgroundColor: type.color,
+                  width: total < (0.5 * data.capacity) ? `${(type.value / (2 * total)) * 100}%` : `${(type.value / data.capacity) * 100}%`
+                }}
                 >
               </div>
             </Tooltip>

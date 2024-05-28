@@ -19,9 +19,6 @@ const FilterChip: React.FC<FilterChipProps> = ({ name, options, action, value })
     label: item.label,
     icon: item.icon,
     action: () => {
-      console.log(item.label);
-      console.log(new Date().toISOString());
-      // resetLimit();
       resetCursor();
       action && action(item?.value || item.label);
     },

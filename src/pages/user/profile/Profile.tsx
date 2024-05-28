@@ -90,6 +90,7 @@ export const Profile: React.FC<ProfileProps> = () => {
         name={{
           first_name: data?.first_name||'',
           last_name: data?.last_name||'',
+          avatar_url: data?.avatar_url||'',
         }}
        />}
       {renameOpen &&

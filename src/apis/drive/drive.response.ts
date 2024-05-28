@@ -18,6 +18,7 @@ export type EntryRESP = {
   created_at: string;
   updated_at: string;
   type: string;
+  is_starred: boolean;
   userRoles?: ('owner' | 'editor' | 'viewer')[];
 };
 

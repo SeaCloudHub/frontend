@@ -1,3 +1,4 @@
+import { useCursor } from '@/store/my-drive/myDrive.store';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { Tooltip } from '@mui/material';
 
@@ -8,6 +9,7 @@ type SortProps = {
 };
 
 const Sort: React.FC<SortProps> = ({ sort, order, setSort }) => {
+  const { resetCursor } = useCursor();
   return (
     <Tooltip title='Sort by'>
       <div className='flex flex-row items-center gap-3'>
@@ -17,6 +19,7 @@ const Sort: React.FC<SortProps> = ({ sort, order, setSort }) => {
         <div
           className='flex h-9 w-9 cursor-pointer items-center justify-center rounded-full hover:bg-[#ededed]'
           onClick={() => {
+            resetCursor();
             setSort({ sort, order: order === 'asc' ? 'desc' : 'asc' });
           }}>
           {order === 'asc' ? (

@@ -23,7 +23,7 @@ type DriveHistoryViewProps = {
 
 export const LocalEntryToTimeEntry = (entries: LocalEntry[]): TimeEntry[] => {
   const timeEntries: TimeEntry[] = [];
-  entries.sort((a, b) => new Date(b.lastModified).getTime() - new Date(a.lastModified).getTime());
+  // entries.sort((a, b) => new Date(b.lastModified).getTime() - new Date(a.lastModified).getTime());
   entries.forEach((entry) => {
     const time = formatDate(entry.lastModified);
     const timeEntry = timeEntries.find((timeEntry) => timeEntry.time === time);
@@ -62,7 +62,7 @@ const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({ sort, order, se
     isLoading && entries.map((item) => item.entries).flat().length < 15 ?
     <LinearProgress className='translate-y-1' /> :
     entries.length === 0 ?
-    <div className='flex h-96 items-center justify-center'>
+    <div className='flex h-96 items-center justify-center select-none'>
       <div className='text-center'>
         <div className='text-3xl font-semibold'>Trash is empty</div>
         <div className='line-clamp-2 text-gray-500'>
@@ -71,7 +71,7 @@ const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({ sort, order, se
         </div>
       </div>
     </div> :
-    <div className='mx-5 mt-2 h-full' ref={driveGridViewRef}>
+    <div className='mx-5 mt-2 h-full select-none' ref={driveGridViewRef}>
       <div className='flex flex-col space-y-2'>
         <div className='absolute z-10 right-4 top-3'>
           <Sort sort={sort} order={order} setSort={setSort} />
@@ -106,6 +106,7 @@ const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({ sort, order, se
                         isDir={file.isDir}
                         dir={dir}
                         userRoles={file.userRoles}
+                        is_starred={file.is_starred}
                       />
                     </div>
                   ))}

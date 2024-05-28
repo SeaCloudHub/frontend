@@ -38,9 +38,9 @@ const Starred = () => {
   return (
     <DriveLayout
       headerLeft={
-        <div className='px-5'>
+        <div className='px-5 select-none'>
           <div className='flex justify-between space-x-2'>
-            <h2 className='pb-[20px] pt-[17px] text-2xl font-semibold'>Starred</h2>
+            <h2 className='pb-[20px] pt-[17px] text-2xl'>Starred</h2>
             <div className='flex items-center gap-2'>
               <SharingPageViewMode setViewMode={setViewMode} viewMode={viewMode} />
               <Icon

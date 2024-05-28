@@ -13,11 +13,10 @@ import TextFieldCore from '../../components/core/form/TextFieldCore';
 import ModalChangePasswordSuccess from '../../components/core/modal/ModalChangePasswordSuccess';
 import { changePasswordSchema } from '../../helpers/form-schema/change-password.schema';
 import { useScreenMode } from '../../store/responsive/screenMode';
-import { AUTH_LOGIN_EMAIL, DRIVE_HOME } from '../../utils/constants/router.constant';
+import { DRIVE_HOME } from '../../utils/constants/router.constant';
 import { ScreenMode } from '../../utils/enums/screen-mode.enum';
 import { toastError } from '../../utils/toast-options/toast-options';
 import { ApiGenericError } from '../../utils/types/api-generic-error.type';
-// import React from 'react';
 
 const ChangePassword = () => {
   const navigate = useNavigate();

@@ -1,11 +1,7 @@
-import { Avatar, LinearProgress } from '@mui/material';
-import React, { useEffect, useRef, useState } from 'react';
+import { LinearProgress } from '@mui/material';
 import ActionItem from './ActionItem';
-import { LogItem } from '@/apis/drive/drive.response';
-import { formatDate } from '@/utils/function/formatDate.function';
 import { useActivityLog } from '@/hooks/drive.hooks';
-import { useStorageStore } from '@/store/storage/storage.store';
-import { useCursor, useCursorActivity } from '@/store/my-drive/myDrive.store';
+import { useCursorActivity } from '@/store/my-drive/myDrive.store';
 
 
 
@@ -15,9 +11,9 @@ const SidePanelAction = () => {
 
   return (
     isLoading && !nextCursorActivity  ? (
-      <LinearProgress className=' translate-y-1' />
+      <LinearProgress className='translate-y-1' />
     ) :
-    <div className='px-2 h-full overflow-hidden overscroll-y-auto overflow-x-hidden' >
+    <div className='px-2 h-full overscroll-y-auto' >
       {data.map((item, index) => {
         return (
           <div key={index} className='flex flex-col relative'>

@@ -96,7 +96,7 @@ const Notification = ({
     <div className='max-h-[535px] max-w-[300px] overflow-y-auto'>
       {notifications.map((notification) => (
         <Link key={notification.Id}
-          to={notification.IsDir ? `/drive/my-drive/dir/${notification.FileId}` : '/drive/shared'}
+          to={notification.IsDir ? `/drive/folder/${notification.FileId}` : '/drive/shared'}
           onClick={() => handleClickViewNotification(notification.Id)}>
           <Card
             key={notification.Id}

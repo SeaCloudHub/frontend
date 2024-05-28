@@ -13,6 +13,7 @@ type ChangePhotoPopUpProps = {
   name: {
     first_name: string;
     last_name: string;
+    avatar_url: string;
   };
 };
 
@@ -59,7 +60,7 @@ const ChangePhotoPopUp: React.FC<ChangePhotoPopUpProps> = ({handleClose, open, s
               inputRef.current?.click();
             }}
           >
-            <Avatar sx={{ width: 200, height: 200 }} src={image ? URL.createObjectURL(image) : ''} />
+            <Avatar sx={{ width: 200, height: 200 }} src={image ? URL.createObjectURL(image) : name.avatar_url ? name.avatar_url : ''} />
           </div>
           <input
             type='file'
