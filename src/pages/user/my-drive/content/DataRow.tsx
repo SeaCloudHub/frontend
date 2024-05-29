@@ -5,7 +5,9 @@ import { Avatar, Tooltip } from '@mui/material';
 import { useCursor, useDrawer, useEntries, useFilter, useSelected } from '@/store/my-drive/myDrive.store';
 import {
   LocalEntry,
+  SuggestedEntry,
   useCopyMutation,
+  useDownloadMutation,
   useRestoreEntriesMutation,
   useStarEntryMutation,
   useUnstarEntryMutation,
@@ -15,7 +17,7 @@ import SharePopUp from '@/components/core/pop-up/SharePopUp';
 import MovePopUp from '@/components/core/pop-up/MovePopUp';
 import RenamePopUp from '@/components/core/pop-up/RenamePopUp';
 import DeletePopUp from '@/components/core/pop-up/DeletePopUp';
-import { FormatDateStrToDDMMYYYY, formatDate } from '@/utils/function/formatDate.function';
+import { formatDate } from '@/utils/function/formatDate.function';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useSession } from '@/store/auth/session';
 import { getFirstCharacters } from '@/utils/function/getFirstCharacter';
@@ -24,11 +26,11 @@ import { numToSize } from '@/utils/function/numbertToSize';
 import FileViewerContainer from '@/components/core/file-viewers/file-viewer-container/FileViewerContainer';
 import { downloadFile } from '@/apis/drive/drive.api';
 import { CopyToClipboard } from '@/utils/function/copy.function';
-import { DRIVE_MY_DRIVE, DRIVE_SHARED, DRIVE_SHARED_DIR } from '@/utils/constants/router.constant';
+import { DRIVE_MY_DRIVE, DRIVE_SHARED } from '@/utils/constants/router.constant';
 import DeleteTempPopUp from '@/components/core/pop-up/DeleteTempPopUp';
-import { isPermission } from '@/utils/function/permisstion.function';
 import { Star } from '@mui/icons-material';
 import { useStorageStore } from '@/store/storage/storage.store';
+import { isPermission } from '@/utils/function/permisstion.function';
 
 type DataRowProps = {
   // dirId?: string;
@@ -61,7 +63,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
   const [isPopUpOpen, setIsPopUpOpen] = React.useState(false);
   const [result, setResult] = useState(false);
 
-  const { openDrawer } = useDrawer();
+  const { openDrawer, setTab } = useDrawer();
   const { identity } = useSession();
   const navigate = useNavigate();
   const copyMutation = useCopyMutation();
@@ -70,32 +72,31 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
   const { setArrSelected, arrSelected } = useSelected();
   const starEntryMutation = useStarEntryMutation();
   const unstarEntryMutation = useUnstarEntryMutation();
-  const { setListEntries } = useEntries();
+  const downloadMutation = useDownloadMutation();
+  const { setListEntries, listEntries, listSuggestedEntries, setListSuggestedEntries  } = useEntries();
   const { resetFilter } = useFilter();
   const { resetCursor } = useCursor();
   const { rootId } = useStorageStore();
 
   const entryMenu: MenuItem[][] = [
-    // chỉ !isdir mới có preview
-    !isDir
-      ? [
-          {
-            label: 'Preview',
-            icon: <Icon icon='material-symbols:visibility' />,
-            action: () => {
-              setFileViewer(true);
-            },
-          },
-        ]
-      : [],
+    [
+      {
+        label: 'Preview',
+        icon: <Icon icon='material-symbols:visibility' />,
+        action: () => {
+          setFileViewer(true);
+        },
+        isHidden: isDir,
+      },
+    ],
     [
       {
         label: 'Download',
         icon: <Icon icon='ic:outline-file-download' />,
         action: () => {
-          downloadFile({ id, name: title });
+          downloadMutation.mutate({ id, name: title});
         },
-        isHidden: isDir,
+        isHidden: isPermission(userRoles) <= 0,
       },
       {
         label: 'Rename',
@@ -104,13 +105,15 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
           setType('rename');
           setIsPopUpOpen(true);
         },
+        isHidden: isPermission(userRoles) <= 1,
       },
-      !isDir && {
+      {
         label: 'Make a copy',
         icon: <Icon icon='material-symbols:content-copy-outline' />,
         action: () => {
           copyMutation.mutate({ ids: [id], to: dir.id });
         },
+        isHidden: isPermission(userRoles) <= 1,
       },
     ],
     [
@@ -128,6 +131,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
           setType('share');
           setIsPopUpOpen(true);
         },
+        isHidden: isPermission(userRoles) <= 1,
       },
     ],
     [
@@ -139,6 +143,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
           setType('move');
           setIsPopUpOpen(true);
         },
+        isHidden: isPermission(userRoles) <= 1,
       },
       {
         label: 'Add shortcut',
@@ -150,7 +155,28 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
           label: 'Remove from starred',
           icon: <Icon icon='mdi:star-off-outline' />,
           action: () => {
-            unstarEntryMutation.mutate({ file_ids: [id] });
+            unstarEntryMutation.mutate({ file_ids: [id] }, {
+              onSuccess: () => {
+                if(parent === 'priority') {
+                  const newState = listSuggestedEntries.map((entry: SuggestedEntry) => {
+                    if (entry.id === id) {
+                      return { ...entry, is_starred: false };
+                    }
+                    return entry;
+                  });
+                  setListSuggestedEntries(newState);
+                }
+                else {
+                  const newState = listEntries.map((entry: LocalEntry) => {
+                    if (entry.id === id) {
+                      return { ...entry, is_starred: false };
+                    }
+                    return entry;
+                  });
+                  setListEntries(newState);
+                }
+              }
+            });
           },
         },
       ] : [
@@ -158,7 +184,28 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
           label: 'Add to starred',
           icon: <Icon icon='material-symbols:star-outline' />,
           action: () => {
-            starEntryMutation.mutate({ file_ids: [id] });
+            starEntryMutation.mutate({ file_ids: [id] }, {
+              onSuccess: () => {
+                if(parent === 'priority') {
+                  const newState = listSuggestedEntries.map((entry: SuggestedEntry) => {
+                    if (entry.id === id) {
+                      return { ...entry, is_starred: true };
+                    }
+                    return entry;
+                  });
+                  setListSuggestedEntries(newState);
+                }
+                else {
+                  const newState = listEntries.map((entry: LocalEntry) => {
+                    if (entry.id === id) {
+                      return { ...entry, is_starred: true };
+                    }
+                    return entry;
+                  });
+                  setListEntries(newState);
+                }
+              }
+            });
           },
         },
       ],
@@ -167,10 +214,20 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
       {
         label: 'Detail',
         icon: <Icon icon='mdi:information-outline' />,
-        action: () => openDrawer(id),
+        action: () => {
+          setTab('Details');
+          openDrawer(id);
+        },
       },
-      { label: 'Activity', icon: <Icon icon='mdi:graph-line-variant' />, action: () => {} },
-      !isDir && { label: 'Lock', icon: <Icon icon='mdi:lock-outline' />, action: () => {} },
+      {
+        label: 'Activity',
+        icon: <Icon icon='mdi:graph-line-variant' />,
+        action: () => {
+          setTab('Activity');
+          openDrawer(id);
+        },
+      },
+      { label: 'Lock', icon: <Icon icon='mdi:lock-outline' />, action: () => {} },
     ],
     [
       {
@@ -182,14 +239,13 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
         },
       },
     ],
-  ].filter((e) => e.length != 0);
+  ].filter((e) => e.length > 0);
 
   const menuItemsTrash: MenuItem[] = [
     {
       label: 'Restore',
       icon: <Icon icon='mdi:restore' />,
       action: () => {
-        console.log('[FileCard] Restore ' + id);
         setResult(true);
         restoreMutation.mutate({ source_ids: [id] });
       },
@@ -198,7 +254,6 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
       label: 'Delete permanently',
       icon: <Icon icon='fa:trash-o' />,
       action: () => {
-        console.log('[FileCard] Delete permanently ' + id);
         setIsPopUpOpen(true);
       },
     },

@@ -22,13 +22,12 @@ const Trash = () => {
   const [isScrolling, setIsScrolling] = useState(false);
 
   const { arrSelected } = useSelected();
-  console.log('[Trash] arrSelected', arrSelected);
 
   const { data, isLoading, refetch } = useTrash();
   console.log('[Trash] data', data);
 
   const onScollBottom = () => {
-    if (nextCursor && nextCursor !== currentCursor) {
+    if (nextCursor !== '' && nextCursor !== currentCursor) {
       setIsScrolling(true);
       setTimeout(() => {
         setIsScrolling(false);
@@ -50,9 +49,9 @@ const Trash = () => {
             arrSelected.length === 0
               ? 'Trash'
               : data
-                  .map((timeEntry) => timeEntry.entries)
-                  .flat()
-                  .find((entry) => entry.id === arrSelected[0].id)?.title || ''
+                .map((timeEntry) => timeEntry.entries)
+                .flat()
+                .find((entry) => entry.id === arrSelected[0].id)?.title || ''
           }
         />
       }

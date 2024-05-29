@@ -30,6 +30,7 @@ export const signOutApi = async () => {
 
 export const getProfileApi = async () => {
   const res = await api.get<BaseResponse<IdentityFileRESP>>('/users/me');
+  console.log(res.data);
   return res.data;
 };
 

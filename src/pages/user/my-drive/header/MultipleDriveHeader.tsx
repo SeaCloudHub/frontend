@@ -1,4 +1,4 @@
-import { downloadFile, downloadMultipleEntries } from '@/apis/drive/drive.api';
+import { downloadMultipleEntries } from '@/apis/drive/drive.api';
 import IconifyIcon from '@/components/core/Icon/IConCore';
 import ButtonIcon from '@/components/core/button/ButtonIcon';
 import CustomDropdown from '@/components/core/drop-down/CustomDropdown';
@@ -8,7 +8,7 @@ import DeleteTempPopUp from '@/components/core/pop-up/DeleteTempPopUp';
 import MovePopUp from '@/components/core/pop-up/MovePopUp';
 import RenamePopUp from '@/components/core/pop-up/RenamePopUp';
 import SharePopUp from '@/components/core/pop-up/SharePopUp';
-import { useDeleteMutation, useRestoreEntriesMutation, useStarEntryMutation, useUnstarEntryMutation } from '@/hooks/drive.hooks';
+import { useDeleteMutation, useDownLoadMultipleMutation, useDownloadMutation, useRestoreEntriesMutation, useStarEntryMutation, useUnstarEntryMutation } from '@/hooks/drive.hooks';
 import { useEntries, useSelected } from '@/store/my-drive/myDrive.store';
 import { UserRoleEnum } from '@/utils/enums/user-role.enum';
 import { CopyToClipboard } from '@/utils/function/copy.function';
@@ -33,6 +33,9 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
   const restoreMutation = useRestoreEntriesMutation();
   const starEntryMutation = useStarEntryMutation();
   const unstarEntryMutation = useUnstarEntryMutation();
+  const downloadMutation = useDownloadMutation();
+  const downloadMultipleEntries = useDownLoadMultipleMutation();
+
 
   console.log('TEST: ', parent, isSelectedPermission(arrSelected, UserRoleEnum.EDITOR));
 
@@ -50,10 +53,12 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
       icon: 'mdi:download',
       label: 'Download',
       action: () => {
-        downloadMultipleEntries({
-          ids: arrSelected.map((e) => e.id),
-          parent_id: dir.id,
-        });
+        arrSelected.length === 1 ?
+          downloadMutation.mutate({ id: arrSelected[0].id }) :
+          downloadMultipleEntries.mutate({
+            ids: arrSelected.map((e) => e.id),
+            parent_id: dir.id
+          });
       },
       isHidden: parent === 'Priority',
     },

@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 
 export const changePasswordSchema = Yup.object({
-  old_password: Yup.string().required('Old password is required'),
+  old_password: Yup.string().required('Current password is required'),
   new_password: Yup.string()
     .matches(
       /^(?=.*\d)(?=.*[a-zA-Z])(?=.*[\W_]).{8,}$/,

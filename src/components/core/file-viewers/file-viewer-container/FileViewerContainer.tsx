@@ -1,6 +1,6 @@
 import { downloadFile } from '@/apis/drive/drive.api';
 import { downloadFileApi } from '@/apis/user/storage/storage.api';
-import { LocalEntry } from '@/hooks/drive.hooks';
+import { LocalEntry, useDownloadMutation } from '@/hooks/drive.hooks';
 import { getFileIcon } from '@/utils/function/validateFileType';
 import { toastError } from '@/utils/toast-options/toast-options';
 import { ApiGenericError } from '@/utils/types/api-generic-error.type';
@@ -59,6 +59,9 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({
   const [fileIcon, setFileIcon] = useState<React.ReactNode | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [openShare, setOpenShare] = useState<boolean>(false);
+
+  const downloadMutation = useDownloadMutation();
+
   useEffect(() => {
     function updateActions() {
       let actions: MenuItemCoreProps[] = [
@@ -112,7 +115,7 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({
     }
   }, [fileInfo]);
   const onDownloadClick = () => {
-    downloadFile({ id: fileInfo.id, name: fileInfo.title });
+    downloadMutation.mutate({ id: fileInfo.id, name: fileInfo.title });
   };
   return (
     <>

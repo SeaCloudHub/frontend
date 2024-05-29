@@ -10,6 +10,7 @@ import {
   LocalEntry,
   SuggestedEntry,
   useCopyMutation,
+  useDownloadMutation,
   useRestoreEntriesMutation,
   useStarEntryMutation,
   useUnstarEntryMutation,
@@ -71,6 +72,7 @@ const DataRowPriorityView: React.FC<SuggestedEntry & DataRowPriorityViewProps> =
   const { setArrSelected, arrSelected } = useSelected();
   const starEntryMutation = useStarEntryMutation();
   const unstarEntryMutation = useUnstarEntryMutation();
+  const downloadMutation = useDownloadMutation();
 
   const entryMenu: MenuItem[][] = [
     !isDir
@@ -89,7 +91,7 @@ const DataRowPriorityView: React.FC<SuggestedEntry & DataRowPriorityViewProps> =
         label: 'Download',
         icon: <Icon icon='ic:outline-file-download' />,
         action: () => {
-          downloadFile({ id, name: title });
+          downloadMutation.mutate({ id, name: title });
         },
       },
       {

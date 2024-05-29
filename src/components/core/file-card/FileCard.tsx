@@ -6,11 +6,12 @@ import { Tooltip } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { MenuItem, classNames } from '../drop-down/Dropdown';
-import { downloadFile } from '@/apis/drive/drive.api';
 import {
   LocalEntry,
   SuggestedEntry,
   useCopyMutation,
+  useDownLoadMultipleMutation,
+  useDownloadMutation,
   useRestoreEntriesMutation,
   useStarEntryMutation,
   useUnstarEntryMutation,
@@ -34,7 +35,6 @@ import SharePopUp from '../pop-up/SharePopUp';
 import { DRIVE_MY_DRIVE, DRIVE_SHARED } from '@/utils/constants/router.constant';
 import { useNavigate } from 'react-router-dom';
 import { useStorageStore } from '@/store/storage/storage.store';
-import { EntryRESP } from '@/apis/drive/drive.response';
 import { isPermission } from '@/utils/function/permisstion.function';
 import { UserRole } from '@/utils/types/user-role.type';
 
@@ -76,8 +76,11 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
   const restoreMutation = useRestoreEntriesMutation();
   const starEntryMutation = useStarEntryMutation();
   const unstarEntryMutation = useUnstarEntryMutation();
+  const downloadMutation = useDownloadMutation();
+  const downloadFolder = useDownLoadMultipleMutation();
   const { setArrSelected, arrSelected } = useSelected();
   const { resetFilter } = useFilter();
+
 
   const menuItems: MenuItem[][] = [
     [
@@ -95,7 +98,8 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
         label: 'Download',
         icon: <Icon icon='ic:outline-file-download' />,
         action: () => {
-          downloadFile({ id, name: title });
+          // downloadFile({ id, name: title });
+          downloadMutation.mutate({ id, name: title });
         },
         isHidden: isPermission(userRoles) <= 0,
       },

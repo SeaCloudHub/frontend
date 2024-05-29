@@ -7,7 +7,7 @@ export const getIdentitiesRESToUserManagementInfoDto = (data: IdentityFileRESP):
     name: (data.first_name || '') + (data.first_name && data.last_name ? ' ' : '') + (data.last_name || ''),
     usedMemory: data.storage_usage,
     totalMemory: data.storage_capacity,
-    avatar: data.avatar_url,
+    avatar: data.avatar_url ? import.meta.env.VITE_BACKEND_API + data.avatar_url : null,
     userId: data.id,
     isBlocked: data.blocked_at ? true : false,
     lastAccess: (data.last_sign_in_at && dayjs(data.last_sign_in_at).format('YYYY-MM-DD')) || '',
