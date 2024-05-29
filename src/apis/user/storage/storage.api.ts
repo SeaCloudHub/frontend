@@ -2,7 +2,7 @@ import { api } from '@/helpers/http/config.http';
 import { HTTP_HEADER } from '@/utils/constants/http.constant';
 import { objectToFormData } from '@/utils/parser/http.parser';
 import { BaseResponse } from '@/utils/types/api-base-response.type';
-import { CreateFolderREQ, UploadFileREQ } from './request/create-storage.request';
+import { CreateFolderREQ, UpdateGeneralAccessREQ, UploadFileREQ } from './request/create-storage.request';
 import { CreateFolderRES } from './response/create-storage.response';
 import { AccessFileREQ, ShareFileREQ, SharedUsersSearchREQ } from './request/share.request';
 import { SharedUsersSearchRESP } from './response/share.response';
@@ -35,6 +35,11 @@ export const shareFileAPi = async (body: ShareFileREQ) => {
 };
 
 export const accessFileAPi = async (body: AccessFileREQ) => {
+  const res = await api.get<BaseResponse<void>>(`/files/${body.id}/access`);
+  return res.data;
+};
+
+export const updateGeneralAccessApi = async (body: UpdateGeneralAccessREQ) => {
   const res = await api.get<BaseResponse<void>>(`/files/${body.id}/access`);
   return res.data;
 };

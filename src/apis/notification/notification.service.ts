@@ -8,7 +8,7 @@ export const parseNotificationContent = (notificationResp: NotificationRESP): No
     FileId: parsedContent.file_id,
     IsDir: parsedContent.is_dir,
     Role: parsedContent.role,
-    OwnerAvatar: parsedContent.owner_id,
+    OwnerAvatar: parsedContent.owner_avatar,
     OwnerName: parsedContent.owner_name,
     Status: notificationResp.Status,
   };

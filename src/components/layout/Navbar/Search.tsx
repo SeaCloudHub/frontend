@@ -46,7 +46,10 @@ function Search() {
   }, [onFocus, resetCursorSearch, setArrSelected]);
 
   return (
-    <div className='relative max-w-2xl flex-1 ' ref={ref} >
+    <div className={`relative max-w-2xl flex-1 ${identity.is_admin?'opacity-0 pointer-events-none':''}`} ref={ref} onClick={() => {
+      setOnFocus(true)
+      // resetCursorSearch();
+    }}>
       <span
         onClick={() => {}}
         className=' absolute left-2 top-[5px] h-9 w-9 cursor-pointer rounded-full p-2 hover:bg-gray-100 dark:text-white hover:dark:bg-slate-800'>

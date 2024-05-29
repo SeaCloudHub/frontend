@@ -2,6 +2,7 @@ import { getUserDetailApi } from '@/apis/admin/user-management/user-management.a
 import { getIdentitiesRESToUserManagementInfoDto } from '@/apis/admin/user-management/user-management.service';
 import ModalConfirmBlockOrUnBlock from '@/components/core/modal/ModalBlockConfirm';
 import ModalConfirmDelete from '@/components/core/modal/ModalConfirmDelete';
+import ModalUpdateUser from '@/components/core/modal/ModalUpdateUser';
 import { ScreenMode } from '@/utils/enums/screen-mode.enum';
 import { getFirstCharacters } from '@/utils/function/getFirstCharacter';
 import { getRandomColor } from '@/utils/function/getRandomColor';
@@ -37,6 +38,7 @@ const UserManagementDetail = () => {
   }, []);
   const [deleteModal, setDeleteModal] = useState(false);
   const [blockModal, setBlockModal] = useState(false);
+  const [updateModal, setUpdateModal] = useState(false);
   const [isBlocked, setBlocked] = useState(false);
   const {
     data: identityData,
@@ -49,11 +51,11 @@ const UserManagementDetail = () => {
   });
   const userDto = useMemo(() => {
     if (identityData) {
+      setBlocked(identityData.blocked_at == null);
       return getIdentitiesRESToUserManagementInfoDto(identityData);
     }
     return null;
   }, [identityData]);
-  console.log('trieu ');
   return (
     <div className='h-full w-full overflow-y-auto overflow-x-hidden'>
       <div
@@ -91,8 +93,8 @@ const UserManagementDetail = () => {
                 <p className='statement-upper-medium h3'> {identityData && userDto.name}</p>
                 <p className='statement-medium'>{identityData && identityData.email}</p>
                 <ul>
-                  <li className={`${identityData && identityData.blocked_at != null ? 'text-red-600' : 'text-green-500'}`}>
-                    Active
+                  <li className={`${identityData && !isBlocked ? 'text-red-600' : 'text-green-500'}`}>
+                    {identityData && !isBlocked ? 'Blocked' : 'Active'}
                   </li>
                   <li>
                     Last signed at:{' '}
@@ -115,9 +117,23 @@ const UserManagementDetail = () => {
                 navigate(AUTH_CHANGE_PASSWORD);
               }}
             />
-            <UserDetailAction title='UPDATE USER' onClick={() => {}} />
             <UserDetailAction
-              title='BLOCK USER'
+              title='UPDATE USER'
+              onClick={() => {
+                setUpdateModal(true);
+              }}
+            />
+            {updateModal && (
+              <ModalUpdateUser
+                title={'Update User'}
+                isOpen={true}
+                handleConfirm={function (data?: any): void {
+                  setUpdateModal(false);
+                }}
+              />
+            )}
+            <UserDetailAction
+              title={isBlocked ? 'BLOCK USER' : 'UN-BLOCK USER'}
               onClick={() => {
                 setBlockModal(true);
               }}
@@ -130,6 +146,9 @@ const UserManagementDetail = () => {
                 title={isBlocked ? 'Block' : 'Un-block' + userDto.name}
                 isOpen={true}
                 handleConfirm={function (data?: boolean): void {
+                  if (data) {
+                    setBlocked((prev) => !prev);
+                  }
                   setBlockModal(false);
                 }}
               />
@@ -148,6 +167,9 @@ const UserManagementDetail = () => {
                 isOpen={true}
                 handleConfirm={function (data?: boolean): void {
                   setDeleteModal(false);
+                  if (data) {
+                    navigate(ADMIN_USER_MANAGEMENT);
+                  }
                 }}
               />
             )}

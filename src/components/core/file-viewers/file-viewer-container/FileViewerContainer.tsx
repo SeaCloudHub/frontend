@@ -31,16 +31,6 @@ const totalFileViewerActions: Record<string, MenuItemCoreProps> = {
     onClick: () => {},
     title: 'Delete',
   },
-  print: {
-    icon: 'uit:print',
-    onClick: () => {},
-    title: 'Print',
-  },
-  fileHistory: {
-    icon: 'system-uicons:files-history',
-    onClick: () => {},
-    title: 'File history',
-  },
   copyLink: {
     icon: 'ic:sharp-link',
     onClick: () => {},
@@ -76,8 +66,6 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({
     function updateActions() {
       let actions: MenuItemCoreProps[] = [
         totalFileViewerActions['delete'],
-        totalFileViewerActions['print'],
-        totalFileViewerActions['fileHistory'],
       ];
       if (window.innerWidth < 640) {
         actions.push(totalFileViewerActions['download']);
