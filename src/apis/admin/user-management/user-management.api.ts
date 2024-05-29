@@ -4,10 +4,10 @@ import { objectToFormData } from '../../../utils/parser/http.parser';
 import { BaseResponse } from '../../../utils/types/api-base-response.type';
 import { ImportExcelREQ } from './request/add-user-excel.request';
 import { AddUserREQ } from './request/add-user.request';
-import { GetIdentitiesREQ, GetUserDetailREQ } from './request/get-identities.request';
+import { GetIdentitiesREQ, GetUserDetailREQ, GetUserFileDetailREQ } from './request/get-identities.request';
 import { UserBlockREQ, UserDeleteREQ } from './request/user-action.request';
 import { AddUserRESP } from './response/add-user.response';
-import { GetIdentitiesRESP } from './response/get-identities.response';
+import { GetIdentitiesRESP, GetUserFileDetailRESP } from './response/get-identities.response';
 
 export const addUserApi = async (body: AddUserREQ) => {
   const res = await api.post<BaseResponse<AddUserRESP>>('admin/identities', body, {});
@@ -43,3 +43,10 @@ export const getUserDetailApi = async (param: GetUserDetailREQ) => {
   const res = await api.get<BaseResponse<IdentityRESP>>(`admin/identities/${param.identity_id}`);
   return res.data.data;
 };
+
+export const getFileUserApi = async (param: GetUserFileDetailREQ) => {
+  const res = await api.get<BaseResponse<GetUserFileDetailRESP>>(`admin/identities/${param.identity_id}/files`,
+    { params: param }
+  );
+  return res;
+}

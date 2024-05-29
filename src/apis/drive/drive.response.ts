@@ -1,3 +1,4 @@
+import { PaginationRESP } from '@/utils/types/api-base-response.type';
 import { IdentityRESP } from '../auth/response/auth.sign-in.response';
 
 export type EntryRESP = {
@@ -34,7 +35,7 @@ export type ListEntriesRESP = {
 
 export type ListEntriesPageRESP = {
   entries: EntryRESP[];
-  pagination: PageInfoRESP;
+  pagination: PaginationRESP;
 };
 
 export type ParentRES = {
@@ -67,16 +68,7 @@ export type SharedEntriesRESP = {
 
 export type DeleteFilesRESP = EntryRESP[];
 
-export type PageInfoRESP = {
-  total_items: number;
-  total_pages: number;
-  current_page: number;
-  next_page: number;
-  previous_page: number;
-  first_page: number;
-  last_page: number;
-  limit: number;
-};
+export type PageInfoRESP = PaginationRESP;
 
 export type LogEntry = {
   user_id: string;
