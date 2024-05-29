@@ -84,7 +84,7 @@ export const DataRow: React.FC<DataRowProps> = ({ id, isDir, title, icon, lastMo
         </div>
         <div className='col-span-1 max-[500px]:hidden truncate'>
           {size ?
-            <Tooltip title={`${size} bytes `}>
+            <Tooltip title={numToSize(size)}>
               <span>{numToSize(size)}</span>
             </Tooltip>:
             <span>---</span>
