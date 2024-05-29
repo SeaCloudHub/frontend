@@ -5,6 +5,7 @@ import { useSelected } from '@/store/my-drive/myDrive.store';
 import { Star } from '@mui/icons-material';
 import FileViewerContainer from '@/components/core/file-viewers/file-viewer-container/FileViewerContainer';
 import { useNavigate } from 'react-router-dom';
+import { numToSize } from '@/utils/function/numbertToSize';
 
 type DataRowProps = LocalEntry & {
   isSelected?: boolean;
@@ -83,8 +84,8 @@ export const DataRow: React.FC<DataRowProps> = ({ id, isDir, title, icon, lastMo
         </div>
         <div className='col-span-1 max-[500px]:hidden truncate'>
           {size ?
-            <Tooltip title={`${size} bytes `}>
-              <span>{size}</span>
+            <Tooltip title={numToSize(size)}>
+              <span>{numToSize(size)}</span>
             </Tooltip>:
             <span>---</span>
           }
