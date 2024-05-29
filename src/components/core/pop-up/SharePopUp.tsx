@@ -2,6 +2,7 @@ import { SharedUsersSearchREQ } from '@/apis/user/storage/request/share.request'
 import { shareFileAPi, sharedUserApi } from '@/apis/user/storage/storage.api';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useTheme } from '@/providers/theme-provider';
+import { toastSuccess } from '@/utils/toast-options/toast-options';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import {
   Autocomplete,
@@ -17,17 +18,15 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import ButtonSuccess from '../button/ButtonSuccess';
 import CustomDropdown from '../drop-down/CustomDropdown';
 import CustomSelect from '../drop-down/CustomSelect';
 import { MenuItem as MenuItemCustom } from '../drop-down/Dropdown';
 import ListPeople from '../list-people/ListPeople';
 import PopUp from './PopUp';
-import { toastSuccess } from '@/utils/toast-options/toast-options';
-import { toast } from 'react-toastify';
-import { getEntryMetadata } from '@/apis/drive/drive.api';
 
 type SharePopUpProps = {
   open: boolean;
@@ -43,7 +42,7 @@ type UserOption = {
 };
 
 const fakeUsers: UserOption[] = [
-  { name: 'John Doe', email: 'johndoe@gmail.com' },
+  { name: 'Johssn Doe', email: 'johndoe@gmail.com' },
   { name: 'John Doe1', email: 'johndoe1@gmail.com' },
   { name: 'John Doe2', email: 'johndoe2@gmail.com' },
   { name: 'John Doe3', email: 'johndoe3@gmail.com' },
@@ -67,7 +66,6 @@ const helpItems: MenuItemCustom[] = [
 const typeShareItems = ['Viewer', 'Editor'];
 
 const SharePopUp: React.FC<SharePopUpProps> = ({ open, handleClose, title, fileId }) => {
-  console.log(fileId);
   const [values, setValues] = React.useState([]);
   const [typeShare, setTypeShare] = React.useState('Viewer');
   const [typeView, setTypeView] = React.useState(fakelistPeople.map((item) => item.type));
@@ -106,18 +104,11 @@ const SharePopUp: React.FC<SharePopUpProps> = ({ open, handleClose, title, fileI
       setApiData(mappedData);
     },
   });
-    const { data, error, isFetching } = useQuery({
-      queryKey: ['get-file-metadata-for-share', fileId],
-      queryFn: () => getEntryMetadata({ id: fileId }),
-      staleTime: 0,
-      select: (data) => {
-        return data.data;
-      },
-    });
 
   useEffect(() => {
     sharedUsersMutation.mutateAsync({ query: searchValue });
   }, [searchValue]);
+
   return (
     <PopUp open={open} handleClose={handleClose}>
       <div className='m-3 mb-0 flex items-center justify-between'>
@@ -230,7 +221,7 @@ const SharePopUp: React.FC<SharePopUpProps> = ({ open, handleClose, title, fileI
             {errror && <p className='text-red-600'>Please select people to share file.</p>}
             <div className='my-2'>
               <div className='text-base font-semibold'>People with access</div>
-              <ListPeople items={fakeUsers} state={typeView} setState={setTypeView} height='150px' />
+              <ListPeople fileId={fileId} height='150px' />
             </div>
             <div>
               <div className='text-base font-semibold'>General access</div>

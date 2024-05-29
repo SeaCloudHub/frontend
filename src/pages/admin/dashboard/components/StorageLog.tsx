@@ -1,5 +1,10 @@
+import { storageLogToDto } from '@/apis/admin/dashboard/dash-board.service';
+import { storageLogApi } from '@/apis/admin/dashboard/dashboard-api';
 import { StorageLogDto } from '@/utils/types/strorage-log.type';
+import { useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
 import AccordionCore from '../../../../components/core/accordion/AccordionCore';
+import { Box, Skeleton } from '@mui/material';
 
 type StorageLogProps = {
   logs?: StorageLogDto[];
@@ -17,28 +22,68 @@ const actionColors = {
   SHARE: 'text-blue-400',
   UPDATE: 'text-orange-600',
 };
-const StorageLog = ({ logs, isFetching, moreClick }: StorageLogProps) => {
+
+  const renderSkeleton = () => {
+    return Array.from({ length: 5 }).map((_, index) => (
+      <Box key={index} display="flex" flexDirection="row" alignItems="center" mb={2}>
+        <Skeleton variant="text" width={80} height={24} />
+        <Skeleton variant="text" width={100} height={24} style={{ marginLeft: '0.5rem' }} />
+        <Skeleton variant="text" width={60} height={24} style={{ marginLeft: '0.5rem' }} />
+        <Skeleton variant="text" width={140} height={24} style={{ marginLeft: '0.5rem' }} />
+      </Box>
+    ));
+  };
+const StorageLog = () => {
+  const [logs, setLogs] = useState<StorageLogDto[]>([]);
+  const [cursor, setCursor] = useState<string | null>(null);
+   const [fetching, setFetching] = useState(false);
   const getActionColorClass = (action: string) => {
     return actionColors[action] || 'black';
   };
+
+  const fetchLogs = async () => {
+    setFetching(true);
+    try {
+      const response = await storageLogApi({ cursor, limit: 20, userID: '' });
+      const newLogs = response.logs.map((item) => storageLogToDto(item));
+      setLogs((prevLogs) => [...prevLogs, ...newLogs]);
+      setCursor(response.cursor);
+    } catch (error) {
+      console.error('Error fetching logs:', error);
+    } finally {
+      setFetching(false);
+    }
+  };
+    useEffect(() => {
+      fetchLogs();
+    }, []);
+
+ 
+  const onMoreClick = () => {
+   if (cursor && !fetching) {
+     fetchLogs();
+   }
+  };
+
   return (
-    <AccordionCore title='Storage Log'>
-      <div className='max-h-[400px] overflow-y-auto  bg-content-bg px-2 text-sm dark:bg-content-bg-dark dark:text-content-bg'>
+    <AccordionCore title='Storage Log' className='h-full overflow-y-auto'>
+      <div className='h-full overflow-y-auto bg-content-bg px-2 text-sm dark:bg-content-bg-dark dark:text-content-bg'>
         {logs &&
           logs.map((log, index) => (
             <div className='flex space-x-2 truncate' key={index}>
-              <p className=' italic '>{log.date}</p>
-              <p className=' font-bold'>{log.username}</p>
-              <p className={`font-bold ${getActionColorClass(log.action)}  `}>{`[${log.action}]`}</p>
+              <p className='italic'>{log.date}</p>
+              <p className='font-bold'>{log.username}</p>
+              <p className={`font-bold ${getActionColorClass(log.action)}`}>{`[${log.action}]`}</p>
               <p className='truncate'>{log.fileName}</p>
             </div>
           ))}
+        {fetching && renderSkeleton()}
       </div>
       <p
         onClick={() => {
-          moreClick();
+          onMoreClick();
         }}
-        className='  statement-bold cursor-pointer bg-content-bg px-2 text-sm italic underline dark:bg-content-bg-dark dark:text-content-bg'>
+        className='statement-bold cursor-pointer bg-content-bg px-2 text-sm italic underline dark:bg-content-bg-dark dark:text-content-bg'>
         See more
       </p>
     </AccordionCore>

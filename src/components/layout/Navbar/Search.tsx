@@ -46,7 +46,7 @@ function Search() {
   }, [onFocus, resetCursorSearch, setArrSelected]);
 
   return (
-    <div className='relative max-w-2xl flex-1 ' ref={ref} onClick={() => {
+    <div className={`relative max-w-2xl flex-1 ${identity.is_admin?'opacity-0 pointer-events-none':''}`} ref={ref} onClick={() => {
       setOnFocus(true)
       // resetCursorSearch();
     }}>

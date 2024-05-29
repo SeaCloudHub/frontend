@@ -1,5 +1,5 @@
-import { storageLogToDto, userByMonthToDto } from '@/apis/admin/dashboard/dash-board.service';
-import { storageLogApi, userStatisticApi } from '@/apis/admin/dashboard/dashboard-api';
+import { userByMonthToDto } from '@/apis/admin/dashboard/dash-board.service';
+import { userStatisticApi } from '@/apis/admin/dashboard/dashboard-api';
 import LineChartCore from '@/components/core/line-chart/LineChartCore';
 import { numToSize } from '@/utils/function/numbertToSize';
 import { ApiGenericError } from '@/utils/types/api-generic-error.type';
@@ -52,19 +52,9 @@ const DashBoardSkeleton = () => {
 };
 const DashBoard = () => {
   const { data: userStatisticData, errorMessage: userStatisticError, isLoading: userStatisticLoading } = UserStatisticHook();
-  const [page, setPage] = useState(1);
-  const {
-    data: logData,
-    error: logError,
-    isFetching: logFetching,
-  } = useQuery({
-    queryKey: ['storage-logs', page],
-    queryFn: () => storageLogApi({ cursor: '', limit: 10 * page, userID: '' }),
-    staleTime: 0,
-    select: (data) => data && data.logs.map((item, indext) => storageLogToDto(item)),
-  });
+  console.log(userStatisticData);
   return (
-    <div className='h-full w-full  space-y-2 overflow-y-auto overflow-x-hidden  lg:flex lg:space-y-0'>
+    <div className='h-full w-full  space-y-2 overflow-x-hidden overflow-y-hidden  lg:flex lg:space-y-0'>
       <div className='w-full overflow-y-auto lg:h-full  lg:w-3/4 '>
         <div className='flex w-full flex-col'>
           <div className='grid-col-1 grid w-full gap-6 px-1  lg:grid-cols-3'>
@@ -135,27 +125,21 @@ const DashBoard = () => {
             />
             <PieChartCore
               data={[
-                { value: userStatisticData ? userStatisticData.file_by_type['archive'] : 0, label: 'Archive' },
+                // { value: userStatisticData ? userStatisticData.file_by_type['archive'] : 0, label: 'Archive' },
                 { value: userStatisticData ? userStatisticData.file_by_type['document'] : 0, label: 'Document' },
                 { value: userStatisticData ? userStatisticData.file_by_type['image'] : 0, label: 'Image' },
                 { value: userStatisticData ? userStatisticData.file_by_type['pdf'] : 0, label: 'PDF' },
                 { value: userStatisticData ? userStatisticData.file_by_type['text'] : 0, label: 'Text' },
-                { value: userStatisticData ? userStatisticData.file_by_type['video'] : 0, label: 'Video' },
+                // { value: userStatisticData ? userStatisticData.file_by_type['video'] : 0, label: 'Video' },
                 { value: userStatisticData ? userStatisticData.file_by_type['other'] : 0, label: 'Another' },
               ]}
             />
           </div>
         </div>
       </div>
-      <div className=' ml-1 h-12 lg:w-1/4'>
+      <div className=' ml-1  overflow-y-auto   lg:w-1/4'>
         {/* <RecentlyAddedUsers /> */}
-        <StorageLog
-          isFetching={logFetching}
-          logs={logData}
-          moreClick={() => {
-            setPage((prev) => prev + 1);
-          }}
-        />
+        <StorageLog />
       </div>
     </div>
   );

@@ -1,38 +1,76 @@
-import { List } from '@mui/material';
-import React from 'react';
-import PeopleItem, { PeopleItemProps } from './PeopleItem';
+import { getEntryMetadata } from '@/apis/drive/drive.api';
+import { convertUserFileRoleInf } from '@/apis/user/storage/storage.service';
+import { List, ListItem, ListItemAvatar, ListItemText, Skeleton } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
+import React, { useEffect, useState } from 'react';
+import PeopleItem from './PeopleItem';
 
 type PeopleList = {
   name: string;
   email: string;
   avatar?: string;
+  role: 'Viewer' | 'Editor' | 'Owner';
 };
 
 type ListPeopleProps = {
-  items: PeopleList[];
-  state: ('Viewer' | 'Editor' | 'Owner')[];
-  setState: (state: ('Viewer' | 'Editor' | 'Owner')[]) => void;
   height?: string;
+  fileId?: string;
+};
+const renderSkeleton = () => {
+  return Array.from({ length: 5 }).map((_, index) => (
+    <ListItem key={index}>
+      <ListItemAvatar>
+        <Skeleton variant='circular' width={40} height={40} />
+      </ListItemAvatar>
+      <ListItemText primary={<Skeleton variant='text' width='80%' />} secondary={<Skeleton variant='text' width='60%' />} />
+      <Skeleton variant='rectangular' width={120} height={40} />
+    </ListItem>
+  ));
 };
 
-const ListPeople: React.FC<ListPeopleProps> = ({ items, state, setState, height }) => {
+const ListPeople: React.FC<ListPeopleProps> = ({ fileId, height }) => {
+  const [peopleList, setPeopleList] = useState<PeopleList[]>([]);
+  const { data, error, isFetching } = useQuery({
+    queryKey: ['get-file-metadata-for-share', fileId],
+    queryFn: () => {
+      if (fileId) {
+        return getEntryMetadata({ id: fileId });
+      }
+      return Promise.resolve(null);
+    },
+    staleTime: 0,
+    select: (data) => {
+      return convertUserFileRoleInf(data.data.users);
+    },
+  });
+
+  useEffect(() => {
+    if (data) {
+      setPeopleList(data as PeopleList[]);
+    }
+  }, [data]);
+
   return (
-    <List sx={{ height: height || '200px' }} className='overflow-y-auto'>
-      {items.map((item, index) => (
-        <PeopleItem
-          key={index}
-          name={item.name}
-          email={item.email}
-          avatar={item.avatar}
-          value={state[index]}
-          setValue={(value: string) => {
-            const newState = [...state];
-            newState[index] = value as 'Viewer' | 'Editor' | 'Owner';
-            setState(newState);
-          }}
-        />
-      ))}
-    </List>
+    <>
+      <List sx={{ height: height || '200px' }} className='overflow-y-auto'>
+        {isFetching && !data
+          ? renderSkeleton()
+          : peopleList.map((item, index) => (
+              <PeopleItem
+                key={index}
+                name={item.name}
+                email={item.email}
+                avatar={item.avatar}
+                value={item.role}
+                setValue={(value: string) => {
+                  const newState = [...peopleList];
+                  newState[index] = { ...newState[index], role: value as 'Viewer' | 'Editor' | 'Owner' };
+                  setPeopleList(newState);
+                }}
+              />
+            ))}
+      </List>
+    </>
   );
 };
 
