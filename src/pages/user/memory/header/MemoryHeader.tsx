@@ -1,10 +1,11 @@
-import { useFilter } from '@/store/my-drive/myDrive.store';
+import { useCursor, useFilter } from '@/store/my-drive/myDrive.store';
 import InfoButton from '../../my-drive/header/InfoButton';
 import MemoryFilter from './MemoryFilter';
 import DriveFilter from '../../my-drive/header/DriveFilter';
 
 const MemoryHeader = () => {
-  const { typeFilter, setTypeFilter, modifiedFilter, setModifiedFilter } = useFilter();
+  const { typeFilter, modifiedFilter, setModifiedFilter, setTypeFilter, resetFilter } = useFilter();
+  const { resetCursor } = useCursor();
 
   return (
     <div className='flex flex-col pr-3'>
@@ -24,6 +25,7 @@ const MemoryHeader = () => {
               onClick={() => {
                 setTypeFilter('');
                 setModifiedFilter('');
+                resetCursor();
               }}
               className='cursor-pointer text-sm font-medium'>
               Clear filters

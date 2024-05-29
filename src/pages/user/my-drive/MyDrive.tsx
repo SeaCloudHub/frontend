@@ -5,7 +5,7 @@ import MyDriveHeader from './header/MyDriveHeader';
 import { DriveGridView } from './content/DriveGridView';
 import { DriveListView } from './content/DriveListView';
 import SidePanel from '@/pages/user/my-drive/side-panel/SidePanel';
-import { LocalEntry, useCopyMutation, useListEntries } from '@/hooks/drive.hooks';
+import { LocalEntry, useCopyMutation, useListEntries, usePathParents } from '@/hooks/drive.hooks';
 import { toast } from 'react-toastify';
 
 const MyDrive = () => {
@@ -19,15 +19,15 @@ const MyDrive = () => {
 
   const copyMutation = useCopyMutation();
 
-
-  const { parents, data, isLoading } = useListEntries();
+  const { parents } = usePathParents();
+  const { data, isLoading } = useListEntries();
 
   useEffect(() => {
     const handleKeyDown = (event) => {
       if ((event.ctrlKey || event.metaKey) && event.key === 'c') {
         if (arrSelected.length !== 0 && JSON.stringify(arrSelected) !== JSON.stringify(copiedIds)) {
           toast.info(`Copied ${arrSelected.length}` + (arrSelected.length > 1 ? ' items' : ' item') + ` to clipboard`);
-          setCopiedIds(arrSelected.map(e => e.id));
+          setCopiedIds(arrSelected.map((e) => e.id));
         }
       } else if ((event.ctrlKey || event.metaKey) && event.key === 'v' && copiedIds.length !== 0) {
         copyMutation.mutate({ ids: copiedIds, to: parents[parents.length - 1].id });
@@ -42,8 +42,7 @@ const MyDrive = () => {
 
   // scroll to load more
   const onScollBottom = () => {
-    console.log('currentCursor', currentCursor, 'nextCursor', nextCursor)
-    if(nextCursor!=='' && currentCursor !== nextCursor) {
+    if(nextCursor !== '' && currentCursor !== nextCursor) {
       setIsScrolling(true);
       setTimeout(() => {
         setIsScrolling(false);
@@ -54,20 +53,13 @@ const MyDrive = () => {
 
   return (
     <DriveLayout
-      headerLeft={
-        <MyDriveHeader
-          path={parents}
-          sort={sort}
-          order={order}
-          setSort={setSort}
-        />
-      }
+      headerLeft={<MyDriveHeader path={parents} sort={sort} order={order} setSort={setSort} />}
       onScrollBottom={onScollBottom}
       bodyLeft={
         viewMode === 'grid' ? (
-          <DriveGridView entries={data} isLoading={isLoading} curDir={parents[parents.length - 1]} isScrolling={isScrolling} />
+          <DriveGridView entries={data} parent='my-drive' isLoading={isLoading} curDir={parents[parents.length - 1]} isScrolling={isScrolling} />
         ) : (
-          <DriveListView entries={data} isLoading={isLoading} curDir={parents[parents.length - 1]} isScrolling={isScrolling} />
+          <DriveListView entries={data} parent='my-drive' isLoading={isLoading} curDir={parents[parents.length - 1]} isScrolling={isScrolling} />
         )
       }
       sidePanel={

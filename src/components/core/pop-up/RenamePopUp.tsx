@@ -53,7 +53,10 @@ const RenamePopUp: React.FC<RenamePopUpProps> = ({ open, handleClose, name, id }
         </DialogContent>
         <DialogActions>
           <ButtonCancel onClick={handleClose}>Cancel</ButtonCancel>
-          <ButtonSuccess type='submit' isInvisible={!formik.isValid}> Save </ButtonSuccess>
+          <ButtonSuccess type='submit' isInvisible={!formik.isValid}>
+            {' '}
+            Save{' '}
+          </ButtonSuccess>
         </DialogActions>
       </form>
     </PopUp>

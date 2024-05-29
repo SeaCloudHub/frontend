@@ -9,17 +9,9 @@ import Notification from './Notification';
 import { useEffect, useState } from 'react';
 import { pullNewNotification } from '@/apis/notification/notification.socket';
 import { NotificationContent } from '@/apis/notification/response/notification.response';
+import ModalHelp from '@/components/core/modal/ModalHelp';
+import ModalAboutUs from '@/components/core/modal/ModalAboutUs';
 
-const helpOptions: MenuItemCoreProps[] = [
-  {
-    icon: '',
-    title: 'About us',
-  },
-  {
-    icon: '',
-    title: 'Help',
-  },
-];
 const useSettingProviders = () => {
   const { setTheme } = useTheme();
   const settingMenu: MenuItem[][] = [
@@ -50,6 +42,8 @@ const Configuration = () => {
   const [unviewedNotificationsCount, setUnviewedNotificationsCount] = useState(0);
   const [isClickMarkAllAsView, setIsClickMarkAllAsView] = useState(false);
   const [hasNotification, setHasNotification] = useState(false);
+  const [modalHelpOpen, setModalHelpOpen] = useState(false);
+  const [modalAboutUs, setModalAboutUs] = useState(false);
 
   const receiveNewNotification = () => {
     setHasNewNotification(false);
@@ -75,6 +69,23 @@ const Configuration = () => {
   const handleUnviewedNotificationsCount = (count: number) => {
     setUnviewedNotificationsCount(count);
   };
+
+  const helpOptions: MenuItemCoreProps[] = [
+    {
+      icon: '',
+      title: 'About us',
+      onClick: () => {
+        setModalAboutUs(true);
+      },
+    },
+    {
+      icon: '',
+      title: 'Help',
+      onClick: () => {
+        setModalHelpOpen(true);
+      },
+    },
+  ];
 
   return (
     <div className='ml-7 mr-5 flex items-center space-x-3'>
@@ -112,6 +123,8 @@ const Configuration = () => {
         items={settingMenu}
       /> */}
       <ColorSchemeToggle />
+      {modalHelpOpen && <ModalHelp isOpen={modalHelpOpen} handleConfirm={() => setModalHelpOpen(false)} />}
+      {modalAboutUs && <ModalAboutUs isOpen={modalAboutUs} handleConfirm={() => setModalAboutUs(false)} />}
     </div>
   );
 };

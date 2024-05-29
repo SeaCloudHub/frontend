@@ -35,7 +35,7 @@ const Sidebar = ({ role, shrinkMode }: SidebarProps) => {
 
   return (
     <>
-      <div className={`sidebar z-20 ${shrinkMode ? '' : 'sidebar-lg'} dark:bg-content-bg-dark`}>
+      <div className={`sidebar z-20 ${shrinkMode ? '' : 'sidebar-lg'} dark:bg-content-bg-dark select-none`}>
         <div className='flex w-full items-center justify-center'>
           {shrinkMode ? (
             <div className='flex h-16 items-center'>
@@ -49,15 +49,13 @@ const Sidebar = ({ role, shrinkMode }: SidebarProps) => {
             </div>
           ) : (
             <div className='flex w-full  flex-col '>
-              <div
-                className='flex h-16 w-full cursor-pointer items-center justify-around gap-2 p-3 pl-6'
-              >
-                <div className='flex gap-2 items-center'
+              <div className='flex h-16 w-full cursor-pointer items-center justify-around gap-2 p-3 pl-6'>
+                <div
+                  className='flex items-center gap-2'
                   onClick={() => {
                     setArrSelected([]);
                     navigate(role === Role.ADMIN ? ADMIN_HOME : DRIVE_HOME);
-                  }}
-                >
+                  }}>
                   <img src={(import.meta.env.BASE_URL + 'logo.png') as string} alt='placeholder' className='h-9  rounded-full' />
                   <p className='h4'>SEACLOUD</p>
                 </div>

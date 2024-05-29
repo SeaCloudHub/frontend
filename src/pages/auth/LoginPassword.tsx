@@ -20,8 +20,7 @@ import { toastError } from '../../utils/toast-options/toast-options';
 import { ApiGenericError } from '../../utils/types/api-generic-error.type';
 import AuthFooter from './AuthFooter';
 import AuthLink from './auth-link/AuthLink';
-import { useCookies } from 'react-cookie'
-
+import { useCookies } from 'react-cookie';
 
 const LoginPassword = () => {
   // const [currentValue, setCurrentValue] = React.useState('');

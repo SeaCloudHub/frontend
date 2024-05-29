@@ -17,7 +17,7 @@ type DriveGridViewProps = {
   folderShow?: boolean;
   isLoading?: boolean;
   isScrolling?: boolean;
-  parent?: 'priority' | 'my-drive' | 'shared' | 'trash' | 'starred';
+  parent: 'priority' | 'my-drive' | 'shared' | 'trash' | 'starred';
 };
 
 export const DriveGridView: React.FC<DriveGridViewProps> = ({
@@ -40,7 +40,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
   const { drawerOpen } = useDrawer();
   const { setArrSelected, arrSelected } = useSelected();
   const { nextCursor } = useCursor();
-  const {resetCursorActivity} = useCursorActivity();
+  const { resetCursorActivity } = useCursorActivity();
 
   useEffect(() => {
     const fileCardRefs = document.querySelectorAll('.file-card');
@@ -58,7 +58,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
-    return () =>  document.removeEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [arrSelected, setArrSelected]);
 
   return (
@@ -73,11 +73,11 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
           </div>
         </div>
       ) : (
-        <div ref={driveGridViewRef} className='pl-5 pr-3 pt-4 h-full'>
+        <div ref={driveGridViewRef} className='h-full pl-5 pr-3 pt-4'>
           <div className='relative flex min-w-40 flex-col space-y-2 overflow-hidden'>
             {entries.length !== 0 && (
               <>
-                <div className='pb-4 text-sm font-medium'>{folderShow ? 'Folders' : fileShow ? 'Files' : 'All'}</div>
+                <div className='pb-4 text-sm font-medium select-none'>{folderShow ? 'Folders' : fileShow ? 'Files' : 'All'}</div>
                 <div className={`grid grid-cols-1 gap-4 ${drawerOpen ? 'xl:grid-cols-3' : 'sm:grid-cols-2 xl:grid-cols-5'}`}>
                   {showEntry.map((entry, index) =>
                     folderShow ? (
@@ -86,12 +86,12 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
                           title={entry.title}
                           icon={entry.icon}
                           id={entry.id}
-                          onDoubleClick={() => navigate(`${DRIVE_MY_DRIVE}/dir/${entry.id}`)}
-                          onClick={() => setArrSelected([{ id: entry.id, isDir: entry.isDir, userRoles: entry.userRoles}])}
+                          onClick={() => setArrSelected([{ id: entry.id, isDir: entry.isDir, userRoles: entry.userRoles }])}
                           isSelected={arrSelected.some((item) => item.id === entry.id)}
                           parent={parent}
                           dir={curDir}
                           userRoles={entry.userRoles}
+                          is_starred={entry.is_starred}
                         />
                       </div>
                     ) : (
@@ -107,6 +107,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
                           fileType={entry.fileType}
                           parent={parent}
                           userRoles={entry.userRoles}
+                          is_starred={entry.is_starred}
                         />
                       </div>
                     ),
@@ -114,11 +115,11 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
                 </div>
               </>
             )}
-            {isScrolling &&
+            {isScrolling && (
               <div className='h-fit text-center'>
                 <CircularProgress className='mx-auto font-semibold' />
               </div>
-            }
+            )}
           </div>
         </div>
       )}

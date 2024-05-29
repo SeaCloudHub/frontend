@@ -24,7 +24,7 @@ export const Profile: React.FC<ProfileProps> = () => {
   const [changePasswordOpen, setChangePasswordOpen] = useState(false);
   const { identity } = useSession();
   const navigate = useNavigate();
-  const {data, isLoading, error} = useProfile();
+  const { data, isLoading, error } = useProfile();
 
   return (
     <>
@@ -35,29 +35,29 @@ export const Profile: React.FC<ProfileProps> = () => {
               <div className='text-2xl'>Profile info</div>
               <div className='text-lg'>Info about you</div>
             </div>
-            <div className='flex flex-col rounded-lg border mt-10'>
-              <div className='text-2xl mx-5 mt-5'>Basic info</div>
-              <div className='grid grid-cols-7 cursor-pointer items-center px-5 py-4 hover:bg-gray-200 active:brightness-90 dark:hover:bg-slate-500'
-                onClick={() => setOpen(true)}
-              >
-                <div className='font-medium col-span-2'>Profile picture</div>
+            <div className='mt-10 flex flex-col rounded-lg border'>
+              <div className='mx-5 mt-5 text-2xl'>Basic info</div>
+              <div
+                className='grid cursor-pointer grid-cols-7 items-center px-5 py-4 hover:bg-gray-200 active:brightness-90 dark:hover:bg-slate-500'
+                onClick={() => setOpen(true)}>
+                <div className='col-span-2 font-medium'>Profile picture</div>
                 <div className='col-span-4'>Add a profile photo to personalize your account</div>
                 <div className='col-span-1 mx-auto'>
-                  <div className='relative w-fit rounded-full overflow-hidden'>
+                  <div className='relative w-fit overflow-hidden rounded-full'>
                     <Avatar about='profile picture' src={data?.avatar_url} sx={{ width: 60, height: 60 }} />
-                    <div className='absolute h-6 bottom-0 w-full blur-sm bg-gray-500'></div>
-                    <div className='h-5 absolute bottom-0 w-full bg-transparent'>
-                      <Icon icon='mdi:camera' className='h-5 w-5 brightness-95 text-white mx-auto' />
+                    <div className='absolute bottom-0 h-6 w-full bg-gray-500 blur-sm'></div>
+                    <div className='absolute bottom-0 h-5 w-full bg-transparent'>
+                      <Icon icon='mdi:camera' className='mx-auto h-5 w-5 text-white brightness-95' />
                     </div>
                   </div>
                 </div>
               </div>
               <div
-                className='grid grid-cols-7 cursor-pointer items-center border-t px-5 py-4 hover:bg-gray-200 active:brightness-90 dark:hover:bg-slate-500'
+                className='grid cursor-pointer grid-cols-7 items-center border-t px-5 py-4 hover:bg-gray-200 active:brightness-90 dark:hover:bg-slate-500'
                 onClick={() => {
                   setRenameOpen(true);
                 }}>
-                <div className='font-medium col-span-2'>Name</div>
+                <div className='col-span-2 font-medium'>Name</div>
                 <div className='col-span-4'>{data?.first_name + ' ' + data?.last_name}</div>
                 <div className='col-span-1 mx-auto'>
                   <Icon icon='mdi:keyboard-arrow-right' className='h-6 w-6' />
@@ -68,10 +68,9 @@ export const Profile: React.FC<ProfileProps> = () => {
                 <div className='col-span-4'>{data?.email}</div>
               </div>
               <div
-                className='grid grid-cols-7 cursor-pointer items-center border-t px-5 pt-4 pb-5 hover:bg-gray-200 active:brightness-90 dark:hover:bg-slate-500'
-                onClick={() => setChangePasswordOpen(true)}
-              >
-                <div className='font-medium col-span-2'>Password</div>
+                className='grid cursor-pointer grid-cols-7 items-center border-t px-5 pb-5 pt-4 hover:bg-gray-200 active:brightness-90 dark:hover:bg-slate-500'
+                onClick={() => setChangePasswordOpen(true)}>
+                <div className='col-span-2 font-medium'>Password</div>
                 <div className='col-span-4'>{'Last changed at ' + formatDate(new Date(data?.password_changed_at))} </div>
                 <div className='mx-auto'>
                   <Icon icon='mdi:keyboard-arrow-right' className='h-6 w-6' />
@@ -82,7 +81,7 @@ export const Profile: React.FC<ProfileProps> = () => {
         }
         headerLeft={<></>}
       />
-      {open &&
+      {open && (
         <ChangePhotoPopUp
         open={open}
         handleClose={() => setOpen(false)}
@@ -90,9 +89,11 @@ export const Profile: React.FC<ProfileProps> = () => {
         name={{
           first_name: data?.first_name||'',
           last_name: data?.last_name||'',
+          avatar_url: data?.avatar_url||'',
         }}
-       />}
-      {renameOpen &&
+       />
+      )}
+      {renameOpen && (
         <RenameProfilePopUp
           open={renameOpen}
           handleClose={() => setRenameOpen(false)}
@@ -102,10 +103,8 @@ export const Profile: React.FC<ProfileProps> = () => {
           }}
           avatar_url={data?.avatar_url}
         />
-      }
-      {changePasswordOpen &&
-        <ChangePasswordPopUp open={changePasswordOpen} handleClose={() => setChangePasswordOpen(false)} />
-      }
+      )}
+      {changePasswordOpen && <ChangePasswordPopUp open={changePasswordOpen} handleClose={() => setChangePasswordOpen(false)} />}
     </>
   );
 };

@@ -43,10 +43,12 @@ const CustomDropdown: React.FC<DropdownProps> = ({ button, items, minWidth }) =>
               <MenuItem
                 disabled={isHidden}
                 key={ind + ' ' + label}
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
                   action && action();
                   handleClose();
                 }}
+                onDoubleClick={(e) => e.stopPropagation()}
                 sx={{
                   minWidth: minWidth ? '250px' : '0px',
                   py: '3px',

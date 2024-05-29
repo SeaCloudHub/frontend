@@ -2,7 +2,7 @@ import { LocalEntry, useRestoreEntriesMutation } from '@/hooks/drive.hooks';
 import React, { useEffect, useRef } from 'react';
 import { DataRow } from '../../my-drive/content/DataRow';
 import Sort from '../../my-drive/content/Sort';
-import { LocalEntryToTimeEntry, TimeEntry } from './DriveHistoryGridView';
+import { TimeEntry } from './DriveHistoryGridView';
 import { useCursorActivity, useSelected } from '@/store/my-drive/myDrive.store';
 
 type DriveHistoryListViewProps = {
@@ -47,7 +47,7 @@ const DriveHistoryListView: React.FC<DriveHistoryListViewProps> = ({ sort, order
   }, [arrSelected, setArrSelected]);
 
   return (
-    <div className='pl-5 pr-3 h-full' ref={driveListViewRef}>
+    <div className='pl-5 pr-3 h-full select-none' ref={driveListViewRef}>
       <div className='relative flex flex-col'>
         <div className='grid grid-cols-7 gap-3 border-b border-b-[#dadce0] pt-2 max-[1160px]:grid-cols-6'>
           <div className='col-span-4 font-medium'>Name</div>
@@ -58,7 +58,9 @@ const DriveHistoryListView: React.FC<DriveHistoryListViewProps> = ({ sort, order
         {entries.map((entry, index) => {
           return (
             <div key={index} className='relative'>
-              <div className='border-b py-2 text-sm font-medium sticky z-10 top-0 bg-white dark:bg-dashboard-dark'>{entry.time}</div>
+              <div className='sticky top-0 z-10 border-b bg-white py-2 text-sm font-medium dark:bg-dashboard-dark'>
+                {entry.time}
+              </div>
               {entry.entries.map((item, index) => {
                 return (
                   <DataRow
@@ -66,9 +68,9 @@ const DriveHistoryListView: React.FC<DriveHistoryListViewProps> = ({ sort, order
                     dir={dir}
                     {...item}
                     parent='trash'
-                    isSelected={arrSelected?.some((e)=>e.id === item.id)}
+                    isSelected={arrSelected?.some((e) => e.id === item.id)}
                   />
-                )
+                );
               })}
             </div>
           );

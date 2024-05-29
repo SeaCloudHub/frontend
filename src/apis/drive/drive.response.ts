@@ -18,11 +18,12 @@ export type EntryRESP = {
   created_at: string;
   updated_at: string;
   type: string;
+  is_starred: boolean;
   userRoles?: ('owner' | 'editor' | 'viewer')[];
 };
 
 export type SuggestedEntriesRESP = EntryRESP & {
-  parent: Pick<EntryRESP, 'id' & 'name' & 'path' >;
+  parent: Pick<EntryRESP, 'id' & 'name' & 'path'>;
   log?: LogEntry;
 };
 
@@ -97,12 +98,10 @@ export type LogItem = {
   user_id: string;
 };
 
-
 export type ActivityLogRESP = {
   activities: LogItem[];
   cursor: string;
 };
-
 
 export type DataSidePanelAction = {
   id: string;

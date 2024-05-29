@@ -13,7 +13,6 @@
 //   },
 // ];
 
-
 export const typeFilterItems = [
   {
     label: 'Folder',

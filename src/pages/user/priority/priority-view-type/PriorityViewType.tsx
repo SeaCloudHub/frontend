@@ -11,7 +11,7 @@ type PriorityViewTypeProps = {
 const PriorityViewType: React.FC<PriorityViewTypeProps> = () => {
   const { isFileMode, setIsFileMode } = useIsFileMode();
   // const { resetLimit } = useLimit();
-  const {nextCursor, setCurrentCursor, resetCursor} = useCursor();
+  const { nextCursor, setCurrentCursor, resetCursor } = useCursor();
   return (
     <div className='flex cursor-pointer items-center'>
       <Tooltip title='File view'>

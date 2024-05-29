@@ -17,7 +17,16 @@ type DriveListViewProps = {
   parent?: 'priority' | 'my-drive' | 'shared' | 'trash' | 'starred';
 };
 
-export const DriveListView: React.FC<DriveListViewProps> = ({ order, setSort, sort, entries, curDir, parent, isScrolling, isLoading }) => {
+export const DriveListView: React.FC<DriveListViewProps> = ({
+  order,
+  setSort,
+  sort,
+  entries,
+  curDir,
+  parent,
+  isScrolling,
+  isLoading,
+}) => {
   const files = entries.filter((entry) => !entry.isDir);
   const folders = entries.filter((entry) => entry.isDir);
 
@@ -26,7 +35,6 @@ export const DriveListView: React.FC<DriveListViewProps> = ({ order, setSort, so
   const { nextCursor } = useCursor();
   const { resetCursorActivity } = useCursorActivity();
   const driveListViewRef = useRef(null);
-
 
   useEffect(() => {
     const DataRows = document.querySelectorAll('.data-row');
@@ -45,11 +53,11 @@ export const DriveListView: React.FC<DriveListViewProps> = ({ order, setSort, so
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [arrSelected, setArrSelected]);
+  }, [arrSelected, resetCursorActivity, setArrSelected]);
 
   return (
     <>
-    {isLoading && !nextCursor ? (
+      {isLoading && !nextCursor ? (
         <LinearProgress className='translate-y-1' />
       ) : entries.length === 0 ? (
         <div className='flex h-96 items-center justify-center'>
@@ -80,7 +88,14 @@ export const DriveListView: React.FC<DriveListViewProps> = ({ order, setSort, so
               />
             ))}
             {files.map((entry, index) => (
-              <DataRow key={index} {...entry} dir={curDir} isSelected={arrSelected?.some((e) => e.id === entry.id)} parent={parent} userRoles={entry.userRoles} />
+              <DataRow
+                key={index}
+                {...entry}
+                dir={curDir}
+                isSelected={arrSelected?.some((e) => e.id === entry.id)}
+                parent={parent}
+                userRoles={entry.userRoles}
+              />
             ))}
             {isScrolling && (
               <div className='h-fit text-center'>

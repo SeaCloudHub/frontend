@@ -12,9 +12,10 @@ type PriorityListViewProps = {
   entries: SuggestedEntry[];
   isLoading?: boolean;
   curDir?: { id: string; name: string };
+  parrent?: 'priority' | 'my-drive' | 'shared' | 'trash' | 'starred';
 };
 
-const PriorityListView: React.FC<PriorityListViewProps> = ({ entries, curDir, isLoading, order, setSort, sort }) => {
+const PriorityListView: React.FC<PriorityListViewProps> = ({ entries, curDir, isLoading, order, setSort, sort, parrent }) => {
   const files = entries.filter((entry) => !entry.isDir);
   const folders = entries.filter((entry) => entry.isDir);
   const driveListViewRef = useRef(null);
@@ -65,12 +66,12 @@ const PriorityListView: React.FC<PriorityListViewProps> = ({ entries, curDir, is
                 dir={curDir}
                 key={index}
                 {...entry}
-                isSelected={arrSelected?.some((e)=>e.id===entry.id)}
+                isSelected={arrSelected?.some((e) => e.id === entry.id)}
                 onDoubleClick={() => navigate(`${DRIVE_MY_DRIVE}/dir/${entry.id}`)}
               />
             ))}
             {files.map((entry, index) => (
-              <DataRowPriorityView key={index} {...entry} dir={curDir} isSelected={arrSelected?.some((e)=>e.id===entry.id)} />
+              <DataRowPriorityView key={index} {...entry} dir={curDir} isSelected={arrSelected?.some((e) => e.id === entry.id)} />
             ))}
           </div>
         </div>

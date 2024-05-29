@@ -16,7 +16,7 @@ type RenameProfilePopUpProps = {
   avatar_url: string;
 };
 
-const RenameProfilePopUp: React.FC<RenameProfilePopUpProps> = ({open, handleClose, values, avatar_url}) => {
+const RenameProfilePopUp: React.FC<RenameProfilePopUpProps> = ({ open, handleClose, values, avatar_url }) => {
   const updateNameProfile = useUpdateNameProfileMutation();
 
   const formik = useFormik({
@@ -28,7 +28,7 @@ const RenameProfilePopUp: React.FC<RenameProfilePopUpProps> = ({open, handleClos
     onSubmit: (values) => {
       updateNameProfile.mutate({ ...values, avatar_url });
       handleClose();
-    }
+    },
   });
   return (
     <PopUp open={open} handleClose={handleClose}>
@@ -41,7 +41,7 @@ const RenameProfilePopUp: React.FC<RenameProfilePopUpProps> = ({open, handleClos
           <TextFieldCore
             label='First name'
             name='first_name'
-            sx={{mt:'5px'}}
+            sx={{ mt: '5px' }}
             value={formik.values.first_name}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -60,7 +60,10 @@ const RenameProfilePopUp: React.FC<RenameProfilePopUpProps> = ({open, handleClos
         </DialogContent>
         <DialogActions>
           <ButtonCancel onClick={handleClose}>Cancel</ButtonCancel>
-          <ButtonSuccess type='submit' isInvisible={!formik.isValid}> Save </ButtonSuccess>
+          <ButtonSuccess type='submit' isInvisible={!formik.isValid}>
+            {' '}
+            Save{' '}
+          </ButtonSuccess>
         </DialogActions>
       </form>
     </PopUp>

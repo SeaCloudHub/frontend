@@ -28,7 +28,7 @@ const Trash = () => {
   console.log('[Trash] data', data);
 
   const onScollBottom = () => {
-    if(nextCursor && nextCursor !== currentCursor) {
+    if (nextCursor && nextCursor !== currentCursor) {
       setIsScrolling(true);
       setTimeout(() => {
         setIsScrolling(false);
@@ -39,15 +39,20 @@ const Trash = () => {
 
   return (
     <DriveLayout
-      headerLeft= { <TrashPageHeader /> }
+      headerLeft={<TrashPageHeader />}
       onScrollBottom={onScollBottom}
-      bodyLeft={<TrashPageView entries={data} dir={{ id: rootId, name: 'Trash' }} isLoading={isLoading}/>}
+      bodyLeft={<TrashPageView entries={data} dir={{ id: rootId, name: 'Trash' }} isLoading={isLoading} />}
       sidePanel={
         <SidePanel
           isHidden={arrSelected.length === 0}
           id={arrSelected.length === 0 ? rootId : arrSelected.length === 1 ? arrSelected[0].id : ''}
           title={
-            arrSelected.length === 0 ? 'Trash' : data.map((timeEntry) => timeEntry.entries).flat().find((entry) => entry.id === arrSelected[0].id)?.title || ''
+            arrSelected.length === 0
+              ? 'Trash'
+              : data
+                  .map((timeEntry) => timeEntry.entries)
+                  .flat()
+                  .find((entry) => entry.id === arrSelected[0].id)?.title || ''
           }
         />
       }

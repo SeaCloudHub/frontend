@@ -4,11 +4,6 @@ import React from 'react';
 import { loginFooter } from '../../utils/constants/login-footer.constant';
 import AuthLink from './auth-link/AuthLink';
 
-const items = [
-  { label: 'About', value: 'en' },
-  { label: 'Vietnamese', value: 'vi' },
-];
-
 const AuthFooter = () => {
   return (
     <>
