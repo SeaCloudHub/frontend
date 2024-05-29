@@ -23,6 +23,7 @@ function UserInfo({ onClose }: UserInfoProps) {
   const navigate = useNavigate();
   const [cookies, setCookie, removeCookie] = useCookies(['token']);
   const { signOut, identity } = useSession();
+  console.log('identity:', identity);
   const modalRef = useRef(null);
   const role = useSession((state) => state.role);
 
@@ -64,7 +65,7 @@ function UserInfo({ onClose }: UserInfoProps) {
       <div className='h-20 w-20 rounded-full border'>
         {identity && identity.avatar_url && (
           <img
-            src={identity.avatar_url}
+            src={import.meta.env.VITE_BACKEND_API + identity.avatar_url}
             className='h-full w-full rounded-full object-center'
             height={500}
             width={500}

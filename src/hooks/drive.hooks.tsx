@@ -2,6 +2,8 @@ import { IdentityRESP } from '@/apis/auth/response/auth.sign-in.response';
 import {
   copyFiles,
   deleteEntries,
+  downloadFile,
+  downloadMultipleEntries,
   getAccessEntries,
   getActivityLog,
   getEntryMetadata,
@@ -27,6 +29,7 @@ import {
   DeleteEntriesREQ,
   RestoreEntriesREQ,
   StarEntriesREQ,
+  DownloadMultipleEntriesREQ,
 } from '@/apis/drive/drive.request';
 import {
   EntryMetadataRES,
@@ -383,7 +386,7 @@ export const useTrash = () => {
     queryKey: ['Trash-entries', id, currentCursor],
     queryFn: async () => {
       const res = await getListEntriesTrash({ limit: 15, cursor: currentCursor }).then((res) => res?.data);
-      return {entries: transformEntries(res?.entries || []), cursor: res?.cursor};
+      return {entries: transformEntries(res?.entries || []), cursor: res.cursor || ''};
     },
     staleTime: 10 * 1000,
   });
@@ -395,12 +398,15 @@ export const useTrash = () => {
   useEffect(() => {
     if (data) {
       data.cursor && setNextCursor(data.cursor);
-      if (!currentCursor) setTrashEntries(LocalEntryToTimeEntry(data.entries));
+      const temp = LocalEntryToTimeEntry(data.entries);
+      if (!currentCursor) setTrashEntries(temp);
       else {
-        const temp = LocalEntryToTimeEntry(data.entries);
         let result = trashEntries.map((entry) => {
           if (temp.find((e) => e.time === entry.time)) {
-            entry.entries = entry.entries.concat(temp.find((e) => e.time === entry.time).entries);
+            // concat những file không có
+            entry.entries = entry.entries.concat(
+              temp.find((e) => e.time === entry.time)?.entries.filter((e) => !entry.entries.find((en) => en.id === e.id)) || [],
+            );
           }
           return entry;
         });
@@ -447,13 +453,52 @@ export const useRenameMutation = () => {
       }
     },
     onSuccess: (data) => {
-      setListEntries(listEntries.map((entry) => (entry.id === data.data.id ? transformEntry(data.data) : entry)));
+      setListEntries(listEntries.map((entry) => (entry.id === data.data.id ? {...entry, title: data.data.name} : entry)));
       toast.success(`Renamed to ${data.data.name}`);
       queryClient.invalidateQueries({ queryKey: ['suggested-entries'] });
       queryClient.invalidateQueries({ queryKey: ['entry-metadata'] });
     },
   });
 };
+
+export const useDownloadMutation = () => {
+  return useMutation({
+    mutationFn: (body: { id: string, name?: string }) => {
+      console.log(body);
+      return downloadFile(body);
+    },
+    onError: (error) => {
+      if (isAxiosError<ApiGenericError>(error)) {
+        toast.error(error.response?.data.message, toastError());
+      }
+    },
+    onSuccess: () => {
+      toast.success('Downloaded');
+    },
+    onMutate: (body) => {
+      toast.info('Downloading...');
+    },
+  });
+};
+
+export const useDownLoadMultipleMutation = () => {
+  return useMutation({
+    mutationFn: (body: DownloadMultipleEntriesREQ) => {
+      return downloadMultipleEntries(body);
+    },
+    onError: (error) => {
+      if (isAxiosError<ApiGenericError>(error)) {
+        toast.error(error.response?.data.message, toastError());
+      }
+    },
+    onSuccess: () => {
+      toast.success('Downloaded');
+    },
+    onMutate: (body) => {
+      toast.info('Downloading...');
+    },
+  });
+}
 
 export const useMoveToTrashMutation = () => {
   const queryClient = useQueryClient();
@@ -899,7 +944,7 @@ const transformSuggestedEntries = (entries: SuggestedEntriesRESP[]): SuggestedEn
 export const transformEntry = (entry: EntryRESP): LocalEntry => {
   if (entry.is_dir) {
     return {
-      isDir: true,
+      isDir: entry.is_dir,
       title: entry.name,
       icon: <Icon icon='ic:baseline-folder' className='h-full w-full object-cover text-yellow-600' />,
       preview: <Icon icon='ic:baseline-folder' className='h-32 w-32 text-yellow-600' />,
@@ -915,7 +960,7 @@ export const transformEntry = (entry: EntryRESP): LocalEntry => {
   const ext = entry.name.split('.').pop() || 'any';
   const icon = fileTypeIcons[ext] || fileTypeIcons.any;
   return {
-    isDir: true,
+    isDir: entry.is_dir,
     title: entry.name,
     icon: icon,
     preview: entry.thumbnail ? (

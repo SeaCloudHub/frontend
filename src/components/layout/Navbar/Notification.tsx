@@ -96,8 +96,11 @@ const Notification = ({
     <div className='max-h-[535px] max-w-[300px] overflow-y-auto'>
       {notifications.map((notification) => (
         <Link key={notification.Id}
-          to={notification.IsDir ? `/drive/folder/${notification.FileId}` : '/drive/shared'}
-          onClick={() => handleClickViewNotification(notification.Id)}>
+          to={notification.IsDir ? `/drive/folder/${notification.FileId}` : `/drive/file/${notification.FileId}`}
+          onClick={() => {
+            notification.Status != NotificationStatus.Viewed && handleClickViewNotification(notification.Id);
+          }}
+        >
           <Card
             key={notification.Id}
             className={`mb-2 ${notification.Status != NotificationStatus.Viewed ? 'bg-gray-200 dark:bg-slate-800' : ''}`}>
@@ -118,7 +121,7 @@ const Notification = ({
               )}
               <div className='flex-1'>
                 <p>
-                  {notification.OwnerName} has shared a folder with you with {notification.Role} role
+                  {notification.OwnerName} has shared a {notification.IsDir? 'folder' : 'file'} '{notification.File}' with you with {notification.Role} role
                 </p>
               </div>
             </div>

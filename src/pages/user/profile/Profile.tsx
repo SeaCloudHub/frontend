@@ -31,10 +31,6 @@ export const Profile: React.FC<ProfileProps> = () => {
       <DriveLayout
         bodyLeft={
           <div className='flex flex-col items-center'>
-            <div className='flex flex-col items-center gap-2'>
-              <div className='text-2xl'>Profile info</div>
-              <div className='text-lg'>Info about you</div>
-            </div>
             <div className='mt-10 flex flex-col rounded-lg border'>
               <div className='mx-5 mt-5 text-2xl'>Basic info</div>
               <div
@@ -44,7 +40,7 @@ export const Profile: React.FC<ProfileProps> = () => {
                 <div className='col-span-4'>Add a profile photo to personalize your account</div>
                 <div className='col-span-1 mx-auto'>
                   <div className='relative w-fit overflow-hidden rounded-full'>
-                    <Avatar about='profile picture' src={data?.avatar_url} sx={{ width: 60, height: 60 }} />
+                    <Avatar about='profile picture' src={import.meta.env.VITE_BACKEND_API + data?.avatar_url} sx={{ width: 60, height: 60 }} />
                     <div className='absolute bottom-0 h-6 w-full bg-gray-500 blur-sm'></div>
                     <div className='absolute bottom-0 h-5 w-full bg-transparent'>
                       <Icon icon='mdi:camera' className='mx-auto h-5 w-5 text-white brightness-95' />
@@ -80,6 +76,7 @@ export const Profile: React.FC<ProfileProps> = () => {
           </div>
         }
         headerLeft={<></>}
+        sidePanel={<></>}
       />
       {open && (
         <ChangePhotoPopUp
@@ -89,7 +86,7 @@ export const Profile: React.FC<ProfileProps> = () => {
         name={{
           first_name: data?.first_name||'',
           last_name: data?.last_name||'',
-          avatar_url: data?.avatar_url||'',
+          avatar_url: import.meta.env.VITE_BACKEND_API + data?.avatar_url||'',
         }}
        />
       )}

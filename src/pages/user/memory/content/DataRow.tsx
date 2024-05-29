@@ -46,13 +46,6 @@ export const DataRow: React.FC<DataRowProps> = ({ id, isDir, title, icon, lastMo
     }
   };
 
-  // useEffect(() => {
-  //   if (result) {
-  //     setResult(false);
-  //     setArrSelected([]);
-  //   }
-  // }, [result, setArrSelected]);
-
   return (
     <>
       {fileViewer && (
@@ -75,7 +68,7 @@ export const DataRow: React.FC<DataRowProps> = ({ id, isDir, title, icon, lastMo
           }}
         />
       )}
-      <div className={`grid grid-cols-7 items-center space-x-3 py-2 border-b border-b-[#dadce0] hover:bg-slate-700 select-none cursor-pointer ${isSelected ? 'bg-[#c2e7ff]  dark:bg-blue-900' : 'hover:bg-[#dfe3e7] dark:text-white dark:hover:bg-slate-700'}`}
+      <div className={`grid grid-cols-7 items-center space-x-3 py-2 border-b border-b-[#dadce0] hover:bg-[#dfe3e7]  select-none cursor-pointer ${isSelected ? 'bg-[#c2e7ff] dark:bg-blue-900 dark:hover:brightness-90' : ' dark:text-white dark:hover:bg-slate-700'}`}
         onClick={handleClick}
         onDoubleClick={handleDoubleClick}
       >

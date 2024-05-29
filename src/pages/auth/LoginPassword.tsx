@@ -51,6 +51,7 @@ const LoginPassword = () => {
       }
     },
     onSuccess: (data) => {
+      console.log(data);
       const firstSignin = data.data.identity.password_changed_at === null;
       if (firstSignin) {
         navigate(AUTH_CHANGE_PASSWORD);
@@ -91,7 +92,7 @@ const LoginPassword = () => {
                 {identity && identity.avatar_url && (
                   <Avatar
                     alt='Remy Sharp'
-                    src={identity.avatar_url}
+                    src={import.meta.env.VITE_BACKEND_API + identity.avatar_url}
                     sx={{
                       width: 25,
                       height: 25,

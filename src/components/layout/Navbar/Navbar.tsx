@@ -45,7 +45,7 @@ const Navbar = ({ isShrink, phoneMode }: NavbarProps) => {
               onClick={() => {
                 setShowUserInfo(true);
               }}
-              src={identity.avatar_url}
+              src={import.meta.env.VITE_BACKEND_API + identity.avatar_url}
               className='h-10 w-10 rounded-full border-2 border-red-300 object-contain  p-1'
               draggable={false}
               alt='avatar'
