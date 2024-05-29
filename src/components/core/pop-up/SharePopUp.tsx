@@ -18,7 +18,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import ButtonSuccess from '../button/ButtonSuccess';
@@ -27,6 +27,7 @@ import CustomSelect from '../drop-down/CustomSelect';
 import { MenuItem as MenuItemCustom } from '../drop-down/Dropdown';
 import ListPeople from '../list-people/ListPeople';
 import PopUp from './PopUp';
+import { getEntryMetadata } from '@/apis/drive/drive.api';
 
 type SharePopUpProps = {
   open: boolean;
