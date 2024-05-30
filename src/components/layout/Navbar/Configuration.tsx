@@ -90,7 +90,7 @@ const Configuration = () => {
 
   return (
     <div className='ml-7 mr-5 flex items-center space-x-3'>
-      {!identity.is_admin && (
+      {identity.id && !identity.is_admin && (
         <Popover
           content={Notification({
             receiveNewNotification,
