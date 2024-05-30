@@ -22,8 +22,6 @@ import StorageStatistic from '../../shared/StorageStatistic';
 import UserDetailAction from './components/action/UserDetailAction';
 import FileFolderFilter from './components/file-folder-detail/FileFolderFilter';
 import ModifyMemoryPopUp from '@/components/core/pop-up/ModifyMemoryPopUp';
-import { Tooltip } from '@mui/material';
-import ModifyMemoryPopUp from '@/components/core/pop-up/ModifyMemoryPopUp';
 
 const UserManagementDetail = () => {
   const navigate = useNavigate();
