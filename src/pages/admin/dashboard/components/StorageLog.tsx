@@ -65,7 +65,7 @@ const StorageLog = () => {
 
   return (
     <AccordionCore title='Storage Log' className='h-full overflow-y-auto'>
-      <div className='h-full overflow-y-auto bg-content-bg px-2 text-sm dark:bg-content-bg-dark dark:text-content-bg'>
+      <div className='h-full overflow-y-auto bg-content-bg px-2 text-xs dark:bg-content-bg-dark dark:text-content-bg'>
         {logs &&
           logs.map((log, index) => (
             <div className='flex space-x-2 truncate' key={index}>

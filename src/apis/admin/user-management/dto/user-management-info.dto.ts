@@ -7,4 +7,5 @@ export type UserManagementInfoDto = {
   totalMemory: number;
   lastAccess?: string;
   root_id?: string;
+  isAdmin?: boolean;
 };

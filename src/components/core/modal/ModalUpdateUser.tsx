@@ -3,7 +3,7 @@ import { updateUserApi } from '@/apis/admin/user-management/user-management.api'
 import { IdentityRESP } from '@/apis/auth/response/auth.sign-in.response';
 import { updateUserSchema } from '@/helpers/form-schema/admin/update-user.schema';
 import { LinearProgress } from '@mui/material';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { useFormik } from 'formik';
 import { useEffect, useState } from 'react';
@@ -32,8 +32,7 @@ const ModalUpdateUser = ({ title, user, isOpen, handleConfirm }: ModalUpdateUser
   useEffect(() => {
     if (file) {
       setAvatar(URL.createObjectURL(file));
-    }
-    else if (user&&user.avatar_url){
+    } else if (user && user.avatar_url) {
       setAvatar(import.meta.env.VITE_BACKEND_API + user.avatar_url);
     }
   }, [user, file]);
@@ -42,6 +41,7 @@ const ModalUpdateUser = ({ title, user, isOpen, handleConfirm }: ModalUpdateUser
       setFile(event.target.files[0]);
     }
   };
+
   const formik = useFormik({
     initialValues: {
       first_name: user ? user.first_name : '',
@@ -49,7 +49,7 @@ const ModalUpdateUser = ({ title, user, isOpen, handleConfirm }: ModalUpdateUser
     },
     validationSchema: updateUserSchema,
     onSubmit: async (values) => {
-      let avatar_url =user? user.avatar_url:null;
+      let avatar_url = user ? user.avatar_url : null;
       if (file) {
         try {
           const res = await uploadImage({
@@ -69,12 +69,12 @@ const ModalUpdateUser = ({ title, user, isOpen, handleConfirm }: ModalUpdateUser
           first_name: values.first_name,
           last_name: values.last_name,
         },
-        userId: '',
+        userId: user.id,
       });
       handleConfirm(true);
     },
   });
-
+  const queryClient = useQueryClient();
   const updateUserMutation = useMutation({
     mutationFn: (data: { body: AdminUpdateUserREQ; userId: string }) => updateUserApi(data),
     onError: (error) => {
@@ -83,7 +83,8 @@ const ModalUpdateUser = ({ title, user, isOpen, handleConfirm }: ModalUpdateUser
       }
     },
     onSuccess: (data) => {
-      // handle success
+      queryClient.invalidateQueries({ queryKey: ['user-details', user.id] });
+      handleConfirm(true);
     },
   });
   const handleFieldChange = (fieldName: string, value: string) => {
@@ -94,6 +95,7 @@ const ModalUpdateUser = ({ title, user, isOpen, handleConfirm }: ModalUpdateUser
       },
     });
   };
+
   return (
     <ModalCore open={isOpen} width={'70%'} closeOutside={handleConfirm} isCloseOutside={true}>
       <div className='absolute bottom-1 left-0 w-full px-3'>

@@ -27,7 +27,7 @@ const ModalCore = ({ width, children, open, isCloseOutside = true, closeOutside 
         aria-describedby='modal-modal-description'>
         <Box
           sx={{
-            padding: '10px',
+            padding: '20px',
             maxWidth: 1000,
             outline: 'none',
             '.dark &': {

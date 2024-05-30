@@ -206,7 +206,9 @@ const UserManagement = () => {
       dataIndex: 'userId',
       key: 'actions',
       render: (userId: string, user: UserManagementInfoDto) => {
-        return (
+        return user.isAdmin ? (
+          <></>
+        ) : (
           <Dropdown
             key={userId}
             trigger={['click']}
