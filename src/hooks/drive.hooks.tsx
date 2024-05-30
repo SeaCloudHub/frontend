@@ -1,4 +1,5 @@
-import { getFileUserApi } from '@/apis/admin/user-management/user-management.api';
+import { ModifyStorageCapacityREQ } from '@/apis/admin/user-management/request/user-action.request';
+import { getFileUserApi, modifyStorageCapacityApi } from '@/apis/admin/user-management/user-management.api';
 import { IdentityRESP } from '@/apis/auth/response/auth.sign-in.response';
 import {
   copyFiles,
@@ -472,6 +473,7 @@ export const useRenameMutation = () => {
       toast.success(`Renamed to ${data.data.name}`);
       queryClient.invalidateQueries({ queryKey: ['suggested-entries'] });
       queryClient.invalidateQueries({ queryKey: ['entry-metadata'] });
+      queryClient.invalidateQueries({ queryKey: ['list-files-user'] });
     },
   });
 };
@@ -537,6 +539,7 @@ export const useMoveToTrashMutation = () => {
 
 export const useDeleteMutation = () => {
   const { trashEntries, setTrashEntries } = useEntries();
+  const client = useQueryClient();
 
   return useMutation({
     mutationFn: (body: DeleteEntriesREQ) => {
@@ -556,6 +559,7 @@ export const useDeleteMutation = () => {
       }).filter((entry) => entry.entries.length > 0);
       setTrashEntries(trash);
       toast.success(`${data.data.length} files deleted`);
+      client.invalidateQueries({ queryKey: ['list-files-user'] });
     },
   });
 };
@@ -852,15 +856,24 @@ export const useActivityLog = () => {
 
 
 ///////////////////  admin //////////////////////
-export const useGetListFilesUser = (page: number, id: string, isRoot: boolean) => {
+export const useGetListFilesUser = (page: number, id: string, isRoot: boolean, query?: string) => {
   const { userId } = useParams();
+  const {modifiedFilter, typeFilter} = useFilter();
 
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: ['list-files-user', userId, id, page, isRoot],
+    queryKey: ['list-files-user', userId, id, page, isRoot, modifiedFilter, typeFilter, query],
     queryFn: async () => {
       const res = isRoot ?
-        await getFileUserApi({ identity_id: userId, limit: 8, page }).then((res) => res?.data) :
-        await getListEntriesPageMyDrive({ id, limit: 8, page });
+        await getFileUserApi({ identity_id: userId, limit: 8, page,
+          ...(modifiedFilter ? { after: modifiedFilter } : {}),
+          ...(typeFilter ? { type: typeFilter } : {}),
+          ...(query ? { query } : {})
+        }).then((res) => res?.data) :
+        await getListEntriesPageMyDrive({ id, limit: 8, page,
+          ...(modifiedFilter ? { after: modifiedFilter } : {}),
+          ...(typeFilter ? { type: typeFilter } : {}),
+          ...(query ? { query } : {})
+        })
       return res;
     },
     staleTime: 10 * 1000,
@@ -875,6 +888,22 @@ export const useGetListFilesUser = (page: number, id: string, isRoot: boolean) =
   }
 
   return { data: data , refetch, isLoading };
+}
+
+export const useModifyStorageCapacityMutation = () => {
+  return useMutation({
+    mutationFn: (body: ModifyStorageCapacityREQ) => {
+      return modifyStorageCapacityApi(body);
+    },
+    onError: (error) => {
+      if (isAxiosError<ApiGenericError>(error)) {
+        toast.error(error.response?.data.message, toastError());
+      }
+    },
+    onSuccess: (data) => {
+      toast.success('Modified');
+    },
+  });
 }
 
 const transformMetadata = (data: EntryMetadataRES) => {

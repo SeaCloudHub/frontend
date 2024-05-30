@@ -19,6 +19,7 @@ import StorageStatistic from '../../shared/StorageStatistic';
 import UserDetailAction from './components/action/UserDetailAction';
 import FileFolderFilter from './components/file-folder-detail/FileFolderFilter';
 import { Tooltip } from '@mui/material';
+import ModifyMemoryPopUp from '@/components/core/pop-up/ModifyMemoryPopUp';
 
 const UserManagementDetail = () => {
   const navigate = useNavigate();
@@ -41,6 +42,7 @@ const UserManagementDetail = () => {
   const [blockModal, setBlockModal] = useState(false);
   const [updateModal, setUpdateModal] = useState(false);
   const [isBlocked, setBlocked] = useState(false);
+  const [modify, setModify] = useState(false);
   const {
     data: identityData,
     error: identityError,
@@ -122,12 +124,14 @@ const UserManagementDetail = () => {
               onClick={() => {
                 navigate(AUTH_CHANGE_PASSWORD);
               }}
+              icon={<IconifyIcon icon='tabler:password' />}
             />
             <UserDetailAction
               title='UPDATE USER'
               onClick={() => {
                 setUpdateModal(true);
               }}
+              icon={<IconifyIcon icon='tabler:user-edit' />}
             />
             {updateModal && (
               <ModalUpdateUser
@@ -143,6 +147,7 @@ const UserManagementDetail = () => {
               onClick={() => {
                 setBlockModal(true);
               }}
+              icon={<IconifyIcon icon='tabler:user-cancel' />}
             />
             {blockModal && (
               <ModalConfirmBlockOrUnBlock
@@ -164,6 +169,7 @@ const UserManagementDetail = () => {
               onClick={() => {
                 setDeleteModal(true);
               }}
+              icon={<IconifyIcon icon='tabler:user-x'/>}
             />
             {deleteModal && (
               <ModalConfirmDelete
@@ -179,6 +185,20 @@ const UserManagementDetail = () => {
                 }}
               />
             )}
+            <UserDetailAction
+              icon={<IconifyIcon icon='tabler:edit' />}
+              title='MODIFY MEMORY'
+              onClick={() => {
+                setModify(true);
+              }}
+            />
+            {modify &&
+              <ModifyMemoryPopUp
+                open={modify}
+                onClose={() => setModify(false)}
+                identity_id={userId}
+              />
+            }
           </div>
         </div>
         {/* <!--section --> */}
@@ -187,9 +207,9 @@ const UserManagementDetail = () => {
             <p className='statement-medium h4 '>{`Personal storage space of ${identityData && userDto.name}`} </p>
             <StorageStatistic />
           </div>
-          <div className='z-0 w-full space-y-2 p-3 shadow-md'>
+          {/* <div className='z-0 w-full space-y-2 p-3 shadow-md'>
             <ButtonContainer title='Modify memory' icon={<IconifyIcon icon={'tabler:edit'} />} />
-          </div>
+          </div> */}
           <div className='mr-2 rounded-xl border pl-3 shadow-xl dark:bg-[#031525] dark:text-white'>
             <FileFolderFilter userDTO={userDto}/>
             {/* <FileSection />

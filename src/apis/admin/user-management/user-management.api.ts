@@ -5,7 +5,7 @@ import { BaseResponse } from '../../../utils/types/api-base-response.type';
 import { ImportExcelREQ } from './request/add-user-excel.request';
 import { AddUserREQ } from './request/add-user.request';
 import { GetIdentitiesREQ, GetUserDetailREQ, GetUserFileDetailREQ } from './request/get-identities.request';
-import { UserBlockREQ, UserDeleteREQ } from './request/user-action.request';
+import { ModifyStorageCapacityREQ, UserBlockREQ, UserDeleteREQ } from './request/user-action.request';
 import { AddUserRESP } from './response/add-user.response';
 import { GetIdentitiesRESP, GetUserFileDetailRESP } from './response/get-identities.response';
 
@@ -46,7 +46,14 @@ export const getUserDetailApi = async (param: GetUserDetailREQ) => {
 
 export const getFileUserApi = async (param: GetUserFileDetailREQ) => {
   const res = await api.get<BaseResponse<GetUserFileDetailRESP>>(`admin/identities/${param.identity_id}/files`,
-    { params: param }
+    { params: { ...param, type: param.type?.toLowerCase() } }
   );
   return res;
+}
+
+export const modifyStorageCapacityApi = async (param: ModifyStorageCapacityREQ) => {
+  const res = await api.patch<BaseResponse<void>>(`admin/identities/${param.identity_id}/storage`,
+    { storage_capacity: param.storage_capacity }
+  );
+  return res.data.data;
 }

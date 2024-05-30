@@ -5,3 +5,8 @@ export type UserBlockREQ = {
 export type UserDeleteREQ = {
   identity_id: string;
 };
+
+export type ModifyStorageCapacityREQ = {
+  identity_id: string;
+  storage_capacity: number;
+};

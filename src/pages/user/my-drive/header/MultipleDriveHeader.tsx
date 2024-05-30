@@ -47,7 +47,7 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
         setType('share');
         setIsOpened(true);
       },
-      isHidden: !isSelectedPermission(arrSelected, UserRoleEnum.EDITOR) && arrSelected.length > 1,
+      isHidden: !isSelectedPermission(arrSelected, UserRoleEnum.EDITOR) || arrSelected.length > 1,
     },
     {
       icon: 'mdi:download',

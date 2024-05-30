@@ -19,6 +19,7 @@ import { useSession } from '@/store/auth/session';
 import { useDrawer, useSelected } from '@/store/my-drive/myDrive.store';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { DRIVE_HOME, DRIVE_MY_DRIVE_DIR, DRIVE_SHARED, HOME } from '@/utils/constants/router.constant';
+import { UserRoleEnum } from '@/utils/enums/user-role.enum';
 import { CopyToClipboard } from '@/utils/function/copy.function';
 import { formatDate } from '@/utils/function/formatDate.function';
 import { getFirstCharacters } from '@/utils/function/getFirstCharacter';
@@ -216,18 +217,9 @@ const DataRowPriorityView: React.FC<SuggestedEntry & DataRowPriorityViewProps> =
           closeOutside={() => {
             setFileViewer(false);
           }}
-          fileInfo={{
-            isDir: false,
-            title: title,
-            icon: icon,
-            preview: '',
-            id: id,
-            owner: null,
-            lastModified: new Date(),
-            size: size,
-            fileType: fileType,
-            userRoles,
-          }}
+          canDelete={isPermission(userRoles) >= UserRoleEnum.EDITOR}
+          canShare={isPermission(userRoles) >= UserRoleEnum.EDITOR}
+          fileInfo={{ isDir, title, icon, preview: '', id, owner: null, lastModified, size, fileType, userRoles }}
         />
       )}
       <div
@@ -259,7 +251,7 @@ const DataRowPriorityView: React.FC<SuggestedEntry & DataRowPriorityViewProps> =
             {owner?.avatar_url ? (
               <Avatar
                 alt={owner.last_name}
-                src={owner.avatar_url || 'https://picsum.photos/200/300'}
+                src={import.meta.env.VITE_BACKEND_API + owner.avatar_url}
                 sx={{
                   width: 30,
                   height: 30,

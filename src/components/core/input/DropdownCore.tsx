@@ -2,6 +2,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import { useState } from 'react';
 import { DropdownItems } from '../../../utils/types/drop-down.type';
+import { useTheme } from '@/providers/theme-provider';
 
 type DropdownCoreProps = {
   label?: string;
@@ -29,7 +30,8 @@ const DropdownCore = ({
   minWidth,
   mix,
 }: DropdownCoreProps) => {
-  const [inputValue, setInputValue] = useState(isDefault ? options[0].value : undefined);
+  const [inputValue, setInputValue] = useState(isDefault ? options[0].value : '');
+  const { theme } = useTheme();
   const onChangeConverter = (event: SelectChangeEvent) => {
     onChange && onChange(event.target.value);
     setInputValue(event.target.value);
@@ -46,9 +48,6 @@ const DropdownCore = ({
           paddingTop: 0,
           height: height ?? '40px',
           minWidth: minWidth ?? '120px',
-          '.MuiSelect-root': {
-            padding: 182,
-          },
           '.dark &': {
             '& .MuiOutlinedInput-notchedOutline': {
               borderColor: 'gray',
@@ -58,6 +57,13 @@ const DropdownCore = ({
             },
             '&:hover': {
               backgroundColor: 'rgb(23 37 84)',
+            },
+          },
+        }}
+        MenuProps={{
+          PaperProps: {
+            sx: {
+              backgroundColor: theme === 'dark' ? '#1E293B' : 'white',
             },
           },
         }}
@@ -73,9 +79,9 @@ const DropdownCore = ({
               py: '3px',
               '.dark &': {
                 color: 'white',
-                backgroundColor: '#1E293B',
+                backgroundColor: option.value === inputValue ? 'rgb(23 37 84)' : '',
                 '&:hover': {
-                  backgroundColor: 'rgb(23 37 84)',
+                  backgroundColor: '#334155',
                 },
               },
             }}

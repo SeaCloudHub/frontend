@@ -17,6 +17,9 @@ export type ListEntriesPageREQ = {
   id: string;
   limit?: number;
   page?: number;
+  after?: string;
+  type?: TypeEntry;
+  query?: string;
 };
 
 export type UploadFileREQ = {
