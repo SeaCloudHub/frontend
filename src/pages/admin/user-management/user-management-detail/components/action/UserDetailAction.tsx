@@ -7,7 +7,7 @@ const UserDetailAction = ({ title, onClick }: UserDetailActionProps) => {
     <div
       onClick={onClick}
       className='flex  cursor-pointer items-center justify-start uppercase
-    hover:bg-gray-300
+    hover:bg-gray-300 dark:hover:bg-slate-700
     '>
       <p className='statement-upper-medium truncate p-2 uppercase'>{title}</p>
     </div>

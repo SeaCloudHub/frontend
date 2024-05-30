@@ -1,4 +1,4 @@
-export type UploadImageRES = {
+export type UploadImageRESP= {
   file_name: string;
   file_path: string;
   size: number;

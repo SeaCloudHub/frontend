@@ -5,9 +5,12 @@ import { BaseResponse } from '../../../utils/types/api-base-response.type';
 import { ImportExcelREQ } from './request/add-user-excel.request';
 import { AddUserREQ } from './request/add-user.request';
 import { GetIdentitiesREQ, GetUserDetailREQ } from './request/get-identities.request';
+import { ResetPasswordREQ } from './request/reset-password.request';
+import { AdminUpdateUserREQ } from './request/update-user.request';
 import { UserBlockREQ, UserDeleteREQ } from './request/user-action.request';
 import { AddUserRESP } from './response/add-user.response';
 import { GetIdentitiesRESP } from './response/get-identities.response';
+import { ResetPasswordRESP } from './response/reset-password.response';
 
 export const addUserApi = async (body: AddUserREQ) => {
   const res = await api.post<BaseResponse<AddUserRESP>>('admin/identities', body, {});
@@ -43,3 +46,14 @@ export const getUserDetailApi = async (param: GetUserDetailREQ) => {
   const res = await api.get<BaseResponse<IdentityRESP>>(`admin/identities/${param.identity_id}`);
   return res.data.data;
 };
+
+export const updateUserApi = async (data: { body: AdminUpdateUserREQ; userId: string }) => {
+  const { body, userId } = data;
+  const res = await api.patch<BaseResponse<IdentityRESP>>(`admin/identities/${userId}`, body);
+  return res.data.data;
+};
+
+export const resetPasswordApi = async ( param: ResetPasswordREQ) => {
+  const res = await api.patch<BaseResponse<ResetPasswordRESP>>(`admin/identities/${param.identity_id}/reset-password`);
+  return res.data.data;
+}; 
