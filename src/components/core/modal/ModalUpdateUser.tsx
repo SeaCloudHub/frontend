@@ -1,23 +1,22 @@
-import { getIdentitiesRESToUserManagementInfoDto } from '@/apis/admin/user-management/user-management.service';
+import { AdminUpdateUserREQ } from '@/apis/admin/user-management/request/update-user.request';
+import { updateUserApi } from '@/apis/admin/user-management/user-management.api';
+import { IdentityRESP } from '@/apis/auth/response/auth.sign-in.response';
+import { updateUserSchema } from '@/helpers/form-schema/admin/update-user.schema';
 import { LinearProgress } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { useFormik } from 'formik';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-import { AddUserREQ, addUserInitValue } from '../../../apis/admin/user-management/request/add-user.request';
-import { addUserApi } from '../../../apis/admin/user-management/user-management.api';
 import { uploadImage } from '../../../apis/shared/shared.api';
-import { addUserSchema } from '../../../helpers/form-schema/admin/add-user.schema';
 import { useScreenHook } from '../../../hooks/useScreenHook';
-import { toastError, toastSuccess } from '../../../utils/toast-options/toast-options';
+import { toastError } from '../../../utils/toast-options/toast-options';
 import { ApiGenericError } from '../../../utils/types/api-generic-error.type';
 import IconifyIcon from '../Icon/IConCore';
 import ButtonContainer from '../button/ButtonContainer';
 import ButtonIcon from '../button/ButtonIcon';
 import TextInputCore from '../input/TextInputCore';
 import ModalCore from './ModalCore';
-import { IdentityRESP } from '@/apis/auth/response/auth.sign-in.response';
 
 type ModalUpdateUserProps = {
   title: string;
@@ -26,21 +25,31 @@ type ModalUpdateUserProps = {
   handleConfirm: (data?: any) => void;
 };
 
-const ModalUpdateUser = ({ title, isOpen, handleConfirm }: ModalUpdateUserProps) => {
+const ModalUpdateUser = ({ title, user, isOpen, handleConfirm }: ModalUpdateUserProps) => {
   const flex = !useScreenHook(500);
   const [file, setFile] = useState<File | null>(null);
-
+  const [avatar, setAvatar] = useState<null | string>(null);
+  useEffect(() => {
+    if (file) {
+      setAvatar(URL.createObjectURL(file));
+    }
+    else if (user&&user.avatar_url){
+      setAvatar(import.meta.env.VITE_BACKEND_API + user.avatar_url);
+    }
+  }, [user, file]);
   const handleImageSelection = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       setFile(event.target.files[0]);
     }
   };
   const formik = useFormik({
-    initialValues: addUserInitValue,
-    validationSchema: addUserSchema,
+    initialValues: {
+      first_name: user ? user.first_name : '',
+      last_name: user ? user.last_name : '',
+    },
+    validationSchema: updateUserSchema,
     onSubmit: async (values) => {
-      let avatar_url: string | undefined;
-
+      let avatar_url =user? user.avatar_url:null;
       if (file) {
         try {
           const res = await uploadImage({
@@ -55,27 +64,26 @@ const ModalUpdateUser = ({ title, isOpen, handleConfirm }: ModalUpdateUserProps)
         }
       }
       await updateUserMutation.mutateAsync({
-        email: values.email,
-        password: values.password,
-        first_name: values.first_name,
-        last_name: values.last_name,
-        avatar_url: avatar_url ? import.meta.env.VITE_BACKEND_API + avatar_url : null,
+        body: {
+          avatar_url: avatar_url,
+          first_name: values.first_name,
+          last_name: values.last_name,
+        },
+        userId: '',
       });
       handleConfirm(true);
     },
   });
+
   const updateUserMutation = useMutation({
-    mutationFn: (body: AddUserREQ) => {
-      return addUserApi(body);
-    },
+    mutationFn: (data: { body: AdminUpdateUserREQ; userId: string }) => updateUserApi(data),
     onError: (error) => {
       if (isAxiosError<ApiGenericError>(error)) {
         toast.error(error.response?.data.message, toastError());
       }
     },
     onSuccess: (data) => {
-      handleConfirm(getIdentitiesRESToUserManagementInfoDto(data.data));
-      toast.success('Create user successfully', toastSuccess());
+      // handle success
     },
   });
   const handleFieldChange = (fieldName: string, value: string) => {
@@ -129,32 +137,6 @@ const ModalUpdateUser = ({ title, isOpen, handleConfirm }: ModalUpdateUserProps)
                 placeholder='Last Name'
               />
             </div>
-            <div className={`${flex ? 'flex items-center justify-center space-x-6' : ''}  w-full `}>
-              <TextInputCore
-                name='password'
-                value={formik.values.password}
-                type={'password'}
-                onChange={(value?: string) => handleFieldChange('password', value!)}
-                fullWidth={true}
-                label='Password'
-                labelDirection='vertical'
-                error={formik.touched.password && Boolean(formik.errors.password)}
-                helperText={formik.touched.password && formik.errors.password}
-                placeholder='Password'
-              />
-              <TextInputCore
-                name='confirm_password'
-                value={formik.values.confirm_password}
-                type={'password'}
-                onChange={(value?: string) => handleFieldChange('confirm_password', value!)}
-                fullWidth={true}
-                label='Confirm password'
-                labelDirection='vertical'
-                error={formik.touched.confirm_password && Boolean(formik.errors.confirm_password)}
-                helperText={formik.touched.confirm_password && formik.errors.confirm_password}
-                placeholder='Confirm password'
-              />
-            </div>
             <div className={`${flex ? 'flex items-center  space-x-6' : ''}`}>
               <label className='flex w-1/2 cursor-pointer items-center' htmlFor='upload-photo'>
                 <ButtonIcon icon='tabler:camera' color='blue' />
@@ -169,21 +151,14 @@ const ModalUpdateUser = ({ title, isOpen, handleConfirm }: ModalUpdateUserProps)
                 id='upload-photo'
                 onChange={handleImageSelection}
               />
-              {file && (
+              {avatar && (
                 <div className='flex items-center space-x-2'>
-                  <img className='max-w-[90px] object-contain' src={URL.createObjectURL(file)} />
-                  <ButtonIcon
-                    icon='uiw:delete'
-                    onClick={() => {
-                      setFile(null);
-                    }}
-                    color='red'
-                  />
+                  <img className='max-w-[90px] object-contain' src={avatar} />
                 </div>
               )}
             </div>
             <div className='float-right'>
-              <ButtonContainer type='submit' title='Add User' icon={<IconifyIcon icon='tabler:playlist-add' />} />
+              <ButtonContainer type='submit' title='Update' icon={<IconifyIcon icon='dashicons:update-alt' />} />
             </div>
           </div>
         </div>

@@ -61,7 +61,7 @@ export const useUpDateAvatarMutation = () => {
   return useMutation({
     mutationFn: async (body: AuthUploadAvatarREQ & Pick<AuthUpdateProfileREQ, 'first_name' | 'last_name'>) => {
       const resAvatar = await uploadAvatarApi(body);
-      const avatar_url = import.meta.env.VITE_BACKEND_API + resAvatar.data.file_path;
+      const avatar_url = resAvatar.data.file_path;
       return updateProfileApi({ avatar_url, first_name: body.first_name, last_name: body.last_name });
     },
     onError: (error) => {

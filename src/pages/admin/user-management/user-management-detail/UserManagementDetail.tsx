@@ -2,6 +2,7 @@ import { getUserDetailApi } from '@/apis/admin/user-management/user-management.a
 import { getIdentitiesRESToUserManagementInfoDto } from '@/apis/admin/user-management/user-management.service';
 import ModalConfirmBlockOrUnBlock from '@/components/core/modal/ModalBlockConfirm';
 import ModalConfirmDelete from '@/components/core/modal/ModalConfirmDelete';
+import ModalResetPasswordConfirm from '@/components/core/modal/ModalResetPasswordConfirm';
 import ModalUpdateUser from '@/components/core/modal/ModalUpdateUser';
 import { ScreenMode } from '@/utils/enums/screen-mode.enum';
 import { getFirstCharacters } from '@/utils/function/getFirstCharacter';
@@ -14,7 +15,7 @@ import IconifyIcon from '../../../../components/core/Icon/IConCore';
 import ButtonContainer from '../../../../components/core/button/ButtonContainer';
 import { useScreenHook } from '../../../../hooks/useScreenHook';
 import { useScreenMode } from '../../../../store/responsive/screenMode';
-import { ADMIN_USER_MANAGEMENT, AUTH_CHANGE_PASSWORD } from '../../../../utils/constants/router.constant';
+import { ADMIN_USER_MANAGEMENT } from '../../../../utils/constants/router.constant';
 import StorageStatistic from '../../shared/StorageStatistic';
 import UserDetailAction from './components/action/UserDetailAction';
 import FileFolderFilter from './components/file-folder-detail/FileFolderFilter';
@@ -41,6 +42,7 @@ const UserManagementDetail = () => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [blockModal, setBlockModal] = useState(false);
   const [updateModal, setUpdateModal] = useState(false);
+  const [resetModal, setResetModal] = useState(false);
   const [isBlocked, setBlocked] = useState(false);
   const [modify, setModify] = useState(false);
   const {
@@ -79,12 +81,15 @@ const UserManagementDetail = () => {
         {/* <!--section --> */}
         <div className={`${flex ? 'w-1/4' : ''} border-2`}>
           <div className='flex  flex-col space-y-2 border-b-2 p-4'>
-            <p className='flex bg-[#eee] p-1 dark:bg-blue-200 dark:text-black'>
+            <p className='flex bg-[#eee] p-1 font-semibold dark:bg-blue-200 dark:text-black'>
               {identityData && identityData.is_admin ? 'ADMIN' : 'USER'}
             </p>
             <div className='flex items-start space-x-3'>
               {identityData && identityData.avatar_url && (
-                <img className='w-[70px] h-[70px] rounded-full object-contain' src={import.meta.env.VITE_BACKEND_API + identityData.avatar_url} />
+                <img
+                  className='w-[70px] rounded-full object-contain'
+                  src={import.meta.env.VITE_BACKEND_API + identityData.avatar_url}
+                />
               )}
               {identityData && !identityData.avatar_url && (
                 <div
@@ -120,12 +125,23 @@ const UserManagementDetail = () => {
           </div>
           <div className='flex flex-col border-b-2 p-3'>
             <UserDetailAction
-              title='CHANGE PASSWORD'
+              title='RESET PASSWORD'
               onClick={() => {
-                navigate(AUTH_CHANGE_PASSWORD);
+                setResetModal(true);
               }}
               icon={<IconifyIcon icon='tabler:password' />}
             />
+            {resetModal && (
+              <ModalResetPasswordConfirm
+                user_id={identityData.id}
+                message={`Do you want to reset password for this user ?`}
+                title={'Reset password'}
+                isOpen={true}
+                handleConfirm={function (data?: boolean): void {
+                  setResetModal(false);
+                }}
+              />
+            )}
             <UserDetailAction
               title='UPDATE USER'
               onClick={() => {
@@ -135,6 +151,7 @@ const UserManagementDetail = () => {
             />
             {updateModal && (
               <ModalUpdateUser
+                user={identityData}
                 title={'Update User'}
                 isOpen={true}
                 handleConfirm={function (data?: any): void {
@@ -205,7 +222,10 @@ const UserManagementDetail = () => {
         <div className={`flex  h-full flex-col space-y-4 overflow-y-auto pb-2 ${flex ? 'w-3/4 ' : ''}`}>
           <div className='w-full space-y-2 border p-3  shadow-md'>
             <p className='statement-medium h4 '>{`Personal storage space of ${identityData && userDto.name}`} </p>
-            <StorageStatistic />
+            <StorageStatistic
+              totalMemory={identityData ? identityData.storage_capacity : 0}
+              usedMemory={identityData ? identityData.storage_usage : 0}
+            />
           </div>
           {/* <div className='z-0 w-full space-y-2 p-3 shadow-md'>
             <ButtonContainer title='Modify memory' icon={<IconifyIcon icon={'tabler:edit'} />} />
