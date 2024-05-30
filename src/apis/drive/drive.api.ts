@@ -38,7 +38,7 @@ export const getListEntries = async (params: ListEntriesREQ) => {
 
 export const getListEntriesPageMyDrive = async (param: ListEntriesPageREQ) => {
   const res = await api.get<BaseResponse<ListEntriesPageRESP>>(`/files/${param.id}/page`, {
-    params: { page: param.page, limit: param.limit },
+    params: { ...param, type: param.type?.toLowerCase() },
   });
   return res.data;
 };

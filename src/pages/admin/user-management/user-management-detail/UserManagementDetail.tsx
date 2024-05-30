@@ -21,6 +21,9 @@ import { ADMIN_USER_MANAGEMENT } from '../../../../utils/constants/router.consta
 import StorageStatistic from '../../shared/StorageStatistic';
 import UserDetailAction from './components/action/UserDetailAction';
 import FileFolderFilter from './components/file-folder-detail/FileFolderFilter';
+import ModifyMemoryPopUp from '@/components/core/pop-up/ModifyMemoryPopUp';
+import { Tooltip } from '@mui/material';
+import ModifyMemoryPopUp from '@/components/core/pop-up/ModifyMemoryPopUp';
 
 const UserManagementDetail = () => {
   const navigate = useNavigate();
@@ -47,6 +50,7 @@ const UserManagementDetail = () => {
   const [resetModal, setResetModal] = useState(false);
   const [isBlocked, setBlocked] = useState(false);
 
+  const [modify, setModify] = useState(false);
   const {
     data: identityData,
     error: identityError,
@@ -137,7 +141,13 @@ const UserManagementDetail = () => {
             </div>
           </div>
           <div className='flex flex-col border-b-2 p-3'>
-            <UserDetailAction title='RESET PASSWORD' onClick={() => setResetModal(true)} />
+            <UserDetailAction
+              title='RESET PASSWORD'
+              onClick={() => {
+                setResetModal(true);
+              }}
+              icon={<IconifyIcon icon='tabler:password' />}
+            />
             {resetModal && (
               <ModalResetPasswordConfirm
                 user_id={identityData.id}
@@ -147,7 +157,13 @@ const UserManagementDetail = () => {
                 handleConfirm={() => setResetModal(false)}
               />
             )}
-            <UserDetailAction title='UPDATE USER' onClick={() => setUpdateModal(true)} />
+            <UserDetailAction
+              title='UPDATE USER'
+              onClick={() => {
+                setUpdateModal(true);
+              }}
+              icon={<IconifyIcon icon='tabler:user-edit' />}
+            />
             {updateModal && (
               <ModalUpdateUser
                 user={identityData}
@@ -156,7 +172,13 @@ const UserManagementDetail = () => {
                 handleConfirm={() => setUpdateModal(false)}
               />
             )}
-            <UserDetailAction title={isBlocked ? 'BLOCK USER' : 'UN-BLOCK USER'} onClick={() => setBlockModal(true)} />
+            <UserDetailAction
+              title={isBlocked ? 'BLOCK USER' : 'UN-BLOCK USER'}
+              onClick={() => {
+                setBlockModal(true);
+              }}
+              icon={<IconifyIcon icon='tabler:user-cancel' />}
+            />
             {blockModal && (
               <ModalConfirmBlockOrUnBlock
                 isBlock={isBlocked}
@@ -172,7 +194,13 @@ const UserManagementDetail = () => {
                 }}
               />
             )}
-            <UserDetailAction title='DELETE USER' onClick={() => setDeleteModal(true)} />
+            <UserDetailAction
+              title='DELETE USER'
+              onClick={() => {
+                setDeleteModal(true);
+              }}
+              icon={<IconifyIcon icon='tabler:user-x'/>}
+            />
             {deleteModal && (
               <ModalConfirmDelete
                 user={userDto}
@@ -187,6 +215,20 @@ const UserManagementDetail = () => {
                 }}
               />
             )}
+            <UserDetailAction
+              icon={<IconifyIcon icon='tabler:edit' />}
+              title='MODIFY MEMORY'
+              onClick={() => {
+                setModify(true);
+              }}
+            />
+            {modify &&
+              <ModifyMemoryPopUp
+                open={modify}
+                onClose={() => setModify(false)}
+                identity_id={userId}
+              />
+            }
           </div>
         </div>
 
@@ -202,9 +244,9 @@ const UserManagementDetail = () => {
               />
             )}
           </div>
-          <div className='z-0 w-full space-y-2 p-3 shadow-md'>
+          {/* <div className='z-0 w-full space-y-2 p-3 shadow-md'>
             <ButtonContainer title='Modify memory' icon={<IconifyIcon icon={'tabler:edit'} />} />
-          </div>
+          </div> */}
           <div className='mr-2 rounded-xl border pl-3 shadow-xl dark:bg-[#031525] dark:text-white'>
             <FileFolderFilter userDTO={userDto} />
           </div>

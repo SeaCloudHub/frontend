@@ -5,3 +5,35 @@
 .none-shrink-mode {
   @apply left-[16.4rem];
 }
+
+.ant-table {
+  @apply dark:bg-[#031525] dark:text-white;
+}
+
+.ant-table-thead > tr > th {
+  @apply dark:bg-[#031525] dark:text-white;
+}
+
+.ant-table-row:hover > .ant-table-cell-row-hover {
+  @apply dark:bg-slate-700 ;
+}
+
+.ant-btn {
+  @apply dark:bg-[#031525] dark:text-white;
+}
+
+.ant-dropdown-menu {
+  @apply dark:bg-slate-800 dark:text-white;
+}
+
+.ant-card {
+  @apply dark:bg-[#031525] dark:text-white;
+}
+
+.ant-table-cell {
+  @apply dark:bg-[#031525] dark:text-white;
+}
+
+.ant-table-placeholder {
+  @apply dark:bg-[#031525] dark:text-white;
+}

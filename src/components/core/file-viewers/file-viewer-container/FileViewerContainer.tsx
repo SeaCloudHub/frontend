@@ -12,6 +12,8 @@ import MenuCore from '../../menu/MenuCore';
 import { MenuItemCoreProps } from '../../menu/MenuItem';
 import SharePopUp from '../../pop-up/SharePopUp';
 import Viewer from './Viewer';
+import { CopyToClipboard } from '@/utils/function/copy.function';
+import { DRIVE_HOME } from '@/utils/constants/router.constant';
 
 type FileViewerContainerProps = {
   canDelete?: boolean;
@@ -135,7 +137,9 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({
                 <p className='text-sm'>Share</p>
               </div>
             )}
-            <div className='hidden cursor-pointer items-center space-x-2 rounded-md p-2 hover:bg-gray-100 hover:bg-gray-100 dark:hover:bg-slate-700 xs:flex'>
+            <div
+              className='hidden cursor-pointer items-center space-x-2 rounded-md p-2 hover:bg-gray-100  dark:hover:bg-slate-700 xs:flex'
+              onClick={() => CopyToClipboard(`${location.origin + DRIVE_HOME}/file/${fileInfo.id}`)}>
               <IconifyIcon icon='ic:sharp-link' fontSize={16} />
               <p className='text-sm'>Copy link</p>
             </div>
@@ -143,7 +147,7 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({
               onClick={() => {
                 onDownloadClick();
               }}
-              className={` hidden cursor-pointer items-center space-x-2 rounded-md p-2 hover:bg-gray-100 hover:bg-gray-100 dark:hover:bg-slate-700 sm:flex`}>
+              className={` hidden cursor-pointer items-center space-x-2 rounded-md p-2  hover:bg-gray-100 dark:hover:bg-slate-700 sm:flex`}>
               <IconifyIcon icon='material-symbols-light:download' fontSize={16} />
               <p className='text-sm'>Download</p>
             </div>

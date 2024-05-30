@@ -312,6 +312,8 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
           closeOutside={() => {
             setFileViewer(false);
           }}
+          canDelete={isPermission(userRoles) >= 1}
+          canShare={isPermission(userRoles) >= 1}
           fileInfo={{
             isDir: false,
             title: title,

@@ -31,6 +31,7 @@ import DeleteTempPopUp from '@/components/core/pop-up/DeleteTempPopUp';
 import { Star } from '@mui/icons-material';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { isPermission } from '@/utils/function/permisstion.function';
+import { UserRoleEnum } from '@/utils/enums/user-role.enum';
 
 type DataRowProps = {
   // dirId?: string;
@@ -311,6 +312,8 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
           closeOutside={() => {
             setFileViewer(false);
           }}
+          canDelete={isPermission(userRoles) >= UserRoleEnum.EDITOR}
+          canShare={isPermission(userRoles) >= UserRoleEnum.EDITOR}
           fileInfo={{
             isDir: false,
             title: title,
@@ -348,7 +351,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
             {owner?.avatar_url ? (
               <Avatar
                 alt={owner.last_name}
-                src={owner.avatar_url || 'https://picsum.photos/200/300'}
+                src={import.meta.env.VITE_BACKEND_API + owner.avatar_url}
                 sx={{
                   width: 30,
                   height: 30,

@@ -250,8 +250,11 @@ const UserManagement = () => {
               </Menu>
             }
             placement='bottomLeft'>
-            <Button type='dashed' icon={<SettingsApplications />}>
-              Actions
+            <Button type='dashed'>
+              <div className='flex h-full items-center'>
+                <SettingsApplications />
+                Actions
+              </div>
             </Button>
           </Dropdown>
         );
@@ -267,7 +270,7 @@ const UserManagement = () => {
         <div className='mx-5'>
           <UserManagementFilter handleSearch={onSearchClick} />
         </div>
-        <div className={`${shrinkMode ? 'shrink-mode' : 'none-shrink-mode'} ' '  mx-5  flex w-full bg-white dark:bg-transparent`}>
+        <div className={`${shrinkMode ? 'shrink-mode' : 'none-shrink-mode'} ' '  mx-5  flex bg-white dark:bg-transparent`}>
           <MenuCore menuItems={addUserOptions}>
             <ButtonContainer
               color='063768'

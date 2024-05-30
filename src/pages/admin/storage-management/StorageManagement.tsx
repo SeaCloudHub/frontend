@@ -107,6 +107,7 @@ const StorageManagement = () => {
         return (
           <Dropdown
             key={record.id}
+            {...(path.length ===1 && { disabled: true })}
             trigger={['click']}
             overlay={
               <Menu>
