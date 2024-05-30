@@ -47,7 +47,7 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
         setType('share');
         setIsOpened(true);
       },
-      isHidden: !isSelectedPermission(arrSelected, UserRoleEnum.EDITOR),
+      isHidden: !isSelectedPermission(arrSelected, UserRoleEnum.EDITOR) && arrSelected.length > 1,
     },
     {
       icon: 'mdi:download',
@@ -174,7 +174,9 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
         ))
       )}
       {type === 'share' && (
-        <SharePopUp fileId='' open={isOpened} handleClose={() => setIsOpened(false)} title={`${arrSelected.length} items`} />
+        <SharePopUp fileId={
+          arrSelected.length === 1 ? arrSelected[0].id : null
+        } open={isOpened} handleClose={() => setIsOpened(false)} title={`${arrSelected.length} items`} />
       )}
       {type === 'move' && (
         <MovePopUp

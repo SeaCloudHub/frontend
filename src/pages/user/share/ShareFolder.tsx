@@ -33,7 +33,7 @@ const ShareFolder = () => {
   const {modifiedFilter, typeFilter, setModifiedFilter, setTypeFilter} = useFilter();
 
   const {data, isLoading} = useListEntries();
-  const { parents } = usePathParents(true);
+  const { parents } = usePathParents();
 
 
   const onScollBottom = () => {

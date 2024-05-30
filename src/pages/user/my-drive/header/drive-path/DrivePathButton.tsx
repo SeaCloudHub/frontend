@@ -24,7 +24,7 @@ const DrivePathButton: React.FC<DrivePathButtonProps> = ({type, path }) => {
 
   return (
     <div
-      className='my-0.5 flex h-9 cursor-pointer items-center rounded-full py-1 pl-4 pr-3 hover:bg-slate-500'
+      className='my-0.5 flex h-9 cursor-pointer items-center rounded-full py-1 pl-4 pr-3 hover:bg-[#ededed] hover:dark:bg-slate-500'
       onClick={() => {
         setArrSelected && setArrSelected([]);
         setListEntries([]);

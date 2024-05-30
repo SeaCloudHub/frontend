@@ -158,7 +158,9 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ path, type })
       {
         label: 'Share',
         icon: <Icon icon='lucide:user-plus' />,
-        action: () => {},
+        action: () => {
+
+        },
         isHidden: isPermission(path.userRoles) < UserRoleEnum.EDITOR,
       },
       {

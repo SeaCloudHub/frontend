@@ -1,3 +1,4 @@
+import { getFileUserApi } from '@/apis/admin/user-management/user-management.api';
 import { IdentityRESP } from '@/apis/auth/response/auth.sign-in.response';
 import {
   copyFiles,
@@ -64,16 +65,16 @@ import { toastError } from '@/utils/toast-options/toast-options';
 import { ApiGenericError } from '@/utils/types/api-generic-error.type';
 import { UserRole } from '@/utils/types/user-role.type';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import React, { useEffect } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-export const usePathParents = (isShare?: boolean) => {
+export const usePathParents = (dir?: string, is_admin?: boolean) => {
   const { dirId } = useParams();
   const { rootId } = useStorageStore();
-  const id = dirId || rootId;
+  const id = dir || dirId || rootId;
 
   const { data: parents, error: parentsError } = useQuery({
     queryKey: ['path-parrent', id],
@@ -86,13 +87,28 @@ export const usePathParents = (isShare?: boolean) => {
       if (data.parents) {
         data.parents.sort((a, b) => a.path.localeCompare(b.path));
         const path = data.parents.map((parent, ind) => {
-          if(ind === 0) return { id: rootId, name: parent.id !== rootId ? 'Shared with me' : 'My Drive', userRoles: ['owner'] as UserRole[], is_starred: data.file.is_starred };
-          else return { id: parent.id, name: parent.name, userRoles: data.file.userRoles, is_starred: data.file.is_starred };
+          if(ind === 0) return {
+            id: !is_admin ? rootId : parent.id,
+            name: !is_admin ?  parent.id !== rootId ? 'Shared with me' : 'My Drive' : 'Root',
+            userRoles: ['owner'] as UserRole[],
+            is_starred: data.file.is_starred
+          };
+          else return {
+            id: parent.id,
+            name: parent.name,
+            userRoles: data.file.userRoles,
+            is_starred: data.file.is_starred
+          };
         });
         path.push({ id: data.file.id, name: data.file.name, userRoles: data.file.userRoles, is_starred: data.file.is_starred});
         return path;
       }
-      return [{ id: rootId, name: 'My Drive', userRoles: ['owner'] as UserRole[], is_starred: false }];
+      return [{
+        id: is_admin ? dir : rootId,
+        name: is_admin ? 'Root' : 'My Drive',
+        userRoles: ['owner'] as UserRole[],
+        is_starred: false
+      }];
     },
   });
 
@@ -103,15 +119,14 @@ export const usePathParents = (isShare?: boolean) => {
   return { parents: parents || [{ id, name: 'My Drive', userRoles: ['owner'] as UserRole[], is_starred: false }] };
 }
 
-export const useListEntries = () => {
+export const useListEntries = (rootUserId?: string) => {
   const { dirId } = useParams();
   const { rootId } = useStorageStore();
   const { typeFilter, modifiedFilter } = useFilter();
   const { setNextCursor, nextCursor, currentCursor } = useCursor();
 
-  const id = dirId || rootId;
+  const id = rootUserId || dirId || rootId;
   const { setListEntries, listEntries } = useEntries();
-
 
   const { data, error, refetch, isLoading } = useQuery({
     queryKey: ['mydrive-entries', id, typeFilter, modifiedFilter, currentCursor],
@@ -835,6 +850,33 @@ export const useActivityLog = () => {
   return { data: activityLog, isLoading };
 };
 
+
+///////////////////  admin //////////////////////
+export const useGetListFilesUser = (page: number, id: string, isRoot: boolean) => {
+  const { userId } = useParams();
+
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: ['list-files-user', userId, id, page, isRoot],
+    queryFn: async () => {
+      const res = isRoot ?
+        await getFileUserApi({ identity_id: userId, limit: 8, page }).then((res) => res?.data) :
+        await getListEntriesPageMyDrive({ id, limit: 8, page });
+      return res;
+    },
+    staleTime: 10 * 1000,
+    select(data) {
+      return { entries: transformEntries(data.data.entries), pagination: data.data.pagination };
+    },
+    placeholderData: keepPreviousData,
+  });
+
+  if (isAxiosError<ApiGenericError>(error)) {
+    toast.error(error.response?.data.message, toastError());
+  }
+
+  return { data: data , refetch, isLoading };
+}
+
 const transformMetadata = (data: EntryMetadataRES) => {
   data.parents?.sort((a, b) => a.path.localeCompare(b.path));
   if (data.file.is_dir && data.parents) {
@@ -947,7 +989,7 @@ export const transformEntry = (entry: EntryRESP): LocalEntry => {
       isDir: entry.is_dir,
       title: entry.name,
       icon: <Icon icon='ic:baseline-folder' className='h-full w-full object-cover text-yellow-600' />,
-      preview: <Icon icon='ic:baseline-folder' className='h-32 w-32 text-yellow-600' />,
+      preview: <Icon icon='ic:baseline-folder' className='h-32 w-32 text-yellow-600 object-cover' />,
       id: entry.id,
       owner: entry.owner,
       fileType: entry.type,

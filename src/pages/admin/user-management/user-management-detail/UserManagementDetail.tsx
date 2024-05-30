@@ -19,6 +19,7 @@ import { ADMIN_USER_MANAGEMENT } from '../../../../utils/constants/router.consta
 import StorageStatistic from '../../shared/StorageStatistic';
 import UserDetailAction from './components/action/UserDetailAction';
 import FileFolderFilter from './components/file-folder-detail/FileFolderFilter';
+import { Tooltip } from '@mui/material';
 
 const UserManagementDetail = () => {
   const navigate = useNavigate();
@@ -58,6 +59,7 @@ const UserManagementDetail = () => {
     }
     return null;
   }, [identityData]);
+  console.log('UserManagementDetail:', userDto);
   return (
     <div className='h-full w-full overflow-y-auto overflow-x-hidden'>
       <div
@@ -80,7 +82,7 @@ const UserManagementDetail = () => {
             <p className='flex bg-[#eee] p-1 font-semibold dark:bg-blue-200 dark:text-black'>
               {identityData && identityData.is_admin ? 'ADMIN' : 'USER'}
             </p>
-            <div className='flex items-start  space-x-3'>
+            <div className='flex items-start space-x-3'>
               {identityData && identityData.avatar_url && (
                 <img
                   className='w-[70px] rounded-full object-contain'
@@ -94,9 +96,13 @@ const UserManagementDetail = () => {
                   <p className='statement-bold truncate'>{getFirstCharacters(userDto.name)}</p>
                 </div>
               )}
-              <div className='space-y-2 '>
-                <p className='statement-upper-medium h3'> {identityData && userDto.name}</p>
-                <p className='statement-medium'>{identityData && identityData.email}</p>
+              <div className='space-y-2 overflow-hidden'>
+                <Tooltip title={userDto?.name}>
+                  <p className='statement-upper-medium h3 truncate'> {identityData && userDto.name}</p>
+                </Tooltip>
+                <Tooltip title={identityData?.email}>
+                  <p className='statement-medium truncate'>{identityData && identityData.email}</p>
+                </Tooltip>
                 <ul>
                   <li className={`${identityData && !isBlocked ? 'text-red-600' : 'text-green-500'}`}>
                     {identityData && !isBlocked ? 'Blocked' : 'Active'}
@@ -205,7 +211,7 @@ const UserManagementDetail = () => {
             <ButtonContainer title='Modify memory' icon={<IconifyIcon icon={'tabler:edit'} />} />
           </div>
           <div className='mr-2 rounded-xl border pl-3 shadow-xl dark:bg-[#031525] dark:text-white'>
-            <FileFolderFilter />
+            <FileFolderFilter userDTO={userDto}/>
             {/* <FileSection />
             <FolderSection /> */}
           </div>
