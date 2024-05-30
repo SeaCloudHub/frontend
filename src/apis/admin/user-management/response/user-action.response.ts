@@ -4,3 +4,7 @@ export type UserBlockRESP = {
 export type UserDeleteRESP = {
   identity_id: string;
 };
+export type ModifyStorageCapacityRESP = {
+  identity_id: string;
+  storage_capacity: number;
+};
