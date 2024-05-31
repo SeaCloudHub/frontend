@@ -54,13 +54,17 @@ const Configuration = () => {
   const handleNewNotification = (newNotification: NotificationContent) => {
     setHasNewNotification(true);
     setNewNotification(newNotification);
+    try {
+      notification.open({
+        message: 'New Notification',
+        description: `${newNotification.OwnerName} has shared a file with you.`,
+        icon: <ButtonIcon tooltip='Notification' size={'1.6rem'} icon='heroicons-outline:bell' />,
+        duration: 2,
+      });
+    } catch (error) {
+      console.error('Error:', error);
+    }
 
-    notification.open({
-      message: 'New Notification',
-      description: `${newNotification.OwnerName} has shared a file with you.`,
-      icon: <ButtonIcon tooltip='Notification' size={'1.6rem'} icon='heroicons-outline:bell' />,
-      duration: 2,
-    });
   };
 
   useEffect(() => {

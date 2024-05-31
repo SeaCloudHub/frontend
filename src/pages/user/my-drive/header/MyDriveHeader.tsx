@@ -58,7 +58,7 @@ const MyDriveHeader: React.FC<MyDriveHeaderProps> = ({ path, sort, order, setSor
                 </div>
               )}
             </div>
-            <Sort sort={sort} order={order} setSort={setSort} />
+            {/* <Sort sort={sort} order={order} setSort={setSort} /> */}
           </div>
         </div>
       )}

@@ -56,7 +56,11 @@ const DrivePath: React.FC<DrivePathProps> = ({ path, type }) => {
         <Icon icon='ic:baseline-keyboard-arrow-right' className='h-6 w-6' />
         <DrivePathButton type={type} path={path[path.length - 2]}/>
         <Icon icon='ic:baseline-keyboard-arrow-right' className='h-6 w-6' />
-        <DrivePathMenuButton path={path[path.length - 1]} type={type} />
+        <DrivePathMenuButton
+          path={path[path.length - 1]}
+          type={type}
+          location={{ id: path[path.length - 2].id, name: path[path.length - 2].name }}
+        />
       </div>
     );
   }
@@ -66,7 +70,15 @@ const DrivePath: React.FC<DrivePathProps> = ({ path, type }) => {
       {path.map((d, index) => {
         if (index === path.length - 1) {
           return isPermission(d.userRoles) >= 1 ? (
-            <DrivePathMenuButton path={path[path.length - 1]} key={d.id} type={type} />
+            <DrivePathMenuButton
+              path={path[path.length - 1]}
+              key={d.id}
+              type={type}
+              location={ path.length > 1 ?
+                { id: path[path.length - 2].id, name: path[path.length - 2].name } :
+                { id: rootId, name: 'My Drive' }
+              }
+            />
           ) : (
             <DrivePathButton path={d} key={d.id} type={type} />
           );

@@ -658,6 +658,7 @@ export const useMoveEntriesMutation = () => {
       setArrSelected([]);
       toast.success(`${data.data.length} entries moved`);
       queryClient.invalidateQueries({ queryKey: ['priority-entries'] });
+      queryClient.invalidateQueries({ queryKey: ['path-parrent'] });
     },
   });
 };

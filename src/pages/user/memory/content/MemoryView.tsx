@@ -27,7 +27,7 @@ export const MemoryView: React.FC<MemoryViewProps> = ({ entries, isLoading, orde
   return isLoading && entries.length < 15 ? (
     <LinearProgress className='translate-y-1' />
   ) : (
-    <div className='pl-5 pr-3'>
+    <div className='pl-5 pr-3 select-none'>
       <div className='relative flex flex-col'>
         <Statistics />
         <div className='sticky grid grid-cols-7 top-0 h-12 items-center space-x-3 border-b border-b-[#dadce0] pt-2 dark:bg-dashboard-dark bg-white'>

@@ -136,13 +136,13 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
                     {data.map((item, index) => (
                       <div
                         key={index}
-                        className={`flex items-center gap-3 px-3 py-1 ${locateTo === item.id ? 'bg-[#c2e7ff] dark:bg-blue-900' : ''} ${arrSelected.some(e=> e.id === item.id) ? 'brightness-75' : 'cursor-pointer hover:bg-gray-100 dark:hover:bg-blue-950'}`}
+                        className={`flex items-center gap-3 px-3 py-1 ${locateTo === item.id ? 'bg-[#c2e7ff] dark:bg-blue-900' : ''} ${ids.includes(item.id) ? 'brightness-75' : 'cursor-pointer hover:bg-gray-100 dark:hover:bg-blue-950'}`}
                         onClick={() => {
-                          if (arrSelected.some(e=>e.id === item.id)) return;
+                          if (ids.includes(item.id)) return;
                           setLocateTo(item.id);
                         }}
                         onDoubleClick={() => {
-                          if (arrSelected.some(e=>e.id === item.id)) return;
+                          if (ids.includes(item.id)) return;
                           setCurFolder({ id: item.id, name: item.title });
                         }}>
                         <Icon icon='mdi:folder-multiple-outline' className='text-xl' />
@@ -210,9 +210,12 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
           <ButtonSuccess
             isInvisible={!locateTo}
             onClick={() => {
-              if (arrSelected.length === 0) return;
-              if (curFolder.id === location.id) return;
-              moveEntriesMutation.mutate({ id: location.id, source_ids: ids, to: curFolder.id });
+              if (ids.length === 0) return;
+              console.log('ids', ids);
+              console.log('curFolder', curFolder);
+              console.log('location', location);
+              if (curFolder.id === locateTo) return;
+              moveEntriesMutation.mutate({ id: location.id, source_ids: ids, to: locateTo });
               setArrSelected([]);
               handleClose();
             }}

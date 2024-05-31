@@ -25,11 +25,12 @@ const SearchResult: React.FC<SearchResultProps> = ({ data, loading, onSelected }
           data.map((item, index) => (
             <div
               key={index}
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 onSelected && onSelected();
                 navigate(`/drive/${item.isDir?'folder':'file'}/${item.id}`);
               }}
-              className='flex w-full cursor-pointer items-center space-x-3.5 border-blue-700 px-4 py-2 hover:border-l-2 hover:bg-slate-700'>
+              className='flex w-full cursor-pointer items-center space-x-3.5 border-blue-700 px-4 py-2 hover:border-l-2 hover:bg-[#dfe3e7] dark:hover:bg-slate-700'>
               <span className='h-6 w-6'>{item.isDir ? <AiFillFolder className='text-textC h-full w-full' /> : item.icon}</span>
               <span className='w-full truncate'>{item.title}</span>
             </div>

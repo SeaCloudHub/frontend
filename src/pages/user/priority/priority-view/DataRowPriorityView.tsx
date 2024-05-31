@@ -16,7 +16,7 @@ import {
   useUnstarEntryMutation,
 } from '@/hooks/drive.hooks';
 import { useSession } from '@/store/auth/session';
-import { useDrawer, useSelected } from '@/store/my-drive/myDrive.store';
+import { useDrawer, useEntries, useSelected } from '@/store/my-drive/myDrive.store';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { DRIVE_HOME, DRIVE_MY_DRIVE_DIR, DRIVE_SHARED, HOME } from '@/utils/constants/router.constant';
 import { UserRoleEnum } from '@/utils/enums/user-role.enum';
@@ -64,7 +64,7 @@ const DataRowPriorityView: React.FC<SuggestedEntry & DataRowPriorityViewProps> =
   const [result, setResult] = useState(false);
   const { rootId } = useStorageStore();
 
-  const { openDrawer } = useDrawer();
+  const { openDrawer, setTab } = useDrawer();
   const { identity } = useSession();
   const navigate = useNavigate();
   const copyMutation = useCopyMutation();
@@ -74,6 +74,7 @@ const DataRowPriorityView: React.FC<SuggestedEntry & DataRowPriorityViewProps> =
   const starEntryMutation = useStarEntryMutation();
   const unstarEntryMutation = useUnstarEntryMutation();
   const downloadMutation = useDownloadMutation();
+  const { listSuggestedEntries, setListSuggestedEntries } = useEntries();
 
   const entryMenu: MenuItem[][] = [
     !isDir
@@ -143,22 +144,62 @@ const DataRowPriorityView: React.FC<SuggestedEntry & DataRowPriorityViewProps> =
         icon: <Icon icon='material-symbols:add-to-drive' />,
         action: () => {},
       },
-      {
-        label: 'Add to starred',
-        icon: <Icon icon='material-symbols:star-outline' />,
-        action: () => {
-          starEntryMutation.mutate({ file_ids: [id] });
+      ... is_starred ? [
+        {
+          label: 'Remove from starred',
+          icon: <Icon icon='mdi:star-off-outline' />,
+          action: () => {
+            unstarEntryMutation.mutate({ file_ids: [id] }, {
+              onSuccess: () => {
+                const newState = listSuggestedEntries.map((entry: SuggestedEntry) => {
+                  if (entry.id === id) {
+                    return { ...entry, is_starred: false };
+                  }
+                  return entry;
+                });
+                setListSuggestedEntries(newState);
+              }
+            });
+          },
         },
-      },
+      ] : [
+        {
+          label: 'Add to starred',
+          icon: <Icon icon='material-symbols:star-outline' />,
+          action: () => {
+            starEntryMutation.mutate({ file_ids: [id] }, {
+              onSuccess: () => {
+                const newState = listSuggestedEntries.map((entry: SuggestedEntry) => {
+                  if (entry.id === id) {
+                    return { ...entry, is_starred: true };
+                  }
+                  return entry;
+                });
+                setListSuggestedEntries(newState);
+              }
+            });
+          },
+        },
+      ],
     ],
     [
       {
         label: 'Detail',
         icon: <Icon icon='mdi:information-outline' />,
-        action: () => openDrawer(id),
+        action: () => {
+          setTab('Details')
+          openDrawer(id)
+        },
       },
-      { label: 'Activity', icon: <Icon icon='mdi:graph-line-variant' />, action: () => {} },
-      !isDir && { label: 'Lock', icon: <Icon icon='mdi:lock-outline' />, action: () => {} },
+      {
+        label: 'Activity',
+        icon: <Icon icon='mdi:graph-line-variant' />,
+        action: () => {
+          setTab('Activity')
+          openDrawer(id)
+        },
+      },
+      // !isDir && { label: 'Lock', icon: <Icon icon='mdi:lock-outline' />, action: () => {} },
     ],
     [
       {
