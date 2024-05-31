@@ -27,11 +27,11 @@ import {
 } from '@/apis/drive/drive.api';
 import {
   CopyFileREQ,
-  RenameREQ,
   DeleteEntriesREQ,
+  DownloadMultipleEntriesREQ,
+  RenameREQ,
   RestoreEntriesREQ,
   StarEntriesREQ,
-  DownloadMultipleEntriesREQ,
 } from '@/apis/drive/drive.request';
 import {
   EntryMetadataRES,
@@ -47,15 +47,15 @@ import { uploadFilesApi } from '@/apis/user/storage/storage.api';
 import { LocalEntryToTimeEntry } from '@/pages/user/trash/trash-page-view/DriveHistoryGridView';
 import {
   Path,
-  useDrawer,
-  useEntries,
-  useIsFileMode,
-  useFilter,
-  useSelected,
   useActivityLogStore,
   useCursor,
   useCursorActivity,
   useCursorSearch,
+  useDrawer,
+  useEntries,
+  useFilter,
+  useIsFileMode,
+  useSelected,
 } from '@/store/my-drive/myDrive.store';
 import { useProgressIndicator } from '@/store/storage/progressIndicator.store';
 import { useStorageStore } from '@/store/storage/storage.store';
@@ -484,7 +484,7 @@ export const useRenameMutation = () => {
   });
 };
 
-export const useRenameMutationV2 = (queryKey:QueryKey) => {
+export const useRenameMutationV2 = (queryKey: QueryKey) => {
   const queryClient = useQueryClient();
   const { listEntries, setListEntries, setListSuggestedEntries, listSuggestedEntries } = useEntries();
 
@@ -593,7 +593,7 @@ export const useDeleteMutation = () => {
   });
 };
 
-export const useDeleteMutationV2 = (queryKey?:QueryKey) => {
+export const useDeleteMutationV2 = (queryKey?: QueryKey) => {
   const { trashEntries, setTrashEntries } = useEntries();
   const client = useQueryClient();
 
@@ -617,7 +617,9 @@ export const useDeleteMutationV2 = (queryKey?:QueryKey) => {
         .filter((entry) => entry.entries.length > 0);
       setTrashEntries(trash);
       toast.success(`${data.data.length} files deleted`);
-      client.invalidateQueries({ queryKey: queryKey });
+      if (queryKey) {
+        client.invalidateQueries({ queryKey: queryKey });
+      }
     },
   });
 };

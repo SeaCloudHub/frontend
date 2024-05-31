@@ -1,6 +1,6 @@
 import FileViewerContainer from '@/components/core/file-viewers/file-viewer-container/FileViewerContainer';
 import { useSharedFileInfo } from '@/store/storage/file-share-info.store';
-import { DRIVE_SHARED } from '@/utils/constants/router.constant';
+import { DRIVE_MY_DRIVE, DRIVE_SHARED } from '@/utils/constants/router.constant';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -17,7 +17,7 @@ const ShareFile = () => {
           fileInfo={fileInfo}
           closeOutside={() => {
             setOpen(false);
-            navigate(DRIVE_SHARED);
+            navigate(role == 'owner' ? DRIVE_MY_DRIVE : DRIVE_SHARED);
           }}
         />
       )}

@@ -1,19 +1,20 @@
 import { downloadFileApi } from '@/apis/user/storage/storage.api';
-import { LocalEntry, useDownloadMutation } from '@/hooks/drive.hooks';
+import { LocalEntry, useDeleteMutationV2, useDownloadMutation } from '@/hooks/drive.hooks';
+import { DRIVE_HOME } from '@/utils/constants/router.constant';
+import { CopyToClipboard } from '@/utils/function/copy.function';
 import { getFileIcon } from '@/utils/function/validateFileType';
 import { ApiGenericError } from '@/utils/types/api-generic-error.type';
 import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 import { isAxiosError } from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import IconifyIcon from '../../Icon/IConCore';
 import ButtonCore from '../../button/ButtonCore';
 import ButtonIcon from '../../button/ButtonIcon';
 import MenuCore from '../../menu/MenuCore';
 import { MenuItemCoreProps } from '../../menu/MenuItem';
+import DeletePopUp from '../../pop-up/DeletePopUp';
 import SharePopUp from '../../pop-up/SharePopUp';
 import Viewer from './Viewer';
-import { CopyToClipboard } from '@/utils/function/copy.function';
-import { DRIVE_HOME } from '@/utils/constants/router.constant';
 
 type FileViewerContainerProps = {
   canDelete?: boolean;
@@ -24,28 +25,6 @@ type FileViewerContainerProps = {
   closeOutside?: (data?: any) => void;
 };
 
-const totalFileViewerActions: Record<string, MenuItemCoreProps> = {
-  delete: {
-    icon: 'material-symbols-light:delete-outline',
-    onClick: () => {},
-    title: 'Delete',
-  },
-  copyLink: {
-    icon: 'ic:sharp-link',
-    onClick: () => {},
-    title: 'Copy link',
-  },
-  share: {
-    icon: 'codicon:share',
-    onClick: () => {},
-    title: 'Share',
-  },
-  download: {
-    icon: 'material-symbols-light:download',
-    onClick: () => {},
-    title: 'Download',
-  },
-};
 const FileViewerContainer: React.FC<FileViewerContainerProps> = ({
   isCloseOutside,
   closeOutside,
@@ -55,12 +34,39 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({
   canShare,
 }) => {
   const [fileViewerActions, setFileViewerActions] = useState<MenuItemCoreProps[]>([]);
+  const [deletePopup, setDeletePopUp] = useState(false);
   const [fileIcon, setFileIcon] = useState<React.ReactNode | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [openShare, setOpenShare] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const downloadMutation = useDownloadMutation();
-
+  const deleteFileMutation = useDeleteMutationV2();
+  const totalFileViewerActions: Record<string, MenuItemCoreProps> = useMemo(() => {
+    return {
+      delete: {
+        icon: 'material-symbols-light:delete-outline',
+        onClick: () => {
+          setDeletePopUp(true);
+        },
+        title: 'Delete',
+      },
+      copyLink: {
+        icon: 'ic:sharp-link',
+        onClick: () => {},
+        title: 'Copy link',
+      },
+      share: {
+        icon: 'codicon:share',
+        onClick: () => {},
+        title: 'Share',
+      },
+      download: {
+        icon: 'material-symbols-light:download',
+        onClick: () => {},
+        title: 'Download',
+      },
+    };
+  }, []);
   useEffect(() => {
     function updateActions() {
       let actions: MenuItemCoreProps[] = [totalFileViewerActions['delete']];
@@ -117,6 +123,21 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({
   return (
     <>
       <Dialog onClose={isCloseOutside ? closeOutside : () => {}} open={open} fullScreen>
+        {deletePopup && (
+          <DeletePopUp
+            handleClose={(data?: any) => {
+              setDeletePopUp(false);
+              if (data) {
+                closeOutside && closeOutside(false);
+              }
+            }}
+            additionalMutaion={deleteFileMutation}
+            open={true}
+            title={fileInfo.title}
+            source_ids={[fileInfo.id]}
+            setResult={function (value: React.SetStateAction<boolean>): void {}}
+          />
+        )}
         <DialogTitle
           className='md:text-md flex h-[54px] items-center justify-between border-b  bg-content-bg py-0  dark:bg-content-bg-dark dark:text-icons-color-dark'
           sx={{
