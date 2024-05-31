@@ -5,6 +5,7 @@ import { CopyToClipboard } from '@/utils/function/copy.function';
 import { getFileIcon } from '@/utils/function/validateFileType';
 import { ApiGenericError } from '@/utils/types/api-generic-error.type';
 import { Dialog, DialogContent, DialogTitle } from '@mui/material';
+import { QueryKey } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import React, { useEffect, useMemo, useState } from 'react';
 import IconifyIcon from '../../Icon/IConCore';
@@ -23,6 +24,7 @@ type FileViewerContainerProps = {
   fileInfo: LocalEntry;
   isCloseOutside?: boolean;
   closeOutside?: (data?: any) => void;
+  queryKey?:QueryKey;
 };
 
 const FileViewerContainer: React.FC<FileViewerContainerProps> = ({
@@ -31,6 +33,7 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({
   open,
   fileInfo,
   canDelete,
+  queryKey,
   canShare,
 }) => {
   const [fileViewerActions, setFileViewerActions] = useState<MenuItemCoreProps[]>([]);
@@ -40,7 +43,7 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({
   const [openShare, setOpenShare] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const downloadMutation = useDownloadMutation();
-  const deleteFileMutation = useDeleteMutationV2();
+  const deleteFileMutation = useDeleteMutationV2(queryKey);
   const totalFileViewerActions: Record<string, MenuItemCoreProps> = useMemo(() => {
     return {
       delete: {
