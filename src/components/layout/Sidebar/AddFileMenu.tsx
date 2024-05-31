@@ -80,8 +80,10 @@ const AddFileMenu = ({ shrinkMode }: AddFileMenuProps) => {
       } else {
         setCanCreate(false);
       }
+    } else {
+      setCanCreate(true);
     }
-  }, [location.pathname]);
+  }, [location.pathname,role]);
 
   const toggleFilePicker = () => {
     if (fileInputRef.current) {
