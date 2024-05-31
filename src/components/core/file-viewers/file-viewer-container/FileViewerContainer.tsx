@@ -1,13 +1,10 @@
-import { downloadFile } from '@/apis/drive/drive.api';
 import { downloadFileApi } from '@/apis/user/storage/storage.api';
 import { LocalEntry, useDownloadMutation } from '@/hooks/drive.hooks';
 import { getFileIcon } from '@/utils/function/validateFileType';
-import { toastError } from '@/utils/toast-options/toast-options';
 import { ApiGenericError } from '@/utils/types/api-generic-error.type';
 import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 import { isAxiosError } from 'axios';
 import React, { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 import IconifyIcon from '../../Icon/IConCore';
 import ButtonCore from '../../button/ButtonCore';
 import ButtonIcon from '../../button/ButtonIcon';
@@ -61,14 +58,12 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({
   const [fileIcon, setFileIcon] = useState<React.ReactNode | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [openShare, setOpenShare] = useState<boolean>(false);
-
+  const [error, setError] = useState<string | null>(null);
   const downloadMutation = useDownloadMutation();
 
   useEffect(() => {
     function updateActions() {
-      let actions: MenuItemCoreProps[] = [
-        totalFileViewerActions['delete'],
-      ];
+      let actions: MenuItemCoreProps[] = [totalFileViewerActions['delete']];
       if (window.innerWidth < 640) {
         actions.push(totalFileViewerActions['download']);
       } else {
@@ -100,7 +95,7 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({
       setFile(file);
     } catch (error) {
       if (isAxiosError<ApiGenericError>(error)) {
-        toast.error(error.response?.data.message, toastError());
+        setError('You can access this file');
       }
     }
   };
@@ -134,7 +129,7 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({
             {/* <ButtonCore type='contained' title='Edit' icon={<IconifyIcon icon='basil:edit-outline' />} /> */}
             {canShare && (
               <div
-                className='flex  cursor-pointer  items-center space-x-2 rounded-md p-2 hover:bg-gray-100'
+                className='flex  cursor-pointer  items-center space-x-2 rounded-md p-2 hover:bg-gray-100 dark:hover:bg-slate-700'
                 onClick={() => {
                   setOpenShare(true);
                 }}>
@@ -142,9 +137,9 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({
                 <p className='text-sm'>Share</p>
               </div>
             )}
-            <div className='hidden cursor-pointer items-center space-x-2 rounded-md p-2 hover:bg-gray-100 xs:flex'
-              onClick={() => CopyToClipboard(`${location.origin + DRIVE_HOME}/file/${fileInfo.id}`)}
-            >
+            <div
+              className='hidden cursor-pointer items-center space-x-2 rounded-md p-2 hover:bg-gray-100  dark:hover:bg-slate-700 xs:flex'
+              onClick={() => CopyToClipboard(`${location.origin + DRIVE_HOME}/file/${fileInfo.id}`)}>
               <IconifyIcon icon='ic:sharp-link' fontSize={16} />
               <p className='text-sm'>Copy link</p>
             </div>
@@ -152,7 +147,7 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({
               onClick={() => {
                 onDownloadClick();
               }}
-              className={` hidden cursor-pointer items-center space-x-2 rounded-md p-2 hover:bg-gray-100 sm:flex`}>
+              className={` hidden cursor-pointer items-center space-x-2 rounded-md p-2  hover:bg-gray-100 dark:hover:bg-slate-700 sm:flex`}>
               <IconifyIcon icon='material-symbols-light:download' fontSize={16} />
               <p className='text-sm'>Download</p>
             </div>
@@ -187,7 +182,10 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({
             width: '100%',
           }}>
           {file && <Viewer file={file} fileId={fileInfo.id} fileName={fileInfo.title} fileType={fileInfo.fileType} />}
-          {!file && <img src={(import.meta.env.BASE_URL + 'loader.svg') as string} className='mx-auto  h-[50px] w-[50px]' />}
+          {!file && !error && (
+            <img src={(import.meta.env.BASE_URL + 'loader.svg') as string} className='mx-auto  h-[50px] w-[50px]' />
+          )}
+          {error && <p>{error}</p>}
         </DialogContent>
       </Dialog>
       {openShare && (

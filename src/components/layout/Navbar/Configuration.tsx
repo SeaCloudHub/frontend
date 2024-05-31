@@ -46,6 +46,8 @@ const Configuration = () => {
   const [modalHelpOpen, setModalHelpOpen] = useState(false);
   const [modalAboutUs, setModalAboutUs] = useState(false);
   const identity = useSession((state) => state.identity);
+  const [isShowNotification, setIsShowNotification] = useState(!identity.is_admin);
+
   const receiveNewNotification = () => {
     setHasNewNotification(false);
     return newNotification as NotificationContent;
@@ -94,7 +96,7 @@ const Configuration = () => {
 
   return (
     <div className='ml-7 mr-5 flex items-center space-x-3'>
-      {!identity.is_admin && (
+      {isShowNotification && (
         <Popover
           content={Notification({
             receiveNewNotification,
