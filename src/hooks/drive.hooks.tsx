@@ -66,7 +66,7 @@ import { toastError } from '@/utils/toast-options/toast-options';
 import { ApiGenericError } from '@/utils/types/api-generic-error.type';
 import { UserRole } from '@/utils/types/user-role.type';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { QueryKey, keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import React, { useEffect } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
@@ -397,11 +397,15 @@ export const useTrash = () => {
   const id = dirId || rootId;
   const { setNextCursor, currentCursor } = useCursor();
   const { trashEntries, setTrashEntries } = useEntries();
+  const { modifiedFilter, typeFilter } = useFilter();
 
   const { data, error, refetch, isLoading } = useQuery({
-    queryKey: ['Trash-entries', id, currentCursor],
+    queryKey: ['Trash-entries', id, currentCursor, modifiedFilter, typeFilter],
     queryFn: async () => {
-      const res = await getListEntriesTrash({ limit: 15, cursor: currentCursor }).then((res) => res?.data);
+      const res = await getListEntriesTrash({ limit: 15, cursor: currentCursor,
+        ...(modifiedFilter ? { after: modifiedFilter } : {}),
+        ...(typeFilter ? { type: typeFilter } : {}),
+      }).then((res) => res?.data);
       return {entries: transformEntries(res?.entries || []), cursor: res.cursor || ''};
     },
     staleTime: 10 * 1000,
@@ -891,7 +895,9 @@ export const useGetListFilesUser = (page: number, id: string, isRoot: boolean, q
   return { data: data , refetch, isLoading };
 }
 
-export const useModifyStorageCapacityMutation = () => {
+export const useModifyStorageCapacityMutation = (queryKey: QueryKey) => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: (body: ModifyStorageCapacityREQ) => {
       return modifyStorageCapacityApi(body);
@@ -903,6 +909,8 @@ export const useModifyStorageCapacityMutation = () => {
     },
     onSuccess: (data) => {
       toast.success('Modified');
+      console.log(queryKey);
+      queryClient.invalidateQueries({ queryKey: queryKey });
     },
   });
 }

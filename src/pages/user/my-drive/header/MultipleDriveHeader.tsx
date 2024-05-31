@@ -27,7 +27,7 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
   const [result, setResult] = useState(false);
   const [type, setType] = useState<'move' | 'share' | 'rename' | 'move to trash' | null>();
 
-  const { listEntries, setListEntries } = useEntries();
+  const { listEntries, setListEntries, getNameById } = useEntries();
 
   const deleteMutation = useDeleteMutation();
   const restoreMutation = useRestoreEntriesMutation();
@@ -204,6 +204,14 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
           source_ids={arrSelected.map((e) => e.id)}
           title={''}
           setResult={setResult}
+        />
+      )}
+      {type === 'rename' && (
+        <RenamePopUp
+          open={isOpened}
+          handleClose={() => setIsOpened(false)}
+          id={arrSelected[0].id}
+          name={getNameById(arrSelected[0].id)}
         />
       )}
     </div>

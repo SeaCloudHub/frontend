@@ -10,17 +10,18 @@ import { TypeEntry } from '@/apis/drive/drive.request';
 import { useFilter } from '@/store/my-drive/myDrive.store';
 import { modifiedFilterItems } from '@/utils/constants/modified-filter.constant';
 import { useDebounce } from '@/hooks/useDebounce';
+import FileViewerContainer from '@/components/core/file-viewers/file-viewer-container/FileViewerContainer';
 
 type FileFolderFilterProps = {
   userDTO: UserManagementInfoDto;
 };
 
 const FileFolderFilter: React.FC<FileFolderFilterProps> = ({ userDTO }) => {
-
   const [name, setName] = useState('');
-
   const [page, setPage] = useState(1);
   const [isRoot, setIsRoot] = useState(true);
+  const [recordSelected, setRecordSelected] = useState<LocalEntry>(null);
+
   const [dirId, setDirId] = useState<string>(userDTO?.root_id);
 
   const { setModifiedFilter, setTypeFilter } = useFilter();
@@ -34,8 +35,16 @@ const FileFolderFilter: React.FC<FileFolderFilterProps> = ({ userDTO }) => {
       setDirId(record.id);
       setIsRoot(false);
       setPage(1);
+    } else {
+      setRecordSelected(record);
     }
   };
+
+  const handlePathChange = (id: string, name: string) => {
+    setDirId(id);
+    setIsRoot(false);
+    setPage(1);
+  }
 
   const { parents } = usePathParents(dirId, true);
   const query = useDebounce({ delay: 260, value: name });
@@ -93,11 +102,8 @@ const FileFolderFilter: React.FC<FileFolderFilterProps> = ({ userDTO }) => {
           handlePageChange={handlePageChange}
           handleOnRow={handleOnRow}
           parentPath={parents}
-          handlePathChange={(id, name) => {
-            setDirId(id);
-            setIsRoot(false);
-            setPage(1);
-          }}
+          handlePathChange={handlePathChange}
+          fileInfoView={recordSelected}
         />
       </div>
     </div>

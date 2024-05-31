@@ -17,13 +17,13 @@ type ModifyMemoryPopUpProps = {
 };
 
 const ModifyMemoryPopUp: React.FC<ModifyMemoryPopUpProps> = ({onClose, open, identity_id}) => {
-  const modifyStorageCapacityMutation = useModifyStorageCapacityMutation();
+  const modifyStorageCapacityMutation = useModifyStorageCapacityMutation(['user-details' ,identity_id]);
   const formik = useFormik({
     initialValues: { capacity: 0 },
     validationSchema: Yup.object({ capacity: Yup.number().required('Memory Name is required') }),
     onSubmit: (values) => {
       modifyStorageCapacityMutation.mutateAsync(
-        { storage_capacity: values.capacity * Math.pow(10,9) , identity_id },
+        { storage_capacity: values.capacity * Math.pow(2, 30) , identity_id },
         { onSuccess: () =>  onClose() }
       );
     },

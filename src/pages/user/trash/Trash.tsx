@@ -40,7 +40,14 @@ const Trash = () => {
     <DriveLayout
       headerLeft={<TrashPageHeader />}
       onScrollBottom={onScollBottom}
-      bodyLeft={<TrashPageView entries={data} dir={{ id: rootId, name: 'Trash' }} isLoading={isLoading} />}
+      bodyLeft={
+        <TrashPageView
+          entries={data}
+          dir={{ id: rootId, name: 'Trash' }}
+          isLoading={isLoading}
+          isScrolling={isScrolling}
+        />
+      }
       sidePanel={
         <SidePanel
           isHidden={arrSelected.length === 0}

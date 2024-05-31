@@ -35,7 +35,6 @@ function Search() {
       if (onFocus) {
         setOnFocus(false);
         resetCursorSearch();
-        setArrSelected([]);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -43,7 +42,7 @@ function Search() {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [onFocus, resetCursorSearch, setArrSelected]);
+  }, [onFocus, resetCursorSearch]);
 
   return (
     <div className={`relative max-w-2xl flex-1 ${identity.is_admin?'opacity-0 pointer-events-none':''}`} ref={ref} onClick={() => {

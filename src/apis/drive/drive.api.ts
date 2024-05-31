@@ -55,8 +55,10 @@ export const getListEntriesPageStarred = async (params?: Pick<ListEntriesREQ, 'a
   return res.data;
 };
 
-export const getListEntriesTrash = async (params?: Pick<ListEntriesREQ, 'limit' | 'cursor'>) => {
-  const res = await api.get<BaseResponse<ListEntriesRESP>>(`/files/trash`, { params });
+export const getListEntriesTrash = async (params?: Pick<ListEntriesREQ, 'after' | 'cursor' | 'limit' | 'type'>) => {
+  const res = await api.get<BaseResponse<ListEntriesRESP>>(`/files/trash`, {
+    params: { ...params, type: params.type?.toLowerCase() },
+  });
   return res.data;
 };
 

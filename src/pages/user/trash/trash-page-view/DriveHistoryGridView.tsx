@@ -81,9 +81,9 @@ const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({
     </div> :
     <div className='mx-5 mt-2 h-full select-none' ref={driveGridViewRef}>
       <div className='flex flex-col space-y-2'>
-        <div className='absolute right-4 top-3 z-10'>
+        {/* <div className='absolute right-4 top-3 z-10'>
           <Sort sort={sort} order={order} setSort={setSort} />
-        </div>
+        </div> */}
         {entries.length === 0 && (
           <div className='flex h-96 items-center justify-center'>
             <div className='text-center'>
