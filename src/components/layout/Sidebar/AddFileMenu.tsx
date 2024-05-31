@@ -83,7 +83,7 @@ const AddFileMenu = ({ shrinkMode }: AddFileMenuProps) => {
     } else {
       setCanCreate(true);
     }
-  }, [location.pathname,role]);
+  }, [location.pathname, role]);
 
   const toggleFilePicker = () => {
     if (fileInputRef.current) {
@@ -108,7 +108,7 @@ const AddFileMenu = ({ shrinkMode }: AddFileMenuProps) => {
   const [createModal, setCreateModal] = useState<boolean>(false);
   const queryClient = useQueryClient();
   const dirId = useMemo(() => {
-    if (location.pathname.includes('/dir/')) {
+    if (location.pathname.includes('/dir/') || location.pathname.includes('/folder/')) {
       const lastSlashIndex = location.pathname.lastIndexOf('/');
       return location.pathname.substring(lastSlashIndex + 1);
     } else {
