@@ -9,9 +9,9 @@ export const convertUserFileRoleInf = (userRoles: RoleUser[]) => {
   return userRoles.map((item) => {
     const roleInfo = roleInfoDto.find((role) => role.key === item.role);
     return {
-      name: item.user_id,
-      email: item.user_id,
-      avatar: '',
+      name: (item.first_name || '') + (item.first_name && item.last_name ? ' ' : '') + (item.last_name || ''),
+      email: item.email,
+      avatar: item.avatar_url ? import.meta.env.VITE_BACKEND_API + item.avatar_url : '',
       role: roleInfo ? roleInfo.value : 'Unknown',
     };
   });

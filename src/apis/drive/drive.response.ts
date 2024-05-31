@@ -48,6 +48,10 @@ export type ParentRES = {
 export type RoleUser = {
   user_id: string;
   role: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  avatar_url:string;
 };
 
 export type EntryMetadataRES = {
