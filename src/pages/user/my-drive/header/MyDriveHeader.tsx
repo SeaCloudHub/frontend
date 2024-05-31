@@ -11,7 +11,7 @@ import { TypeEntry } from '@/apis/drive/drive.request';
 import { UserRole } from '@/utils/types/user-role.type';
 
 type MyDriveHeaderProps = {
-  path: { id: string; name: string, userRoles: UserRole[], is_starred: boolean }[];
+  path: { id: string; name: string; userRoles: UserRole[]; is_starred: boolean }[];
   sort: string;
   order: string;
   setSort: ({ sort, order }: { sort: string; order: string }) => void;

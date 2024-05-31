@@ -52,6 +52,6 @@ export const typeFilterItems = [
   },
   {
     label: 'Other',
-    icon: 'basil:other-1-outline'
-  }
+    icon: 'basil:other-1-outline',
+  },
 ];

@@ -13,8 +13,9 @@ type SearchResultProps = {
 const SearchResult: React.FC<SearchResultProps> = ({ data, loading, onSelected }) => {
   const navigate = useNavigate();
 
-  return (
-    loading ? <LinearProgress className='translate-y-1' /> :
+  return loading ? (
+    <LinearProgress className='translate-y-1' />
+  ) : (
     <div
       className='border-textC shadow-darkC absolute z-10 w-full overflow-x-hidden
       rounded-b-2xl border-t-[1.5px] bg-white pt-2 shadow-md dark:bg-search-bg-dark'>
@@ -28,7 +29,7 @@ const SearchResult: React.FC<SearchResultProps> = ({ data, loading, onSelected }
               onClick={(e) => {
                 e.stopPropagation();
                 onSelected && onSelected();
-                navigate(`/drive/${item.isDir?'folder':'file'}/${item.id}`);
+                navigate(`/drive/${item.isDir ? 'folder' : 'file'}/${item.id}`);
               }}
               className='flex w-full cursor-pointer items-center space-x-3.5 border-blue-700 px-4 py-2 hover:border-l-2 hover:bg-[#dfe3e7] dark:hover:bg-slate-700'>
               <span className='h-6 w-6'>{item.isDir ? <AiFillFolder className='text-textC h-full w-full' /> : item.icon}</span>

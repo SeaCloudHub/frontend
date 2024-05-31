@@ -197,7 +197,7 @@ const UserManagementDetail = () => {
               onClick={() => {
                 setDeleteModal(true);
               }}
-              icon={<IconifyIcon icon='tabler:user-x'/>}
+              icon={<IconifyIcon icon='tabler:user-x' />}
             />
             {deleteModal && (
               <ModalConfirmDelete
@@ -220,13 +220,7 @@ const UserManagementDetail = () => {
                 setModify(true);
               }}
             />
-            {modify &&
-              <ModifyMemoryPopUp
-                open={modify}
-                onClose={() => setModify(false)}
-                identity_id={userId}
-              />
-            }
+            {modify && <ModifyMemoryPopUp open={modify} onClose={() => setModify(false)} identity_id={userId} />}
           </div>
         </div>
 

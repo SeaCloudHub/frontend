@@ -1,4 +1,4 @@
-import { TypeEntry } from "@/apis/drive/drive.request";
+import { TypeEntry } from '@/apis/drive/drive.request';
 
 export type GetIdentitiesREQ = {
   limit: number;

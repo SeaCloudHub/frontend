@@ -11,7 +11,7 @@ import { useStorageStore } from '@/store/storage/storage.store';
 
 const Memory = () => {
   const [{ sort, order }, setSort] = useState<{ sort: string; order: 'asc' | 'desc' }>({ sort: 'Size', order: 'desc' });
-  const {setCurrentCursor, currentCursor, nextCursor} = useCursor();
+  const { setCurrentCursor, currentCursor, nextCursor } = useCursor();
   const { rootId } = useStorageStore();
   // const {} = useEntries();
   const { arrSelected } = useSelected();
@@ -30,10 +30,14 @@ const Memory = () => {
       onScrollBottom={onScrollBottom}
       bodyLeft={<MemoryView entries={data} isLoading={isLoading} order={order} setSort={setSort} sort={sort} />}
       sidePanel={
-        <SidePanel isHidden={arrSelected.length === 0}
-          id={ arrSelected.length === 0 ? rootId : arrSelected.length === 1 ? arrSelected[0].id : '' }
-          title={ arrSelected.length === 0 ? 'Memory' :
-          data.find((item) => item.id === arrSelected[arrSelected.length - 1].id)?.title || ''}
+        <SidePanel
+          isHidden={arrSelected.length === 0}
+          id={arrSelected.length === 0 ? rootId : arrSelected.length === 1 ? arrSelected[0].id : ''}
+          title={
+            arrSelected.length === 0
+              ? 'Memory'
+              : data.find((item) => item.id === arrSelected[arrSelected.length - 1].id)?.title || ''
+          }
         />
       }
     />

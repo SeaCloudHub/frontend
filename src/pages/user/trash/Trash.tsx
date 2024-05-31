@@ -49,9 +49,9 @@ const Trash = () => {
             arrSelected.length === 0
               ? 'Trash'
               : data
-                .map((timeEntry) => timeEntry.entries)
-                .flat()
-                .find((entry) => entry.id === arrSelected[0].id)?.title || ''
+                  .map((timeEntry) => timeEntry.entries)
+                  .flat()
+                  .find((entry) => entry.id === arrSelected[0].id)?.title || ''
           }
         />
       }

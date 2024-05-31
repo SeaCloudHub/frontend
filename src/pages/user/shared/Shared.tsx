@@ -31,9 +31,9 @@ const Shared = () => {
   return (
     <DriveLayout
       headerLeft={
-        <div className='flex flex-col overflow-hidden select-none'>
+        <div className='flex select-none flex-col overflow-hidden'>
           <div className='flex justify-between space-x-2 text-2xl'>
-            <div className='w-full pb-[20px] pt-[15px] px-4'> Shared with me </div>
+            <div className='w-full px-4 pb-[20px] pt-[15px]'> Shared with me </div>
             <div className='flex items-center gap-2'>
               <SharingPageViewMode setViewMode={setViewMode} viewMode={viewMode} />
               <Icon

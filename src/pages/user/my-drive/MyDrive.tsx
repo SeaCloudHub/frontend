@@ -42,7 +42,7 @@ const MyDrive = () => {
 
   // scroll to load more
   const onScollBottom = () => {
-    if(nextCursor !== '' && currentCursor !== nextCursor) {
+    if (nextCursor !== '' && currentCursor !== nextCursor) {
       setIsScrolling(true);
       setTimeout(() => {
         setIsScrolling(false);
@@ -57,9 +57,21 @@ const MyDrive = () => {
       onScrollBottom={onScollBottom}
       bodyLeft={
         viewMode === 'grid' ? (
-          <DriveGridView entries={data} parent='my-drive' isLoading={isLoading} curDir={parents[parents.length - 1]} isScrolling={isScrolling} />
+          <DriveGridView
+            entries={data}
+            parent='my-drive'
+            isLoading={isLoading}
+            curDir={parents[parents.length - 1]}
+            isScrolling={isScrolling}
+          />
         ) : (
-          <DriveListView entries={data} parent='my-drive' isLoading={isLoading} curDir={parents[parents.length - 1]} isScrolling={isScrolling} />
+          <DriveListView
+            entries={data}
+            parent='my-drive'
+            isLoading={isLoading}
+            curDir={parents[parents.length - 1]}
+            isScrolling={isScrolling}
+          />
         )
       }
       sidePanel={
