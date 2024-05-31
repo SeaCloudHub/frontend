@@ -3,13 +3,14 @@ import IconifyIcon from '@/components/core/Icon/IConCore';
 import CustomDropdown from '@/components/core/drop-down/CustomDropdown';
 import { MenuItem } from '@/components/core/drop-down/Dropdown';
 import ModalCreateFolder from '@/components/core/modal/ModalCreateFolder';
+import { useSharedFileInfo } from '@/store/storage/file-share-info.store';
 import { useProgressIndicator } from '@/store/storage/progressIndicator.store';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { toastError } from '@/utils/toast-options/toast-options';
 import { ApiGenericError } from '@/utils/types/api-generic-error.type';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -22,8 +23,9 @@ const AddFileMenu = ({ shrinkMode }: AddFileMenuProps) => {
   const folderInputRef = useRef<HTMLInputElement>(null);
   const rootId = useStorageStore((state) => state.rootId);
   const setFileNames = useProgressIndicator((state) => state.setFileNames);
+  const [canCreate, setCanCreate] = useState(true);
   const location = useLocation();
-
+  const { role } = useSharedFileInfo();
   const uploadFilesMutation = useMutation({
     mutationFn: (body: { files: File[]; id: string }) => {
       return uploadFilesApi(body);
@@ -71,11 +73,15 @@ const AddFileMenu = ({ shrinkMode }: AddFileMenuProps) => {
     }
   };
 
-  // const toggleFolderPicker = () => {
-  //   if (folderInputRef.current) {
-  //     folderInputRef.current.click();
-  //   }
-  // };
+  useEffect(() => {
+    if (location.pathname.includes('folder')) {
+      if (role == 'editor' || role == 'owner') {
+        setCanCreate(true);
+      } else {
+        setCanCreate(false);
+      }
+    }
+  }, [location.pathname]);
 
   const toggleFilePicker = () => {
     if (fileInputRef.current) {
@@ -110,6 +116,7 @@ const AddFileMenu = ({ shrinkMode }: AddFileMenuProps) => {
   return (
     <>
       <CustomDropdown
+        disableAll={!canCreate}
         button={
           <button
             className={`flex w-40 items-center space-x-3 rounded-full bg-white ${shrinkMode ? '' : 'sidebar-item-lg'} px-4 py-2 duration-300 hover:bg-blue-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700`}>
