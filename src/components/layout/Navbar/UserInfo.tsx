@@ -29,8 +29,8 @@ function UserInfo({ onClose }: UserInfoProps) {
   const role = useSession((state) => state.role);
 
   const logoutMutation = useMutation({
-    mutationFn: () => {
-      return signOutApi();
+    mutationFn: async () => {
+      return await signOutApi();
     },
     onError: (error) => {
       if (isAxiosError<ApiGenericError>(error)) {
@@ -47,8 +47,8 @@ function UserInfo({ onClose }: UserInfoProps) {
     },
   });
 
-  const onSignOutClick = async () => {
-    await logoutMutation.mutateAsync();
+  const onSignOutClick = () => {
+    logoutMutation.mutate();
   };
 
   const onUserProfileClick = () => {

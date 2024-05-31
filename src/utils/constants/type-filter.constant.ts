@@ -50,4 +50,8 @@ export const typeFilterItems = [
     label: 'Archive',
     icon: 'mdi:archive',
   },
+  {
+    label: 'Other',
+    icon: 'basil:other-1-outline',
+  },
 ];

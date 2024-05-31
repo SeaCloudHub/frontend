@@ -59,7 +59,19 @@ export const FileOperation = [
   { icon: <TrashIcon />, label: 'Delete file' },
 ];
 
-const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelected, dir, fileType, parent, isDir, userRoles, is_starred }) => {
+const FileCard: React.FC<FileCardProps> = ({
+  title,
+  icon,
+  preview,
+  id,
+  isSelected,
+  dir,
+  fileType,
+  parent,
+  isDir,
+  userRoles,
+  is_starred,
+}) => {
   const [fileViewer, setFileViewer] = useState(false);
   const [isPopUpOpen, setIsPopUpOpen] = useState(false);
   const [type, setType] = useState<'move' | 'share' | 'rename' | 'move to trash' | null>(null);
@@ -71,7 +83,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
   const { resetCursorActivity } = useCursorActivity();
   const { resetCursor } = useCursor();
   const { setListEntries, listEntries, setListSuggestedEntries, listSuggestedEntries } = useEntries();
-  const {setActivityLog} = useActivityLogStore();
+  const { setActivityLog } = useActivityLogStore();
   const copyMutation = useCopyMutation();
   const restoreMutation = useRestoreEntriesMutation();
   const starEntryMutation = useStarEntryMutation();
@@ -80,7 +92,6 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
   const downloadFolder = useDownLoadMultipleMutation();
   const { setArrSelected, arrSelected } = useSelected();
   const { resetFilter } = useFilter();
-
 
   const menuItems: MenuItem[][] = [
     [
@@ -151,65 +162,71 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
         },
         isHidden: isPermission(userRoles) <= 1,
       },
-      ... is_starred ? [
-        {
-          label: 'Remove from starred',
-          icon: <Icon icon='mdi:star-off-outline' />,
-          action: () => {
-            unstarEntryMutation.mutate({ file_ids: [id] }, {
-              onSuccess: () => {
-                if(parent === 'priority') {
-                  const newState = listSuggestedEntries.map((entry: SuggestedEntry) => {
-                    if (entry.id === id) {
-                      return { ...entry, is_starred: false };
-                    }
-                    return entry;
-                  });
-                  setListSuggestedEntries(newState);
-                }
-                else {
-                  const newState = listEntries.map((entry: LocalEntry) => {
-                    if (entry.id === id) {
-                      return { ...entry, is_starred: false };
-                    }
-                    return entry;
-                  });
-                  setListEntries(newState);
-                }
-              }
-            });
-          },
-        },
-      ] : [
-        {
-          label: 'Add to starred',
-          icon: <Icon icon='material-symbols:star-outline' />,
-          action: () => {
-            starEntryMutation.mutate({ file_ids: [id] }, {
-              onSuccess: () => {
-                if(parent === 'priority') {
-                  const newState = listSuggestedEntries.map((entry: SuggestedEntry) => {
-                    if (entry.id === id) {
-                      return { ...entry, is_starred: true };
-                    }
-                    return entry;
-                  });
-                  setListSuggestedEntries(newState);
-                }
-                else {
-                  const newState = listEntries.map((entry: LocalEntry) => {
-                    if (entry.id === id) {
-                      return { ...entry, is_starred: true };
-                    }
-                    return entry;
-                  });
-                  setListEntries(newState);
-                }
-              }
-            });
-          },
-        },
-      ],
+      ...(is_starred
+        ? [
+            {
+              label: 'Remove from starred',
+              icon: <Icon icon='mdi:star-off-outline' />,
+              action: () => {
+                unstarEntryMutation.mutate(
+                  { file_ids: [id] },
+                  {
+                    onSuccess: () => {
+                      if (parent === 'priority') {
+                        const newState = listSuggestedEntries.map((entry: SuggestedEntry) => {
+                          if (entry.id === id) {
+                            return { ...entry, is_starred: false };
+                          }
+                          return entry;
+                        });
+                        setListSuggestedEntries(newState);
+                      } else {
+                        const newState = listEntries.map((entry: LocalEntry) => {
+                          if (entry.id === id) {
+                            return { ...entry, is_starred: false };
+                          }
+                          return entry;
+                        });
+                        setListEntries(newState);
+                      }
+                    },
+                  },
+                );
+              },
+            },
+          ]
+        : [
+            {
+              label: 'Add to starred',
+              icon: <Icon icon='material-symbols:star-outline' />,
+              action: () => {
+                starEntryMutation.mutate(
+                  { file_ids: [id] },
+                  {
+                    onSuccess: () => {
+                      if (parent === 'priority') {
+                        const newState = listSuggestedEntries.map((entry: SuggestedEntry) => {
+                          if (entry.id === id) {
+                            return { ...entry, is_starred: true };
+                          }
+                          return entry;
+                        });
+                        setListSuggestedEntries(newState);
+                      } else {
+                        const newState = listEntries.map((entry: LocalEntry) => {
+                          if (entry.id === id) {
+                            return { ...entry, is_starred: true };
+                          }
+                          return entry;
+                        });
+                        setListEntries(newState);
+                      }
+                    },
+                  },
+                );
+              },
+            },
+          ]),
     ],
     [
       {
@@ -228,7 +245,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
           openDrawer(id);
         },
       },
-      { label: 'Lock', icon: <Icon icon='mdi:lock-outline' />, action: () => {} },
+      // { label: 'Lock', icon: <Icon icon='mdi:lock-outline' />, action: () => {} },
     ],
     [
       {
@@ -265,7 +282,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
 
   const handleCtrlClick = () => {
     setArrSelected(
-      arrSelected.includes({ id, isDir, userRoles })
+      arrSelected.some((item) => item.id === id)
         ? arrSelected.filter((item) => item.id !== id)
         : [...arrSelected, { id, isDir, userRoles }],
     );
@@ -286,13 +303,14 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
     e.preventDefault();
     if (!isDir) setFileViewer(true);
     else {
+      if (parent === 'trash') return;
       setArrSelected([]);
       setListEntries([]);
       // setActivityLog([]);
       resetFilter();
       resetCursor();
       // resetCursorActivity();
-      if(parent === 'shared') id === rootId ? navigate(DRIVE_SHARED) : navigate(`/drive/folder/${id}`);
+      if (parent === 'shared') id === rootId ? navigate(DRIVE_SHARED) : navigate(`/drive/folder/${id}`);
       else id === rootId ? navigate(DRIVE_MY_DRIVE) : navigate(`${DRIVE_MY_DRIVE}/dir/${id}`);
     }
   };
@@ -347,8 +365,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
           </div>
           <div
             className='h-6 w-6 rounded-full p-1 hover:bg-slate-300 dark:hover:bg-slate-500'
-            onDoubleClick={(e) => e.stopPropagation()}
-          >
+            onDoubleClick={(e) => e.stopPropagation()}>
             <CustomDropdown
               button={<BsThreeDotsVertical className='dark:hover:text-white' />}
               minWidth
@@ -360,9 +377,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
           {preview}
         </div>
       </div>
-      {type === 'share' && (
-        <SharePopUp fileId={id} open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} />
-      )}
+      {type === 'share' && <SharePopUp fileId={id} open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} title={title} />}
       {type === 'move' && (
         <MovePopUp
           open={isPopUpOpen}
@@ -372,14 +387,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
           ids={arrSelected.map((item) => item.id) || [id]}
         />
       )}
-      {type === 'rename' &&
-        <RenamePopUp
-          open={isPopUpOpen}
-          handleClose={() => setIsPopUpOpen(false)}
-          name={title}
-          id={id}
-        />
-      }
+      {type === 'rename' && <RenamePopUp open={isPopUpOpen} handleClose={() => setIsPopUpOpen(false)} name={title} id={id} />}
       {type === 'move to trash' && (
         <DeleteTempPopUp
           open={isPopUpOpen}

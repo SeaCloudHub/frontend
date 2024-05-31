@@ -18,7 +18,7 @@ const SidebarItem = ({ icon, title, link, shrink, tooltip }: SidebarItemProps) =
   const { resetEntries } = useEntries();
   const { resetCursor } = useCursor();
   const onClick = () => {
-    if(link !== pathName.pathname && !isMyDriveActive()) {
+    if (link !== pathName.pathname && !isMyDriveActive()) {
       resetEntries();
       resetCursor();
       setArrSelected([]);
@@ -36,7 +36,6 @@ const SidebarItem = ({ icon, title, link, shrink, tooltip }: SidebarItemProps) =
   const isSharedActive = () => {
     return link.startsWith(DRIVE_SHARED) && pathName.pathname.startsWith('/drive/folder');
   };
-
 
   return (
     <>

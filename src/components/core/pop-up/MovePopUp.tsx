@@ -62,7 +62,7 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
   }, [currentCursorSearch, nextCursorSearch, resetCursorSearch, setCurrentCursorSearch]);
 
   return (
-    <PopUp open={open} handleClose={()=>  handleClose()}>
+    <PopUp open={open} handleClose={() => handleClose()}>
       <div className='h-[450px] max-w-[600px] font-semibold'>
         <div className='p-3'>
           <Tooltip title={title}>
@@ -125,7 +125,7 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
                 ))}
               </Tab.List>
               <hr className='border-t-[1px] border-gray-600' />
-              <Tab.Panels className='mt-3 h-[200px] w-full overflow-y-auto font-normal' ref={ref} >
+              <Tab.Panels className='mt-3 h-[200px] w-full overflow-y-auto font-normal' ref={ref}>
                 {isLoading && <LinearProgress />}
                 {data.length === 0 ? (
                   <div className='flex h-full items-center justify-center'>
@@ -136,24 +136,24 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
                     {data.map((item, index) => (
                       <div
                         key={index}
-                        className={`flex items-center gap-3 px-3 py-1 ${locateTo === item.id ? 'bg-[#c2e7ff] dark:bg-blue-900' : ''} ${arrSelected.some(e=> e.id === item.id) ? 'brightness-75' : 'cursor-pointer hover:bg-gray-100 dark:hover:bg-blue-950'}`}
+                        className={`flex items-center gap-3 px-3 py-1 ${locateTo === item.id ? 'bg-[#c2e7ff] dark:bg-blue-900' : ''} ${ids.includes(item.id) ? 'brightness-75' : 'cursor-pointer hover:bg-gray-100 dark:hover:bg-blue-950'}`}
                         onClick={() => {
-                          if (arrSelected.some(e=>e.id === item.id)) return;
+                          if (ids.includes(item.id)) return;
                           setLocateTo(item.id);
                         }}
                         onDoubleClick={() => {
-                          if (arrSelected.some(e=>e.id === item.id)) return;
+                          if (ids.includes(item.id)) return;
                           setCurFolder({ id: item.id, name: item.title });
                         }}>
                         <Icon icon='mdi:folder-multiple-outline' className='text-xl' />
                         <span className='select-none'>{item.title}</span>
                       </div>
                     ))}
-                    {isScrolling &&
+                    {isScrolling && (
                       <div className='h-3 text-center'>
                         <CircularProgress />
                       </div>
-                    }
+                    )}
                   </>
                 )}
               </Tab.Panels>
@@ -210,9 +210,12 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
           <ButtonSuccess
             isInvisible={!locateTo}
             onClick={() => {
-              if (arrSelected.length === 0) return;
-              if (curFolder.id === location.id) return;
-              moveEntriesMutation.mutate({ id: location.id, source_ids: ids, to: curFolder.id });
+              if (ids.length === 0) return;
+              console.log('ids', ids);
+              console.log('curFolder', curFolder);
+              console.log('location', location);
+              if (curFolder.id === locateTo) return;
+              moveEntriesMutation.mutate({ id: location.id, source_ids: ids, to: locateTo });
               setArrSelected([]);
               handleClose();
             }}

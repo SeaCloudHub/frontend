@@ -8,7 +8,7 @@ const MemoryHeader = () => {
   const { resetCursor } = useCursor();
 
   return (
-    <div className='flex flex-col pr-3'>
+    <div className='flex select-none flex-col pr-3'>
       <div className='flex justify-between'>
         <div className='pb-[20px] pl-[20px] pt-[17px] text-2xl font-semibold'>Memory</div>
         <div className='flex items-center pb-[6px] pl-[25px] pr-[11px] pt-[14px]'>

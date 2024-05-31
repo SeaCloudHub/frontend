@@ -16,7 +16,6 @@ type FileFolderFilterProps = {
 };
 
 const FileFolderFilter: React.FC<FileFolderFilterProps> = ({ userDTO }) => {
-
   const [name, setName] = useState('');
 
   const [page, setPage] = useState(1);
@@ -27,7 +26,7 @@ const FileFolderFilter: React.FC<FileFolderFilterProps> = ({ userDTO }) => {
 
   const handlePageChange = (page: number) => {
     setPage(page);
-  }
+  };
 
   const handleOnRow = (record: LocalEntry) => {
     if (record.isDir) {
@@ -41,16 +40,15 @@ const FileFolderFilter: React.FC<FileFolderFilterProps> = ({ userDTO }) => {
   const query = useDebounce({ delay: 260, value: name });
   const { data, isLoading } = useGetListFilesUser(page, dirId, isRoot, query);
 
-
   return (
-    <div className='py-3 overflow-x-auto overscroll-x-auto'>
+    <div className='overflow-x-auto overscroll-x-auto py-3'>
       <div className='rounded-xl p-2 dark:bg-[#031525] dark:text-white'>
-        <div className='flex items-center flex-wrap space-y-2'>
+        <div className='flex flex-wrap items-center space-y-2'>
           <TextInputCore
             className='mr-2'
             onChange={(data: string) => {
               console.log(data);
-              setName(data)
+              setName(data);
             }}
             value={name}
             label='Name'
@@ -82,7 +80,7 @@ const FileFolderFilter: React.FC<FileFolderFilterProps> = ({ userDTO }) => {
               ...modifiedFilterItems.map((item) => ({
                 label: item.label,
                 value: item.value,
-              }))
+              })),
             ]}
             isDefault
             label='Modified'

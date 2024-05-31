@@ -38,7 +38,7 @@ const Starred = () => {
   return (
     <DriveLayout
       headerLeft={
-        <div className='px-5 select-none'>
+        <div className='select-none px-5'>
           <div className='flex justify-between space-x-2'>
             <h2 className='pb-[20px] pt-[17px] text-2xl'>Starred</h2>
             <div className='flex items-center gap-2'>

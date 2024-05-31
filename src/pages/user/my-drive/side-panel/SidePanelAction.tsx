@@ -7,11 +7,10 @@ const SidePanelAction = () => {
   const { data, isLoading } = useActivityLog();
   const { nextCursorActivity } = useCursorActivity();
 
-  return (
-    isLoading && !nextCursorActivity  ? (
-      <LinearProgress className='translate-y-1' />
-    ) :
-    <div className='px-2 h-full overscroll-y-auto' >
+  return isLoading && !nextCursorActivity ? (
+    <LinearProgress className='translate-y-1' />
+  ) : (
+    <div className='h-full overscroll-y-auto px-2'>
       {data.map((item, index) => {
         return (
           <div key={index} className='relative flex flex-col'>

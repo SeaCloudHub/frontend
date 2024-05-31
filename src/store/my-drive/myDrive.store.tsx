@@ -79,7 +79,8 @@ export const useEntries = create<ListEntriesState>((set) => ({
   setTrashEntries: (trashEntries: TimeEntry[]) => set({ trashEntries }),
   setEntriesSearchPage: (entriesSearchPage: SuggestedEntry[]) => set({ entriesSearchPage }),
   setFolderEntries: (folderEntries: LocalEntry[]) => set({ folderEntries }),
-  resetEntries: () => set({ listEntries: [], listSuggestedEntries: [], trashEntries: [], entriesSearchPage: [], folderEntries: [] }),
+  resetEntries: () =>
+    set({ listEntries: [], listSuggestedEntries: [], trashEntries: [], entriesSearchPage: [], folderEntries: [] }),
 }));
 
 export type CursorState = {

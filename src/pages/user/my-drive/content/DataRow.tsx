@@ -74,7 +74,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
   const starEntryMutation = useStarEntryMutation();
   const unstarEntryMutation = useUnstarEntryMutation();
   const downloadMutation = useDownloadMutation();
-  const { setListEntries, listEntries, listSuggestedEntries, setListSuggestedEntries  } = useEntries();
+  const { setListEntries, listEntries, listSuggestedEntries, setListSuggestedEntries } = useEntries();
   const { resetFilter } = useFilter();
   const { resetCursor } = useCursor();
   const { rootId } = useStorageStore();
@@ -95,7 +95,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
         label: 'Download',
         icon: <Icon icon='ic:outline-file-download' />,
         action: () => {
-          downloadMutation.mutate({ id, name: title});
+          downloadMutation.mutate({ id, name: title });
         },
         isHidden: isPermission(userRoles) <= 0,
       },
@@ -151,65 +151,71 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
         icon: <Icon icon='material-symbols:add-to-drive' />,
         action: () => {},
       },
-      ... is_starred ? [
-        {
-          label: 'Remove from starred',
-          icon: <Icon icon='mdi:star-off-outline' />,
-          action: () => {
-            unstarEntryMutation.mutate({ file_ids: [id] }, {
-              onSuccess: () => {
-                if(parent === 'priority') {
-                  const newState = listSuggestedEntries.map((entry: SuggestedEntry) => {
-                    if (entry.id === id) {
-                      return { ...entry, is_starred: false };
-                    }
-                    return entry;
-                  });
-                  setListSuggestedEntries(newState);
-                }
-                else {
-                  const newState = listEntries.map((entry: LocalEntry) => {
-                    if (entry.id === id) {
-                      return { ...entry, is_starred: false };
-                    }
-                    return entry;
-                  });
-                  setListEntries(newState);
-                }
-              }
-            });
-          },
-        },
-      ] : [
-        {
-          label: 'Add to starred',
-          icon: <Icon icon='material-symbols:star-outline' />,
-          action: () => {
-            starEntryMutation.mutate({ file_ids: [id] }, {
-              onSuccess: () => {
-                if(parent === 'priority') {
-                  const newState = listSuggestedEntries.map((entry: SuggestedEntry) => {
-                    if (entry.id === id) {
-                      return { ...entry, is_starred: true };
-                    }
-                    return entry;
-                  });
-                  setListSuggestedEntries(newState);
-                }
-                else {
-                  const newState = listEntries.map((entry: LocalEntry) => {
-                    if (entry.id === id) {
-                      return { ...entry, is_starred: true };
-                    }
-                    return entry;
-                  });
-                  setListEntries(newState);
-                }
-              }
-            });
-          },
-        },
-      ],
+      ...(is_starred
+        ? [
+            {
+              label: 'Remove from starred',
+              icon: <Icon icon='mdi:star-off-outline' />,
+              action: () => {
+                unstarEntryMutation.mutate(
+                  { file_ids: [id] },
+                  {
+                    onSuccess: () => {
+                      if (parent === 'priority') {
+                        const newState = listSuggestedEntries.map((entry: SuggestedEntry) => {
+                          if (entry.id === id) {
+                            return { ...entry, is_starred: false };
+                          }
+                          return entry;
+                        });
+                        setListSuggestedEntries(newState);
+                      } else {
+                        const newState = listEntries.map((entry: LocalEntry) => {
+                          if (entry.id === id) {
+                            return { ...entry, is_starred: false };
+                          }
+                          return entry;
+                        });
+                        setListEntries(newState);
+                      }
+                    },
+                  },
+                );
+              },
+            },
+          ]
+        : [
+            {
+              label: 'Add to starred',
+              icon: <Icon icon='material-symbols:star-outline' />,
+              action: () => {
+                starEntryMutation.mutate(
+                  { file_ids: [id] },
+                  {
+                    onSuccess: () => {
+                      if (parent === 'priority') {
+                        const newState = listSuggestedEntries.map((entry: SuggestedEntry) => {
+                          if (entry.id === id) {
+                            return { ...entry, is_starred: true };
+                          }
+                          return entry;
+                        });
+                        setListSuggestedEntries(newState);
+                      } else {
+                        const newState = listEntries.map((entry: LocalEntry) => {
+                          if (entry.id === id) {
+                            return { ...entry, is_starred: true };
+                          }
+                          return entry;
+                        });
+                        setListEntries(newState);
+                      }
+                    },
+                  },
+                );
+              },
+            },
+          ]),
     ],
     [
       {
@@ -228,7 +234,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
           openDrawer(id);
         },
       },
-      { label: 'Lock', icon: <Icon icon='mdi:lock-outline' />, action: () => {} },
+      // { label: 'Lock', icon: <Icon icon='mdi:lock-outline' />, action: () => {} },
     ],
     [
       {
@@ -286,7 +292,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
       setListEntries([]);
       // setActivityLog([]);
       resetFilter();
-      resetCursor()
+      resetCursor();
       if (parent === 'shared') {
         id === rootId ? navigate(DRIVE_SHARED) : navigate(`/drive/folder/${id}`);
       }
@@ -333,9 +339,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
         onDoubleClick={handleDoubleClick}
         className={classNames(
           'data-row grid cursor-pointer grid-cols-7 gap-3 truncate border-b border-b-[#dadce0] py-2 font-medium max-[1160px]:grid-cols-7 max-[1150px]:grid-cols-6 max-[1000px]:grid-cols-5',
-          isSelected
-            ? 'bg-[#c2e7ff]  dark:bg-blue-900'
-            : 'hover:bg-[#dfe3e7] dark:text-white dark:hover:bg-slate-700',
+          isSelected ? 'bg-[#c2e7ff]  dark:bg-blue-900' : 'hover:bg-[#dfe3e7] dark:text-white dark:hover:bg-slate-700',
         )}>
         <div className='col-span-4 flex items-center'>
           <div className='px-4'>
@@ -344,7 +348,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
           <Tooltip title={title}>
             <div className='truncate'>{title}</div>
           </Tooltip>
-          {is_starred && (<Star className='dark:text-yellow-400' />)}
+          {is_starred && <Star className='dark:text-yellow-400' />}
         </div>
         <div className='max-[1150px]:hidden'>
           <div className='flex items-center gap-x-2'>
@@ -369,13 +373,13 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
             <span className='truncate'>{owner?.id === identity.id ? 'me' : owner?.last_name}</span>
           </div>
         </div>
-        <div className='truncate max-[1000px]:hidden my-auto'>{formatDate(lastModified)}</div>
+        <div className='my-auto truncate max-[1000px]:hidden'>{formatDate(lastModified)}</div>
         <div className='flex items-center justify-between max-[1160px]:justify-end'>
           <div className='truncate max-[1160px]:hidden'>{isDir ? '---' : numToSize(size)}</div>
-          <div className='text-end hover:bg-slate-300 dark:hover:bg-slate-500 rounded-full'
+          <div
+            className='rounded-full text-end hover:bg-slate-300 dark:hover:bg-slate-500'
             // onClick={(e) => e.stopPropagation()}
-            onDoubleClick={(e) => e.stopPropagation()}
-          >
+            onDoubleClick={(e) => e.stopPropagation()}>
             <CustomDropdown
               button={<Icon icon='ic:baseline-more-vert' className='h-7 w-7 rounded-full p-1 dark:hover:text-white' />}
               items={parent === 'trash' ? [menuItemsTrash] : entryMenu}

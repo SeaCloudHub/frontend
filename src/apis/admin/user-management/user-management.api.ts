@@ -53,20 +53,20 @@ export const updateUserApi = async (data: { body: AdminUpdateUserREQ; userId: st
   return res.data.data;
 };
 
-export const resetPasswordApi = async ( param: ResetPasswordREQ) => {
+export const resetPasswordApi = async (param: ResetPasswordREQ) => {
   const res = await api.patch<BaseResponse<ResetPasswordRESP>>(`admin/identities/${param.identity_id}/reset-password`);
   return res.data.data;
 };
 export const getFileUserApi = async (param: GetUserFileDetailREQ) => {
-  const res = await api.get<BaseResponse<GetUserFileDetailRESP>>(`admin/identities/${param.identity_id}/files`,
-    { params: { ...param, type: param.type?.toLowerCase() } }
-  );
+  const res = await api.get<BaseResponse<GetUserFileDetailRESP>>(`admin/identities/${param.identity_id}/files`, {
+    params: { ...param, type: param.type?.toLowerCase() },
+  });
   return res;
-}
+};
 
 export const modifyStorageCapacityApi = async (param: ModifyStorageCapacityREQ) => {
-  const res = await api.patch<BaseResponse<void>>(`admin/identities/${param.identity_id}/storage`,
-    { storage_capacity: param.storage_capacity }
-  );
+  const res = await api.patch<BaseResponse<void>>(`admin/identities/${param.identity_id}/storage`, {
+    storage_capacity: param.storage_capacity,
+  });
   return res.data.data;
-}
+};

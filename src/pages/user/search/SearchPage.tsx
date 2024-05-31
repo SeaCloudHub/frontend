@@ -14,6 +14,8 @@ import { DriveListView } from '../my-drive/content/DriveListView';
 import { useSubmit } from 'react-router-dom';
 import DriveFilter from '../my-drive/header/DriveFilter';
 import { Tooltip } from '@mui/material';
+import DriveViewMode from '../my-drive/header/DriveViewMode';
+import PriorityListView from '../priority/priority-view/PriorityListView';
 
 const SearchPage = () => {
   const { rootId } = useStorageStore();
@@ -49,7 +51,12 @@ const SearchPage = () => {
         <div className='flex flex-col overflow-hidden'>
           <div className='mr-2 flex items-center justify-between space-x-2 text-2xl'>
             <div className='line-clamp-1 pb-[20px] pl-5 pt-[17px]'>Search result</div>
-            <InfoButton />
+            <div className='flex items-center pb-[6px] pr-[11px] pt-[14px]'>
+              <DriveViewMode />
+              <div className='mx-1 my-0.5'>
+                <InfoButton />
+              </div>
+            </div>
           </div>
           {arrSelected.length === 0 ? (
             <div className='ml-5 flex gap-2'>
@@ -83,6 +90,7 @@ const SearchPage = () => {
           <DriveGridView entries={data} isLoading={isLoading} isScrolling={isScrolling} parent='priority' />
         ) : (
           <DriveListView entries={data} isLoading={isLoading} isScrolling={isScrolling} parent='priority' />
+          // <PriorityListView entries={data} isLoading={isLoading} parrent='priority' />
         )
       }
       sidePanel={

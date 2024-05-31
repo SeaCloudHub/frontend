@@ -11,7 +11,7 @@ import { UserRole } from '@/utils/types/user-role.type';
 import { isPermission } from '@/utils/function/permisstion.function';
 
 type DrivePathProps = {
-  path: { id: string; name: string, userRoles: UserRole[], is_starred: boolean }[];
+  path: { id: string; name: string; userRoles: UserRole[]; is_starred: boolean }[];
   type?: 'MyDrive' | 'Shared' | 'Starred' | 'Trash' | 'Priority';
 };
 
@@ -34,7 +34,7 @@ const DrivePath: React.FC<DrivePathProps> = ({ path, type }) => {
             setArrSelected([]);
             resetCursor();
             resetCursorActivity();
-            if(isPermission(d.userRoles) <= 2)
+            if (isPermission(d.userRoles) <= 2)
               d.id === rootId ? navigate(`${DRIVE_SHARED}`) : navigate(`/drive/folder/${DRIVE_SHARED_DIR}`);
             d.id === rootId ? navigate(`${DRIVE_MY_DRIVE}`) : navigate(`${DRIVE_MY_DRIVE}/dir/${d.id}`);
           },
@@ -54,19 +54,32 @@ const DrivePath: React.FC<DrivePathProps> = ({ path, type }) => {
           items={driveMenuItems}
         />
         <Icon icon='ic:baseline-keyboard-arrow-right' className='h-6 w-6' />
-        <DrivePathButton type={type} path={path[path.length - 2]}/>
+        <DrivePathButton type={type} path={path[path.length - 2]} />
         <Icon icon='ic:baseline-keyboard-arrow-right' className='h-6 w-6' />
-        <DrivePathMenuButton path={path[path.length - 1]} type={type} />
+        <DrivePathMenuButton
+          path={path[path.length - 1]}
+          type={type}
+          location={{ id: path[path.length - 2].id, name: path[path.length - 2].name }}
+        />
       </div>
     );
   }
 
   return (
-    <div className='flex items-center select-none'>
+    <div className='flex select-none items-center'>
       {path.map((d, index) => {
         if (index === path.length - 1) {
           return isPermission(d.userRoles) >= 1 ? (
-            <DrivePathMenuButton path={path[path.length - 1]} key={d.id} type={type} />
+            <DrivePathMenuButton
+              path={path[path.length - 1]}
+              key={d.id}
+              type={type}
+              location={
+                path.length > 1
+                  ? { id: path[path.length - 2].id, name: path[path.length - 2].name }
+                  : { id: rootId, name: 'My Drive' }
+              }
+            />
           ) : (
             <DrivePathButton path={d} key={d.id} type={type} />
           );

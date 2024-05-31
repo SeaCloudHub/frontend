@@ -46,10 +46,13 @@ function Search() {
   }, [onFocus, resetCursorSearch, setArrSelected]);
 
   return (
-    <div className={`relative max-w-2xl flex-1 ${identity.is_admin?'opacity-0 pointer-events-none':''}`} ref={ref} onClick={() => {
-      setOnFocus(true)
-      // resetCursorSearch();
-    }}>
+    <div
+      className={`relative max-w-2xl flex-1 ${identity.is_admin ? 'pointer-events-none opacity-0' : ''}`}
+      ref={ref}
+      onClick={() => {
+        setOnFocus(true);
+        // resetCursorSearch();
+      }}>
       <span
         onClick={() => {}}
         className=' absolute left-2 top-[5px] h-9 w-9 cursor-pointer rounded-full p-2 hover:bg-gray-100 dark:text-white hover:dark:bg-slate-800'>
@@ -74,7 +77,7 @@ function Search() {
           dark:bg-search-bg-dark dark:text-icons-color-dark dark:placeholder-blue-50 dark:placeholder-opacity-60'
         />
       </form>
-      {onFocus && <SearchResult data={data} loading={isLoading} onSelected={()=> setOnFocus(false)} />}
+      {onFocus && <SearchResult data={data} loading={isLoading} onSelected={() => setOnFocus(false)} />}
     </div>
   );
 }

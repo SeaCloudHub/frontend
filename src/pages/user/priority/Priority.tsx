@@ -19,7 +19,7 @@ const Priority = () => {
   return (
     <DriveLayout
       headerLeft={
-        <div className='flex flex-col overflow-hidden select-none'>
+        <div className='flex select-none flex-col overflow-hidden'>
           <div className='mr-2 flex items-center justify-between space-x-2 text-2xl'>
             <div className='line-clamp-1 pb-[20px] pl-5 pt-[17px]'>Welcome to SeaCloud</div>
             <InfoButton />

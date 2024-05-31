@@ -5,8 +5,6 @@ import { ColorSchemeToggle } from '@/components/core/button/ColorSchemeToggle';
 import { MenuItem } from '@/components/core/drop-down/Dropdown';
 import MenuCore from '@/components/core/menu/MenuCore';
 import { MenuItemCoreProps } from '@/components/core/menu/MenuItem';
-import ModalAboutUs from '@/components/core/modal/ModalAboutUs';
-import ModalHelp from '@/components/core/modal/ModalHelp';
 import { useTheme } from '@/providers/theme-provider';
 import { useSession } from '@/store/auth/session';
 import { Badge, Popover, notification } from 'antd';
@@ -46,6 +44,8 @@ const Configuration = () => {
   const [modalHelpOpen, setModalHelpOpen] = useState(false);
   const [modalAboutUs, setModalAboutUs] = useState(false);
   const identity = useSession((state) => state.identity);
+  const [isShowNotification, setIsShowNotification] = useState(!identity.is_admin);
+
   const receiveNewNotification = () => {
     setHasNewNotification(false);
     return newNotification as NotificationContent;
@@ -54,13 +54,16 @@ const Configuration = () => {
   const handleNewNotification = (newNotification: NotificationContent) => {
     setHasNewNotification(true);
     setNewNotification(newNotification);
-
-    notification.open({
-      message: 'New Notification',
-      description: `${newNotification.OwnerName} has shared a file with you.`,
-      icon: <ButtonIcon tooltip='Notification' size={'1.6rem'} icon='heroicons-outline:bell' />,
-      duration: 2,
-    });
+    try {
+      notification.open({
+        message: 'New Notification',
+        description: `${newNotification.OwnerName} has shared a file with you.`,
+        icon: <ButtonIcon tooltip='Notification' size={'1.6rem'} icon='heroicons-outline:bell' />,
+        duration: 2,
+      });
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   useEffect(() => {
@@ -76,21 +79,21 @@ const Configuration = () => {
       icon: '',
       title: 'About us',
       onClick: () => {
-        setModalAboutUs(true);
+        window.open(`/about`, '_blank');
       },
     },
     {
       icon: '',
       title: 'Help',
       onClick: () => {
-        setModalHelpOpen(true);
+        window.open(`/help`, '_blank');
       },
     },
   ];
 
   return (
     <div className='ml-7 mr-5 flex items-center space-x-3'>
-      {!identity.is_admin && (
+      {isShowNotification && (
         <Popover
           content={Notification({
             receiveNewNotification,
@@ -126,8 +129,6 @@ const Configuration = () => {
         items={settingMenu}
       /> */}
       <ColorSchemeToggle />
-      {modalHelpOpen && <ModalHelp isOpen={modalHelpOpen} handleConfirm={() => setModalHelpOpen(false)} />}
-      {modalAboutUs && <ModalAboutUs isOpen={modalAboutUs} handleConfirm={() => setModalAboutUs(false)} />}
     </div>
   );
 };

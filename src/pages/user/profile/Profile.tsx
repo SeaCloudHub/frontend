@@ -40,7 +40,11 @@ export const Profile: React.FC<ProfileProps> = () => {
                 <div className='col-span-4'>Add a profile photo to personalize your account</div>
                 <div className='col-span-1 mx-auto'>
                   <div className='relative w-fit overflow-hidden rounded-full'>
-                    <Avatar about='profile picture' src={import.meta.env.VITE_BACKEND_API + data?.avatar_url} sx={{ width: 60, height: 60 }} />
+                    <Avatar
+                      about='profile picture'
+                      src={import.meta.env.VITE_BACKEND_API + data?.avatar_url}
+                      sx={{ width: 60, height: 60 }}
+                    />
                     <div className='absolute bottom-0 h-6 w-full bg-gray-500 blur-sm'></div>
                     <div className='absolute bottom-0 h-5 w-full bg-transparent'>
                       <Icon icon='mdi:camera' className='mx-auto h-5 w-5 text-white brightness-95' />
@@ -80,15 +84,15 @@ export const Profile: React.FC<ProfileProps> = () => {
       />
       {open && (
         <ChangePhotoPopUp
-        open={open}
-        handleClose={() => setOpen(false)}
-        setResult={() => {}}
-        name={{
-          first_name: data?.first_name||'',
-          last_name: data?.last_name||'',
-          avatar_url: import.meta.env.VITE_BACKEND_API + data?.avatar_url||'',
-        }}
-       />
+          open={open}
+          handleClose={() => setOpen(false)}
+          setResult={() => {}}
+          name={{
+            first_name: data?.first_name || '',
+            last_name: data?.last_name || '',
+            avatar_url: import.meta.env.VITE_BACKEND_API + data?.avatar_url || '',
+          }}
+        />
       )}
       {renameOpen && (
         <RenameProfilePopUp

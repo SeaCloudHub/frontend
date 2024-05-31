@@ -91,7 +91,7 @@ export const getEntryMetadata = async (param: Pick<ListEntriesREQ, 'id'>) => {
   return res.data;
 };
 
-export const downloadFile = async (param: { id: string; name?: string}) => {
+export const downloadFile = async (param: { id: string; name?: string }) => {
   const res = await api.get(`/files/${param.id}/download`, { responseType: 'blob' });
   const url = window.URL.createObjectURL(new Blob([res.data], { type: res.headers['content-type'] }));
   const link = document.createElement('a');

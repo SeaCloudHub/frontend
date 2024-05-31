@@ -15,7 +15,7 @@ type DrivePathButtonProps = {
 };
 
 // button of drive path
-const DrivePathButton: React.FC<DrivePathButtonProps> = ({type, path }) => {
+const DrivePathButton: React.FC<DrivePathButtonProps> = ({ type, path }) => {
   const navigate = useNavigate();
   const { rootId } = useStorageStore();
   const { resetCursor } = useCursor();
@@ -30,10 +30,10 @@ const DrivePathButton: React.FC<DrivePathButtonProps> = ({type, path }) => {
         setListEntries([]);
         resetCursor();
         console.log('path', path, rootId);
-        if(type === 'Shared') path.id === rootId ? navigate(`${DRIVE_SHARED}`) : navigate(`/drive/folder/${path.id}`);
+        if (type === 'Shared') path.id === rootId ? navigate(`${DRIVE_SHARED}`) : navigate(`/drive/folder/${path.id}`);
         else path.id === rootId ? navigate(`${DRIVE_MY_DRIVE}`) : navigate(`${DRIVE_MY_DRIVE}/dir/${path.id}`);
       }}>
-      <div className='pb-1 text-2xl truncate min-w-20'>{path.name}</div>
+      <div className='min-w-20 truncate pb-1 text-2xl'>{path.name}</div>
     </div>
   );
 };
