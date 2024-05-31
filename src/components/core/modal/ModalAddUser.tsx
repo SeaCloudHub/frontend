@@ -1,4 +1,3 @@
-import { getIdentitiesRESToUserManagementInfoDto } from '@/apis/admin/user-management/user-management.service';
 import { LinearProgress } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
@@ -10,12 +9,13 @@ import { addUserApi } from '../../../apis/admin/user-management/user-management.
 import { uploadImage } from '../../../apis/shared/shared.api';
 import { addUserSchema } from '../../../helpers/form-schema/admin/add-user.schema';
 import { useScreenHook } from '../../../hooks/useScreenHook';
-import { toastError, toastSuccess } from '../../../utils/toast-options/toast-options';
+import { toastError } from '../../../utils/toast-options/toast-options';
 import { ApiGenericError } from '../../../utils/types/api-generic-error.type';
 import IconifyIcon from '../Icon/IConCore';
 import ButtonContainer from '../button/ButtonContainer';
 import ButtonIcon from '../button/ButtonIcon';
 import TextInputCore from '../input/TextInputCore';
+import ModalAddUserSuccess from './ModalAddUserSuccess';
 import ModalCore from './ModalCore';
 
 type ModalAddUserProps = {
@@ -27,7 +27,8 @@ type ModalAddUserProps = {
 const ModalAddUser = ({ title, isOpen, handleConfirm }: ModalAddUserProps) => {
   const flex = !useScreenHook(500);
   const [file, setFile] = useState<File | null>(null);
-
+  const [modalSuccess, setModalSuccess] = useState(false);
+  const [authInfo, setAuthInfo] = useState<{ email: string; pass: string }>({ email: '', pass: '' });
   const handleImageSelection = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       setFile(event.target.files[0]);
@@ -38,7 +39,6 @@ const ModalAddUser = ({ title, isOpen, handleConfirm }: ModalAddUserProps) => {
     validationSchema: addUserSchema,
     onSubmit: async (values) => {
       let avatar_url: string | undefined;
-
       if (file) {
         try {
           const res = await uploadImage({
@@ -57,9 +57,8 @@ const ModalAddUser = ({ title, isOpen, handleConfirm }: ModalAddUserProps) => {
         password: values.password,
         first_name: values.first_name,
         last_name: values.last_name,
-        avatar_url: avatar_url ,
+        avatar_url: avatar_url,
       });
-      handleConfirm(true);
     },
   });
   const addUserMutation = useMutation({
@@ -72,8 +71,8 @@ const ModalAddUser = ({ title, isOpen, handleConfirm }: ModalAddUserProps) => {
       }
     },
     onSuccess: (data) => {
-      handleConfirm(getIdentitiesRESToUserManagementInfoDto(data.data));
-      toast.success('Create user successfully', toastSuccess());
+      setAuthInfo({ email: data.email, pass: data.password });
+      setModalSuccess(true);
     },
   });
   const handleFieldChange = (fieldName: string, value: string) => {
@@ -86,6 +85,20 @@ const ModalAddUser = ({ title, isOpen, handleConfirm }: ModalAddUserProps) => {
   };
   return (
     <ModalCore open={isOpen} width={'70%'} closeOutside={handleConfirm} isCloseOutside={true}>
+      {modalSuccess && (
+        <ModalAddUserSuccess
+          data={{
+            email: authInfo.email,
+            password: authInfo.pass,
+          }}
+          single={true}
+          isOpen={true}
+          handleConfirm={function (data?: any): void {
+            setModalSuccess(false);
+            handleConfirm(true);
+          }}
+        />
+      )}
       <div className='absolute bottom-1 left-0 w-full px-3'>
         {addUserMutation.isPending && <LinearProgress className=' translate-y-1' />}
       </div>

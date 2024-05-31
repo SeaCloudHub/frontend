@@ -14,11 +14,11 @@ import { ResetPasswordRESP } from './response/reset-password.response';
 
 export const addUserApi = async (body: AddUserREQ) => {
   const res = await api.post<BaseResponse<AddUserRESP>>('admin/identities', body, {});
-  return res.data;
+  return res.data.data;
 };
 
 export const importExcelApi = async (body: ImportExcelREQ) => {
-  const res = await api.post<BaseResponse<IdentityRESP[]>>('admin/identities/bulk', objectToFormData(body));
+  const res = await api.post<BaseResponse<AddUserRESP[]>>('admin/identities/bulk', objectToFormData(body));
   return res.data;
 };
 

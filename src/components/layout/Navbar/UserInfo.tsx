@@ -1,5 +1,6 @@
 import { signOutApi } from '@/apis/auth/auth.api';
 import { useSession } from '@/store/auth/session';
+import { useProgressIndicator } from '@/store/storage/progressIndicator.store';
 import { AUTH_LOGIN_EMAIL, DRIVE_PROFILE } from '@/utils/constants/router.constant';
 import { Role } from '@/utils/enums/role.enum';
 import { getFirstCharacters } from '@/utils/function/getFirstCharacter';
@@ -10,11 +11,11 @@ import { LinearProgress } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { useRef } from 'react';
+import { useCookies } from 'react-cookie';
 import { AiOutlineClose } from 'react-icons/ai';
 import { PiSignOutBold } from 'react-icons/pi';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { useCookies } from 'react-cookie';
 
 type UserInfoProps = {
   onClose: () => void;
@@ -23,7 +24,7 @@ function UserInfo({ onClose }: UserInfoProps) {
   const navigate = useNavigate();
   const [cookies, setCookie, removeCookie] = useCookies(['token']);
   const { signOut, identity } = useSession();
-  console.log('identity:', identity);
+  const reset = useProgressIndicator((state) => state.reset);
   const modalRef = useRef(null);
   const role = useSession((state) => state.role);
 
@@ -38,7 +39,8 @@ function UserInfo({ onClose }: UserInfoProps) {
     },
     onSuccess: () => {
       signOut();
-      removeCookie('token', {path: '/'});
+      reset();
+      removeCookie('token', { path: '/' });
       setTimeout(() => {
         navigate(AUTH_LOGIN_EMAIL);
       }, 0);
@@ -57,7 +59,7 @@ function UserInfo({ onClose }: UserInfoProps) {
   return (
     <div
       ref={modalRef}
-      className='bg-darkC2 z-100 relative z-10 flex max-w-[250px] flex-col items-center justify-center space-y-3 rounded-2xl bg-white px-5 py-3 text-sm font-medium shadow-md shadow-[#b4bebb] dark:bg-dashboard-dark dark:text-white select-none'>
+      className='bg-darkC2 z-100 relative z-10 flex max-w-[250px] select-none flex-col items-center justify-center space-y-3 rounded-2xl bg-white px-5 py-3 text-sm font-medium shadow-md shadow-[#b4bebb] dark:bg-dashboard-dark dark:text-white'>
       <button onClick={onClose} className='bg-darkC2 hover:bg-dark absolute right-3 top-3 rounded-full p-1'>
         <AiOutlineClose className='h-5 w-5 rounded-full stroke-2' />
       </button>

@@ -43,6 +43,15 @@ export const getListEntriesPageMyDrive = async (param: ListEntriesPageREQ) => {
   return res.data;
 };
 
+export const getListEntriesAdmin = async (param: ListEntriesPageREQ) => {
+  const { id, ...rest } = param;
+  const res = await api.get<BaseResponse<ListEntriesPageRESP>>(`/files/${id}/page`, {
+    params: { ...rest , type: param.type?.toLowerCase() },
+  });
+  return res.data;
+};
+
+
 export const getListEntriesSuggested = async (params: SuggestedEntriesREQ) => {
   const res = await api.get<BaseResponse<SuggestedEntriesRESP[]>>(`/files/suggested`, { params });
   return res.data;

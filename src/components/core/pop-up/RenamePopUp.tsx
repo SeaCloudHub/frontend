@@ -9,15 +9,17 @@ import TextFieldCore from '../form/TextFieldCore';
 import ButtonSuccess from '../button/ButtonSuccess';
 import ButtonCancel from '../button/ButtonCancel';
 import { useEntries } from '@/store/my-drive/myDrive.store';
+import { UseMutationResult } from '@tanstack/react-query';
 
 type RenamePopUpProps = {
   open: boolean;
   name: string;
   id: string;
   handleClose: () => void;
+  additionalMutaion?: UseMutationResult<any, Error, any, unknown>;
 };
 
-const RenamePopUp: React.FC<RenamePopUpProps> = ({ open, handleClose, name, id }) => {
+const RenamePopUp: React.FC<RenamePopUpProps> = ({ open, handleClose, name, id, additionalMutaion }) => {
   const renameMutation = useRenameMutation();
 
   const formik = useFormik({
@@ -28,7 +30,7 @@ const RenamePopUp: React.FC<RenamePopUpProps> = ({ open, handleClose, name, id }
       name: Yup.string().required('Name is required'),
     }),
     onSubmit: (values) => {
-      renameMutation.mutate({ id, name: values.name });
+      additionalMutaion ? additionalMutaion.mutate({ id, name: values.name }) : renameMutation.mutate({ id, name: values.name });
       handleClose();
     },
   });

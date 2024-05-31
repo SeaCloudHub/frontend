@@ -39,7 +39,16 @@ export default function MenuCore({ menuItems, children, mix }: MenuCoreProps) {
         open={open}
         onClose={handleClose}>
         {menuItems.map((item, index) => (
-          <MenuItemCore mix={mix} key={index} title={item.title} onClick={item.onClick} icon={item.icon} />
+          <MenuItemCore
+            mix={mix}
+            key={index}
+            title={item.title}
+            onClick={() => {
+              item.onClick();
+              handleClose();
+            }}
+            icon={item.icon}
+          />
         ))}
       </Menu>
     </>

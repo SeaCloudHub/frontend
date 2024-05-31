@@ -1,21 +1,21 @@
-import { useEffect, useState } from 'react';
-import { Breadcrumb, Button, Card, Dropdown, Menu, MenuProps, Pagination, Table } from 'antd';
-import { isAxiosError } from 'axios';
-import { toast } from 'react-toastify';
-import { toastError } from '@/utils/toast-options/toast-options';
-import { PagingState, initialPagingState } from '@/utils/types/paging-stage.type';
 import { listStorages } from '@/apis/admin/storage/list-storage.api';
-import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
-import { FilerDataDto } from './filter/FilterTable';
-import { Path } from '@/store/my-drive/myDrive.store';
-import { getListEntries, getListEntriesPageMyDrive } from '@/apis/drive/drive.api';
-import { Icon } from '@iconify/react/dist/iconify.js';
-import { numToSize } from '@/utils/function/numbertToSize';
-import { useDeleteMutation, useRenameMutation } from '@/hooks/drive.hooks';
-import { SettingsApplications } from '@mui/icons-material';
+import { getListEntriesAdmin } from '@/apis/drive/drive.api';
 import FileViewerContainer from '@/components/core/file-viewers/file-viewer-container/FileViewerContainer';
-import RenamePopUp from '@/components/core/pop-up/RenamePopUp';
 import DeletePopUp from '@/components/core/pop-up/DeletePopUp';
+import RenamePopUp from '@/components/core/pop-up/RenamePopUp';
+import { useDeleteMutationV2, useRenameMutationV2 } from '@/hooks/drive.hooks';
+import { Path } from '@/store/my-drive/myDrive.store';
+import { numToSize } from '@/utils/function/numbertToSize';
+import { toastError } from '@/utils/toast-options/toast-options';
+import { PagingState } from '@/utils/types/paging-stage.type';
+import { Icon } from '@iconify/react/dist/iconify.js';
+import { SettingsApplications } from '@mui/icons-material';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { Breadcrumb, Button, Card, Dropdown, Menu, Pagination, Table } from 'antd';
+import { isAxiosError } from 'axios';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { FilerDataDto } from './filter/FilterTable';
 
 const StorageManagement = () => {
   const initPage = { page: 1, size: 10, totalPage: 1 } as PagingState;
@@ -27,20 +27,22 @@ const StorageManagement = () => {
   const [selected, setSelected] = useState<FilerDataDto>(null);
   const [result, setResult] = useState(false);
 
-  const renameMutation = useRenameMutation();
-  const deleteMutation = useDeleteMutation();
+  const renameMutation = useRenameMutationV2 (['list-storages', path[path.length - 1].id, paging.page]);
+  const deleteMutation = useDeleteMutationV2(['list-storages', path[path.length - 1].id, paging.page]);
 
   const { data, error, isFetching } = useQuery({
     queryKey: ['list-storages', path[path.length - 1].id, paging.page],
     queryFn: () =>
       path.length === 1
         ? listStorages({ limit: paging.size, page: paging.page })
-        : getListEntriesPageMyDrive({ id: path[path.length - 1].id, page: paging.page, limit: paging.size }),
+        : getListEntriesAdmin({ id: path[path.length - 1].id, page: paging.page, limit: paging.size }),
     staleTime: 5000,
     select: path.length === 1 ? transformRootData : transformData,
     placeholderData: keepPreviousData,
   });
-
+  useEffect(() => {
+    setPaging(initPage);
+  }, [path]);
   useEffect(() => {
     if (error) {
       if (isAxiosError(error)) {
@@ -70,7 +72,16 @@ const StorageManagement = () => {
       key: 'name',
       render: (_, record: FilerDataDto) => {
         return (
-          <div className='flex items-center gap-1 '>
+          <div
+            onClick={() => {
+              if (record.is_dir) {
+                setPath((prev) => [...prev, { id: record.id, name: record.name }]);
+              } else {
+                setFileViewer(true);
+                setSelected(record);
+              }
+            }}
+            className='flex items-center gap-1 hover:cursor-pointer '>
             {record.is_dir && <Icon icon='mdi:folder' />}
             <div className='statement-medium'>{record.name}</div>
           </div>
@@ -107,7 +118,7 @@ const StorageManagement = () => {
         return (
           <Dropdown
             key={record.id}
-            {...(path.length ===1 && { disabled: true })}
+            {...((path.length === 1 || record.name === '.trash') && { disabled: true })}
             trigger={['click']}
             overlay={
               <Menu>
@@ -137,6 +148,8 @@ const StorageManagement = () => {
       <div className='h-full w-full overflow-y-auto   '>
         {fileViewer && (
           <FileViewerContainer
+            canDelete={true}
+            canShare={true}
             open={fileViewer}
             closeOutside={() => {
               setFileViewer(false);
@@ -156,10 +169,17 @@ const StorageManagement = () => {
           />
         )}
         {renameModal && (
-          <RenamePopUp open={renameModal} handleClose={() => setRenameModal(false)} name={selected.name} id={selected.id} />
+          <RenamePopUp
+            additionalMutaion={renameMutation}
+            open={renameModal}
+            handleClose={() => setRenameModal(false)}
+            name={selected.name}
+            id={selected.id}
+          />
         )}
         {deleteModal && (
           <DeletePopUp
+            additionalMutaion={deleteMutation}
             open={deleteModal}
             handleClose={() => setDeleteModal(false)}
             setResult={setResult}
@@ -190,18 +210,6 @@ const StorageManagement = () => {
                   bordered={true}
                   pagination={false}
                   rowKey={(record) => record.id}
-                  onRow={(record: FilerDataDto) => {
-                    return {
-                      onDoubleClick: () => {
-                        if (record.is_dir) {
-                          setPath((prev) => [...prev, { id: record.id, name: record.name }]);
-                        } else {
-                          setFileViewer(true);
-                          setSelected(record);
-                        }
-                      },
-                    };
-                  }}
                 />
 
                 <Pagination
@@ -235,7 +243,7 @@ const transformRootData = (data) => {
           id: item.id,
           name: item.name,
           is_dir: item.is_dir,
-          type: item.is_dir ? null : item.mime_type,
+          type: item.is_dir ? null : item.type,
           size: item.is_dir ? null : item.size,
           created: new Date(item.created_at),
           is_root: true,
@@ -259,7 +267,7 @@ const transformData = (data) => {
           id: item.id,
           name: item.name,
           is_dir: item.is_dir,
-          type: item.is_dir ? null : item.mime_type,
+          type: item.is_dir ? null : item.type,
           size: item.is_dir ? null : item.size,
           created: new Date(item.created_at),
           is_root: false,

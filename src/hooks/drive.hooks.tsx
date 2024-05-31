@@ -66,7 +66,7 @@ import { toastError } from '@/utils/toast-options/toast-options';
 import { ApiGenericError } from '@/utils/types/api-generic-error.type';
 import { UserRole } from '@/utils/types/user-role.type';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { QueryKey, keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import React, { useEffect } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
@@ -478,6 +478,27 @@ export const useRenameMutation = () => {
   });
 };
 
+export const useRenameMutationV2 = (queryKey:QueryKey) => {
+  const queryClient = useQueryClient();
+  const { listEntries, setListEntries, setListSuggestedEntries, listSuggestedEntries } = useEntries();
+
+  return useMutation({
+    mutationFn: (body: RenameREQ) => {
+      return renameEntry(body);
+    },
+    onError: (error) => {
+      if (isAxiosError<ApiGenericError>(error)) {
+        toast.error(error.response?.data.message, toastError());
+      }
+    },
+    onSuccess: (data) => {
+      setListEntries(listEntries.map((entry) => (entry.id === data.data.id ? { ...entry, title: data.data.name } : entry)));
+      toast.success(`Renamed to ${data.data.name}`);
+      queryClient.invalidateQueries({ queryKey: queryKey });
+    },
+  });
+};
+
 export const useDownloadMutation = () => {
   return useMutation({
     mutationFn: (body: { id: string, name?: string }) => {
@@ -560,6 +581,35 @@ export const useDeleteMutation = () => {
       setTrashEntries(trash);
       toast.success(`${data.data.length} files deleted`);
       client.invalidateQueries({ queryKey: ['list-files-user'] });
+    },
+  });
+};
+
+export const useDeleteMutationV2 = (queryKey?:QueryKey) => {
+  const { trashEntries, setTrashEntries } = useEntries();
+  const client = useQueryClient();
+
+  return useMutation({
+    mutationFn: (body: DeleteEntriesREQ) => {
+      return deleteEntries(body);
+    },
+    onError: (error) => {
+      if (isAxiosError<ApiGenericError>(error)) {
+        toast.error(error.response?.data.message, toastError());
+      }
+    },
+    onSuccess: (data) => {
+      const trash = trashEntries
+        .map((entry) => {
+          return {
+            time: entry.time,
+            entries: entry.entries.filter((e) => !data.data.some((d) => d.id === e.id)),
+          };
+        })
+        .filter((entry) => entry.entries.length > 0);
+      setTrashEntries(trash);
+      toast.success(`${data.data.length} files deleted`);
+      client.invalidateQueries({ queryKey: queryKey });
     },
   });
 };

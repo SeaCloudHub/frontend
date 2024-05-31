@@ -1,10 +1,10 @@
-import React from 'react';
-import PopUp from './PopUp';
-import { Button, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { useDeleteMutation } from '@/hooks/drive.hooks';
-import ButtonSuccess from '../button/ButtonSuccess';
+import { DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { UseMutationResult } from '@tanstack/react-query';
+import React from 'react';
 import ButtonCancel from '../button/ButtonCancel';
-import { useEntries } from '@/store/my-drive/myDrive.store';
+import ButtonSuccess from '../button/ButtonSuccess';
+import PopUp from './PopUp';
 
 type DeletePopUpProps = {
   open: boolean;
@@ -12,9 +12,10 @@ type DeletePopUpProps = {
   title: string;
   source_ids: string[];
   setResult: React.Dispatch<React.SetStateAction<boolean>>;
+  additionalMutaion?: UseMutationResult<any, Error, any, unknown>;
 };
 
-const DeletePopUp: React.FC<DeletePopUpProps> = ({ open, handleClose, title, source_ids, setResult }) => {
+const DeletePopUp: React.FC<DeletePopUpProps> = ({ open, handleClose, title, source_ids, setResult, additionalMutaion }) => {
   const deleteMutation = useDeleteMutation();
   return (
     <PopUp open={open} handleClose={handleClose}>
@@ -31,7 +32,7 @@ const DeletePopUp: React.FC<DeletePopUpProps> = ({ open, handleClose, title, sou
           onClick={() => {
             handleClose();
             setResult(true);
-            deleteMutation.mutate({ source_ids });
+            additionalMutaion ? additionalMutaion.mutate({ source_ids }) : deleteMutation.mutate({ source_ids });
           }}
           type={'button'}>
           Delete
