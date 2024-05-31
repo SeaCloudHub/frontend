@@ -228,7 +228,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
           openDrawer(id);
         },
       },
-      { label: 'Lock', icon: <Icon icon='mdi:lock-outline' />, action: () => {} },
+      // { label: 'Lock', icon: <Icon icon='mdi:lock-outline' />, action: () => {} },
     ],
     [
       {

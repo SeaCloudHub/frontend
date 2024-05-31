@@ -228,7 +228,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
           openDrawer(id);
         },
       },
-      { label: 'Lock', icon: <Icon icon='mdi:lock-outline' />, action: () => {} },
+      // { label: 'Lock', icon: <Icon icon='mdi:lock-outline' />, action: () => {} },
     ],
     [
       {
@@ -265,7 +265,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
 
   const handleCtrlClick = () => {
     setArrSelected(
-      arrSelected.includes({ id, isDir, userRoles })
+      arrSelected.some((item) => item.id === id)
         ? arrSelected.filter((item) => item.id !== id)
         : [...arrSelected, { id, isDir, userRoles }],
     );
@@ -286,6 +286,7 @@ const FileCard: React.FC<FileCardProps> = ({ title, icon, preview, id, isSelecte
     e.preventDefault();
     if (!isDir) setFileViewer(true);
     else {
+      if(parent === 'trash') return;
       setArrSelected([]);
       setListEntries([]);
       // setActivityLog([]);

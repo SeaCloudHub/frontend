@@ -22,13 +22,17 @@ import { useEntries, useSelected } from '@/store/my-drive/myDrive.store';
 import RenamePopUp from '@/components/core/pop-up/RenamePopUp';
 import { CopyToClipboard } from '@/utils/function/copy.function';
 import { useStarEntryMutation, useUnstarEntryMutation } from '@/hooks/drive.hooks';
+import SharePopUp from '@/components/core/pop-up/SharePopUp';
+import MovePopUp from '@/components/core/pop-up/MovePopUp';
 
 type DrivePathMenuButtonProps = {
   path: { id: string; name: string, userRoles: UserRole[], is_starred: boolean};
   type?: 'MyDrive' | 'Shared' | 'Starred' | 'Trash' | 'Priority';
+  location?: { id: string; name: string };
 };
 
-const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ path, type }) => {
+const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ path, type, location }) => {
+  console.log('DrivePathMenuButtonProps:', location);
   const fileInputRef = useRef<HTMLInputElement>(null);
   // const folderInputRef = useRef<HTMLInputElement>(null);
   const [openPopUp, setOpenPopUp] = useState<boolean>(false);
@@ -159,14 +163,18 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ path, type })
         label: 'Share',
         icon: <Icon icon='lucide:user-plus' />,
         action: () => {
-
+          setOpenPopUp(true),
+          setTypePopUp('Share');
         },
         isHidden: isPermission(path.userRoles) < UserRoleEnum.EDITOR,
       },
       {
         label: 'Move',
         icon: <Icon icon='mdi:folder-move-outline' />,
-        action: () => {},
+        action: () => {
+          setOpenPopUp(true),
+          setTypePopUp('Move');
+        },
         isHidden: isPermission(path.userRoles) < UserRoleEnum.EDITOR,
       },
       ...(path.is_starred ? [
@@ -223,23 +231,16 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ path, type })
         multiple
       />
       {openPopUp && typePopUp === 'Create' && (
-        <ModalCreateFolder
-          dirId={path.id}
-          isOpen={openPopUp}
-          handleConfirm={() => {
-            setOpenPopUp(false);
-          }}
-        />
+        <ModalCreateFolder dirId={path.id} isOpen={openPopUp} handleConfirm={() => setOpenPopUp(false)} />
       )}
       {openPopUp && typePopUp === 'Rename' && (
-        <RenamePopUp
-          open={openPopUp}
-          handleClose={() => {
-            setOpenPopUp(false);
-          }}
-          id={path.id}
-          name={path.name}
-        />
+        <RenamePopUp open={openPopUp} handleClose={() => setOpenPopUp(false)} id={path.id} name={path.name}/>
+      )}
+      {openPopUp && typePopUp === 'Share' && (
+        <SharePopUp open={openPopUp} handleClose={() => setOpenPopUp(false)} title={path.name} fileId={path.id} />
+      )}
+      {openPopUp && typePopUp === 'Move' && (
+        <MovePopUp open={openPopUp} handleClose={() => setOpenPopUp(false)} title={path.name} ids={[path.id]} location={location} />
       )}
     </>
   );
