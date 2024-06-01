@@ -5,7 +5,7 @@ type StorageStatisticProps = {
   totalMemory?: number;
   usedMemory?: number;
 };
-const StorageStatistic = ({  totalMemory, usedMemory }: StorageStatisticProps) => {
+const StorageStatistic = ({ totalMemory, usedMemory }: StorageStatisticProps) => {
   return (
     <div className='flex rounded-lg dark:border dark:border-white dark:text-white'>
       <div className=' flex items-center border-r p-4'>

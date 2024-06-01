@@ -27,11 +27,12 @@ import {
 } from '@/apis/drive/drive.api';
 import {
   CopyFileREQ,
-  RenameREQ,
   DeleteEntriesREQ,
+  RenameREQ,
   RestoreEntriesREQ,
   StarEntriesREQ,
   DownloadMultipleEntriesREQ,
+  UpdateGeneralAccessREQ,
 } from '@/apis/drive/drive.request';
 import {
   EntryMetadataRES,
@@ -43,19 +44,19 @@ import {
   SuggestedEntriesRESP,
 } from '@/apis/drive/drive.response';
 import { MoveToTrashREQ } from '@/apis/drive/request/move-to-trash.request';
-import { uploadFilesApi } from '@/apis/user/storage/storage.api';
+import { updateGeneralAccessApi, uploadFilesApi } from '@/apis/user/storage/storage.api';
 import { LocalEntryToTimeEntry } from '@/pages/user/trash/trash-page-view/DriveHistoryGridView';
 import {
   Path,
-  useDrawer,
-  useEntries,
-  useIsFileMode,
-  useFilter,
-  useSelected,
   useActivityLogStore,
   useCursor,
   useCursorActivity,
   useCursorSearch,
+  useDrawer,
+  useEntries,
+  useFilter,
+  useIsFileMode,
+  useSelected,
 } from '@/store/my-drive/myDrive.store';
 import { useProgressIndicator } from '@/store/storage/progressIndicator.store';
 import { useStorageStore } from '@/store/storage/storage.store';
@@ -79,46 +80,55 @@ export const usePathParents = (dir?: string, is_admin?: boolean) => {
 
   const { data: parents, error: parentsError } = useQuery({
     queryKey: ['path-parrent', id],
-    queryFn: async () =>{
+    queryFn: async () => {
       const res = await getEntryMetadata({ id }).then((res) => res?.data);
       return res;
     },
     staleTime: 10 * 1000,
-    select: (data): {id: string, name: string, userRoles: UserRole[], is_starred: boolean}[] => {
+    select: (data): { id: string; name: string; userRoles: UserRole[]; is_starred: boolean }[] => {
       if (data.parents) {
         data.parents.sort((a, b) => a.path.localeCompare(b.path));
         const path = data.parents.map((parent, ind) => {
-          if(ind === 0) return {
-            id: !is_admin ? rootId : parent.id,
-            name: !is_admin ?  parent.id !== rootId ? 'Shared with me' : 'My Drive' : 'Root',
-            userRoles: ['owner'] as UserRole[],
-            is_starred: data.file.is_starred
-          };
-          else return {
-            id: parent.id,
-            name: parent.name,
-            userRoles: data.file.userRoles,
-            is_starred: data.file.is_starred
-          };
+          if (ind === 0)
+            return {
+              id: !is_admin ? rootId : parent.id,
+              name: !is_admin ? (parent.id !== rootId ? 'Shared with me' : 'My Drive') : 'Root',
+              userRoles: ['owner'] as UserRole[],
+              is_starred: data.file.is_starred,
+            };
+          else
+            return {
+              id: parent.id,
+              name: parent.name,
+              userRoles: data.file.userRoles,
+              is_starred: data.file.is_starred,
+            };
         });
-        path.push({ id: data.file.id, name: data.file.name, userRoles: data.file.userRoles, is_starred: data.file.is_starred});
+        path.push({ id: data.file.id, name: data.file.name, userRoles: data.file.userRoles, is_starred: data.file.is_starred });
         return path;
       }
-      return [{
-        id: is_admin ? dir : rootId,
-        name: is_admin ? 'Root' : 'My Drive',
-        userRoles: ['owner'] as UserRole[],
-        is_starred: false
-      }];
+      return [
+        {
+          id: is_admin ? dir : rootId,
+          name: is_admin ? 'Root' : 'My Drive',
+          userRoles: ['owner'] as UserRole[],
+          is_starred: false,
+        },
+      ];
     },
   });
 
-  if (isAxiosError<ApiGenericError>(parentsError)) {
-    toast.error(parentsError.response?.data.message, toastError());
-  }
+  // if (isAxiosError<ApiGenericError>(parentsError)) {
+  //   toast.error(parentsError.response?.data.message, toastError());
+  // }
 
-  return { parents: parents || [{ id, name: 'My Drive', userRoles: ['owner'] as UserRole[], is_starred: false }] };
-}
+  return {
+    parents: parents || [{ id, name: 'My Drive', userRoles: ['owner'] as UserRole[], is_starred: false }],
+    error: parentsError ? (
+      isAxiosError<ApiGenericError>(parentsError) ? parentsError.response?.data.message : parentsError.message || 'Something went wrong'
+      ) : null,
+  };
+};
 
 export const useListEntries = (rootUserId?: string) => {
   const { dirId } = useParams();
@@ -152,73 +162,65 @@ export const useListEntries = (rootUserId?: string) => {
     }
   }, [data, setListEntries]);
 
-  if (isAxiosError<ApiGenericError>(error)) {
-    toast.error(error.response?.data.message, toastError());
-  }
+  // if (isAxiosError<ApiGenericError>(error)) {
+  //   toast.error(error.response?.data.message, toastError());
+  // }
 
-  return { data: listEntries, refetch, isLoading };
+  return {
+    data: listEntries,
+    refetch,
+    isLoading,
+    error: error ? (
+      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
+      ) : null,
+  };
 };
 
 export const useListFolders = (volumn?: 'Priority' | 'My Drive' | 'Starred' | 'Shared', dirId?: string) => {
   const { rootId } = useStorageStore();
   if (!dirId) dirId = rootId;
-  const {setNextCursorSearch, currentCursorSearch} = useCursorSearch();
+  const { setNextCursorSearch, currentCursorSearch } = useCursorSearch();
   const { folderEntries, setFolderEntries } = useEntries();
 
-  const { data: parents, error: parentsError } = useQuery({
-    queryKey: ['entry-metadata', dirId],
-    queryFn: () => getEntryMetadata({ id: dirId }).then((res) => res?.data),
-    staleTime: 10 * 1000,
-    select: (data): Path => {
-      if (data.parents) {
-        data.parents.sort((a, b) => a.path.localeCompare(b.path));
-        const path = data.parents.map((parent) =>
-          parent.id === rootId ? { id: rootId, name: volumn || 'My Drive' } : { id: parent.id, name: parent.name },
-        );
-        path.push({ id: data.file.id, name: data.file.name });
-        return path;
-      }
-      return [{ id: rootId, name: volumn || 'My Drive' }];
-    },
-  });
+  const { parents, error: parentsError } = usePathParents(dirId, false);
+  console.log('parents', parents);
 
-  if (isAxiosError<ApiGenericError>(parentsError)) {
-    toast.error(parentsError.response?.data.message, toastError());
-  }
   const { data, error, refetch, isLoading } = useQuery({
     queryKey: ['list-folders', dirId, volumn, currentCursorSearch],
     queryFn: async () => {
       if (dirId !== rootId) volumn = 'My Drive';
       switch (volumn) {
         case 'Starred':
-          return (await getListEntriesPageStarred({type: 'folder'}).then((res) => res?.data));
+          return await getListEntriesPageStarred({ type: 'folder' }).then((res) => res?.data);
         case 'Shared':
-          return (await getSharedEntries({type: 'folder'}).then((res) => res?.data));
+          return await getSharedEntries({ type: 'folder' }).then((res) => res?.data);
         case 'Priority': {
-          const suggestedEntries = await getListEntriesSuggested({dir: true, limit: 15}).then((res) => res?.data);
-          return {entries: suggestedEntries, cursor: ''};
+          const suggestedEntries = await getListEntriesSuggested({ dir: true, limit: 15 }).then((res) => res?.data);
+          return { entries: suggestedEntries, cursor: '' };
         }
         default:
-          return (await getListEntries({ id: dirId, limit: 15, type: 'folder', cursor: currentCursorSearch }).then((res) => res?.data));
+          return await getListEntries({ id: dirId, limit: 15, type: 'folder', cursor: currentCursorSearch }).then(
+            (res) => res?.data,
+          );
       }
     },
     staleTime: 10 * 1000,
   });
 
   useEffect(() => {
-    if(data){
+    if (data) {
       data?.cursor && setNextCursorSearch(data.cursor);
       const entries = transformEntries(data.entries);
-      if(!currentCursorSearch) setFolderEntries(entries);
+      if (!currentCursorSearch) setFolderEntries(entries);
       else setFolderEntries(folderEntries.concat(entries.filter((entry) => !folderEntries.find((e) => e.id === entry.id))));
     }
   }, [currentCursorSearch, data, setFolderEntries, setNextCursorSearch]);
 
-  if (isAxiosError<ApiGenericError>(error)) {
-    toast.error(error.response?.data.message, toastError());
-  }
-
-  return { parents: parents || [{ id: dirId, name: 'My Drive' }], data: folderEntries || [], refetch, isLoading };
+  return { parents: parents || [{ id: dirId, name: 'My Drive' }], data: folderEntries || [], refetch, isLoading,
+    error: error ? (
+      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
+    ) : parentsError ? parentsError : null,
+  };
 };
 
 export const useSuggestedEntries = () => {
@@ -241,11 +243,18 @@ export const useSuggestedEntries = () => {
     if (data) setListSuggestedEntries(data);
   }, [data, setListSuggestedEntries]);
 
-  if (isAxiosError<ApiGenericError>(error)) {
-    toast.error(error.response?.data.message, toastError());
-  }
+  // if (isAxiosError<ApiGenericError>(error)) {
+  //   toast.error(error.response?.data.message, toastError());
+  // }
 
-  return { data: listSuggestedEntries || [], refetch, isLoading };
+  return {
+    data: listSuggestedEntries || [],
+    refetch,
+    isLoading,
+    error: error ? (
+      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
+    ) : null,
+  };
 };
 
 export const useSearchEntries = (query: string) => {
@@ -259,11 +268,16 @@ export const useSearchEntries = (query: string) => {
     select: transformSuggestedEntries,
   });
 
-  if (isAxiosError<ApiGenericError>(error)) {
-    toast.error(error.response?.data.message, toastError());
-  }
+  // if (isAxiosError<ApiGenericError>(error)) {
+  //   toast.error(error.response?.data.message, toastError());
+  // }
 
-  return { data: data || [], refetch, isLoading };
+  return {
+    data: data || [], refetch, isLoading,
+    error: error ? (
+      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
+    ) : null
+  };
 };
 
 export const useSearchEntriesPage = () => {
@@ -272,7 +286,7 @@ export const useSearchEntriesPage = () => {
   const { typeFilter, modifiedFilter } = useFilter();
   const { entriesSearchPage, setEntriesSearchPage } = useEntries();
 
-  const { data, refetch, isLoading } = useQuery({
+  const { data, refetch, isLoading, error } = useQuery({
     queryKey: ['search-entries-Page', query, typeFilter, modifiedFilter],
     queryFn: async () => {
       if (!query) return { entries: [], cursor: '' };
@@ -298,30 +312,14 @@ export const useSearchEntriesPage = () => {
     }
   }, [data, setEntriesSearchPage]);
 
-  return { data: entriesSearchPage, refetch, isLoading };
-};
-
-export const usePriorityEntries = () => {
-  const { dirId } = useParams();
-  const { rootId } = useStorageStore();
-  const id = dirId || rootId;
-
-  const { data, error, refetch, isLoading } = useQuery({
-    queryKey: ['priority-entries', id],
-    queryFn: async () => {
-      return (await getListEntriesPageMyDrive({ id, limit: 100 }).then((res) => res?.data?.entries || [])).filter(
-        (e) => !e.name.includes('.trash'),
-      );
-    },
-    staleTime: 10 * 1000,
-    select: transformEntries,
-  });
-
-  if (isAxiosError<ApiGenericError>(error)) {
-    toast.error(error.response?.data.message, toastError());
-  }
-
-  return { data: data || [], refetch, isLoading };
+  return {
+    data: entriesSearchPage,
+    refetch,
+    isLoading,
+    error: error ? (
+      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
+    ) : null
+  };
 };
 
 export const useQueries = () => {
@@ -354,9 +352,9 @@ export const useSharedEntry = () => {
     },
   });
 
-  if (isAxiosError<ApiGenericError>(parentsError)) {
-    toast.error(parentsError.response?.data.message, toastError());
-  }
+  // if (isAxiosError<ApiGenericError>(parentsError)) {
+  //   toast.error(parentsError.response?.data.message, toastError());
+  // }
 
   const { data, error, refetch, isLoading } = useQuery({
     queryKey: ['shared-entries', id, modifiedFilter, typeFilter],
@@ -373,9 +371,9 @@ export const useSharedEntry = () => {
     staleTime: 10 * 1000,
   });
 
-  if (isAxiosError<ApiGenericError>(error)) {
-    toast.error(error.response?.data.message, toastError());
-  }
+  // if (isAxiosError<ApiGenericError>(error)) {
+  //   toast.error(error.response?.data.message, toastError());
+  // }
 
   useEffect(() => {
     if (data) {
@@ -388,7 +386,13 @@ export const useSharedEntry = () => {
     }
   }, [data, setNextCursor]);
 
-  return { parents: parents || [{ id, name: 'Shared' }], data: listEntries || [], refetch, isLoading };
+  return { parents: parents || [{ id, name: 'Shared' }], data: listEntries || [], refetch, isLoading,
+    error: error ? (
+      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
+    ) : parentsError ? (
+      isAxiosError<ApiGenericError>(parentsError) ? parentsError.response?.data.message : parentsError.message || 'Something went wrong'
+    ) : null
+  };
 };
 
 export const useTrash = () => {
@@ -411,9 +415,9 @@ export const useTrash = () => {
     staleTime: 10 * 1000,
   });
 
-  if (isAxiosError<ApiGenericError>(error)) {
-    toast.error(error.response?.data.message, toastError());
-  }
+  // if (isAxiosError<ApiGenericError>(error)) {
+  //   toast.error(error.response?.data.message, toastError());
+  // }
 
   useEffect(() => {
     if (data) {
@@ -436,7 +440,12 @@ export const useTrash = () => {
     }
   }, [data, setTrashEntries]);
 
-  return { data: trashEntries, refetch, isLoading };
+  return {
+    data: trashEntries, refetch, isLoading,
+    error: error ? (
+      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
+    ) : null
+  };
 };
 
 export const useCopyMutation = () => {
@@ -473,7 +482,7 @@ export const useRenameMutation = () => {
       }
     },
     onSuccess: (data) => {
-      setListEntries(listEntries.map((entry) => (entry.id === data.data.id ? {...entry, title: data.data.name} : entry)));
+      setListEntries(listEntries.map((entry) => (entry.id === data.data.id ? { ...entry, title: data.data.name } : entry)));
       toast.success(`Renamed to ${data.data.name}`);
       queryClient.invalidateQueries({ queryKey: ['suggested-entries'] });
       queryClient.invalidateQueries({ queryKey: ['entry-metadata'] });
@@ -482,9 +491,30 @@ export const useRenameMutation = () => {
   });
 };
 
+export const useRenameMutationV2 = (queryKey: QueryKey) => {
+  const queryClient = useQueryClient();
+  const { listEntries, setListEntries, setListSuggestedEntries, listSuggestedEntries } = useEntries();
+
+  return useMutation({
+    mutationFn: (body: RenameREQ) => {
+      return renameEntry(body);
+    },
+    onError: (error) => {
+      if (isAxiosError<ApiGenericError>(error)) {
+        toast.error(error.response?.data.message, toastError());
+      }
+    },
+    onSuccess: (data) => {
+      setListEntries(listEntries.map((entry) => (entry.id === data.data.id ? { ...entry, title: data.data.name } : entry)));
+      toast.success(`Renamed to ${data.data.name}`);
+      queryClient.invalidateQueries({ queryKey: queryKey });
+    },
+  });
+};
+
 export const useDownloadMutation = () => {
   return useMutation({
-    mutationFn: (body: { id: string, name?: string }) => {
+    mutationFn: (body: { id: string; name?: string }) => {
       console.log(body);
       return downloadFile(body);
     },
@@ -519,7 +549,7 @@ export const useDownLoadMultipleMutation = () => {
       toast.info('Downloading...');
     },
   });
-}
+};
 
 export const useMoveToTrashMutation = () => {
   const queryClient = useQueryClient();
@@ -555,15 +585,48 @@ export const useDeleteMutation = () => {
       }
     },
     onSuccess: (data) => {
-      const trash = trashEntries.map((entry) => {
-        return {
-          time: entry.time,
-          entries: entry.entries.filter((e) => !data.data.some((d) => d.id === e.id)),
-        };
-      }).filter((entry) => entry.entries.length > 0);
+      const trash = trashEntries
+        .map((entry) => {
+          return {
+            time: entry.time,
+            entries: entry.entries.filter((e) => !data.data.some((d) => d.id === e.id)),
+          };
+        })
+        .filter((entry) => entry.entries.length > 0);
       setTrashEntries(trash);
       toast.success(`${data.data.length} files deleted`);
       client.invalidateQueries({ queryKey: ['list-files-user'] });
+    },
+  });
+};
+
+export const useDeleteMutationV2 = (queryKey?: QueryKey) => {
+  const { trashEntries, setTrashEntries } = useEntries();
+  const client = useQueryClient();
+
+  return useMutation({
+    mutationFn: (body: DeleteEntriesREQ) => {
+      return deleteEntries(body);
+    },
+    onError: (error) => {
+      if (isAxiosError<ApiGenericError>(error)) {
+        toast.error(error.response?.data.message, toastError());
+      }
+    },
+    onSuccess: (data) => {
+      const trash = trashEntries
+        .map((entry) => {
+          return {
+            time: entry.time,
+            entries: entry.entries.filter((e) => !data.data.some((d) => d.id === e.id)),
+          };
+        })
+        .filter((entry) => entry.entries.length > 0);
+      setTrashEntries(trash);
+      toast.success(`${data.data.length} files deleted`);
+      if (queryKey) {
+        client.invalidateQueries({ queryKey: queryKey });
+      }
     },
   });
 };
@@ -590,9 +653,9 @@ export const useStarred = () => {
     select: transformEntries,
   });
 
-  if (isAxiosError<ApiGenericError>(error)) {
-    toast.error(error.response?.data.message, toastError());
-  }
+  // if (isAxiosError<ApiGenericError>(error)) {
+  //   toast.error(error.response?.data.message, toastError());
+  // }
 
   useEffect(() => {
     if (data) {
@@ -601,12 +664,17 @@ export const useStarred = () => {
     }
   }, [data, setListEntries]);
 
-  return { data: listEntries || [], refetch, isLoading };
+  return {
+    data: listEntries || [], refetch, isLoading,
+    error: error ? (
+      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
+    ) : null
+  };
 };
 
 export const useStarEntryMutation = () => {
   const queryClient = useQueryClient();
-  const {listEntries, setListEntries} = useEntries();
+  const { listEntries, setListEntries } = useEntries();
 
   return useMutation({
     mutationFn: (param: StarEntriesREQ) => {
@@ -706,11 +774,15 @@ export const useEntryMetadata = (id: string) => {
     enabled: !!drawerOpen && !!id,
   });
 
-  if (isAxiosError<ApiGenericError>(error)) {
-    toast.error(error.response?.data.message, toastError());
-  }
+  // if (isAxiosError<ApiGenericError>(error)) {
+  //   toast.error(error.response?.data.message, toastError());
+  // }
 
-  return { data, isLoading, isFetching };
+  return { data, isLoading, isFetching,
+    error: error ? (
+      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
+    ) : null
+  };
 };
 
 export const useEntryAccess = (id: string) => {
@@ -727,11 +799,15 @@ export const useEntryAccess = (id: string) => {
     enabled: !!drawerOpen && !!id,
   });
 
-  if (isAxiosError<ApiGenericError>(error)) {
-    toast.error(error.response?.data.message, toastError());
-  }
+  // if (isAxiosError<ApiGenericError>(error)) {
+  //   toast.error(error.response?.data.message, toastError());
+  // }
 
-  return { data, isLoading };
+  return { data, isLoading,
+    error: error ? (
+      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
+    ) : null
+  };
 };
 
 export const useUploadMutation = () => {
@@ -772,11 +848,16 @@ export const useMemoryStatistics = () => {
     },
   });
 
-  if (isAxiosError<ApiGenericError>(error)) {
-    toast.error(error.response?.data.message, toastError());
-  }
+  // if (isAxiosError<ApiGenericError>(error)) {
+  //   toast.error(error.response?.data.message, toastError());
+  // }
 
-  return { data, isLoading };
+  return {
+    data, isLoading,
+    error: error ? (
+      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
+    ) : null
+  };
 };
 
 export const useMemory = (asc: boolean) => {
@@ -799,31 +880,36 @@ export const useMemory = (asc: boolean) => {
     },
   });
 
-  if (isAxiosError<ApiGenericError>(error)) {
-    toast.error(error.response?.data.message, toastError());
-  }
+  // if (isAxiosError<ApiGenericError>(error)) {
+  //   toast.error(error.response?.data.message, toastError());
+  // }
 
   useEffect(() => {
     if (data) {
       data.cursor && setNextCursor(data.cursor);
       const entries = transformEntries(data.entries);
-      if(!currentCursor) setListEntries(entries);
+      if (!currentCursor) setListEntries(entries);
       else setListEntries(listEntries.concat(entries.filter((entry) => !listEntries.find((e) => e.id === entry.id))));
     }
   }, [data, setListEntries]);
 
-  return { data: listEntries, isLoading };
+  return {
+    data: listEntries, isLoading,
+    error: error ? (
+      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
+    ) : null
+  };
 };
 
 export const useActivityLog = () => {
-  const {rootId} = useStorageStore();
-  const {arrSelected} = useSelected();
-  const {activityLog, setActivityLog} = useActivityLogStore();
-  const {currentCursorActivity, setNextCursorActivity} = useCursorActivity();
+  const { rootId } = useStorageStore();
+  const { arrSelected } = useSelected();
+  const { activityLog, setActivityLog } = useActivityLogStore();
+  const { currentCursorActivity, setNextCursorActivity } = useCursorActivity();
 
   const id = arrSelected.length === 1 ? arrSelected[0].id : rootId;
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['activity-log', id, currentCursorActivity],
     queryFn: async () => {
       const res = await getActivityLog({
@@ -834,10 +920,10 @@ export const useActivityLog = () => {
       return res;
     },
     staleTime: 10 * 1000,
-  })
+  });
 
   useEffect(() => {
-    if(data) {
+    if (data) {
       data.cursor && setNextCursorActivity(data.cursor);
       if (!currentCursorActivity) setActivityLog(transformActivityLog(data?.activities || []));
       else {
@@ -845,7 +931,7 @@ export const useActivityLog = () => {
         if (activityLog.length > 0) {
           const last = activityLog[activityLog.length - 1];
           const first = temp[0];
-          if(last.time === first?.time) {
+          if (last.time === first?.time) {
             last.data = last.data.concat(first.data);
             setActivityLog(activityLog.slice(0, -1).concat(last));
           } else {
@@ -856,29 +942,39 @@ export const useActivityLog = () => {
     }
   }, [data, setActivityLog]);
 
-  return { data: activityLog, isLoading };
+  return {
+    data: activityLog, isLoading,
+    error: error ? (
+      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
+    ) : null
+  };
 };
-
 
 ///////////////////  admin //////////////////////
 export const useGetListFilesUser = (page: number, id: string, isRoot: boolean, query?: string) => {
   const { userId } = useParams();
-  const {modifiedFilter, typeFilter} = useFilter();
+  const { modifiedFilter, typeFilter } = useFilter();
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['list-files-user', userId, id, page, isRoot, modifiedFilter, typeFilter, query],
     queryFn: async () => {
-      const res = isRoot ?
-        await getFileUserApi({ identity_id: userId, limit: 8, page,
-          ...(modifiedFilter ? { after: modifiedFilter } : {}),
-          ...(typeFilter ? { type: typeFilter } : {}),
-          ...(query ? { query } : {})
-        }).then((res) => res?.data) :
-        await getListEntriesPageMyDrive({ id, limit: 8, page,
-          ...(modifiedFilter ? { after: modifiedFilter } : {}),
-          ...(typeFilter ? { type: typeFilter } : {}),
-          ...(query ? { query } : {})
-        })
+      const res = isRoot
+        ? await getFileUserApi({
+            identity_id: userId,
+            limit: 8,
+            page,
+            ...(modifiedFilter ? { after: modifiedFilter } : {}),
+            ...(typeFilter ? { type: typeFilter } : {}),
+            ...(query ? { query } : {}),
+          }).then((res) => res?.data)
+        : await getListEntriesPageMyDrive({
+            id,
+            limit: 8,
+            page,
+            ...(modifiedFilter ? { after: modifiedFilter } : {}),
+            ...(typeFilter ? { type: typeFilter } : {}),
+            ...(query ? { query } : {}),
+          });
       return res;
     },
     staleTime: 10 * 1000,
@@ -888,12 +984,17 @@ export const useGetListFilesUser = (page: number, id: string, isRoot: boolean, q
     placeholderData: keepPreviousData,
   });
 
-  if (isAxiosError<ApiGenericError>(error)) {
-    toast.error(error.response?.data.message, toastError());
-  }
+  // if (isAxiosError<ApiGenericError>(error)) {
+  //   toast.error(error.response?.data.message, toastError());
+  // }
 
-  return { data: data , refetch, isLoading };
-}
+  return {
+    data: data, refetch, isLoading,
+    error: error ? (
+      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
+    ) : null
+  };
+};
 
 export const useModifyStorageCapacityMutation = (queryKey: QueryKey) => {
   const queryClient = useQueryClient();
@@ -911,6 +1012,22 @@ export const useModifyStorageCapacityMutation = (queryKey: QueryKey) => {
       toast.success('Modified');
       console.log(queryKey);
       queryClient.invalidateQueries({ queryKey: queryKey });
+    },
+  });
+};
+
+export const useUpdateGeneralAccessMutation = () => {
+  return useMutation({
+    mutationFn: (body: UpdateGeneralAccessREQ) => {
+      return updateGeneralAccessApi(body);
+    },
+    onError: (error) => {
+      if (isAxiosError<ApiGenericError>(error)) {
+        toast.error(error.response?.data.message, toastError());
+      }
+    },
+    onSuccess: () => {
+      toast.success('Changed general access');
     },
   });
 }
@@ -1002,7 +1119,7 @@ const transformSuggestedEntries = (entries: SuggestedEntriesRESP[]): SuggestedEn
         <img
           src={`${import.meta.env.VITE_BACKEND_API}${entry.thumbnail}`}
           alt={entry.name}
-          className='h-full w-full object-cover select-none'
+          className='h-full w-full select-none object-cover'
           draggable={false}
         />
       ) : (
@@ -1027,7 +1144,7 @@ export const transformEntry = (entry: EntryRESP): LocalEntry => {
       isDir: entry.is_dir,
       title: entry.name,
       icon: <Icon icon='ic:baseline-folder' className='h-full w-full object-cover text-yellow-600' />,
-      preview: <Icon icon='ic:baseline-folder' className='h-32 w-32 text-yellow-600 object-cover' />,
+      preview: <Icon icon='ic:baseline-folder' className='h-32 w-32 object-cover text-yellow-600' />,
       id: entry.id,
       owner: entry.owner,
       fileType: entry.type,
@@ -1047,7 +1164,7 @@ export const transformEntry = (entry: EntryRESP): LocalEntry => {
       <img
         src={`${import.meta.env.VITE_BACKEND_API}${entry.thumbnail}`}
         alt={entry.name}
-        className='h-full w-full object-cover select-none'
+        className='h-full w-full select-none object-cover'
         draggable={false}
       />
     ) : (
@@ -1061,7 +1178,7 @@ export const transformEntry = (entry: EntryRESP): LocalEntry => {
     userRoles: entry.userRoles,
     is_starred: entry.is_starred,
   } as LocalEntry;
-}
+};
 
 const transformActivityLog = (data: LogItem[]): LocalActivityLog => {
   const result: LocalActivityLog = [];

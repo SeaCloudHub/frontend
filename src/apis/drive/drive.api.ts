@@ -13,6 +13,7 @@ import {
   DownloadMultipleEntriesREQ,
   GetListFileSizesREQ,
   GetActivityLogREQ,
+  UpdateGeneralAccessREQ,
 } from './drive.request';
 import { BaseResponse } from '@/utils/types/api-base-response.type';
 import { MoveToTrashREQ } from './request/move-to-trash.request';
@@ -28,6 +29,7 @@ import {
 } from './drive.response';
 import { HTTP_HEADER } from '@/utils/constants/http.constant';
 import { GetStorageRESP } from './response/get-storage.response';
+import { GeneralAccessType } from '@/utils/types/general-access.type';
 
 export const getListEntries = async (params: ListEntriesREQ) => {
   const res = await api.get<BaseResponse<ListEntriesRESP>>(`/files/${params.id}`, {
@@ -42,6 +44,15 @@ export const getListEntriesPageMyDrive = async (param: ListEntriesPageREQ) => {
   });
   return res.data;
 };
+
+export const getListEntriesAdmin = async (param: ListEntriesPageREQ) => {
+  const { id, ...rest } = param;
+  const res = await api.get<BaseResponse<ListEntriesPageRESP>>(`/files/${id}/page`, {
+    params: { ...rest , type: param.type?.toLowerCase() },
+  });
+  return res.data;
+};
+
 
 export const getListEntriesSuggested = async (params: SuggestedEntriesREQ) => {
   const res = await api.get<BaseResponse<SuggestedEntriesRESP[]>>(`/files/suggested`, { params });
@@ -84,7 +95,7 @@ export const getEntryMetadata = async (param: Pick<ListEntriesREQ, 'id'>) => {
   return res.data;
 };
 
-export const downloadFile = async (param: { id: string; name?: string}) => {
+export const downloadFile = async (param: { id: string; name?: string }) => {
   const res = await api.get(`/files/${param.id}/download`, { responseType: 'blob' });
   const url = window.URL.createObjectURL(new Blob([res.data], { type: res.headers['content-type'] }));
   const link = document.createElement('a');
@@ -173,3 +184,8 @@ export const getActivityLog = async (params: GetActivityLogREQ) => {
   const res = await api.get<BaseResponse<ActivityLogRESP>>(`/files/${params.id}/activities`, { params });
   return res.data;
 };
+
+export const updateGeneralAccess = async (body: UpdateGeneralAccessREQ) => {
+  const res = await api.patch<BaseResponse<void>>(`/files/general-access`, body);
+  return res.data;
+}

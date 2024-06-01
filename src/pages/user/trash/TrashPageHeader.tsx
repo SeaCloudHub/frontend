@@ -23,7 +23,7 @@ const TrashPageHeader = () => {
   console.log('[TrashPageHeader] arrSelected', arrSelected);
 
   return (
-    <div className='flex flex-col px-5 select-none'>
+    <div className='flex select-none flex-col px-5'>
       <div className='flex justify-between space-x-2'>
         <h2 className='pb-[20px] pt-[17px] text-2xl'>Trash</h2>
         <div className='flex items-center gap-2'>

@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Skeleton, Tooltip } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
-import { Tooltip, Skeleton } from '@mui/material';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { getUserDetailApi } from '@/apis/admin/user-management/user-management.api';
 import { getIdentitiesRESToUserManagementInfoDto } from '@/apis/admin/user-management/user-management.service';
@@ -10,18 +10,17 @@ import ModalConfirmBlockOrUnBlock from '@/components/core/modal/ModalBlockConfir
 import ModalConfirmDelete from '@/components/core/modal/ModalConfirmDelete';
 import ModalResetPasswordConfirm from '@/components/core/modal/ModalResetPasswordConfirm';
 import ModalUpdateUser from '@/components/core/modal/ModalUpdateUser';
+import ModifyMemoryPopUp from '@/components/core/pop-up/ModifyMemoryPopUp';
 import { ScreenMode } from '@/utils/enums/screen-mode.enum';
 import { getFirstCharacters } from '@/utils/function/getFirstCharacter';
 import { getRandomColor } from '@/utils/function/getRandomColor';
 import IconifyIcon from '../../../../components/core/Icon/IConCore';
-import ButtonContainer from '../../../../components/core/button/ButtonContainer';
 import { useScreenHook } from '../../../../hooks/useScreenHook';
 import { useScreenMode } from '../../../../store/responsive/screenMode';
 import { ADMIN_USER_MANAGEMENT } from '../../../../utils/constants/router.constant';
 import StorageStatistic from '../../shared/StorageStatistic';
 import UserDetailAction from './components/action/UserDetailAction';
 import FileFolderFilter from './components/file-folder-detail/FileFolderFilter';
-import ModifyMemoryPopUp from '@/components/core/pop-up/ModifyMemoryPopUp';
 
 const UserManagementDetail = () => {
   const navigate = useNavigate();
@@ -90,7 +89,7 @@ const UserManagementDetail = () => {
                 <Skeleton variant='circular' width={70} height={70} />
               ) : identityData && identityData.avatar_url ? (
                 <img
-                  className='w-[70px] rounded-full object-contain'
+                  className='h-[70px] w-[70px] rounded-full object-contain'
                   src={import.meta.env.VITE_BACKEND_API + identityData.avatar_url}
                 />
               ) : (
@@ -181,8 +180,8 @@ const UserManagementDetail = () => {
               <ModalConfirmBlockOrUnBlock
                 isBlock={isBlocked}
                 user={userDto}
-                message={isBlocked ? 'Do you want to block this user?' : 'Do you want to un-block this user?'}
-                title={isBlocked ? 'Block' : 'Un-block' + userDto.name}
+                message={isBlocked ? 'Do you want to block this user ?' : 'Do you want to un-block this user ?'}
+                title={isBlocked ? 'Block ' + userDto.name : 'Un-block ' + userDto.name}
                 isOpen={true}
                 handleConfirm={(data?: boolean) => {
                   if (data) {
@@ -197,12 +196,12 @@ const UserManagementDetail = () => {
               onClick={() => {
                 setDeleteModal(true);
               }}
-              icon={<IconifyIcon icon='tabler:user-x'/>}
+              icon={<IconifyIcon icon='tabler:user-x' />}
             />
             {deleteModal && (
               <ModalConfirmDelete
                 user={userDto}
-                message={'Do you want to delete this User?'}
+                message={'Do you want to delete this User ?'}
                 title={'Delete ' + userDto.name}
                 isOpen={true}
                 handleConfirm={(data?: boolean) => {
@@ -220,13 +219,7 @@ const UserManagementDetail = () => {
                 setModify(true);
               }}
             />
-            {modify &&
-              <ModifyMemoryPopUp
-                open={modify}
-                onClose={() => setModify(false)}
-                identity_id={userId}
-              />
-            }
+            {modify && <ModifyMemoryPopUp open={modify} onClose={() => setModify(false)} identity_id={userId} />}
           </div>
         </div>
 

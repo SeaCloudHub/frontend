@@ -1,17 +1,13 @@
 import DriveLayout from '@/components/layout/DriveLayout';
-import React, { useState } from 'react';
-import MyDriveHeader from '../my-drive/header/MyDriveHeader';
-import { useEntries, useSelected, useFilter, useViewMode, useCursor } from '@/store/my-drive/myDrive.store';
+import { useState } from 'react';
+import { useSelected, useFilter, useViewMode, useCursor } from '@/store/my-drive/myDrive.store';
 import InfoButton from '../my-drive/header/InfoButton';
-import PriorityFilter from '../priority/priority-filter/PriorityFilter';
 import MultipleDriveHeader from '../my-drive/header/MultipleDriveHeader';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { DriveGridView } from '../my-drive/content/DriveGridView';
-import PriorityView from '../priority/priority-view/PriorityView';
 import SidePanel from '../my-drive/side-panel/SidePanel';
-import { LocalEntry, useQueries, useSearchEntries, useSearchEntriesPage } from '@/hooks/drive.hooks';
+import { useSearchEntriesPage } from '@/hooks/drive.hooks';
 import { DriveListView } from '../my-drive/content/DriveListView';
-import { useSubmit } from 'react-router-dom';
 import DriveFilter from '../my-drive/header/DriveFilter';
 import { Tooltip } from '@mui/material';
 import DriveViewMode from '../my-drive/header/DriveViewMode';
@@ -21,7 +17,6 @@ const SearchPage = () => {
   const { rootId } = useStorageStore();
   const { viewMode, setViewMode } = useViewMode();
   const { arrSelected } = useSelected();
-  const [isFileMode, setIsFileMode] = useState<boolean>(true);
   const [peopleFilter, setPeopleFilter] = useState<string>('');
 
   const { typeFilter, setTypeFilter } = useFilter();
@@ -30,10 +25,7 @@ const SearchPage = () => {
   const [isScrolling, setIsScrolling] = useState(false);
   const [search, setSearch] = useState<boolean>(false);
 
-  const { data, isLoading, refetch } = useSearchEntriesPage();
-  // console.log('SearchPage', data);
-  // console.log('SearchPage', isLoading);
-  // console.log('SearchPage', limit);
+  const { data, isLoading, error } = useSearchEntriesPage();
 
   const onScollBottom = () => {
     if (nextCursor && nextCursor !== currentCursor) {
@@ -86,11 +78,14 @@ const SearchPage = () => {
       }
       onScrollBottom={onScollBottom}
       bodyLeft={
-        viewMode === 'grid' ? (
-          <DriveGridView entries={data} isLoading={isLoading} isScrolling={isScrolling} parent='priority' />
+        error ? (
+          <div className='text-center text-lg text-red-500'>Error: {error}</div>
         ) : (
-          <DriveListView entries={data} isLoading={isLoading} isScrolling={isScrolling} parent='priority' />
-          // <PriorityListView entries={data} isLoading={isLoading} parrent='priority' />
+          viewMode === 'grid' ? (
+            <DriveGridView entries={data} isLoading={isLoading} isScrolling={isScrolling} parent='priority' />
+          ) : (
+            <DriveListView entries={data} isLoading={isLoading} isScrolling={isScrolling} parent='priority' />
+          )
         )
       }
       sidePanel={

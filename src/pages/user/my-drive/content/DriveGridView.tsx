@@ -78,7 +78,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
           <div className='relative flex min-w-40 flex-col space-y-2 overflow-hidden'>
             {entries.length !== 0 && (
               <>
-                <div className='pb-4 text-sm font-medium select-none'>{folderShow ? 'Folders' : fileShow ? 'Files' : 'All'}</div>
+                <div className='select-none pb-4 text-sm font-medium'>{folderShow ? 'Folders' : fileShow ? 'Files' : 'All'}</div>
                 <div className={`grid grid-cols-1 gap-4 ${drawerOpen ? 'xl:grid-cols-3' : 'sm:grid-cols-2 xl:grid-cols-5'}`}>
                   {showEntry.map((entry, index) =>
                     folderShow ? (

@@ -47,7 +47,7 @@ const DriveHistoryListView: React.FC<DriveHistoryListViewProps> = ({ sort, order
   }, [arrSelected, setArrSelected]);
 
   return (
-    <div className='pl-5 pr-3 h-full select-none' ref={driveListViewRef}>
+    <div className='h-full select-none pl-5 pr-3' ref={driveListViewRef}>
       <div className='relative flex flex-col'>
         <div className='grid grid-cols-7 gap-3 border-b border-b-[#dadce0] pt-2 max-[1160px]:grid-cols-6'>
           <div className='col-span-4 font-medium'>Name</div>

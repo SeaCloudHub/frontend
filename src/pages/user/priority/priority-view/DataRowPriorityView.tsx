@@ -18,7 +18,7 @@ import {
 import { useSession } from '@/store/auth/session';
 import { useDrawer, useEntries, useSelected } from '@/store/my-drive/myDrive.store';
 import { useStorageStore } from '@/store/storage/storage.store';
-import { DRIVE_HOME, DRIVE_MY_DRIVE_DIR, DRIVE_SHARED, HOME } from '@/utils/constants/router.constant';
+import { DRIVE_HOME, DRIVE_MY_DRIVE, DRIVE_MY_DRIVE_DIR, DRIVE_SHARED, HOME } from '@/utils/constants/router.constant';
 import { UserRoleEnum } from '@/utils/enums/user-role.enum';
 import { CopyToClipboard } from '@/utils/function/copy.function';
 import { formatDate } from '@/utils/function/formatDate.function';
@@ -144,59 +144,67 @@ const DataRowPriorityView: React.FC<SuggestedEntry & DataRowPriorityViewProps> =
         icon: <Icon icon='material-symbols:add-to-drive' />,
         action: () => {},
       },
-      ... is_starred ? [
-        {
-          label: 'Remove from starred',
-          icon: <Icon icon='mdi:star-off-outline' />,
-          action: () => {
-            unstarEntryMutation.mutate({ file_ids: [id] }, {
-              onSuccess: () => {
-                const newState = listSuggestedEntries.map((entry: SuggestedEntry) => {
-                  if (entry.id === id) {
-                    return { ...entry, is_starred: false };
-                  }
-                  return entry;
-                });
-                setListSuggestedEntries(newState);
-              }
-            });
-          },
-        },
-      ] : [
-        {
-          label: 'Add to starred',
-          icon: <Icon icon='material-symbols:star-outline' />,
-          action: () => {
-            starEntryMutation.mutate({ file_ids: [id] }, {
-              onSuccess: () => {
-                const newState = listSuggestedEntries.map((entry: SuggestedEntry) => {
-                  if (entry.id === id) {
-                    return { ...entry, is_starred: true };
-                  }
-                  return entry;
-                });
-                setListSuggestedEntries(newState);
-              }
-            });
-          },
-        },
-      ],
+      ...(is_starred
+        ? [
+            {
+              label: 'Remove from starred',
+              icon: <Icon icon='mdi:star-off-outline' />,
+              action: () => {
+                unstarEntryMutation.mutate(
+                  { file_ids: [id] },
+                  {
+                    onSuccess: () => {
+                      const newState = listSuggestedEntries.map((entry: SuggestedEntry) => {
+                        if (entry.id === id) {
+                          return { ...entry, is_starred: false };
+                        }
+                        return entry;
+                      });
+                      setListSuggestedEntries(newState);
+                    },
+                  },
+                );
+              },
+            },
+          ]
+        : [
+            {
+              label: 'Add to starred',
+              icon: <Icon icon='material-symbols:star-outline' />,
+              action: () => {
+                starEntryMutation.mutate(
+                  { file_ids: [id] },
+                  {
+                    onSuccess: () => {
+                      const newState = listSuggestedEntries.map((entry: SuggestedEntry) => {
+                        if (entry.id === id) {
+                          return { ...entry, is_starred: true };
+                        }
+                        return entry;
+                      });
+                      setListSuggestedEntries(newState);
+                    },
+                  },
+                );
+              },
+            },
+          ]),
     ],
     [
       {
         label: 'Detail',
         icon: <Icon icon='mdi:information-outline' />,
         action: () => {
-          setTab('Details')
-          openDrawer(id)
+          setTab('Details');
+          openDrawer(id);
         },
       },
       {
         label: 'Activity',
         icon: <Icon icon='mdi:graph-line-variant' />,
         action: () => {
-          setTab('Activity')
-          openDrawer(id)
+          setTab('Activity');
+          openDrawer(id);
         },
       },
       // !isDir && { label: 'Lock', icon: <Icon icon='mdi:lock-outline' />, action: () => {} },
@@ -209,6 +217,7 @@ const DataRowPriorityView: React.FC<SuggestedEntry & DataRowPriorityViewProps> =
           setType('move to trash');
           setIsPopUpOpen(true);
         },
+        isHidden: isPermission(userRoles) < UserRoleEnum.EDITOR,
       },
     ],
   ].filter((e) => e.length != 0);
@@ -268,9 +277,7 @@ const DataRowPriorityView: React.FC<SuggestedEntry & DataRowPriorityViewProps> =
         onDoubleClick={handleDoubleClick}
         className={classNames(
           'data-row grid cursor-pointer grid-cols-8 gap-3 truncate border-b border-b-[#dadce0] py-2 max-[1160px]:grid-cols-7 max-[1150px]:grid-cols-6 max-[1000px]:grid-cols-5',
-          isSelected
-            ? 'bg-[#c2e7ff]  dark:bg-blue-900'
-            : 'hover:bg-[#dfe3e7] dark:text-white dark:hover:bg-slate-700',
+          isSelected ? 'bg-[#c2e7ff]  dark:bg-blue-900' : 'hover:bg-[#dfe3e7] dark:text-white dark:hover:bg-slate-700',
         )}>
         <div className='col-span-4 flex'>
           <div className='px-4'>
@@ -313,13 +320,18 @@ const DataRowPriorityView: React.FC<SuggestedEntry & DataRowPriorityViewProps> =
 
         <div className='flex justify-between max-[1160px]:justify-end'>
           <div className='truncate max-[1160px]:hidden'>
-            <div onClick={() => {
-              if(isPermission(userRoles) <= 2) {
-                id === rootId ? navigate(`/drive/folder/${parent.id}`) : navigate(DRIVE_SHARED);
-              } else {
-                id === rootId ? navigate(`${DRIVE_HOME}/my-drive/dir/${parent.id}`) : navigate(DRIVE_HOME);
-              }
-            }}>
+            <div className='hover:bg-[#dfe3e7] dark:hover:bg-slate-400 rounded-full p-1 cursor-pointer px-1'
+              onClick={(e) => {
+                e.stopPropagation();
+                if (isPermission(userRoles) >= UserRoleEnum.VIEWER) {
+                  const paths = parent.path.split('/');
+                  if(paths[1] === identity.id || (paths[1] === '' && parent.name === identity.id)) {
+                    navigate(`${DRIVE_MY_DRIVE}/dir/${parent.id}`);
+                  } else {
+                    navigate(`/drive/folder/${parent.id}`);
+                  }
+                }
+              }}>
               {parent.id === rootId ? 'My Drive' : parent.name}
             </div>
           </div>

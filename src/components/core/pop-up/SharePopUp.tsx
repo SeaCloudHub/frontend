@@ -28,6 +28,9 @@ import { MenuItem as MenuItemCustom } from '../drop-down/Dropdown';
 import ListPeople from '../list-people/ListPeople';
 import PopUp from './PopUp';
 import { getEntryMetadata } from '@/apis/drive/drive.api';
+import { GeneralAccessType } from '@/utils/types/general-access.type';
+import { GeneralAccess } from '@/utils/constants/general-access.constant';
+import { useUpdateGeneralAccessMutation } from '@/hooks/drive.hooks';
 
 type SharePopUpProps = {
   open: boolean;
@@ -71,11 +74,14 @@ const SharePopUp: React.FC<SharePopUpProps> = ({ open, handleClose, title, fileI
   const [typeShare, setTypeShare] = React.useState('Viewer');
   const [typeView, setTypeView] = React.useState(fakelistPeople.map((item) => item.type));
   const [isPublic, setIsPublic] = React.useState(false);
+  const [generalAccess, setGeneralAccess] = React.useState<GeneralAccessType>(GeneralAccess.RESTRICTED as GeneralAccessType);
   const [keyword, setKeyword] = useState<string>('');
   const searchValue = useDebounce({ delay: 500, value: keyword });
   const [apiData, setApiData] = useState<UserOption[]>([]);
   const [errror, setError] = useState<boolean>(false);
   const { theme } = useTheme();
+
+  const updateGeneralAccess = useUpdateGeneralAccessMutation();
   const shareFileMutation = useMutation({
     mutationFn: () => {
       return shareFileAPi({
@@ -229,9 +235,13 @@ const SharePopUp: React.FC<SharePopUpProps> = ({ open, handleClose, title, fileI
               <ListItemText
                 primary={
                   <CustomSelect
-                    value={isPublic}
+                    value={generalAccess}
                     variant='outlined'
-                    onChange={(e) => setIsPublic(e.target.value === 'true')}
+                    onChange={(e) => {
+                      updateGeneralAccess.mutateAsync({ id: fileId, general_access: e.target.value as GeneralAccessType}, {
+                        onSuccess: () => setGeneralAccess(e.target.value as GeneralAccessType),
+                      });
+                    }}
                     sx={{
                       fontSize: '0.875rem',
                       '& fieldset': {
@@ -244,8 +254,9 @@ const SharePopUp: React.FC<SharePopUpProps> = ({ open, handleClose, title, fileI
                         backgroundColor: '#f3f4f6',
                       },
                     }}>
-                    <MenuItem value={'true'}>Anyone with the link</MenuItem>
-                    <MenuItem value={'false'}>Only people added can open</MenuItem>
+                    <MenuItem value={GeneralAccess.RESTRICTED}>Restricted</MenuItem>
+                    <MenuItem value={GeneralAccess.PUBLIC_VIEW}>Everyone can view</MenuItem>
+                    <MenuItem value={GeneralAccess.PUBLIC_EDIT}>Everyone can edit</MenuItem>
                   </CustomSelect>
                 }
                 secondary={

@@ -96,6 +96,7 @@ export type CursorState = {
 };
 
 export const useCursor = create<CursorState>((set) => ({
+  
   nextCursor: '',
   currentCursor: '',
   setNextCursor: (cursor: string) => set({ nextCursor: cursor }),

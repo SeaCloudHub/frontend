@@ -26,14 +26,14 @@ const Shared = () => {
   const { arrSelected } = useSelected();
   const { rootId } = useStorageStore();
 
-  const { data, isLoading, parents } = useSharedEntry();
+  const { data, isLoading, parents, error } = useSharedEntry();
 
   return (
     <DriveLayout
       headerLeft={
-        <div className='flex flex-col overflow-hidden select-none'>
+        <div className='flex select-none flex-col overflow-hidden'>
           <div className='flex justify-between space-x-2 text-2xl'>
-            <div className='w-full pb-[20px] pt-[15px] px-4'> Shared with me </div>
+            <div className='w-full px-4 pb-[20px] pt-[15px]'> Shared with me </div>
             <div className='flex items-center gap-2'>
               <SharingPageViewMode setViewMode={setViewMode} viewMode={viewMode} />
               <Icon
@@ -81,10 +81,14 @@ const Shared = () => {
         </div>
       }
       bodyLeft={
-        viewMode === 'grid' ? (
-          <DriveGridView entries={data} parent='shared' isLoading={isLoading} curDir={parents[parents.length - 1]} />
+        error ? (
+          <div className='text-center text-lg text-red-500'>Error: {error}</div>
         ) : (
-          <DriveListView entries={data} parent='shared' curDir={parents[parents.length - 1]} isLoading={isLoading} />
+          viewMode === 'grid' ? (
+            <DriveGridView entries={data} parent='shared' isLoading={isLoading} curDir={parents[parents.length - 1]} />
+          ) : (
+            <DriveListView entries={data} parent='shared' curDir={parents[parents.length - 1]} isLoading={isLoading} />
+          )
         )
       }
       sidePanel={

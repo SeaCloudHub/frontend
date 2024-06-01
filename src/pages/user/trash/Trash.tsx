@@ -23,7 +23,7 @@ const Trash = () => {
 
   const { arrSelected } = useSelected();
 
-  const { data, isLoading, refetch } = useTrash();
+  const { data, isLoading, error } = useTrash();
   console.log('[Trash] data', data);
 
   const onScollBottom = () => {
@@ -41,12 +41,16 @@ const Trash = () => {
       headerLeft={<TrashPageHeader />}
       onScrollBottom={onScollBottom}
       bodyLeft={
-        <TrashPageView
-          entries={data}
-          dir={{ id: rootId, name: 'Trash' }}
-          isLoading={isLoading}
-          isScrolling={isScrolling}
-        />
+        error ? (
+          <div className='text-center text-lg text-red-500'>Error: {error}</div>
+        ) : (
+          <TrashPageView
+            entries={data}
+            dir={{ id: rootId, name: 'Trash' }}
+            isLoading={isLoading}
+            isScrolling={isScrolling}
+          />
+        )
       }
       sidePanel={
         <SidePanel
@@ -56,9 +60,9 @@ const Trash = () => {
             arrSelected.length === 0
               ? 'Trash'
               : data
-                .map((timeEntry) => timeEntry.entries)
-                .flat()
-                .find((entry) => entry.id === arrSelected[0].id)?.title || ''
+                  .map((timeEntry) => timeEntry.entries)
+                  .flat()
+                  .find((entry) => entry.id === arrSelected[0].id)?.title || ''
           }
         />
       }

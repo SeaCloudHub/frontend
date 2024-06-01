@@ -66,11 +66,10 @@ const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [arrSelected, setArrSelected]);
 
-  return (
-    isLoading && entries.map((item) => item.entries).flat().length < 15 ?
-    <LinearProgress className='translate-y-1' /> :
-    entries.length === 0 ?
-    <div className='flex h-96 items-center justify-center select-none'>
+  return isLoading && entries.map((item) => item.entries).flat().length < 15 ? (
+    <LinearProgress className='translate-y-1' />
+  ) : entries.length === 0 ? (
+    <div className='flex h-96 select-none items-center justify-center'>
       <div className='text-center'>
         <div className='text-3xl font-semibold'>Trash is empty</div>
         <div className='line-clamp-2 text-gray-500'>
@@ -78,7 +77,8 @@ const DriveHistoryGridView: React.FC<DriveHistoryViewProps> = ({
           days.
         </div>
       </div>
-    </div> :
+    </div>
+  ) : (
     <div className='mx-5 mt-2 h-full select-none' ref={driveGridViewRef}>
       <div className='flex flex-col space-y-2'>
         {/* <div className='absolute right-4 top-3 z-10'>

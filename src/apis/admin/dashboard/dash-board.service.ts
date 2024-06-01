@@ -29,11 +29,10 @@ export const userByMonthToDto = (data: StatisticUserByMonth) => {
 };
 
 export const storageLogToDto = (res: UserFileLogRESP) => {
-  console.log(res);
   return {
     action: isEnumValue(FileAction, res.action.toString().toUpperCase()),
     date: (res.created_at && dayjs(res.created_at).format('YYYY-MM-DD')) || '',
-    fileName: res.file?.name||'',
+    fileName: res.file?.name || '',
     username: res.user.first_name,
   } as StorageLogDto;
 };
