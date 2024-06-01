@@ -1,22 +1,21 @@
-import { PropsWithChildren, useRef } from 'react';
-import { useSession } from '../../store/auth/session';
+import { PropsWithChildren } from 'react';
 import { useScreenMode } from '../../store/responsive/screenMode';
 import { ScreenMode } from '../../utils/enums/screen-mode.enum';
 
 import { Role } from '@/utils/enums/role.enum';
+import { useCookies } from 'react-cookie';
 import { classNames } from '../core/drop-down/Dropdown';
 import Navbar from './Navbar/Navbar';
 import Sidebar from './Sidebar/Sidebar';
 
 const DynamicLayout = ({ children }: PropsWithChildren) => {
   const { shrinkMode, screenMode } = useScreenMode();
-  const role = useSession((state) => state.role);
-
+  const [cookies, setCookies] = useCookies(['role']);
   return (
     <div className='bg-content-bg  dark:bg-content-bg-dark dark:text-content-bg'>
       <Navbar phoneMode={screenMode == ScreenMode.MOBILE} isShrink={shrinkMode} />
-      {!(screenMode == ScreenMode.MOBILE) && <Sidebar shrinkMode={shrinkMode} role={role!} />}
-      {role === Role.ADMIN ? (
+      {!(screenMode == ScreenMode.MOBILE) && <Sidebar shrinkMode={shrinkMode} role={cookies.role!} />}
+      {cookies.role === Role.ADMIN ? (
         <div
           className={` ${screenMode == ScreenMode.DESKTOP ? (shrinkMode ? 'content-shrink-mode' : 'content-default-mode') : 'pl-0 pt-[4rem]'}
         ${screenMode == ScreenMode.MOBILE ? 'pl-0 pt-16' : ''}`}>

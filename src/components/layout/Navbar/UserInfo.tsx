@@ -22,11 +22,10 @@ type UserInfoProps = {
 };
 function UserInfo({ onClose }: UserInfoProps) {
   const navigate = useNavigate();
-  const [cookies, setCookie, removeCookie] = useCookies(['token']);
+  const [cookies, setCookie, removeCookie] = useCookies(['token','role']);
   const { signOut, identity } = useSession();
   const reset = useProgressIndicator((state) => state.reset);
   const modalRef = useRef(null);
-  const role = useSession((state) => state.role);
 
   const logoutMutation = useMutation({
     mutationFn: async () => {
@@ -41,6 +40,7 @@ function UserInfo({ onClose }: UserInfoProps) {
       signOut();
       reset();
       removeCookie('token', { path: '/' });
+      removeCookie('role', { path: '/' });
       setTimeout(() => {
         navigate(AUTH_LOGIN_EMAIL);
       }, 0);
@@ -86,7 +86,7 @@ function UserInfo({ onClose }: UserInfoProps) {
       <h2 className='tablet:text-2xl w-full truncate text-center text-xl font-normal'>{`Hi, ${identity.first_name}!`}</h2>
 
       <div className='flex flex-col items-center justify-center'>
-        {role == Role.USER && (
+        {cookies.role == Role.USER && (
           <button
             onClick={onUserProfileClick}
             className='tablet:w-44 hover:bg-darkC flex w-48 items-center justify-center space-x-2 rounded-full border bg-white py-3  hover:bg-gray-200 dark:text-black'>

@@ -8,10 +8,8 @@ import { ScreenMode } from '../../utils/enums/screen-mode.enum';
 import { useCookies } from 'react-cookie';
 
 const ErrorPage = () => {
-  const { role } = useSession();
-  const [cookies, setCookie] = useCookies(['token']);
-  console.log(role);
-  const to = !cookies.token ? AUTH_LOGIN_EMAIL : role == Role.ADMIN ? ADMIN_HOME : DRIVE_HOME;
+  const [cookies, setCookie] = useCookies(['token','role']);
+  const to = !cookies.token ? AUTH_LOGIN_EMAIL : cookies.role == Role.ADMIN ? ADMIN_HOME : DRIVE_HOME;
   const screenMode = useScreenMode((state) => state.screenMode);
   return (
     <div className='relative flex h-screen justify-center'>

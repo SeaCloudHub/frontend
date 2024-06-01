@@ -20,22 +20,21 @@ import { useCookies } from 'react-cookie';
 
 const LoginEmail = () => {
   const location = useLocation();
-  const [cookies, setCookie] = useCookies(['token']);
+  const [cookies, setCookie] = useCookies(['token','role']);
   const from = location.state?.from?.pathname;
   const [currentValue, setCurrentValue] = React.useState('');
   const onEmailValid = useSession((state) => state.onEmailValid);
   const navigate = useNavigate();
-  const { role } = useSession();
   const handleChange = (e: { target: { value: React.SetStateAction<string> } }) => setCurrentValue(e.target.value);
 
   useEffect(() => {
-    if (!cookies.token) return;
+    if (!cookies?.token) return;
     if (from) {
       navigate(from);
     } else {
-      navigate(accountAuthorityCallback[role!]);
+      navigate(accountAuthorityCallback[cookies.role!]);
     }
-  }, [cookies.token, from, navigate, role]);
+  }, [cookies.token, from, navigate, cookies.role]);
 
   const formik = useFormik({
     initialValues: loginInitialValue,

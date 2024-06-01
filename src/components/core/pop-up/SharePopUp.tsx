@@ -98,6 +98,7 @@ const SharePopUp: React.FC<SharePopUpProps> = ({ open, handleClose, title, fileI
   });
   const sharedUsersMutation = useMutation({
     mutationFn: (param: SharedUsersSearchREQ) => {
+      console.log(param);
       return sharedUserApi(param);
     },
     onError: (error) => {
