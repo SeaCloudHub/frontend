@@ -1,3 +1,4 @@
+import IconifyIcon from '../Icon/IConCore';
 import ButtonContainer from '../button/ButtonContainer';
 import ModalCore from './ModalCore';
 
@@ -16,20 +17,13 @@ const ModalResetPasswordSuccess = ({ message, title, isOpen, handleConfirm, user
         <h3 className='statement-bold text-[24px]'>{title}</h3>
         <p>{message}</p>
         <div className='mt-6 flex items-center justify-end gap-5'>
-          <p
-            onClick={() => {
-              handleConfirm(false);
-            }}
-            className='statement-upper-medium pointer cursor-pointer text-blue-600'>
-            Cancel
-          </p>
           <ButtonContainer
+            icon={<IconifyIcon height={15} icon={'el:ok'} />}
             borderRadius={15}
-            tooltip={'Reset'}
-            title='Reset'
+            title='OK'
             background='#0b57d0'
             onClick={() => {
-              handleConfirm(true);
+              handleConfirm();
             }}
           />
         </div>
