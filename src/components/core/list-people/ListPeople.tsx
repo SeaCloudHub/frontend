@@ -74,7 +74,7 @@ const ListPeople: React.FC<ListPeopleProps> = ({ fileId, height }) => {
                       user_id: item.user_id,
                       role: value.toLocaleLowerCase() as 'viewer' | 'editor',
                     }]
-                  },{
+                  }, {
                     onSuccess: () => {
                       const newState = [...peopleList];
                       newState[index] = { ...newState[index], role: value as 'Viewer' | 'Editor' };
