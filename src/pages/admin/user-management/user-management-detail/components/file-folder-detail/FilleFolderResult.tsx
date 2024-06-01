@@ -28,11 +28,12 @@ type FileFolderResultProps = {
   parentPath: Path;
   handlePathChange: (id: string, name: string) => void;
   fileInfoView?: LocalEntry;
+  isLoading?: boolean;
 };
 
 
 
-const FileFolderResult = ({ data, handlePageChange, handleOnRow, parentPath, handlePathChange, fileInfoView }: FileFolderResultProps) => {
+const FileFolderResult = ({ data, handlePageChange, handleOnRow, parentPath, handlePathChange, fileInfoView, isLoading }: FileFolderResultProps) => {
   const [isOpened, setIsOpened] = useState(false);
   const [typePopup, setTypePopup] = useState<string>('');
   const [isViewFile, setIsViewFile] = useState<boolean>(false);
@@ -45,10 +46,10 @@ const FileFolderResult = ({ data, handlePageChange, handleOnRow, parentPath, han
       key: 'name',
       render: (_, record: LocalEntry) => {
         return (
-          <div className='flex items-center gap-1 select-none'>
+          <div className='flex select-none items-center gap-1'>
             <div className='h-8 w-8'>{record.icon}</div>
             <Tooltip title={record.title}>
-              <div className='statement-medium truncate max-w-[200px]'>{record.title}</div>
+              <div className='statement-medium max-w-[200px] truncate'>{record.title}</div>
             </Tooltip>
           </div>
         );
@@ -67,8 +68,8 @@ const FileFolderResult = ({ data, handlePageChange, handleOnRow, parentPath, han
       dataIndex: 'lastModified',
       key: 'lastModified',
       render: (_, record: LocalEntry) => {
-        return <div className='truncate text-end select-none'>{formatDate(record.lastModified)}</div>
-      }
+        return <div className='select-none truncate text-end'>{formatDate(record.lastModified)}</div>;
+      },
     },
     {
       title: 'Size',
@@ -90,20 +91,24 @@ const FileFolderResult = ({ data, handlePageChange, handleOnRow, parentPath, han
               trigger={['click']}
               overlay={
                 <Menu>
-                  <Menu.Item icon={<Icon icon='ic:round-drive-file-rename-outline' />} onClick={() => {
-                    console.log('Rename');
-                    setIsOpened(true);
-                    setTypePopup('Rename');
-                    setRecordSelected(record);
-                  }}>
+                  <Menu.Item
+                    icon={<Icon icon='ic:round-drive-file-rename-outline' />}
+                    onClick={() => {
+                      console.log('Rename');
+                      setIsOpened(true);
+                      setTypePopup('Rename');
+                      setRecordSelected(record);
+                    }}>
                     Rename
                   </Menu.Item>
-                  <Menu.Item icon={<Icon icon='fa:trash-o' />} onClick={() => {
-                    console.log('Delete');
-                    setIsOpened(true);
-                    setTypePopup('Delete');
-                    setRecordSelected(record);
-                  }}>
+                  <Menu.Item
+                    icon={<Icon icon='fa:trash-o' />}
+                    onClick={() => {
+                      console.log('Delete');
+                      setIsOpened(true);
+                      setTypePopup('Delete');
+                      setRecordSelected(record);
+                    }}>
                     Delete
                   </Menu.Item>
                 </Menu>
@@ -116,7 +121,6 @@ const FileFolderResult = ({ data, handlePageChange, handleOnRow, parentPath, han
                 </div>
               </Button>
             </Dropdown>
-
           </>
         );
       },
@@ -137,7 +141,6 @@ const FileFolderResult = ({ data, handlePageChange, handleOnRow, parentPath, han
       )}
       <div className='h-full w-full overflow-y-auto overflow-x-auto pt-2'>
         <CustomBreadcums path={parentPath} onClick={handlePathChange} />
-
         {data && (
           <div className='h-full mt-3 mb-1'>
             <Table
@@ -155,6 +158,7 @@ const FileFolderResult = ({ data, handlePageChange, handleOnRow, parentPath, han
                   style: { cursor: 'pointer' },
                 };
               }}
+              loading={isLoading}
             />
 
             <Pagination
@@ -183,7 +187,7 @@ const FileFolderResult = ({ data, handlePageChange, handleOnRow, parentPath, han
           handleClose={() => setIsOpened(false)}
           source_ids={[recordSelected?.id]}
           title={recordSelected?.title}
-          setResult={()=>{}}
+          setResult={() => {}}
         />
       )}
     </>

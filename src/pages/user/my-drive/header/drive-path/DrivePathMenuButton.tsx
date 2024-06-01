@@ -26,7 +26,7 @@ import SharePopUp from '@/components/core/pop-up/SharePopUp';
 import MovePopUp from '@/components/core/pop-up/MovePopUp';
 
 type DrivePathMenuButtonProps = {
-  path: { id: string; name: string, userRoles: UserRole[], is_starred: boolean};
+  path: { id: string; name: string; userRoles: UserRole[]; is_starred: boolean };
   type?: 'MyDrive' | 'Shared' | 'Starred' | 'Trash' | 'Priority';
   location?: { id: string; name: string };
 };
@@ -98,8 +98,7 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ path, type, l
         label: 'New Folder',
         icon: <IconifyIcon icon={'lets-icons:folder-add-light'} />,
         action: () => {
-          setOpenPopUp(true),
-          setTypePopUp('Create');
+          setOpenPopUp(true), setTypePopUp('Create');
         },
       },
     ],
@@ -123,8 +122,7 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ path, type, l
         icon: <Icon icon='ic:outline-create-new-folder' />,
         action: () => {
           console.log('Create new folder');
-          setOpenPopUp(true),
-          setTypePopUp('Create');
+          setOpenPopUp(true), setTypePopUp('Create');
         },
         isHidden: isPermission(path.userRoles) < UserRoleEnum.EDITOR,
       },
@@ -144,8 +142,7 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ path, type, l
         label: 'Rename',
         icon: <Icon icon='ic:round-drive-file-rename-outline' />,
         action: () => {
-          setOpenPopUp(true),
-          setTypePopUp('Rename');
+          setOpenPopUp(true), setTypePopUp('Rename');
         },
         isHidden: isPermission(path.userRoles) < UserRoleEnum.EDITOR,
       },
@@ -163,8 +160,7 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ path, type, l
         label: 'Share',
         icon: <Icon icon='lucide:user-plus' />,
         action: () => {
-          setOpenPopUp(true),
-          setTypePopUp('Share');
+          setOpenPopUp(true), setTypePopUp('Share');
         },
         isHidden: isPermission(path.userRoles) < UserRoleEnum.EDITOR,
       },
@@ -172,28 +168,29 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ path, type, l
         label: 'Move',
         icon: <Icon icon='mdi:folder-move-outline' />,
         action: () => {
-          setOpenPopUp(true),
-          setTypePopUp('Move');
+          setOpenPopUp(true), setTypePopUp('Move');
         },
         isHidden: isPermission(path.userRoles) < UserRoleEnum.EDITOR,
       },
-      ...(path.is_starred ? [
-        {
-          label: 'Remove from starred',
-          icon: <Icon icon='material-symbols:star' />,
-          action: () => {
-            unStarEntryMutation.mutate({ file_ids: [path.id] });
-          },
-        },
-      ] : [
-        {
-          label: 'Add to starred',
-          icon: <Icon icon='material-symbols:star-outline' />,
-          action: () => {
-            starEntryMutation.mutate({ file_ids: [path.id] });
-          },
-        },
-      ]),
+      ...(path.is_starred
+        ? [
+            {
+              label: 'Remove from starred',
+              icon: <Icon icon='material-symbols:star' />,
+              action: () => {
+                unStarEntryMutation.mutate({ file_ids: [path.id] });
+              },
+            },
+          ]
+        : [
+            {
+              label: 'Add to starred',
+              icon: <Icon icon='material-symbols:star-outline' />,
+              action: () => {
+                starEntryMutation.mutate({ file_ids: [path.id] });
+              },
+            },
+          ]),
     ],
     [
       {
@@ -201,7 +198,7 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ path, type, l
         icon: <Icon icon='ic:baseline-upload-file' />,
         action: () => {
           // if (fileInputRef.current) {
-            fileInputRef?.current.click();
+          fileInputRef?.current.click();
           // }
         },
         isHidden: isPermission(path.userRoles) < UserRoleEnum.EDITOR,
@@ -214,7 +211,7 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ path, type, l
       <CustomDropdown
         button={
           <div className='my-0.5 flex h-9 cursor-pointer items-center rounded-full py-1 pl-4 pr-3 hover:bg-[#ededed] active:brightness-90 dark:hover:bg-slate-500'>
-            <div className='pb-1 text-2xl truncate max-w-fit'>{path.name}</div>
+            <div className='max-w-fit truncate pb-1 text-2xl'>{path.name}</div>
             <Icon icon='mdi:caret-down' className='h-5 w-5' />
           </div>
         }
@@ -234,13 +231,19 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ path, type, l
         <ModalCreateFolder dirId={path.id} isOpen={openPopUp} handleConfirm={() => setOpenPopUp(false)} />
       )}
       {openPopUp && typePopUp === 'Rename' && (
-        <RenamePopUp open={openPopUp} handleClose={() => setOpenPopUp(false)} id={path.id} name={path.name}/>
+        <RenamePopUp open={openPopUp} handleClose={() => setOpenPopUp(false)} id={path.id} name={path.name} />
       )}
       {openPopUp && typePopUp === 'Share' && (
         <SharePopUp open={openPopUp} handleClose={() => setOpenPopUp(false)} title={path.name} fileId={path.id} />
       )}
       {openPopUp && typePopUp === 'Move' && (
-        <MovePopUp open={openPopUp} handleClose={() => setOpenPopUp(false)} title={path.name} ids={[path.id]} location={location} />
+        <MovePopUp
+          open={openPopUp}
+          handleClose={() => setOpenPopUp(false)}
+          title={path.name}
+          ids={[path.id]}
+          location={location}
+        />
       )}
     </>
   );

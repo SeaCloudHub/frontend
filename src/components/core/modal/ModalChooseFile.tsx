@@ -86,7 +86,7 @@ const ModalChooseFile = ({ isOpen, handleConfirm, fileIcon, fileType }: ModalCho
             onClick={() => {
               handleConfirm(undefined);
             }}
-            className='statement-upper-medium pointer cursor-pointer  rounded-md px-3 py-2 text-blue-600 hover:bg-blue-100'>
+            className='statement-upper-medium pointer cursor-pointer  rounded-md px-3 py-2 text-blue-600 dark:hover:bg-slate-700 hover:bg-blue-100'>
             Cancel
           </p>
           <ButtonContainer

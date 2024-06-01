@@ -32,9 +32,9 @@ const ModifyMemoryPopUp: React.FC<ModifyMemoryPopUpProps> = ({onClose, open, ide
   return (
     <PopUp open={open} handleClose={onClose}>
       <form className='min-w-96 max-w-[400px] bg-white dark:bg-[#031525]' onSubmit={formik.handleSubmit}>
-        <DialogTitle className='flex justify-between items-center p-4'>
+        <DialogTitle className='flex items-center justify-between p-4'>
           <p className='text-lg font-bold'>Modify Memory</p>
-          <button onClick={onClose} className='p-2 rounded-full hover:bg-gray-200 dark:hover:bg-slate-800'>
+          <button onClick={onClose} className='rounded-full p-2 hover:bg-gray-200 dark:hover:bg-slate-800'>
             <Icon icon='eva:close-outline' width={24} height={24} />
           </button>
         </DialogTitle>
@@ -43,7 +43,7 @@ const ModifyMemoryPopUp: React.FC<ModifyMemoryPopUpProps> = ({onClose, open, ide
             type='number'
             label='Memory Capacity (GB)'
             name='capacity'
-            sx={{marginTop: '5px'}}
+            sx={{ marginTop: '5px' }}
             value={formik.values.capacity}
             onChange={formik.handleChange}
             error={formik.touched.capacity && Boolean(formik.errors.capacity)}

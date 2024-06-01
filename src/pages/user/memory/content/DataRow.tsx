@@ -11,8 +11,20 @@ type DataRowProps = LocalEntry & {
   isSelected?: boolean;
 };
 
-export const DataRow: React.FC<DataRowProps> = ({ id, isDir, title, icon, lastModified, owner, size, userRoles, is_starred, fileType, isSelected }) => {
-  const {arrSelected, setArrSelected} = useSelected();
+export const DataRow: React.FC<DataRowProps> = ({
+  id,
+  isDir,
+  title,
+  icon,
+  lastModified,
+  owner,
+  size,
+  userRoles,
+  is_starred,
+  fileType,
+  isSelected,
+}) => {
+  const { arrSelected, setArrSelected } = useSelected();
   const [fileViewer, setFileViewer] = React.useState(false);
   const navigate = useNavigate();
 
@@ -69,11 +81,11 @@ export const DataRow: React.FC<DataRowProps> = ({ id, isDir, title, icon, lastMo
           }}
         />
       )}
-      <div className={`grid grid-cols-7 items-center space-x-3 py-2 border-b border-b-[#dadce0] hover:bg-[#dfe3e7]  select-none cursor-pointer ${isSelected ? 'bg-[#c2e7ff] dark:bg-blue-900 dark:hover:brightness-90' : ' dark:text-white dark:hover:bg-slate-700'}`}
+      <div
+        className={`grid cursor-pointer select-none grid-cols-7 items-center space-x-3 border-b border-b-[#dadce0]  py-2 hover:bg-[#dfe3e7] ${isSelected ? 'bg-[#c2e7ff] dark:bg-blue-900 dark:hover:brightness-90' : ' dark:text-white dark:hover:bg-slate-700'}`}
         onClick={handleClick}
-        onDoubleClick={handleDoubleClick}
-      >
-        <div className='col-span-6 max-[500px]:grid-cols-7 flex items-center text-sm font-medium'>
+        onDoubleClick={handleDoubleClick}>
+        <div className='col-span-6 flex items-center text-sm font-medium max-[500px]:grid-cols-7'>
           <div className='px-4'>
             <div className='h-6 w-6'> {icon} </div>
           </div>
@@ -82,13 +94,14 @@ export const DataRow: React.FC<DataRowProps> = ({ id, isDir, title, icon, lastMo
           </Tooltip>
           {is_starred && <Star className='dark:text-yellow-400' />}
         </div>
-        <div className='col-span-1 max-[500px]:hidden truncate'>
-          {size ?
+        <div className='col-span-1 truncate max-[500px]:hidden'>
+          {size ? (
             <Tooltip title={numToSize(size)}>
               <span>{numToSize(size)}</span>
-            </Tooltip>:
+            </Tooltip>
+          ) : (
             <span>---</span>
-          }
+          )}
         </div>
       </div>
     </>

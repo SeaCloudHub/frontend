@@ -13,7 +13,7 @@ const Sort: React.FC<SortProps> = ({ sort, order, setSort }) => {
   return (
     <Tooltip title='Sort by'>
       <div className='flex flex-row items-center gap-3'>
-        <div className='my-0.5 flex h-9 cursor-pointer items-center rounded-full py-1 hover:bg-[#ededed] dark:hover:bg-slate-500 px-2'>
+        <div className='my-0.5 flex h-9 cursor-pointer items-center rounded-full px-2 py-1 hover:bg-[#ededed] dark:hover:bg-slate-500'>
           <div className='pb-1 text-sm font-medium'>{sort}</div>
         </div>
         <div

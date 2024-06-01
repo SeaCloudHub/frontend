@@ -27,7 +27,7 @@ const Starred = () => {
   const { drawerOpen, openDrawer, closeDrawer } = useDrawer();
   const { rootId } = useStorageStore();
 
-  const { data, isLoading } = useStarred();
+  const { data, isLoading, error } = useStarred();
 
   console.log(isLoading);
 
@@ -38,7 +38,7 @@ const Starred = () => {
   return (
     <DriveLayout
       headerLeft={
-        <div className='px-5 select-none'>
+        <div className='select-none px-5'>
           <div className='flex justify-between space-x-2'>
             <h2 className='pb-[20px] pt-[17px] text-2xl'>Starred</h2>
             <div className='flex items-center gap-2'>
@@ -86,7 +86,13 @@ const Starred = () => {
         </div>
       }
       onScrollBottom={onScrollBottom}
-      bodyLeft={<StarredView entries={data} isLoading={isLoading} />}
+      bodyLeft={
+        error ? (
+          <div className='text-center text-lg text-red-500'>Error: {error}</div>
+        ) : (
+          <StarredView entries={data} isLoading={isLoading}/>
+        )
+      }
       sidePanel={
         <SidePanel
           id={arrSelected.length === 0 ? rootId : arrSelected.length === 1 ? arrSelected[0].id : ''}

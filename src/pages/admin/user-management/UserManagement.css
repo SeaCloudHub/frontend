@@ -15,7 +15,7 @@
 }
 
 .ant-table-row:hover > .ant-table-cell-row-hover {
-  @apply dark:bg-slate-700 ;
+  @apply dark:bg-slate-700;
 }
 
 .ant-btn {

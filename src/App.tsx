@@ -13,6 +13,8 @@ import { Role } from './utils/enums/role.enum';
 import ShareCheck from './helpers/routers/ShareCheck';
 import ShareFile from './pages/user/share/ShareFile';
 import ShareFolder from './pages/user/share/ShareFolder';
+import { AboutPage } from './pages/about-help/AboutPage';
+import { HelpPage } from './pages/about-help/HelpPage';
 
 function App() {
   return (
@@ -23,6 +25,8 @@ function App() {
         <Route element={<RequireAuth allowedRole={[Role.ADMIN, Role.USER]} />}>
           <Route path={AUTH_CHANGE_PASSWORD} element={<ChangePassword />} />
         </Route>
+        <Route path={routes.about.path} element={<AboutPage />} />
+        <Route path={routes.help.path} element={<HelpPage />} />
         {routes.auth.map((item, index) => (
           <Route path={item.path} Component={item.component} key={index} />
         ))}

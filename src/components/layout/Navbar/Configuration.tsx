@@ -5,8 +5,6 @@ import { ColorSchemeToggle } from '@/components/core/button/ColorSchemeToggle';
 import { MenuItem } from '@/components/core/drop-down/Dropdown';
 import MenuCore from '@/components/core/menu/MenuCore';
 import { MenuItemCoreProps } from '@/components/core/menu/MenuItem';
-import ModalAboutUs from '@/components/core/modal/ModalAboutUs';
-import ModalHelp from '@/components/core/modal/ModalHelp';
 import { useTheme } from '@/providers/theme-provider';
 import { useSession } from '@/store/auth/session';
 import { Badge, Popover, notification } from 'antd';
@@ -66,7 +64,6 @@ const Configuration = () => {
     } catch (error) {
       console.error('Error:', error);
     }
-
   };
 
   useEffect(() => {
@@ -82,14 +79,14 @@ const Configuration = () => {
       icon: '',
       title: 'About us',
       onClick: () => {
-        setModalAboutUs(true);
+        window.open(`/about`, '_blank');
       },
     },
     {
       icon: '',
       title: 'Help',
       onClick: () => {
-        setModalHelpOpen(true);
+        window.open(`/help`, '_blank');
       },
     },
   ];
@@ -132,8 +129,6 @@ const Configuration = () => {
         items={settingMenu}
       /> */}
       <ColorSchemeToggle />
-      {modalHelpOpen && <ModalHelp isOpen={modalHelpOpen} handleConfirm={() => setModalHelpOpen(false)} />}
-      {modalAboutUs && <ModalAboutUs isOpen={modalAboutUs} handleConfirm={() => setModalAboutUs(false)} />}
     </div>
   );
 };

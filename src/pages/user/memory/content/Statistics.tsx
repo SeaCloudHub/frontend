@@ -51,11 +51,13 @@ const Statistics = () => {
             <Tooltip title={`${type.title}: ${numToSize(type.value)}`} key={type.title}>
               <div
                 className={`h-2 rounded-full border-2 p-1 hover:z-20 hover:border-2 hover:p-1.5`}
-                style={{ backgroundColor: type.color,
-                  width: total < (0.5 * data.capacity) ? `${(type.value / (2 * total)) * 100}%` : `${(type.value / data.capacity) * 100}%`
-                }}
-                >
-              </div>
+                style={{
+                  backgroundColor: type.color,
+                  width:
+                    total < 0.5 * data.capacity
+                      ? `${(type.value / (2 * total)) * 100}%`
+                      : `${(type.value / data.capacity) * 100}%`,
+                }}></div>
             </Tooltip>
           ))}
       </div>

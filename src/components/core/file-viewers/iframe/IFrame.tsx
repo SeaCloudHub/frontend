@@ -6,8 +6,8 @@ type IFrameProps = {
 };
 const Iframe: React.FC<IFrameProps> = ({ url, isHtml }) => {
   return (
-    <div className='h-full w-full flex items-center justify-center'>
-      {!url && <img src='./loader.svg ' className='w-[50px] h-[50px]' />}
+    <div className='flex h-full w-full items-center justify-center'>
+      {!url && <img src='./loader.svg ' className='h-[50px] w-[50px]' />}
       {url && (
         <iframe
           title='myFrame'

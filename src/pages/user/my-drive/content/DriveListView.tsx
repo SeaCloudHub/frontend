@@ -15,6 +15,7 @@ type DriveListViewProps = {
   curDir?: { id: string; name: string };
   isScrolling?: boolean;
   parent?: 'priority' | 'my-drive' | 'shared' | 'trash' | 'starred';
+  isSearchPage?: boolean;
 };
 
 export const DriveListView: React.FC<DriveListViewProps> = ({

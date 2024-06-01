@@ -1,3 +1,5 @@
+import { GeneralAccessType } from "@/utils/types/general-access.type";
+
 export type CopyFileREQ = {
   ids: string[];
   to: string;
@@ -59,3 +61,8 @@ export type DownloadMultipleEntriesREQ = {
 export type GetListFileSizesREQ = Pick<Partial<ListEntriesREQ>, 'after' | 'cursor' | 'limit' | 'type'> & { asc?: boolean };
 
 export type GetActivityLogREQ = Pick<ListEntriesREQ, 'id' | 'cursor' | 'limit'>;
+
+export type UpdateGeneralAccessREQ = {
+  id: string;
+  general_access: GeneralAccessType;
+};

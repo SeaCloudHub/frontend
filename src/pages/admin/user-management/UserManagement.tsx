@@ -1,8 +1,11 @@
 import { paginationRESPToDto } from '@/apis/shared/shared.service';
+import IconifyIcon from '@/components/core/Icon/IConCore';
 import ButtonContainer from '@/components/core/button/ButtonContainer';
 import MenuCore from '@/components/core/menu/MenuCore';
+import ModalAddUserSuccess, { AuthInfo } from '@/components/core/modal/ModalAddUserSuccess';
 import ModalConfirmBlockOrUnBlock from '@/components/core/modal/ModalBlockConfirm';
 import ModalConfirmDelete from '@/components/core/modal/ModalConfirmDelete';
+import { numToSize } from '@/utils/function/numbertToSize';
 import { BlockOutlined, DeleteOutline, SettingsApplications, ViewDayOutlined } from '@mui/icons-material';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -23,12 +26,11 @@ import { useScreenMode } from '../../../store/responsive/screenMode';
 import { ScreenMode } from '../../../utils/enums/screen-mode.enum';
 import { getFirstCharacters } from '../../../utils/function/getFirstCharacter';
 import { getRandomColor } from '../../../utils/function/getRandomColor';
-import { toastError, toastSuccess } from '../../../utils/toast-options/toast-options';
+import { toastError } from '../../../utils/toast-options/toast-options';
 import { ApiGenericError } from '../../../utils/types/api-generic-error.type';
 import { PagingState, initialPagingState } from '../../../utils/types/paging-stage.type';
 import './UserManagement.css';
 import UserManagementFilter from './UserManagementFilter';
-import IconifyIcon from '@/components/core/Icon/IConCore';
 
 type ModalState = {
   isOpen: boolean;
@@ -86,6 +88,8 @@ const UserManagement = () => {
       },
     },
   ];
+  const [authInfo, setAuthInfo] = useState<AuthInfo[]>([]);
+  const [addSuccess, setAddSuccess] = useState(false);
   const [blockModal, setBlockModal] = useState(false);
   const [block, setBlock] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
@@ -138,7 +142,9 @@ const UserManagement = () => {
       }
     },
     onSuccess: (data) => {
-      toast.success('Create user successfully', toastSuccess());
+      setAddSuccess(true);
+      setAuthInfo(data.data);
+      queryClient.invalidateQueries({ queryKey: ['get-identities', paging.size, paging.page] });
     },
   });
   const [user, setUser] = useState<UserManagementInfoDto | null>(null);
@@ -192,7 +198,9 @@ const UserManagement = () => {
       dataIndex: 'usedMemory',
       key: 'usedMemory',
       render: (usedMemory: number, record: UserManagementInfoDto) => (
-        <LinearChartBar value={usedMemory} total={record['totalMemory'] as number} width='100%' />
+        <div className='h-full w-full cursor-pointer' title={`${numToSize(record.usedMemory)}/${numToSize(record.totalMemory)}`}>
+          <LinearChartBar value={usedMemory} total={record['totalMemory'] as number} width='100%' />
+        </div>
       ),
     },
     {
@@ -266,6 +274,16 @@ const UserManagement = () => {
   };
   return (
     <div ref={containerRef} className='flex h-full w-full flex-col space-y-5 overflow-y-auto'>
+      {addSuccess && (
+        <ModalAddUserSuccess
+          data={authInfo}
+          single={false}
+          isOpen={true}
+          handleConfirm={function (data?: any): void {
+            setAddSuccess(false);
+          }}
+        />
+      )}
       <div className={`z-10 mt-2 w-full space-y-2 ${screenMode == ScreenMode.MOBILE ? 'fixed bottom-2 left-1/4  ' : ''}`}>
         <div className='mx-5'>
           <UserManagementFilter handleSearch={onSearchClick} />
@@ -325,7 +343,7 @@ const UserManagement = () => {
       </Card>
       {deleteModal && (
         <ModalConfirmDelete
-          message={'Do you want to delete this User'}
+          message={'Do you want to delete this user ?'}
           title={'Delete ' + user.name}
           isOpen={true}
           user={user}
@@ -339,8 +357,8 @@ const UserManagement = () => {
       )}
       {blockModal && (
         <ModalConfirmBlockOrUnBlock
-          message={block ? 'Do you want to block this user' : 'Do you want to un-block this user'}
-          title={block ? 'Block' : 'Un-block' + user.name}
+          message={block ? 'Do you want to block this user ?' : 'Do you want to un-block this user ?'}
+          title={block ? 'Block '+user.name : 'Un-block ' + user.name}
           isOpen={true}
           user={user}
           isBlock={block}

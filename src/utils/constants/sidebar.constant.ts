@@ -59,13 +59,13 @@ export const adminSidebar: SidebarItemType[] = [
   },
   {
     icon: 'solar:user-outline',
-    title: 'User management',
+    title: 'Users Management',
     link: ADMIN_USER_MANAGEMENT,
     tooltip: 'User management',
   },
   {
     icon: 'iconamoon:folder-thin',
-    title: 'Storage management',
+    title: 'Storage Management',
     link: ADMIN_STORAGE_MANAGEMENT,
     tooltip: 'Storage management',
   },

@@ -1,5 +1,5 @@
 import { downloadFileApi } from '@/apis/user/storage/storage.api';
-import { useEntryAccess, useEntryMetadata } from '@/hooks/drive.hooks';
+import { useEntryAccess } from '@/hooks/drive.hooks';
 import { useSession } from '@/store/auth/session';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { numToSize } from '@/utils/function/numbertToSize';
@@ -22,7 +22,7 @@ type SidePanDetailProps = {
 const SidePanelDetail: React.FC<SidePanDetailProps> = ({ id, title, details, isLoading }) => {
   const [imageUrl, setImageUrl] = React.useState<string | null>(null);
   const identity = useSession((state) => state.identity);
-  const { data: access, isLoading: isLoadingAccess } = useEntryAccess(id);
+  const { data: access, isLoading: isLoadingAccess, error } = useEntryAccess(id);
   // const {data, isLoading} = useEntryDetails(id);
   const { rootId } = useStorageStore();
 
@@ -50,7 +50,10 @@ const SidePanelDetail: React.FC<SidePanDetailProps> = ({ id, title, details, isL
     }
   }, [details, isLoading, id]);
 
-  return isLoading ? (
+  return error ? (
+    <DefaultTabPanel />
+  ) :
+  isLoading ? (
     <LinearProgress className=' translate-y-1' />
   ) : details ? (
     <div className='flex flex-col space-y-6 '>

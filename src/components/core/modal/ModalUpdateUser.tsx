@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { uploadImage } from '../../../apis/shared/shared.api';
 import { useScreenHook } from '../../../hooks/useScreenHook';
-import { toastError } from '../../../utils/toast-options/toast-options';
+import { toastError, toastSuccess } from '../../../utils/toast-options/toast-options';
 import { ApiGenericError } from '../../../utils/types/api-generic-error.type';
 import IconifyIcon from '../Icon/IConCore';
 import ButtonContainer from '../button/ButtonContainer';
@@ -83,6 +83,7 @@ const ModalUpdateUser = ({ title, user, isOpen, handleConfirm }: ModalUpdateUser
       }
     },
     onSuccess: (data) => {
+       toast.success('Update user successfully !', toastSuccess());
       queryClient.invalidateQueries({ queryKey: ['user-details', user.id] });
       handleConfirm(true);
     },
@@ -160,7 +161,7 @@ const ModalUpdateUser = ({ title, user, isOpen, handleConfirm }: ModalUpdateUser
               )}
             </div>
             <div className='float-right'>
-              <ButtonContainer type='submit' title='Update' icon={<IconifyIcon icon='dashicons:update-alt' />} />
+              <ButtonContainer type='submit' title='Update' icon={<IconifyIcon  icon='dashicons:update-alt' />} />
             </div>
           </div>
         </div>

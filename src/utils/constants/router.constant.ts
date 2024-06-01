@@ -14,6 +14,8 @@ import Starred from '../../pages/user/starred/Starred';
 import Trash from '../../pages/user/trash/Trash';
 import SearchPage from '@/pages/user/search/SearchPage';
 import { Profile } from '@/pages/user/profile/Profile';
+import { AboutPage } from '@/pages/about-help/AboutPage';
+import { HelpPage } from '@/pages/about-help/HelpPage';
 
 export const HOME = '/';
 export const AUTH_HOME = '/auth';
@@ -48,6 +50,9 @@ export const DRIVE_MEMORY = `${DRIVE_HOME}/memory`;
 export const DRIVE_PROFILE = `${DRIVE_HOME}/profile`;
 export const DRIVE_SHARED_VIEW_FILE = `${DRIVE_HOME}/file/:fileId`;
 export const DRIVE_SHARED_VIEW_FOLDER = `${DRIVE_HOME}/folder/:dirId`;
+// About & Help
+export const ABOUT_US = `/about`;
+export const HELP = `/help`;
 
 export const routes = {
   auth: [
@@ -79,4 +84,6 @@ export const routes = {
     { path: DRIVE_PROFILE, component: Profile },
   ],
   notFound: { path: PAGE_NOT_FOUND, component: ErrorPage },
+  about: { path: ABOUT_US, component: AboutPage },
+  help: { path: HELP, component: HelpPage },
 };

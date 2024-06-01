@@ -4,14 +4,18 @@ import { useActivityLog } from '@/hooks/drive.hooks';
 import { useCursorActivity } from '@/store/my-drive/myDrive.store';
 
 const SidePanelAction = () => {
-  const { data, isLoading } = useActivityLog();
+  const { data, isLoading, error } = useActivityLog();
   const { nextCursorActivity } = useCursorActivity();
 
-  return (
-    isLoading && !nextCursorActivity  ? (
-      <LinearProgress className='translate-y-1' />
-    ) :
-    <div className='px-2 h-full overscroll-y-auto' >
+  return error ? (
+    <div className='flex items-center justify-center h-full text-lg font-semibold text-red-500 dark:text-red-400'>
+      Error loading activity log
+    </div>
+  ) :
+   isLoading && !nextCursorActivity ? (
+    <LinearProgress className='translate-y-1' />
+  ) : (
+    <div className='h-full overscroll-y-auto px-2'>
       {data.map((item, index) => {
         return (
           <div key={index} className='relative flex flex-col'>
