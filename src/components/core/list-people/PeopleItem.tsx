@@ -1,3 +1,4 @@
+import { useSession } from '@/store/auth/session';
 import { Avatar, ListItem, ListItemAvatar, ListItemText, MenuItem, Select, Typography } from '@mui/material';
 import React from 'react';
 
@@ -5,11 +6,13 @@ export type PeopleItemProps = {
   name: string;
   email: string;
   avatar?: string;
+  user_id: string;
   value: 'Viewer' | 'Editor' | 'Owner';
   setValue: (value: string) => void;
 };
 
-const PeopleItem: React.FC<PeopleItemProps> = ({ name, email, avatar, value, setValue }) => {
+const PeopleItem: React.FC<PeopleItemProps> = ({ name, email, avatar, value, setValue, user_id }) => {
+  const { identity } = useSession();
   return (
     <ListItem alignItems='center' className='cursor-pointer hover:bg-gray-100 dark:hover:bg-blue-950'>
       <ListItemAvatar>
@@ -26,6 +29,7 @@ const PeopleItem: React.FC<PeopleItemProps> = ({ name, email, avatar, value, set
         }
       />
       <Select
+        disabled={user_id === identity.id }
         sx={{
           '& .MuiSelect-select': {
             padding: '10px',
@@ -55,7 +59,7 @@ const PeopleItem: React.FC<PeopleItemProps> = ({ name, email, avatar, value, set
         onChange={(e) => setValue(e.target.value)}>
         <MenuItem value='Viewer'>Viewer</MenuItem>
         <MenuItem value='Editor'>Editor</MenuItem>
-        <MenuItem value='Owner'>Owner</MenuItem>
+        {user_id === identity.id && <MenuItem value='Owner'>Owner</MenuItem>}
       </Select>
     </ListItem>
   );

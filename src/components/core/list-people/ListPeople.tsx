@@ -4,8 +4,10 @@ import { List, ListItem, ListItemAvatar, ListItemText, Skeleton } from '@mui/mat
 import { useQuery } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
 import PeopleItem from './PeopleItem';
+import { useUpdateAccessMutation } from '@/hooks/drive.hooks';
 
 type PeopleList = {
+  user_id: string;
   name: string;
   email: string;
   avatar?: string;
@@ -30,6 +32,8 @@ const renderSkeleton = () => {
 
 const ListPeople: React.FC<ListPeopleProps> = ({ fileId, height }) => {
   const [peopleList, setPeopleList] = useState<PeopleList[]>([]);
+  const updateAccessMutation = useUpdateAccessMutation();
+
   const { data, error, isFetching } = useQuery({
     queryKey: ['get-file-metadata-for-share', fileId],
     queryFn: () => {
@@ -58,14 +62,25 @@ const ListPeople: React.FC<ListPeopleProps> = ({ fileId, height }) => {
           : peopleList.map((item, index) => (
               <PeopleItem
                 key={index}
+                user_id={item.user_id}
                 name={item.name}
                 email={item.email}
                 avatar={item.avatar}
                 value={item.role}
                 setValue={(value: string) => {
-                  const newState = [...peopleList];
-                  newState[index] = { ...newState[index], role: value as 'Viewer' | 'Editor' | 'Owner' };
-                  setPeopleList(newState);
+                  updateAccessMutation.mutate({
+                    id: fileId,
+                    access: [{
+                      user_id: item.user_id,
+                      role: value.toLocaleLowerCase() as 'viewer' | 'editor',
+                    }]
+                  },{
+                    onSuccess: () => {
+                      const newState = [...peopleList];
+                      newState[index] = { ...newState[index], role: value as 'Viewer' | 'Editor' };
+                      setPeopleList(newState);
+                    },
+                  });
                 }}
               />
             ))}
