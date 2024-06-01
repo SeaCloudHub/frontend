@@ -39,7 +39,7 @@ export const getSocket = () => {
     // const token = JSON.parse(getLocalStorage('sessionStore')).state.token;
 
     if (!token) {
-      throw new Error('Token not found');
+      // throw new Error('Token not found');
     }
 
     initializeSocket(token);

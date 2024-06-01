@@ -7,6 +7,7 @@ import { useMutation } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { useFormik } from 'formik';
 import React, { useEffect } from 'react';
+import { useCookies } from 'react-cookie';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { signinApi } from '../../apis/auth/auth.api';
@@ -19,17 +20,15 @@ import { Role } from '../../utils/enums/role.enum';
 import { toastError } from '../../utils/toast-options/toast-options';
 import { ApiGenericError } from '../../utils/types/api-generic-error.type';
 import AuthFooter from './AuthFooter';
-import AuthLink from './auth-link/AuthLink';
-import { useCookies } from 'react-cookie';
 
 const LoginPassword = () => {
   // const [currentValue, setCurrentValue] = React.useState('');
   const [isShowPassword, setIsShowPassword] = React.useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const [cookies, setCookie] = useCookies(['token']);
+  const [cookies, setCookie] = useCookies(['token', 'role']);
   const from = location.state?.from?.pathname;
-  const { role, signIn, firstLogin, identity } = useSession();
+  const { signIn, firstLogin, identity } = useSession();
   const updateStorageStore = useStorageStore((state) => state.update);
   // const handleChange = (e: { target: { value: React.SetStateAction<string> } }) => setCurrentValue(e.target.value);
   console.log(firstLogin);
@@ -51,11 +50,14 @@ const LoginPassword = () => {
       }
     },
     onSuccess: (data) => {
-      console.log(data);
       const firstSignin = data.data.identity.password_changed_at === null;
       if (firstSignin) {
         navigate(AUTH_CHANGE_PASSWORD);
       }
+      setCookie('role', data.data.identity.is_admin ? Role.ADMIN : Role.USER, {
+        path: '/',
+        expires: new Date(data.data.session_expires_at),
+      });
       setCookie('token', data.data.session_token, { path: '/', expires: new Date(data.data.session_expires_at) });
       updateStorageStore(data.data.identity.storage_usage, data.data.identity.storage_capacity, data.data.identity.root_id);
       signIn(data.data.identity.is_admin ? Role.ADMIN : Role.USER, firstSignin, data.data.identity);
@@ -72,10 +74,10 @@ const LoginPassword = () => {
       if (from) {
         navigate(from);
       } else {
-        navigate(accountAuthorityCallback[role!]);
+        navigate(accountAuthorityCallback[cookies.role!]);
       }
     }
-  }, [role, firstLogin, identity, cookies.token, navigate, from]);
+  }, [cookies.role, firstLogin, identity, cookies.token, navigate, from]);
 
   return (
     <div className='flex h-screen items-center justify-center bg-[#f0f4f9] px-10'>

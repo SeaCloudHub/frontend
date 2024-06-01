@@ -86,7 +86,14 @@ export type StatisticRESP = {
   total_storage_usage: number;
   total_storage_capacity: number;
   file_by_type: FileByType;
+  overview_user: UserOverview;
 };
+export type UserOverview = {
+  total_users: number;
+  active_users: number;
+  blocked_users: number;
+};
+
 type StatisticUser = {
   name: string;
   value: number;

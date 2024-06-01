@@ -52,7 +52,6 @@ const DashBoardSkeleton = () => {
 };
 const DashBoard = () => {
   const { data: userStatisticData, errorMessage: userStatisticError, isLoading: userStatisticLoading } = UserStatisticHook();
-  console.log(userStatisticData);
   return (
     <div className='h-full w-full  space-y-2 overflow-x-hidden overflow-y-hidden  lg:flex lg:space-y-0'>
       <div className='w-full overflow-y-auto lg:h-full  lg:w-3/4 '>
@@ -64,21 +63,21 @@ const DashBoard = () => {
                   data={{
                     name: 'Total users',
                     percentage: userStatisticData.statistic_user.find((stat) => stat.name == 'total_users')?.percentage,
-                    value: userStatisticData.statistic_user.find((stat) => stat.name === 'total_users')?.value,
+                    value: userStatisticData.overview_user.total_users,
                   }}
                 />
                 <DashboardCard
                   data={{
                     name: 'Blocked users',
                     percentage: userStatisticData.statistic_user.find((stat) => stat.name == 'blocked_users')?.percentage,
-                    value: userStatisticData.statistic_user.find((stat) => stat.name === 'blocked_users')?.value,
+                    value: userStatisticData.overview_user.blocked_users,
                   }}
                 />
                 <DashboardCard
                   data={{
                     name: 'Active users',
                     percentage: userStatisticData.statistic_user.find((stat) => stat.name == 'active_users')?.percentage,
-                    value: userStatisticData.statistic_user.find((stat) => stat.name === 'active_users')?.value,
+                    value: userStatisticData.overview_user.active_users,
                   }}
                 />
               </>
