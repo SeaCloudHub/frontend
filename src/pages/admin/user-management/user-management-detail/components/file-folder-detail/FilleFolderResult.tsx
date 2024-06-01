@@ -160,7 +160,6 @@ const FileFolderResult = ({ data, handlePageChange, handleOnRow, parentPath, han
               }}
               loading={isLoading}
             />
-
             <Pagination
               current={data.pagination.current_page}
               pageSize={data.pagination.limit}

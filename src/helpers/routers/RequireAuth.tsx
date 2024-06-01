@@ -32,7 +32,7 @@ const RequireAuth = ({ allowedRole }: RequireAuthProps) => {
         signOut();
       }, 0);
     }
-  }, [location.pathname]);
+  }, [identity?.state.identity.id, location.pathname, removeCookie, role, signOut, token, userRole]);
 
   return token ? (
     allowedRole.includes(userRole) ? (

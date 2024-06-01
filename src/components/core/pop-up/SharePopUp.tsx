@@ -275,7 +275,7 @@ const SharePopUp: React.FC<SharePopUpProps> = ({ open, handleClose, title, fileI
         }}>
         <ButtonSuccess onClick={handleClose} type='button'>
           <Icon icon='material-symbols:link' className='mr-1 text-xl' />
-          <span>Coppy link</span>
+          <span>Copy link</span>
         </ButtonSuccess>
         <ButtonSuccess
           onClick={() => {

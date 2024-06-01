@@ -6,6 +6,7 @@ import { CreateFolderREQ, UpdateGeneralAccessREQ, UploadFileREQ } from './reques
 import { CreateFolderRES } from './response/create-storage.response';
 import { AccessFileREQ, ShareFileREQ, SharedUsersSearchREQ } from './request/share.request';
 import { SharedUsersSearchRESP } from './response/share.response';
+import { UpdateAccessREQ } from './request/update-access.request';
 
 export const createFolderApi = async (body: CreateFolderREQ) => {
   const res = await api.post<BaseResponse<CreateFolderRES>>('files/directories', body, {});
@@ -43,3 +44,8 @@ export const updateGeneralAccessApi = async (body: UpdateGeneralAccessREQ) => {
   const res = await api.get<BaseResponse<void>>(`/files/${body.id}/access`);
   return res.data;
 };
+
+export const updateAccessApi = async (body: UpdateAccessREQ) => {
+  const res = await api.patch<BaseResponse<void>>(`/files/access`, body);
+  return res.data;
+}
