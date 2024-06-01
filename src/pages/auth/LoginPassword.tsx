@@ -31,7 +31,6 @@ const LoginPassword = () => {
   const { signIn, firstLogin, identity } = useSession();
   const updateStorageStore = useStorageStore((state) => state.update);
   // const handleChange = (e: { target: { value: React.SetStateAction<string> } }) => setCurrentValue(e.target.value);
-  console.log(firstLogin);
   const formik = useFormik({
     initialValues: { ...loginInitialValue, email: identity.email },
     validationSchema: passwordSchema,
