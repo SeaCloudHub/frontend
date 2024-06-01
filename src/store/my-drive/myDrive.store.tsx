@@ -66,9 +66,10 @@ export type ListEntriesState = {
   setTrashEntries: Dispatch<SetStateAction<TimeEntry[]>>;
   setFolderEntries: Dispatch<SetStateAction<LocalEntry[]>>;
   resetEntries: () => void;
+  getNameById: (id: string) => string;
 };
 
-export const useEntries = create<ListEntriesState>((set) => ({
+export const useEntries = create<ListEntriesState>((set, get) => ({
   listEntries: [],
   listSuggestedEntries: [],
   trashEntries: [],
@@ -79,8 +80,11 @@ export const useEntries = create<ListEntriesState>((set) => ({
   setTrashEntries: (trashEntries: TimeEntry[]) => set({ trashEntries }),
   setEntriesSearchPage: (entriesSearchPage: SuggestedEntry[]) => set({ entriesSearchPage }),
   setFolderEntries: (folderEntries: LocalEntry[]) => set({ folderEntries }),
-  resetEntries: () =>
-    set({ listEntries: [], listSuggestedEntries: [], trashEntries: [], entriesSearchPage: [], folderEntries: [] }),
+  resetEntries: () => set({ listEntries: [], listSuggestedEntries: [], trashEntries: [], entriesSearchPage: [], folderEntries: [] }),
+  getNameById: (id: string) => {
+    const entry = get().listEntries.find((entry) => entry.id === id) || get().listSuggestedEntries.find((entry) => entry.id === id) || get().entriesSearchPage.find((entry) => entry.id === id);
+    return entry ? entry.title : '';
+  },
 }));
 
 export type CursorState = {
@@ -92,6 +96,7 @@ export type CursorState = {
 };
 
 export const useCursor = create<CursorState>((set) => ({
+  
   nextCursor: '',
   currentCursor: '',
   setNextCursor: (cursor: string) => set({ nextCursor: cursor }),

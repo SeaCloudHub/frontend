@@ -28,10 +28,11 @@ import {
 import {
   CopyFileREQ,
   DeleteEntriesREQ,
-  DownloadMultipleEntriesREQ,
   RenameREQ,
   RestoreEntriesREQ,
   StarEntriesREQ,
+  DownloadMultipleEntriesREQ,
+  UpdateGeneralAccessREQ,
 } from '@/apis/drive/drive.request';
 import {
   EntryMetadataRES,
@@ -43,7 +44,7 @@ import {
   SuggestedEntriesRESP,
 } from '@/apis/drive/drive.response';
 import { MoveToTrashREQ } from '@/apis/drive/request/move-to-trash.request';
-import { uploadFilesApi } from '@/apis/user/storage/storage.api';
+import { updateGeneralAccessApi, uploadFilesApi } from '@/apis/user/storage/storage.api';
 import { LocalEntryToTimeEntry } from '@/pages/user/trash/trash-page-view/DriveHistoryGridView';
 import {
   Path,
@@ -117,11 +118,16 @@ export const usePathParents = (dir?: string, is_admin?: boolean) => {
     },
   });
 
-  if (isAxiosError<ApiGenericError>(parentsError)) {
-    toast.error(parentsError.response?.data.message, toastError());
-  }
+  // if (isAxiosError<ApiGenericError>(parentsError)) {
+  //   toast.error(parentsError.response?.data.message, toastError());
+  // }
 
-  return { parents: parents || [{ id, name: 'My Drive', userRoles: ['owner'] as UserRole[], is_starred: false }] };
+  return {
+    parents: parents || [{ id, name: 'My Drive', userRoles: ['owner'] as UserRole[], is_starred: false }],
+    error: parentsError ? (
+      isAxiosError<ApiGenericError>(parentsError) ? parentsError.response?.data.message : parentsError.message || 'Something went wrong'
+      ) : null,
+  };
 };
 
 export const useListEntries = (rootUserId?: string) => {
@@ -156,11 +162,18 @@ export const useListEntries = (rootUserId?: string) => {
     }
   }, [data, setListEntries]);
 
-  if (isAxiosError<ApiGenericError>(error)) {
-    toast.error(error.response?.data.message, toastError());
-  }
+  // if (isAxiosError<ApiGenericError>(error)) {
+  //   toast.error(error.response?.data.message, toastError());
+  // }
 
-  return { data: listEntries, refetch, isLoading };
+  return {
+    data: listEntries,
+    refetch,
+    isLoading,
+    error: error ? (
+      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
+      ) : null,
+  };
 };
 
 export const useListFolders = (volumn?: 'Priority' | 'My Drive' | 'Starred' | 'Shared', dirId?: string) => {
@@ -169,26 +182,9 @@ export const useListFolders = (volumn?: 'Priority' | 'My Drive' | 'Starred' | 'S
   const { setNextCursorSearch, currentCursorSearch } = useCursorSearch();
   const { folderEntries, setFolderEntries } = useEntries();
 
-  const { data: parents, error: parentsError } = useQuery({
-    queryKey: ['entry-metadata', dirId],
-    queryFn: () => getEntryMetadata({ id: dirId }).then((res) => res?.data),
-    staleTime: 10 * 1000,
-    select: (data): Path => {
-      if (data.parents) {
-        data.parents.sort((a, b) => a.path.localeCompare(b.path));
-        const path = data.parents.map((parent) =>
-          parent.id === rootId ? { id: rootId, name: volumn || 'My Drive' } : { id: parent.id, name: parent.name },
-        );
-        path.push({ id: data.file.id, name: data.file.name });
-        return path;
-      }
-      return [{ id: rootId, name: volumn || 'My Drive' }];
-    },
-  });
+  const { parents, error: parentsError } = usePathParents(dirId, false);
+  console.log('parents', parents);
 
-  if (isAxiosError<ApiGenericError>(parentsError)) {
-    toast.error(parentsError.response?.data.message, toastError());
-  }
   const { data, error, refetch, isLoading } = useQuery({
     queryKey: ['list-folders', dirId, volumn, currentCursorSearch],
     queryFn: async () => {
@@ -220,11 +216,11 @@ export const useListFolders = (volumn?: 'Priority' | 'My Drive' | 'Starred' | 'S
     }
   }, [currentCursorSearch, data, setFolderEntries, setNextCursorSearch]);
 
-  if (isAxiosError<ApiGenericError>(error)) {
-    toast.error(error.response?.data.message, toastError());
-  }
-
-  return { parents: parents || [{ id: dirId, name: 'My Drive' }], data: folderEntries || [], refetch, isLoading };
+  return { parents: parents || [{ id: dirId, name: 'My Drive' }], data: folderEntries || [], refetch, isLoading,
+    error: error ? (
+      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
+    ) : parentsError ? parentsError : null,
+  };
 };
 
 export const useSuggestedEntries = () => {
@@ -247,11 +243,18 @@ export const useSuggestedEntries = () => {
     if (data) setListSuggestedEntries(data);
   }, [data, setListSuggestedEntries]);
 
-  if (isAxiosError<ApiGenericError>(error)) {
-    toast.error(error.response?.data.message, toastError());
-  }
+  // if (isAxiosError<ApiGenericError>(error)) {
+  //   toast.error(error.response?.data.message, toastError());
+  // }
 
-  return { data: listSuggestedEntries || [], refetch, isLoading };
+  return {
+    data: listSuggestedEntries || [],
+    refetch,
+    isLoading,
+    error: error ? (
+      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
+    ) : null,
+  };
 };
 
 export const useSearchEntries = (query: string) => {
@@ -265,11 +268,16 @@ export const useSearchEntries = (query: string) => {
     select: transformSuggestedEntries,
   });
 
-  if (isAxiosError<ApiGenericError>(error)) {
-    toast.error(error.response?.data.message, toastError());
-  }
+  // if (isAxiosError<ApiGenericError>(error)) {
+  //   toast.error(error.response?.data.message, toastError());
+  // }
 
-  return { data: data || [], refetch, isLoading };
+  return {
+    data: data || [], refetch, isLoading,
+    error: error ? (
+      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
+    ) : null
+  };
 };
 
 export const useSearchEntriesPage = () => {
@@ -278,7 +286,7 @@ export const useSearchEntriesPage = () => {
   const { typeFilter, modifiedFilter } = useFilter();
   const { entriesSearchPage, setEntriesSearchPage } = useEntries();
 
-  const { data, refetch, isLoading } = useQuery({
+  const { data, refetch, isLoading, error } = useQuery({
     queryKey: ['search-entries-Page', query, typeFilter, modifiedFilter],
     queryFn: async () => {
       if (!query) return { entries: [], cursor: '' };
@@ -304,30 +312,14 @@ export const useSearchEntriesPage = () => {
     }
   }, [data, setEntriesSearchPage]);
 
-  return { data: entriesSearchPage, refetch, isLoading };
-};
-
-export const usePriorityEntries = () => {
-  const { dirId } = useParams();
-  const { rootId } = useStorageStore();
-  const id = dirId || rootId;
-
-  const { data, error, refetch, isLoading } = useQuery({
-    queryKey: ['priority-entries', id],
-    queryFn: async () => {
-      return (await getListEntriesPageMyDrive({ id, limit: 100 }).then((res) => res?.data?.entries || [])).filter(
-        (e) => !e.name.includes('.trash'),
-      );
-    },
-    staleTime: 10 * 1000,
-    select: transformEntries,
-  });
-
-  if (isAxiosError<ApiGenericError>(error)) {
-    toast.error(error.response?.data.message, toastError());
-  }
-
-  return { data: data || [], refetch, isLoading };
+  return {
+    data: entriesSearchPage,
+    refetch,
+    isLoading,
+    error: error ? (
+      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
+    ) : null
+  };
 };
 
 export const useQueries = () => {
@@ -360,9 +352,9 @@ export const useSharedEntry = () => {
     },
   });
 
-  if (isAxiosError<ApiGenericError>(parentsError)) {
-    toast.error(parentsError.response?.data.message, toastError());
-  }
+  // if (isAxiosError<ApiGenericError>(parentsError)) {
+  //   toast.error(parentsError.response?.data.message, toastError());
+  // }
 
   const { data, error, refetch, isLoading } = useQuery({
     queryKey: ['shared-entries', id, modifiedFilter, typeFilter],
@@ -379,9 +371,9 @@ export const useSharedEntry = () => {
     staleTime: 10 * 1000,
   });
 
-  if (isAxiosError<ApiGenericError>(error)) {
-    toast.error(error.response?.data.message, toastError());
-  }
+  // if (isAxiosError<ApiGenericError>(error)) {
+  //   toast.error(error.response?.data.message, toastError());
+  // }
 
   useEffect(() => {
     if (data) {
@@ -394,7 +386,13 @@ export const useSharedEntry = () => {
     }
   }, [data, setNextCursor]);
 
-  return { parents: parents || [{ id, name: 'Shared' }], data: listEntries || [], refetch, isLoading };
+  return { parents: parents || [{ id, name: 'Shared' }], data: listEntries || [], refetch, isLoading,
+    error: error ? (
+      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
+    ) : parentsError ? (
+      isAxiosError<ApiGenericError>(parentsError) ? parentsError.response?.data.message : parentsError.message || 'Something went wrong'
+    ) : null
+  };
 };
 
 export const useTrash = () => {
@@ -403,19 +401,23 @@ export const useTrash = () => {
   const id = dirId || rootId;
   const { setNextCursor, currentCursor } = useCursor();
   const { trashEntries, setTrashEntries } = useEntries();
+  const { modifiedFilter, typeFilter } = useFilter();
 
   const { data, error, refetch, isLoading } = useQuery({
-    queryKey: ['Trash-entries', id, currentCursor],
+    queryKey: ['Trash-entries', id, currentCursor, modifiedFilter, typeFilter],
     queryFn: async () => {
-      const res = await getListEntriesTrash({ limit: 15, cursor: currentCursor }).then((res) => res?.data);
-      return { entries: transformEntries(res?.entries || []), cursor: res.cursor || '' };
+      const res = await getListEntriesTrash({ limit: 15, cursor: currentCursor,
+        ...(modifiedFilter ? { after: modifiedFilter } : {}),
+        ...(typeFilter ? { type: typeFilter } : {}),
+      }).then((res) => res?.data);
+      return {entries: transformEntries(res?.entries || []), cursor: res.cursor || ''};
     },
     staleTime: 10 * 1000,
   });
 
-  if (isAxiosError<ApiGenericError>(error)) {
-    toast.error(error.response?.data.message, toastError());
-  }
+  // if (isAxiosError<ApiGenericError>(error)) {
+  //   toast.error(error.response?.data.message, toastError());
+  // }
 
   useEffect(() => {
     if (data) {
@@ -438,7 +440,12 @@ export const useTrash = () => {
     }
   }, [data, setTrashEntries]);
 
-  return { data: trashEntries, refetch, isLoading };
+  return {
+    data: trashEntries, refetch, isLoading,
+    error: error ? (
+      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
+    ) : null
+  };
 };
 
 export const useCopyMutation = () => {
@@ -646,9 +653,9 @@ export const useStarred = () => {
     select: transformEntries,
   });
 
-  if (isAxiosError<ApiGenericError>(error)) {
-    toast.error(error.response?.data.message, toastError());
-  }
+  // if (isAxiosError<ApiGenericError>(error)) {
+  //   toast.error(error.response?.data.message, toastError());
+  // }
 
   useEffect(() => {
     if (data) {
@@ -657,7 +664,12 @@ export const useStarred = () => {
     }
   }, [data, setListEntries]);
 
-  return { data: listEntries || [], refetch, isLoading };
+  return {
+    data: listEntries || [], refetch, isLoading,
+    error: error ? (
+      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
+    ) : null
+  };
 };
 
 export const useStarEntryMutation = () => {
@@ -762,11 +774,15 @@ export const useEntryMetadata = (id: string) => {
     enabled: !!drawerOpen && !!id,
   });
 
-  if (isAxiosError<ApiGenericError>(error)) {
-    toast.error(error.response?.data.message, toastError());
-  }
+  // if (isAxiosError<ApiGenericError>(error)) {
+  //   toast.error(error.response?.data.message, toastError());
+  // }
 
-  return { data, isLoading, isFetching };
+  return { data, isLoading, isFetching,
+    error: error ? (
+      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
+    ) : null
+  };
 };
 
 export const useEntryAccess = (id: string) => {
@@ -783,11 +799,15 @@ export const useEntryAccess = (id: string) => {
     enabled: !!drawerOpen && !!id,
   });
 
-  if (isAxiosError<ApiGenericError>(error)) {
-    toast.error(error.response?.data.message, toastError());
-  }
+  // if (isAxiosError<ApiGenericError>(error)) {
+  //   toast.error(error.response?.data.message, toastError());
+  // }
 
-  return { data, isLoading };
+  return { data, isLoading,
+    error: error ? (
+      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
+    ) : null
+  };
 };
 
 export const useUploadMutation = () => {
@@ -828,11 +848,16 @@ export const useMemoryStatistics = () => {
     },
   });
 
-  if (isAxiosError<ApiGenericError>(error)) {
-    toast.error(error.response?.data.message, toastError());
-  }
+  // if (isAxiosError<ApiGenericError>(error)) {
+  //   toast.error(error.response?.data.message, toastError());
+  // }
 
-  return { data, isLoading };
+  return {
+    data, isLoading,
+    error: error ? (
+      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
+    ) : null
+  };
 };
 
 export const useMemory = (asc: boolean) => {
@@ -855,9 +880,9 @@ export const useMemory = (asc: boolean) => {
     },
   });
 
-  if (isAxiosError<ApiGenericError>(error)) {
-    toast.error(error.response?.data.message, toastError());
-  }
+  // if (isAxiosError<ApiGenericError>(error)) {
+  //   toast.error(error.response?.data.message, toastError());
+  // }
 
   useEffect(() => {
     if (data) {
@@ -868,7 +893,12 @@ export const useMemory = (asc: boolean) => {
     }
   }, [data, setListEntries]);
 
-  return { data: listEntries, isLoading };
+  return {
+    data: listEntries, isLoading,
+    error: error ? (
+      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
+    ) : null
+  };
 };
 
 export const useActivityLog = () => {
@@ -879,7 +909,7 @@ export const useActivityLog = () => {
 
   const id = arrSelected.length === 1 ? arrSelected[0].id : rootId;
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['activity-log', id, currentCursorActivity],
     queryFn: async () => {
       const res = await getActivityLog({
@@ -912,7 +942,12 @@ export const useActivityLog = () => {
     }
   }, [data, setActivityLog]);
 
-  return { data: activityLog, isLoading };
+  return {
+    data: activityLog, isLoading,
+    error: error ? (
+      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
+    ) : null
+  };
 };
 
 ///////////////////  admin //////////////////////
@@ -949,14 +984,21 @@ export const useGetListFilesUser = (page: number, id: string, isRoot: boolean, q
     placeholderData: keepPreviousData,
   });
 
-  if (isAxiosError<ApiGenericError>(error)) {
-    toast.error(error.response?.data.message, toastError());
-  }
+  // if (isAxiosError<ApiGenericError>(error)) {
+  //   toast.error(error.response?.data.message, toastError());
+  // }
 
-  return { data: data, refetch, isLoading };
+  return {
+    data: data, refetch, isLoading,
+    error: error ? (
+      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
+    ) : null
+  };
 };
 
-export const useModifyStorageCapacityMutation = () => {
+export const useModifyStorageCapacityMutation = (queryKey: QueryKey) => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: (body: ModifyStorageCapacityREQ) => {
       return modifyStorageCapacityApi(body);
@@ -968,9 +1010,27 @@ export const useModifyStorageCapacityMutation = () => {
     },
     onSuccess: (data) => {
       toast.success('Modified');
+      console.log(queryKey);
+      queryClient.invalidateQueries({ queryKey: queryKey });
     },
   });
 };
+
+export const useUpdateGeneralAccessMutation = () => {
+  return useMutation({
+    mutationFn: (body: UpdateGeneralAccessREQ) => {
+      return updateGeneralAccessApi(body);
+    },
+    onError: (error) => {
+      if (isAxiosError<ApiGenericError>(error)) {
+        toast.error(error.response?.data.message, toastError());
+      }
+    },
+    onSuccess: () => {
+      toast.success('Changed general access');
+    },
+  });
+}
 
 const transformMetadata = (data: EntryMetadataRES) => {
   data.parents?.sort((a, b) => a.path.localeCompare(b.path));

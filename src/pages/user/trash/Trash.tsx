@@ -23,7 +23,7 @@ const Trash = () => {
 
   const { arrSelected } = useSelected();
 
-  const { data, isLoading, refetch } = useTrash();
+  const { data, isLoading, error } = useTrash();
   console.log('[Trash] data', data);
 
   const onScollBottom = () => {
@@ -40,7 +40,18 @@ const Trash = () => {
     <DriveLayout
       headerLeft={<TrashPageHeader />}
       onScrollBottom={onScollBottom}
-      bodyLeft={<TrashPageView entries={data} dir={{ id: rootId, name: 'Trash' }} isLoading={isLoading} />}
+      bodyLeft={
+        error ? (
+          <div className='text-center text-lg text-red-500'>Error: {error}</div>
+        ) : (
+          <TrashPageView
+            entries={data}
+            dir={{ id: rootId, name: 'Trash' }}
+            isLoading={isLoading}
+            isScrolling={isScrolling}
+          />
+        )
+      }
       sidePanel={
         <SidePanel
           isHidden={arrSelected.length === 0}

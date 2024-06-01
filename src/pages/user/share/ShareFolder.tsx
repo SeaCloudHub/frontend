@@ -12,12 +12,14 @@ import { useStorageStore } from '@/store/storage/storage.store';
 import MultipleDriveHeader from '../my-drive/header/MultipleDriveHeader';
 import ShareFolderBreadcum from './ShareFolderBreadcum';
 import { useListEntries, usePathParents } from '@/hooks/drive.hooks';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { UserRole } from '@/utils/types/user-role.type';
+import { useNavigate } from 'react-router-dom';
+import { DRIVE_HOME, DRIVE_MY_DRIVE } from '@/utils/constants/router.constant';
 
 const ShareFolder = () => {
   const [isScrolling, setIsScrolling] = useState(false);
-
+  const navigate = useNavigate();
   const { rootId } = useStorageStore();
   // const {fileInfo, role} = useSharedFileInfo();
   // console.log('[ShareFolder] fileInfo', fileInfo);
@@ -32,8 +34,18 @@ const ShareFolder = () => {
   const { nextCursor, currentCursor, setCurrentCursor } = useCursor();
   const { modifiedFilter, typeFilter, setModifiedFilter, setTypeFilter } = useFilter();
 
-  const { data, isLoading } = useListEntries();
-  const { parents } = usePathParents();
+  const { data, isLoading, error } = useListEntries();
+  const { parents, error: parentError } = usePathParents();
+
+  useEffect(() => {
+    if (parents?.length>0 && parents[0].id === rootId) {
+      if(parents.length > 1) {
+        navigate(`${DRIVE_MY_DRIVE}/dir/${parents[parents.length - 1].id}`);
+      } else {
+        navigate(DRIVE_MY_DRIVE);
+      }
+    }
+  }, [parents, rootId, setCurrentCursor]);
 
   const onScollBottom = () => {
     if (nextCursor !== '' && currentCursor !== nextCursor) {
@@ -101,22 +113,26 @@ const ShareFolder = () => {
       }
       onScrollBottom={onScollBottom}
       bodyLeft={
-        viewMode === 'grid' ? (
-          <DriveGridView
-            entries={data}
-            parent='shared'
-            isLoading={isLoading}
-            curDir={parents[parents.length - 1]}
-            isScrolling={isScrolling}
-          />
+        parentError || error ? (
+          <div className='text-center text-lg text-red-500'>Error: {parentError || error}</div>
         ) : (
-          <DriveListView
-            entries={data}
-            parent='shared'
-            curDir={parents[parents.length - 1]}
-            isLoading={isLoading}
-            isScrolling={isScrolling}
-          />
+          viewMode === 'grid' ? (
+            <DriveGridView
+              entries={data}
+              parent='shared'
+              isLoading={isLoading}
+              curDir={parents[parents.length - 1]}
+              isScrolling={isScrolling}
+            />
+          ) : (
+            <DriveListView
+              entries={data}
+              parent='shared'
+              curDir={parents[parents.length - 1]}
+              isLoading={isLoading}
+              isScrolling={isScrolling}
+            />
+          )
         )
       }
       sidePanel={

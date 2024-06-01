@@ -263,6 +263,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
       action: () => {
         setIsPopUpOpen(true);
       },
+      isHidden: isPermission(userRoles) <= 1,
     },
   ];
 
@@ -353,14 +354,16 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
         <div className='max-[1150px]:hidden'>
           <div className='flex items-center gap-x-2'>
             {owner?.avatar_url ? (
-              <Avatar
-                alt={owner.last_name}
-                src={import.meta.env.VITE_BACKEND_API + owner.avatar_url}
-                sx={{
-                  width: 30,
-                  height: 30,
-                }}
-              />
+              <div className='border border-[#c2e7ff] dark:border-blue-900 p-0.5 rounded-full ring-[1.5px]'>
+                <Avatar
+                  alt={owner.last_name}
+                  src={import.meta.env.VITE_BACKEND_API + owner.avatar_url}
+                  sx={{
+                    width: 30,
+                    height: 30,
+                  }}
+                />
+              </div>
             ) : (
               <div
                 className='round flex h-[30px] w-[30px] items-center justify-center rounded-full'

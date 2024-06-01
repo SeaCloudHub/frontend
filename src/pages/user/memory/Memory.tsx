@@ -16,7 +16,7 @@ const Memory = () => {
   // const {} = useEntries();
   const { arrSelected } = useSelected();
 
-  const { data, isLoading } = useMemory(order === 'asc' ? true : false);
+  const { data, isLoading, error } = useMemory(order === 'asc' ? true : false);
 
   const onScrollBottom = () => {
     if (nextCursor && nextCursor !== currentCursor) {
@@ -28,7 +28,13 @@ const Memory = () => {
     <DriveLayout
       headerLeft={<MemoryHeader />}
       onScrollBottom={onScrollBottom}
-      bodyLeft={<MemoryView entries={data} isLoading={isLoading} order={order} setSort={setSort} sort={sort} />}
+      bodyLeft={
+        error ? (
+          <div className='text-center text-lg text-red-500'>Error: {error}</div>
+        ) : (
+          <MemoryView entries={data} isLoading={isLoading} order={order} setSort={setSort} sort={sort} />
+        )
+      }
       sidePanel={
         <SidePanel
           isHidden={arrSelected.length === 0}

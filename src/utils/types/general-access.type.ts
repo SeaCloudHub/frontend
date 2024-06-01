@@ -1,0 +1,1 @@
+export type GeneralAccessType = 'restricted' | 'everyone-can-view' | 'everyone-can-edit';

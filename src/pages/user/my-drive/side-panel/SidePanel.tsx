@@ -1,11 +1,9 @@
 import { classNames } from '@/components/core/drop-down/Dropdown';
-import { useEntryAccess, useEntryMetadata } from '@/hooks/drive.hooks';
-import { useSession } from '@/store/auth/session';
-import { useActivityLogStore, useCursor, useCursorActivity, useDrawer } from '@/store/my-drive/myDrive.store';
-import { numToSize } from '@/utils/function/numbertToSize';
+import { useEntryMetadata } from '@/hooks/drive.hooks';
+import { useActivityLogStore, useCursorActivity, useDrawer } from '@/store/my-drive/myDrive.store';
 import { Tab } from '@headlessui/react';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import { CircularProgress, LinearProgress } from '@mui/material';
+import { CircularProgress } from '@mui/material';
 import React, { useEffect } from 'react';
 import SidePanelAction from './SidePanelAction';
 import SidePanelDetail from './SidePanelDetail';
@@ -22,7 +20,7 @@ const SidePanel: React.FC<SidePanelProps> = ({ id, title, isHidden }) => {
   console.log('SidePanel render', tab);
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const { currentCursorActivity, nextCursorActivity, setCurrentCursorActivity } = useCursorActivity();
-  const { data: details, isLoading, isFetching } = useEntryMetadata(id || '');
+  const { data: details, isLoading, isFetching, error } = useEntryMetadata(id || '');
   const { activityLog, setActivityLog } = useActivityLogStore();
   const [isScrolling, setIsScrolling] = React.useState(false);
 
@@ -48,7 +46,7 @@ const SidePanel: React.FC<SidePanelProps> = ({ id, title, isHidden }) => {
     }
   }, [activityLog, currentCursorActivity, setCurrentCursorActivity, nextCursorActivity]);
 
-  return isHidden ? (
+  return (error || isHidden) ? (
     <div className='relative w-[360px]'>
       <div className='mb-4 mt-6 flex justify-end'>
         <Icon

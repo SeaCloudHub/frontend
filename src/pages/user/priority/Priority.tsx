@@ -14,7 +14,7 @@ const Priority = () => {
   const { rootId } = useStorageStore();
   const { arrSelected } = useSelected();
   // const { limit, increaseLimit } = useLimit();
-  const { data, isLoading, refetch } = useSuggestedEntries();
+  const { data, isLoading, error } = useSuggestedEntries();
 
   return (
     <DriveLayout
@@ -34,14 +34,18 @@ const Priority = () => {
         </div>
       }
       bodyLeft={
-        <PriorityView
-          isLoading={isLoading}
-          isFileMode={isFileMode}
-          entries={data}
-          sort={''}
-          order={''}
-          setSort={({ sort, order }) => console.log(sort, order)}
-        />
+        error ? (
+          <div className='text-center text-lg text-red-500'>Error: {error}</div>
+        ) : (
+          <PriorityView
+            isLoading={isLoading}
+            isFileMode={isFileMode}
+            entries={data}
+            sort={''}
+            order={''}
+            setSort={({ sort, order }) => console.log(sort, order)}
+          />
+        )
       }
       sidePanel={
         <SidePanel

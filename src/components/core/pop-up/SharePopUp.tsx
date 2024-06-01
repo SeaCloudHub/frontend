@@ -28,6 +28,9 @@ import { MenuItem as MenuItemCustom } from '../drop-down/Dropdown';
 import ListPeople from '../list-people/ListPeople';
 import PopUp from './PopUp';
 import { getEntryMetadata } from '@/apis/drive/drive.api';
+import { GeneralAccessType } from '@/utils/types/general-access.type';
+import { GeneralAccess } from '@/utils/constants/general-access.constant';
+import { useUpdateGeneralAccessMutation } from '@/hooks/drive.hooks';
 
 type SharePopUpProps = {
   open: boolean;
@@ -71,11 +74,14 @@ const SharePopUp: React.FC<SharePopUpProps> = ({ open, handleClose, title, fileI
   const [typeShare, setTypeShare] = React.useState('Viewer');
   const [typeView, setTypeView] = React.useState(fakelistPeople.map((item) => item.type));
   const [isPublic, setIsPublic] = React.useState(false);
+  const [generalAccess, setGeneralAccess] = React.useState<GeneralAccessType>(GeneralAccess.RESTRICTED as GeneralAccessType);
   const [keyword, setKeyword] = useState<string>('');
   const searchValue = useDebounce({ delay: 500, value: keyword });
   const [apiData, setApiData] = useState<UserOption[]>([]);
   const [errror, setError] = useState<boolean>(false);
   const { theme } = useTheme();
+
+  const updateGeneralAccess = useUpdateGeneralAccessMutation();
   const shareFileMutation = useMutation({
     mutationFn: () => {
       return shareFileAPi({
@@ -206,78 +212,62 @@ const SharePopUp: React.FC<SharePopUpProps> = ({ open, handleClose, title, fileI
             </CustomSelect>
           )}
         </div>
-        {values.length > 0 ? (
-          <div>
-            <TextareaAutosize
-              placeholder='Add a message'
-              minRows={10}
-              maxRows={10}
-              style={{
-                border: `1px solid ${theme === 'dark' ? '#1E293B' : '#CBD5E1'}`,
-                borderRadius: '5px',
-                color: theme === 'dark' ? 'white' : '#031525',
-                width: '100%',
-                resize: 'none',
-                marginTop: '10px',
-                backgroundColor: theme === 'dark' ? '#031525' : 'white',
-                paddingLeft: '10px',
-                paddingRight: '10px',
-              }}
-            />
+        <div>
+          {errror && <p className='text-red-600'>Please select people to share file.</p>}
+          <div className='my-2'>
+            <div className='text-base font-semibold'>People with access</div>
+            <ListPeople fileId={fileId} height='150px' />
           </div>
-        ) : (
           <div>
-            {errror && <p className='text-red-600'>Please select people to share file.</p>}
-            <div className='my-2'>
-              <div className='text-base font-semibold'>People with access</div>
-              <ListPeople fileId={fileId} height='150px' />
-            </div>
-            <div>
-              <div className='text-base font-semibold'>General access</div>
-              <ListItem
-                alignItems='center'
-                className='cursor-pointer hover:bg-gray-100 dark:hover:bg-blue-950'
-                sx={{
-                  py: 1,
-                }}>
-                <ListItemAvatar>
-                  <Icon
-                    icon='material-symbols:lock-outline'
-                    className='h-8 w-8 rounded-full bg-gray-200 px-1.5 text-xl dark:text-dashboard-dark'
-                  />
-                </ListItemAvatar>
-                <ListItemText
-                  primary={
-                    <CustomSelect
-                      value={isPublic}
-                      variant='outlined'
-                      onChange={(e) => setIsPublic(e.target.value === 'true')}
-                      sx={{
-                        fontSize: '0.875rem',
-                        '& fieldset': {
-                          border: 'none',
-                        },
-                        '& .MuiSelect-select': {
-                          padding: '2px',
-                        },
-                        '&:hover': {
-                          backgroundColor: '#f3f4f6',
-                        },
-                      }}>
-                      <MenuItem value={'true'}>Anyone with the link</MenuItem>
-                      <MenuItem value={'false'}>Only people added can open</MenuItem>
-                    </CustomSelect>
-                  }
-                  secondary={
-                    <Typography sx={{ display: 'inline' }} component='span' variant='body2' color='gray'>
-                      Anyone on the internet with this link can view
-                    </Typography>
-                  }
+            <div className='text-base font-semibold'>General access</div>
+            <ListItem
+              alignItems='center'
+              className='cursor-pointer hover:bg-gray-100 dark:hover:bg-blue-950'
+              sx={{
+                py: 1,
+              }}>
+              <ListItemAvatar>
+                <Icon
+                  icon='material-symbols:lock-outline'
+                  className='h-8 w-8 rounded-full bg-gray-200 px-1.5 text-xl dark:text-dashboard-dark'
                 />
-              </ListItem>
-            </div>
+              </ListItemAvatar>
+              <ListItemText
+                primary={
+                  <CustomSelect
+                    value={generalAccess}
+                    variant='outlined'
+                    onChange={(e) => {
+                      updateGeneralAccess.mutateAsync({ id: fileId, general_access: e.target.value as GeneralAccessType}, {
+                        onSuccess: () => setGeneralAccess(e.target.value as GeneralAccessType),
+                      });
+                    }}
+                    sx={{
+                      fontSize: '0.875rem',
+                      '& fieldset': {
+                        border: 'none',
+                      },
+                      '& .MuiSelect-select': {
+                        padding: '2px',
+                      },
+                      '&:hover': {
+                        backgroundColor: '#f3f4f6',
+                      },
+                    }}>
+                    <MenuItem value={GeneralAccess.RESTRICTED}>Restricted</MenuItem>
+                    <MenuItem value={GeneralAccess.PUBLIC_VIEW}>Everyone can view</MenuItem>
+                    <MenuItem value={GeneralAccess.PUBLIC_EDIT}>Everyone can edit</MenuItem>
+                  </CustomSelect>
+                }
+                secondary={
+                  <Typography sx={{ display: 'inline' }} component='span' variant='body2' color='gray'>
+                    Anyone on the internet with this link can view
+                  </Typography>
+                }
+              />
+            </ListItem>
           </div>
-        )}
+        </div>
       </div>
       <DialogActions
         sx={{

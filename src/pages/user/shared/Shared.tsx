@@ -26,7 +26,7 @@ const Shared = () => {
   const { arrSelected } = useSelected();
   const { rootId } = useStorageStore();
 
-  const { data, isLoading, parents } = useSharedEntry();
+  const { data, isLoading, parents, error } = useSharedEntry();
 
   return (
     <DriveLayout
@@ -81,10 +81,14 @@ const Shared = () => {
         </div>
       }
       bodyLeft={
-        viewMode === 'grid' ? (
-          <DriveGridView entries={data} parent='shared' isLoading={isLoading} curDir={parents[parents.length - 1]} />
+        error ? (
+          <div className='text-center text-lg text-red-500'>Error: {error}</div>
         ) : (
-          <DriveListView entries={data} parent='shared' curDir={parents[parents.length - 1]} isLoading={isLoading} />
+          viewMode === 'grid' ? (
+            <DriveGridView entries={data} parent='shared' isLoading={isLoading} curDir={parents[parents.length - 1]} />
+          ) : (
+            <DriveListView entries={data} parent='shared' curDir={parents[parents.length - 1]} isLoading={isLoading} />
+          )
         )
       }
       sidePanel={

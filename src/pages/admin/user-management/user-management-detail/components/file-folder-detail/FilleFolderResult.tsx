@@ -19,6 +19,7 @@ import CustomBreadcums from '@/components/core/pop-up/CustomBreadcums';
 import { Path } from '@/store/my-drive/myDrive.store';
 import RenamePopUp from '@/components/core/pop-up/RenamePopUp';
 import DeletePopUp from '@/components/core/pop-up/DeletePopUp';
+import FileViewerContainer from '@/components/core/file-viewers/file-viewer-container/FileViewerContainer';
 
 type FileFolderResultProps = {
   data: { entries: LocalEntry[]; pagination: PaginationRESP };
@@ -26,11 +27,16 @@ type FileFolderResultProps = {
   handleOnRow: (record: LocalEntry) => void;
   parentPath: Path;
   handlePathChange: (id: string, name: string) => void;
+  fileInfoView?: LocalEntry;
+  isLoading?: boolean;
 };
 
-const FileFolderResult = ({ data, handlePageChange, handleOnRow, parentPath, handlePathChange }: FileFolderResultProps) => {
+
+
+const FileFolderResult = ({ data, handlePageChange, handleOnRow, parentPath, handlePathChange, fileInfoView, isLoading }: FileFolderResultProps) => {
   const [isOpened, setIsOpened] = useState(false);
   const [typePopup, setTypePopup] = useState<string>('');
+  const [isViewFile, setIsViewFile] = useState<boolean>(false);
   const [recordSelected, setRecordSelected] = useState<LocalEntry>(null);
 
   const columns = [
@@ -123,10 +129,20 @@ const FileFolderResult = ({ data, handlePageChange, handleOnRow, parentPath, han
 
   return (
     <>
-      <div className='h-full w-full overflow-x-auto overflow-y-auto pt-2'>
+      {isViewFile && (
+        <FileViewerContainer
+          fileInfo={fileInfoView ? fileInfoView : null}
+          open={isViewFile}
+          canDelete={true}
+          canShare={true}
+          closeOutside={() => setIsViewFile(false)}
+          isCloseOutside={true}
+        />
+      )}
+      <div className='h-full w-full overflow-y-auto overflow-x-auto pt-2'>
         <CustomBreadcums path={parentPath} onClick={handlePathChange} />
         {data && (
-          <div className='mb-1 mt-3 h-full'>
+          <div className='h-full mt-3 mb-1'>
             <Table
               dataSource={data.entries}
               columns={columns}
@@ -135,10 +151,14 @@ const FileFolderResult = ({ data, handlePageChange, handleOnRow, parentPath, han
               rowKey={(record) => record.id}
               onRow={(record: LocalEntry) => {
                 return {
-                  onDoubleClick: () => handleOnRow(record),
+                  onDoubleClick: () => {
+                    handleOnRow(record);
+                    if (!record.isDir) setIsViewFile(true);
+                  },
                   style: { cursor: 'pointer' },
                 };
               }}
+              loading={isLoading}
             />
 
             <Pagination
@@ -151,6 +171,7 @@ const FileFolderResult = ({ data, handlePageChange, handleOnRow, parentPath, han
           </div>
         )}
       </div>
+
       {isOpened && typePopup === 'Rename' && (
         <RenamePopUp
           open={isOpened}
@@ -159,6 +180,7 @@ const FileFolderResult = ({ data, handlePageChange, handleOnRow, parentPath, han
           name={recordSelected?.title}
         />
       )}
+
       {isOpened && typePopup === 'Delete' && (
         <DeletePopUp
           open={isOpened}

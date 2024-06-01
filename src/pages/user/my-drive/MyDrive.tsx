@@ -19,8 +19,8 @@ const MyDrive = () => {
 
   const copyMutation = useCopyMutation();
 
-  const { parents } = usePathParents();
-  const { data, isLoading } = useListEntries();
+  const { parents, error: parentError } = usePathParents();
+  const { data, isLoading, error } = useListEntries();
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -56,22 +56,26 @@ const MyDrive = () => {
       headerLeft={<MyDriveHeader path={parents} sort={sort} order={order} setSort={setSort} />}
       onScrollBottom={onScollBottom}
       bodyLeft={
-        viewMode === 'grid' ? (
-          <DriveGridView
-            entries={data}
-            parent='my-drive'
-            isLoading={isLoading}
-            curDir={parents[parents.length - 1]}
-            isScrolling={isScrolling}
-          />
+        parentError || error ? (
+          <div className='text-center text-lg text-red-500'>Error: {parentError || error}</div>
         ) : (
-          <DriveListView
-            entries={data}
-            parent='my-drive'
-            isLoading={isLoading}
-            curDir={parents[parents.length - 1]}
-            isScrolling={isScrolling}
-          />
+          viewMode === 'grid' ? (
+            <DriveGridView
+              entries={data}
+              parent='my-drive'
+              isLoading={isLoading}
+              curDir={parents[parents.length - 1]}
+              isScrolling={isScrolling}
+            />
+          ) : (
+            <DriveListView
+              entries={data}
+              parent='my-drive'
+              isLoading={isLoading}
+              curDir={parents[parents.length - 1]}
+              isScrolling={isScrolling}
+            />
+          )
         )
       }
       sidePanel={

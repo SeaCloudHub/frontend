@@ -22,7 +22,7 @@ function Search() {
   const { setArrSelected } = useSelected();
 
   const searchValue = useDebounce({ delay: 260, value: keyWord });
-  const { data, isLoading, refetch } = useSearchEntries(searchValue);
+  const { data, isLoading, error } = useSearchEntries(searchValue);
 
   const { theme } = useTheme();
   const fill = theme === 'dark' ? 'white' : '';
@@ -35,7 +35,6 @@ function Search() {
       if (onFocus) {
         setOnFocus(false);
         resetCursorSearch();
-        setArrSelected([]);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -43,7 +42,7 @@ function Search() {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [onFocus, resetCursorSearch, setArrSelected]);
+  }, [onFocus, resetCursorSearch]);
 
   return (
     <div

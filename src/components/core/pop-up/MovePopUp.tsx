@@ -24,6 +24,7 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
   const { rootId } = useStorageStore();
   const [volumn, setvolumn] = React.useState<'Priority' | 'My Drive' | 'Starred' | 'Shared'>('Priority');
   const [curFolder, setCurFolder] = React.useState<{ id: string; name: string }>({ id: rootId, name: 'priority' });
+  const [prevFolder, setPrevFolder] = React.useState<{ id: string; name: string }[]>([{id: rootId, name: 'priority'}]);
   const [locateTo, setLocateTo] = React.useState<string>();
   const [isScrolling, setIsScrolling] = React.useState(false);
   const ref = React.useRef<HTMLDivElement>(null);
@@ -32,7 +33,8 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
   const { nextCursorSearch, currentCursorSearch, setCurrentCursorSearch, resetCursorSearch } = useCursorSearch();
   const { theme } = useTheme();
   const { setArrSelected, arrSelected } = useSelected();
-  const { data, isLoading, parents } = useListFolders(volumn, curFolder.id);
+  const { data, isLoading, parents, error } = useListFolders(volumn, curFolder.id);
+  console.log(prevFolder);
 
   useEffect(() => {
     const onScrollBottom = () => {
@@ -60,6 +62,14 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
       resetCursorSearch();
     };
   }, [currentCursorSearch, nextCursorSearch, resetCursorSearch, setCurrentCursorSearch]);
+
+  useEffect(() => {
+    return () => {
+      resetCursorSearch();
+      setLocateTo('');
+      setPrevFolder([{ id: rootId, name: 'priority' }]);
+    };
+  }, [resetCursorSearch, rootId]);
 
   return (
     <PopUp open={open} handleClose={() => handleClose()}>
@@ -90,15 +100,19 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
             </Stack>
           </div>
         </div>
-        {parents.length === 1 ? (
+        {prevFolder.length <=1 ? (
           <Tab.Group
             defaultIndex={tab.indexOf(curFolder.name)}
             selectedIndex={tab.indexOf(curFolder.name)}
             onChange={(index) => {
+              if (tab[index] === curFolder.name) return;
               setvolumn(tab[index] as 'Priority' | 'My Drive' | 'Starred' | 'Shared');
+              setLocateTo('');
+              resetCursorSearch();
               setCurFolder({ id: rootId, name: tab[index] });
+              setPrevFolder([{ id: rootId, name: tab[index] }]);
             }}>
-            <div className='h-[270px] w-full sm:w-[500px] md:w-[580px] lg:w-[600px]'>
+            <div className='h-[270px] w-full sm:min-w-[500px] md:min-w-[580px] lg:min-w-[600px]'>
               <Tab.List className='flex w-full gap-5 px-3'>
                 {tab.map((item, index) => (
                   <Tab className='flex focus:outline-none' key={index}>
@@ -106,13 +120,7 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
                       <div
                         className={`flex grow justify-center active:bg-[#c7d8f4] dark:hover:bg-blue-950 ${
                           selected ? 'hover:bg-[#f5f8fd] ' : 'hover:bg-[#f5f8fd]'
-                        }`}
-                        onClick={() => {
-                          if (item === curFolder.name) return;
-                          setvolumn(item as 'Priority' | 'My Drive' | 'Starred' | 'Shared');
-                          setLocateTo('');
-                          resetCursorSearch();
-                        }}>
+                        }`} >
                         <div
                           className={`w-14 min-w-max py-3 text-sm font-medium ${
                             selected ? 'border-b-[3px] border-[#0B57D0] text-[#4f86dd]' : ''
@@ -144,6 +152,7 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
                         onDoubleClick={() => {
                           if (ids.includes(item.id)) return;
                           setCurFolder({ id: item.id, name: item.title });
+                          setPrevFolder([...prevFolder, { id: item.id, name: item.title }]);
                         }}>
                         <Icon icon='mdi:folder-multiple-outline' className='text-xl' />
                         <span className='select-none'>{item.title}</span>
@@ -167,13 +176,19 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
                 className='h-6 w-6 cursor-pointer rounded-full text-xl hover:bg-gray-200 dark:hover:bg-blue-950'
                 onClick={() => {
                   setLocateTo('');
-                  setCurFolder({ id: parents[parents.length - 2].id, name: parents[parents.length - 2].name });
+                  setCurFolder(prevFolder.length > 1 ? prevFolder[prevFolder.length - 2] : { id: rootId, name: volumn });
+                  setPrevFolder((prev) => prev.slice(0, prev.length - 1));
                 }}
               />
               <span>{parents[parents.length - 1].name}</span>
             </div>
             <div className={'h-[200px] w-full overflow-y-auto font-normal'}>
-              {data.length === 0 ? (
+              {error ? (
+                <div className='flex items-center gap-2 text-xs'>
+                  <Icon icon='mdi:alert-circle-outline' className='text-xl' />
+                  <span>Failed to load folders</span>
+                </div>
+              ) : data.length === 0 ? (
                 <div className='flex h-full items-center justify-center'>
                   <span>No folder in this location</span>
                 </div>
@@ -183,7 +198,10 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
                     key={index}
                     className={`flex cursor-pointer items-center gap-3 px-3 py-1 hover:bg-gray-100 dark:hover:bg-blue-950 ${locateTo === item.id ? 'bg-[#c2e7ff] dark:bg-blue-900' : ''}`}
                     onClick={() => setLocateTo(item.id)}
-                    onDoubleClick={() => setCurFolder({ id: item.id, name: item.title })}>
+                    onDoubleClick={() => {
+                      setCurFolder({ id: item.id, name: item.title });
+                      setPrevFolder((prev) => [...prev, { id: item.id, name: item.title }]);
+                    }}>
                     <Icon icon='mdi:folder-multiple-outline' className='text-xl' />
                     <span className='select-none'>{item.title}</span>
                   </div>
@@ -211,9 +229,6 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
             isInvisible={!locateTo}
             onClick={() => {
               if (ids.length === 0) return;
-              console.log('ids', ids);
-              console.log('curFolder', curFolder);
-              console.log('location', location);
               if (curFolder.id === locateTo) return;
               moveEntriesMutation.mutate({ id: location.id, source_ids: ids, to: locateTo });
               setArrSelected([]);

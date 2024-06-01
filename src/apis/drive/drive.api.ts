@@ -13,6 +13,7 @@ import {
   DownloadMultipleEntriesREQ,
   GetListFileSizesREQ,
   GetActivityLogREQ,
+  UpdateGeneralAccessREQ,
 } from './drive.request';
 import { BaseResponse } from '@/utils/types/api-base-response.type';
 import { MoveToTrashREQ } from './request/move-to-trash.request';
@@ -28,6 +29,7 @@ import {
 } from './drive.response';
 import { HTTP_HEADER } from '@/utils/constants/http.constant';
 import { GetStorageRESP } from './response/get-storage.response';
+import { GeneralAccessType } from '@/utils/types/general-access.type';
 
 export const getListEntries = async (params: ListEntriesREQ) => {
   const res = await api.get<BaseResponse<ListEntriesRESP>>(`/files/${params.id}`, {
@@ -64,8 +66,10 @@ export const getListEntriesPageStarred = async (params?: Pick<ListEntriesREQ, 'a
   return res.data;
 };
 
-export const getListEntriesTrash = async (params?: Pick<ListEntriesREQ, 'limit' | 'cursor'>) => {
-  const res = await api.get<BaseResponse<ListEntriesRESP>>(`/files/trash`, { params });
+export const getListEntriesTrash = async (params?: Pick<ListEntriesREQ, 'after' | 'cursor' | 'limit' | 'type'>) => {
+  const res = await api.get<BaseResponse<ListEntriesRESP>>(`/files/trash`, {
+    params: { ...params, type: params.type?.toLowerCase() },
+  });
   return res.data;
 };
 
@@ -180,3 +184,8 @@ export const getActivityLog = async (params: GetActivityLogREQ) => {
   const res = await api.get<BaseResponse<ActivityLogRESP>>(`/files/${params.id}/activities`, { params });
   return res.data;
 };
+
+export const updateGeneralAccess = async (body: UpdateGeneralAccessREQ) => {
+  const res = await api.patch<BaseResponse<void>>(`/files/general-access`, body);
+  return res.data;
+}
