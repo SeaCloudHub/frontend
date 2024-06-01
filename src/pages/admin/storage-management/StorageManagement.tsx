@@ -27,7 +27,7 @@ const StorageManagement = () => {
   const [selected, setSelected] = useState<FilerDataDto>(null);
   const [result, setResult] = useState(false);
 
-  const renameMutation = useRenameMutationV2 (['list-storages', path[path.length - 1].id, paging.page]);
+  const renameMutation = useRenameMutationV2(['list-storages', path[path.length - 1].id, paging.page]);
   const deleteMutation = useDeleteMutationV2(['list-storages', path[path.length - 1].id, paging.page]);
 
   const { data, error, isFetching } = useQuery({
@@ -148,6 +148,7 @@ const StorageManagement = () => {
       <div className='h-full w-full overflow-y-auto   '>
         {fileViewer && (
           <FileViewerContainer
+            queryKey={['list-storages', path[path.length - 1].id, paging.page]}
             canDelete={true}
             canShare={true}
             open={fileViewer}
