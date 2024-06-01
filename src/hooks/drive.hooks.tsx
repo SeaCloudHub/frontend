@@ -44,7 +44,8 @@ import {
   SuggestedEntriesRESP,
 } from '@/apis/drive/drive.response';
 import { MoveToTrashREQ } from '@/apis/drive/request/move-to-trash.request';
-import { updateGeneralAccessApi, uploadFilesApi } from '@/apis/user/storage/storage.api';
+import { UpdateAccessREQ } from '@/apis/user/storage/request/update-access.request';
+import { updateAccessApi, updateGeneralAccessApi, uploadFilesApi } from '@/apis/user/storage/storage.api';
 import { LocalEntryToTimeEntry } from '@/pages/user/trash/trash-page-view/DriveHistoryGridView';
 import {
   Path,
@@ -1031,6 +1032,22 @@ export const useUpdateGeneralAccessMutation = () => {
     },
   });
 }
+
+export const useUpdateAccessMutation = () => {
+  return useMutation({
+    mutationFn: (body: UpdateAccessREQ) => {
+      return updateAccessApi(body);
+    },
+    onError: (error) => {
+      if (isAxiosError<ApiGenericError>(error)) {
+        toast.error(error.response?.data.message, toastError());
+      }
+    },
+    onSuccess: () => {
+      toast.success('Changed access');
+    },
+  });
+};
 
 const transformMetadata = (data: EntryMetadataRES) => {
   data.parents?.sort((a, b) => a.path.localeCompare(b.path));
