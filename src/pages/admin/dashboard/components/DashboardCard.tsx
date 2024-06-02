@@ -7,7 +7,7 @@ import DashBoardRate from './DashBoardRate';
 type DashboardStatisticUserProps = HTMLAttributes<HTMLDivElement> & {
   data: {
     name: string;
-    percentage: string;
+    percentage: number;
     value: number;
   };
   isLoading?: boolean;

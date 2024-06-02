@@ -16,7 +16,7 @@ const DashBoardRate: React.FC<DashboardRateProps> = ({ pecentage }) => {
         <IconifyIcon icon={`vaadin:caret-${type === 'Increase' ? 'up' : 'down'}`} className='h-3 w-3 translate-y-2 text-sm' />
       )}
       <span>
-        {type === 'Increase' ? '+' : type === 'Decrease' ? '' : ''} {pecentage}%
+        {type === 'Increase' ? '+' : type === 'Decrease' ? '' : ''} {pecentage.toFixed(2)}%
       </span>
     </div>
   );

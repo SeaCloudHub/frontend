@@ -62,21 +62,21 @@ const DashBoard = () => {
                 <DashboardCard
                   data={{
                     name: 'Total users',
-                    percentage: userStatisticData.statistic_user.find((stat) => stat.name == 'total_users')?.percentage.toFixed(2),
+                    percentage: userStatisticData.statistic_user.find((stat) => stat.name == 'total_users')?.percentage,
                     value: userStatisticData.overview_user.total_users,
                   }}
                 />
                 <DashboardCard
                   data={{
                     name: 'Blocked users',
-                    percentage: userStatisticData.statistic_user.find((stat) => stat.name == 'blocked_users')?.percentage.toFixed(2),
+                    percentage: userStatisticData.statistic_user.find((stat) => stat.name == 'blocked_users')?.percentage,
                     value: userStatisticData.overview_user.blocked_users,
                   }}
                 />
                 <DashboardCard
                   data={{
                     name: 'Active users',
-                    percentage: userStatisticData.statistic_user.find((stat) => stat.name == 'active_users')?.percentage.toFixed(2),
+                    percentage: userStatisticData.statistic_user.find((stat) => stat.name == 'active_users')?.percentage,
                     value: userStatisticData.overview_user.active_users,
                   }}
                 />
