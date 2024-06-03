@@ -5,12 +5,14 @@ import { useQuery } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
 import PeopleItem from './PeopleItem';
 import { useUpdateAccessMutation } from '@/hooks/drive.hooks';
+import { isPermission } from '@/utils/function/permisstion.function';
 
 type PeopleList = {
   user_id: string;
   name: string;
   email: string;
   avatar?: string;
+  canEdit: boolean;
   role: 'Viewer' | 'Editor' | 'Owner';
 };
 
@@ -44,7 +46,8 @@ const ListPeople: React.FC<ListPeopleProps> = ({ fileId, height }) => {
     },
     staleTime: 0,
     select: (data) => {
-      return convertUserFileRoleInf(data.data.users);
+      const yourRole = isPermission(data.data.file.userRoles);
+      return convertUserFileRoleInf(data.data.users, yourRole);
     },
   });
 
@@ -67,6 +70,7 @@ const ListPeople: React.FC<ListPeopleProps> = ({ fileId, height }) => {
                 email={item.email}
                 avatar={item.avatar}
                 value={item.role}
+                canEdit={item.canEdit}
                 setValue={(value: string) => {
                   updateAccessMutation.mutate({
                     id: fileId,

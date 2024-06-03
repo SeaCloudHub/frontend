@@ -31,6 +31,7 @@ import { getEntryMetadata } from '@/apis/drive/drive.api';
 import { GeneralAccessType } from '@/utils/types/general-access.type';
 import { GeneralAccess } from '@/utils/constants/general-access.constant';
 import { useUpdateGeneralAccessMutation } from '@/hooks/drive.hooks';
+import { CopyToClipboard } from '@/utils/function/copy.function';
 
 type SharePopUpProps = {
   open: boolean;
@@ -279,7 +280,9 @@ const SharePopUp: React.FC<SharePopUpProps> = ({ open, handleClose, title, fileI
         sx={{
           justifyContent: 'space-between',
         }}>
-        <ButtonSuccess onClick={handleClose} type='button'>
+        <ButtonSuccess onClick={()=>{
+          CopyToClipboard(window.location.origin + `/drive/folder/${fileId}`);
+        }} type='button'>
           <Icon icon='material-symbols:link' className='mr-1 text-xl' />
           <span>Copy link</span>
         </ButtonSuccess>
