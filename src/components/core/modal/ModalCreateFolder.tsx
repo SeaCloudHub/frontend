@@ -18,7 +18,6 @@ const ModalCreateFolder = ({ isOpen, handleConfirm, dirId }: ModalCreateFolderPr
   const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFolderName(event.target.value);
   };
-  console.log(dirId);
   const createFolderMutation = useMutation({
     mutationFn: () => {
       return createFolderApi({ id: dirId, name: folderName });
@@ -29,7 +28,7 @@ const ModalCreateFolder = ({ isOpen, handleConfirm, dirId }: ModalCreateFolderPr
       }
     },
     onSuccess: (data) => {
-      console.log(data.data);
+      toast.success('Folder was created successfully');
     },
   });
 

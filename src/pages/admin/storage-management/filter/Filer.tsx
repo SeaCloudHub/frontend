@@ -81,7 +81,6 @@ export const Filer: React.FC<FilerProps> = ({ data, setPath, path }) => {
         onChange={(e) => {
           const data = queryClient.getQueriesData({ queryKey: ['entry-metadata'] });
           const curDirId = data?.[0]?.[0]?.[1] as string;
-          console.log('[AddFileMenu] curDirId', curDirId);
           handleFileUpload(e, curDirId);
         }}
         multiple

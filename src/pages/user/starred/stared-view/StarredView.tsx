@@ -15,13 +15,9 @@ type StarredPageViewProps = {
 const StarredView: React.FC<StarredPageViewProps> = ({ entries, isLoading }) => {
   const { viewMode } = useViewMode();
   const { rootId } = useStorageStore();
-  const [{ sort, order }, setSort] = useState<{ sort: string; order: string }>({ sort: 'Name', order: 'desc' });
 
   return viewMode === 'grid' ? (
     <DriveGridView
-      sort={sort}
-      order={order}
-      setSort={setSort}
       entries={entries}
       isLoading={isLoading}
       parent='starred'
@@ -29,9 +25,6 @@ const StarredView: React.FC<StarredPageViewProps> = ({ entries, isLoading }) => 
     />
   ) : (
     <DriveListView
-      order={order}
-      sort={sort}
-      setSort={setSort}
       entries={entries}
       isLoading={isLoading}
       parent='starred'

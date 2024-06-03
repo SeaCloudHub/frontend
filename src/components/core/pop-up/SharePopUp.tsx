@@ -280,8 +280,8 @@ const SharePopUp: React.FC<SharePopUpProps> = ({ open, handleClose, title, fileI
         sx={{
           justifyContent: 'space-between',
         }}>
-        <ButtonSuccess onClick={()=>{
-          CopyToClipboard(window.location.origin + `/drive/folder/${fileId}`);
+        <ButtonSuccess onClick={() => {
+          CopyToClipboard(window.location.origin + `/drive/${ data.file.is_dir?'folder' : 'file'}/${fileId}`);
         }} type='button'>
           <Icon icon='material-symbols:link' className='mr-1 text-xl' />
           <span>Copy link</span>

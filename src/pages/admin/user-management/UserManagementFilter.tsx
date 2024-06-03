@@ -1,5 +1,4 @@
 import IconifyIcon from '@/components/core/Icon/IConCore';
-import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { AiOutlineSearch } from 'react-icons/ai';
 type UserManagementFilterProps = {

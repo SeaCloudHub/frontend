@@ -184,7 +184,6 @@ export const useListFolders = (volumn?: 'Priority' | 'My Drive' | 'Starred' | 'S
   const { folderEntries, setFolderEntries } = useEntries();
 
   const { parents, error: parentsError } = usePathParents(dirId, false);
-  console.log('parents', parents);
 
   const { data, error, refetch, isLoading } = useQuery({
     queryKey: ['list-folders', dirId, volumn, currentCursorSearch],
@@ -516,7 +515,6 @@ export const useRenameMutationV2 = (queryKey: QueryKey) => {
 export const useDownloadMutation = () => {
   return useMutation({
     mutationFn: (body: { id: string; name?: string }) => {
-      console.log(body);
       return downloadFile(body);
     },
     onError: (error) => {
@@ -653,10 +651,6 @@ export const useStarred = () => {
     staleTime: 10 * 1000,
     select: transformEntries,
   });
-
-  // if (isAxiosError<ApiGenericError>(error)) {
-  //   toast.error(error.response?.data.message, toastError());
-  // }
 
   useEffect(() => {
     if (data) {
@@ -1011,7 +1005,6 @@ export const useModifyStorageCapacityMutation = (queryKey: QueryKey) => {
     },
     onSuccess: (data) => {
       toast.success('Modified');
-      console.log(queryKey);
       queryClient.invalidateQueries({ queryKey: queryKey });
     },
   });

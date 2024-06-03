@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import ButtonOutline from '../../components/core/button/ButtonOutline';
-import { useSession } from '../../store/auth/session';
 import { useScreenMode } from '../../store/responsive/screenMode';
 import { ADMIN_HOME, AUTH_LOGIN_EMAIL, DRIVE_HOME } from '../../utils/constants/router.constant';
 import { Role } from '../../utils/enums/role.enum';

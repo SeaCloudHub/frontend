@@ -41,9 +41,6 @@ const Priority = () => {
             isLoading={isLoading}
             isFileMode={isFileMode}
             entries={data}
-            sort={''}
-            order={''}
-            setSort={({ sort, order }) => console.log(sort, order)}
           />
         )
       }

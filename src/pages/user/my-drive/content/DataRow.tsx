@@ -1,6 +1,6 @@
 import Dropdown, { MenuItem, classNames } from '@/components/core/drop-down/Dropdown';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Avatar, Tooltip } from '@mui/material';
 import { useCursor, useDrawer, useEntries, useFilter, useSelected } from '@/store/my-drive/myDrive.store';
 import {
@@ -271,7 +271,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
     setArrSelected(
       arrSelected.some((e) => e.id === id)
         ? arrSelected.filter((item) => item.id !== id)
-        : [...arrSelected, { id, isDir, userRoles }],
+        : [...arrSelected, { id, isDir, userRoles, isStared: is_starred}],
     );
   };
 
@@ -280,7 +280,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
       handleCtrlClick();
       return;
     }
-    setArrSelected([{ id, isDir, userRoles }]);
+    setArrSelected([{ id, isDir, userRoles, isStared: is_starred}]);
   };
 
   const handleDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {

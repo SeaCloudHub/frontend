@@ -1,19 +1,11 @@
 import { LocalEntry } from '@/hooks/drive.hooks';
 import { formatDate } from '@/utils/function/formatDate.function';
 import { Icon } from '@iconify/react/dist/iconify.js';
-import DropdownCore from '../../../../../../components/core/input/DropdownCore';
-import Order from '../../../../../../components/core/order/Order';
-import { useScreenHook } from '../../../../../../hooks/useScreenHook';
-import { fileOperations } from '../../../../../../utils/constants/dopdown.constant';
-import fileTypeIcons from '../../../../../../utils/constants/file-icons.constant';
-import { fakeEntries } from '../../../../../../utils/dumps/entries';
-import { Entry } from '../../../../../../utils/types/entry.type';
 import { Button, Dropdown, Menu, Pagination, Table } from 'antd';
 import { numToSize } from '@/utils/function/numbertToSize';
 import { SettingsApplications } from '@mui/icons-material';
-import { GetUserFileDetailRESP } from '@/apis/admin/user-management/response/get-identities.response';
 import { PaginationRESP } from '@/utils/types/api-base-response.type';
-import { SetStateAction, useState } from 'react';
+import { useState } from 'react';
 import { Tooltip } from '@mui/material';
 import CustomBreadcums from '@/components/core/pop-up/CustomBreadcums';
 import { Path } from '@/store/my-drive/myDrive.store';
@@ -94,7 +86,6 @@ const FileFolderResult = ({ data, handlePageChange, handleOnRow, parentPath, han
                   <Menu.Item
                     icon={<Icon icon='ic:round-drive-file-rename-outline' />}
                     onClick={() => {
-                      console.log('Rename');
                       setIsOpened(true);
                       setTypePopup('Rename');
                       setRecordSelected(record);
@@ -104,7 +95,6 @@ const FileFolderResult = ({ data, handlePageChange, handleOnRow, parentPath, han
                   <Menu.Item
                     icon={<Icon icon='fa:trash-o' />}
                     onClick={() => {
-                      console.log('Delete');
                       setIsOpened(true);
                       setTypePopup('Delete');
                       setRecordSelected(record);

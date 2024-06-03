@@ -57,7 +57,6 @@ const FileFolderFilter: React.FC<FileFolderFilterProps> = ({ userDTO }) => {
           <TextInputCore
             className='mr-2'
             onChange={(data: string) => {
-              console.log(data);
               setName(data);
             }}
             value={name}
