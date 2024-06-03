@@ -14,7 +14,6 @@ export type PeopleItemProps = {
 
 const PeopleItem: React.FC<PeopleItemProps> = ({ name, email, avatar, value, setValue, user_id, canEdit }) => {
   const { identity } = useSession();
-  console.log('PeopleItemProps:', identity, value, user_id);
   return (
     <ListItem alignItems='center' className='cursor-pointer hover:bg-gray-100 dark:hover:bg-blue-950'>
       <ListItemAvatar>

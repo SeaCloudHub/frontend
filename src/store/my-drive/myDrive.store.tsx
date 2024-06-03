@@ -42,7 +42,7 @@ export const useViewMode = create<ViewModeState>((set) => ({
   setViewMode: (mode: string) => set({ viewMode: mode }),
 }));
 
-export type SelectedType = { id: string; isDir: boolean; userRoles: UserRole[] };
+export type SelectedType = { id: string; isDir: boolean; userRoles: UserRole[]; isStared: boolean };
 
 export type ArrSelectedState = {
   arrSelected: SelectedType[];
@@ -96,7 +96,7 @@ export type CursorState = {
 };
 
 export const useCursor = create<CursorState>((set) => ({
-  
+
   nextCursor: '',
   currentCursor: '',
   setNextCursor: (cursor: string) => set({ nextCursor: cursor }),

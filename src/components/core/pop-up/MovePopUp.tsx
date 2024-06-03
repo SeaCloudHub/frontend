@@ -34,7 +34,6 @@ const MovePopUp: React.FC<MovePopUpProps> = ({ open, handleClose, title, locatio
   const { theme } = useTheme();
   const { setArrSelected, arrSelected } = useSelected();
   const { data, isLoading, parents, error } = useListFolders(volumn, curFolder.id);
-  console.log(prevFolder);
 
   useEffect(() => {
     const onScrollBottom = () => {

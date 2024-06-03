@@ -1,5 +1,5 @@
 import { LocalEntry } from '@/hooks/drive.hooks';
-import { Path, useCursor, useCursorActivity, useSelected } from '@/store/my-drive/myDrive.store';
+import { useCursor, useCursorActivity, useSelected } from '@/store/my-drive/myDrive.store';
 import React, { useEffect, useRef } from 'react';
 import { DataRow } from './DataRow';
 import { useNavigate } from 'react-router-dom';
@@ -7,9 +7,6 @@ import { DRIVE_MY_DRIVE } from '@/utils/constants/router.constant';
 import { CircularProgress, LinearProgress } from '@mui/material';
 
 type DriveListViewProps = {
-  sort?: string;
-  order?: string;
-  setSort?: ({ sort, order }: { sort: string; order: string }) => void;
   entries: LocalEntry[];
   isLoading?: boolean;
   curDir?: { id: string; name: string };
@@ -19,9 +16,6 @@ type DriveListViewProps = {
 };
 
 export const DriveListView: React.FC<DriveListViewProps> = ({
-  order,
-  setSort,
-  sort,
   entries,
   curDir,
   parent,

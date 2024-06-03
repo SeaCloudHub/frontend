@@ -1,17 +1,13 @@
 import FileCard from '@/components/core/file-card/FileCard';
 import FolderCard from '@/components/core/folder-card/FolderCard';
 import { LocalEntry } from '@/hooks/drive.hooks';
-import { Path, useCursor, useCursorActivity, useDrawer, useEntries, useSelected } from '@/store/my-drive/myDrive.store';
-import { DRIVE_MY_DRIVE } from '@/utils/constants/router.constant';
+import { useCursor, useCursorActivity, useDrawer, useSelected } from '@/store/my-drive/myDrive.store';
 import { CircularProgress, LinearProgress } from '@mui/material';
 import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 type DriveGridViewProps = {
   curDir?: { id: string; name: string };
-  sort?: string;
-  order?: string;
-  setSort?: ({ sort, order }: { sort: string; order: string }) => void;
   entries: LocalEntry[];
   fileShow?: boolean;
   folderShow?: boolean;
@@ -87,7 +83,7 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
                           title={entry.title}
                           icon={entry.icon}
                           id={entry.id}
-                          onClick={() => setArrSelected([{ id: entry.id, isDir: entry.isDir, userRoles: entry.userRoles }])}
+                          onClick={() => setArrSelected([{ id: entry.id, isDir: entry.isDir, userRoles: entry.userRoles, isStared: entry.is_starred}])}
                           isSelected={arrSelected.some((item) => item.id === entry.id)}
                           parent={parent}
                           dir={curDir}

@@ -1,8 +1,4 @@
-import { downloadMultipleEntries } from '@/apis/drive/drive.api';
 import IconifyIcon from '@/components/core/Icon/IConCore';
-import ButtonIcon from '@/components/core/button/ButtonIcon';
-import CustomDropdown from '@/components/core/drop-down/CustomDropdown';
-import { MenuItem } from '@/components/core/drop-down/Dropdown';
 import DeletePopUp from '@/components/core/pop-up/DeletePopUp';
 import DeleteTempPopUp from '@/components/core/pop-up/DeleteTempPopUp';
 import MovePopUp from '@/components/core/pop-up/MovePopUp';
@@ -34,7 +30,15 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
   const [result, setResult] = useState(false);
   const [type, setType] = useState<'move' | 'share' | 'rename' | 'move to trash' | null>();
 
-  const { listEntries, setListEntries, getNameById } = useEntries();
+  const {
+    listEntries,
+    setListEntries,
+    getNameById,
+    entriesSearchPage,
+    setEntriesSearchPage,
+    listSuggestedEntries,
+    setListSuggestedEntries,
+  } = useEntries();
 
   const deleteMutation = useDeleteMutation();
   const restoreMutation = useRestoreEntriesMutation();
@@ -42,8 +46,6 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
   const unstarEntryMutation = useUnstarEntryMutation();
   const downloadMutation = useDownloadMutation();
   const downloadMultipleEntries = useDownLoadMultipleMutation();
-
-  console.log('TEST: ', parent, isSelectedPermission(arrSelected, UserRoleEnum.EDITOR));
 
   const multipleDriveHeaderMenu: { icon: string; label: string; action: () => void; isHidden?: boolean }[] = [
     {
@@ -86,21 +88,67 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
         setIsOpened(true);
       },
     },
-    parent === 'Starred'
-      ? {
-          label: 'Unstar',
-          icon: 'mdi:star-off-outline',
-          action: () => {
-            unstarEntryMutation.mutate({ file_ids: arrSelected.map((e) => e.id) });
-          },
-        }
-      : {
-          label: 'Star',
-          icon: 'mdi:star',
-          action: () => {
-            starEntryMutation.mutate({ file_ids: arrSelected.map((e) => e.id) });
-          },
-        },
+    {
+      label: arrSelected.every((e) => e.isStared) ? 'Unstar' : 'Star',
+      icon: arrSelected.every((e) => e.isStared) ? 'mdi:star-off-outline': 'mdi:star',
+      action: () => {
+        arrSelected.every((e) => e.isStared) ?
+          unstarEntryMutation.mutate({ file_ids: arrSelected.map((e) => e.id)},{
+            onSuccess: () => {
+              switch (parent) {
+                case 'Priority': {
+                  const newList = listSuggestedEntries.map((entry) => {
+                    if (arrSelected.some((e) => e.id === entry.id)) {
+                      return { ...entry, is_starred: false };
+                    }
+                    return entry;
+                  });
+                  setListSuggestedEntries(newList);
+                  break;
+                }
+                default : {
+                  const newList = listEntries.map((entry) => {
+                    if (arrSelected.some((e) => e.id === entry.id)) {
+                      return { ...entry, is_starred: false };
+                    }
+                    return entry;
+                  });
+                  setListEntries(newList);
+                  break;
+                }
+              }
+              setArrSelected(arrSelected.map((e) => ({ ...e, isStared: false })));
+            }
+          }) :
+          starEntryMutation.mutate({ file_ids: arrSelected.map((e) => e.id)}, {
+            onSuccess: () => {
+              switch (parent) {
+                case 'Priority': {
+                  const newList = listSuggestedEntries.map((entry) => {
+                    if (arrSelected.some((e) => e.id === entry.id)) {
+                      return { ...entry, is_starred: true };
+                    }
+                    return entry;
+                  });
+                  setListSuggestedEntries(newList);
+                  break;
+                }
+                default : {
+                  const newList = listEntries.map((entry) => {
+                    if (arrSelected.some((e) => e.id === entry.id)) {
+                      return { ...entry, is_starred: true };
+                    }
+                    return entry;
+                  });
+                  setListEntries(newList);
+                  break;
+                }
+              }
+              setArrSelected(arrSelected.map((e) => ({ ...e, isStared: true })));
+            }
+          });
+      },
+    },
     {
       icon: 'mdi:link',
       label: 'Copy link',

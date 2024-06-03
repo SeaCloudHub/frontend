@@ -32,7 +32,7 @@ export const DataRow: React.FC<DataRowProps> = ({
     setArrSelected(
       arrSelected.some((e) => e.id === id)
         ? arrSelected.filter((item) => item.id !== id)
-        : [...arrSelected, { id, isDir, userRoles }],
+        : [...arrSelected, { id, isDir, userRoles, isStared: is_starred }],
     );
   };
 
@@ -41,7 +41,7 @@ export const DataRow: React.FC<DataRowProps> = ({
       handleCtrlClick();
       return;
     }
-    setArrSelected([{ id, isDir, userRoles }]);
+    setArrSelected([{ id, isDir, userRoles, isStared: is_starred}]);
   };
 
   const handleDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {

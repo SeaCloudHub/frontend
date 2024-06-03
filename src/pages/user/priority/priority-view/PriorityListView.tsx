@@ -6,16 +6,13 @@ import DataRowPriorityView from './DataRowPriorityView';
 import { DRIVE_MY_DRIVE } from '@/utils/constants/router.constant';
 
 type PriorityListViewProps = {
-  sort?: string;
-  order?: string;
-  setSort?: ({ sort, order }: { sort: string; order: string }) => void;
   entries: SuggestedEntry[];
   isLoading?: boolean;
   curDir?: { id: string; name: string };
   parrent?: 'priority' | 'my-drive' | 'shared' | 'trash' | 'starred';
 };
 
-const PriorityListView: React.FC<PriorityListViewProps> = ({ entries, curDir, isLoading, order, setSort, sort, parrent }) => {
+const PriorityListView: React.FC<PriorityListViewProps> = ({ entries, curDir, isLoading, parrent }) => {
   const files = entries.filter((entry) => !entry.isDir);
   const folders = entries.filter((entry) => entry.isDir);
   const driveListViewRef = useRef(null);

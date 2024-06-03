@@ -162,7 +162,7 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onClick, isSel
     setArrSelected(
       arrSelected.some((item) => item.id === id && item.isDir === true)
         ? arrSelected.filter((item) => item.id !== id)
-        : [...arrSelected, { id, isDir: true, userRoles }],
+        : [...arrSelected, { id, isDir: true, userRoles, isStared: is_starred}],
     );
   };
 

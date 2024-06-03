@@ -18,7 +18,6 @@ const ResetPassword = () => {
     initialValues: resetPasswordInitialValue,
     validationSchema: passwordSchema,
     onSubmit: (values) => {
-      console.log(values);
       setIsLogin(true);
     },
   });

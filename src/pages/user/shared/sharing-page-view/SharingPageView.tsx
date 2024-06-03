@@ -13,12 +13,11 @@ type SharingPageViewProps = {
 const SharingPageView: React.FC<SharingPageViewProps> = ({ entries }) => {
   const { viewMode } = useViewMode();
   const processedEntries = transformEntries(entries);
-  const [{ sort, order }, setSort] = useState<{ sort: string; order: string }>({ sort: 'Name', order: 'desc' });
 
   return viewMode === 'grid' ? (
-    <DriveGridView sort={sort} parent='shared' order={order} setSort={setSort} entries={processedEntries} />
+    <DriveGridView parent='shared' entries={processedEntries} />
   ) : (
-    <DriveListView order={order} parent='shared' sort={sort} setSort={setSort} entries={processedEntries} />
+    <DriveListView parent='shared' entries={processedEntries} />
   );
 };
 

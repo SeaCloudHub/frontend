@@ -195,7 +195,6 @@ const StorageManagement = () => {
               items={path.map((item) => ({
                 title: <a>{item.name}</a>,
                 onClick: () => {
-                  // console.log('[Breadcrumb] path after', path.slice(0, path.indexOf(item) + 1));
                   setPaging(initPage);
                   setPath && setPath(path.slice(0, path.indexOf(item) + 1));
                 },

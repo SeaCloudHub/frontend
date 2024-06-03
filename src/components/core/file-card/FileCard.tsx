@@ -284,7 +284,7 @@ const FileCard: React.FC<FileCardProps> = ({
     setArrSelected(
       arrSelected.some((item) => item.id === id)
         ? arrSelected.filter((item) => item.id !== id)
-        : [...arrSelected, { id, isDir, userRoles }],
+        : [...arrSelected, { id, isDir, userRoles, isStared: is_starred }],
     );
   };
 
@@ -294,7 +294,7 @@ const FileCard: React.FC<FileCardProps> = ({
       return;
     }
     if (arrSelected.some((item) => item.id === id)) return;
-    setArrSelected([{ id, isDir, userRoles }]);
+    setArrSelected([{ id, isDir, userRoles, isStared: is_starred }]);
     // setActivityLog([]);
     resetCursorActivity();
   };
