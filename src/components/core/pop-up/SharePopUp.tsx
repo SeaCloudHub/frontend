@@ -121,6 +121,12 @@ const SharePopUp: React.FC<SharePopUpProps> = ({ open, handleClose, title, fileI
   });
 
   useEffect(() => {
+    if (data) {
+      setGeneralAccess(data.file.general_access as GeneralAccessType);
+    }
+  }, [data]);
+
+  useEffect(() => {
     sharedUsersMutation.mutateAsync({ query: searchValue });
   }, [searchValue]);
 

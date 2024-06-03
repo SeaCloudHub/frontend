@@ -41,11 +41,11 @@ export const accessFileAPi = async (body: AccessFileREQ) => {
 };
 
 export const updateGeneralAccessApi = async (body: UpdateGeneralAccessREQ) => {
-  const res = await api.get<BaseResponse<void>>(`/files/${body.id}/access`);
+  const res = await api.patch<BaseResponse<void>>(`/files/general-access`, body);
   return res.data;
 };
 
 export const updateAccessApi = async (body: UpdateAccessREQ) => {
   const res = await api.patch<BaseResponse<void>>(`/files/access`, body);
   return res.data;
-}
+};
