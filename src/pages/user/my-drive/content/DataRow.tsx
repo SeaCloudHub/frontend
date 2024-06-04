@@ -146,11 +146,6 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
         },
         isHidden: isPermission(userRoles) <= 1,
       },
-      {
-        label: 'Add shortcut',
-        icon: <Icon icon='material-symbols:add-to-drive' />,
-        action: () => {},
-      },
       ...(is_starred
         ? [
             {

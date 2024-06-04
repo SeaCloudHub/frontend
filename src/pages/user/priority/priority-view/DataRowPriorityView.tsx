@@ -18,13 +18,12 @@ import {
 import { useSession } from '@/store/auth/session';
 import { useDrawer, useEntries, useSelected } from '@/store/my-drive/myDrive.store';
 import { useStorageStore } from '@/store/storage/storage.store';
-import { DRIVE_HOME, DRIVE_MY_DRIVE, DRIVE_MY_DRIVE_DIR, DRIVE_SHARED, HOME } from '@/utils/constants/router.constant';
+import { DRIVE_MY_DRIVE } from '@/utils/constants/router.constant';
 import { UserRoleEnum } from '@/utils/enums/user-role.enum';
 import { CopyToClipboard } from '@/utils/function/copy.function';
 import { formatDate } from '@/utils/function/formatDate.function';
 import { getFirstCharacters } from '@/utils/function/getFirstCharacter';
 import { getRandomColor } from '@/utils/function/getRandomColor';
-import { numToSize } from '@/utils/function/numbertToSize';
 import { isPermission } from '@/utils/function/permisstion.function';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import { Star } from '@mui/icons-material';
@@ -138,11 +137,6 @@ const DataRowPriorityView: React.FC<SuggestedEntry & DataRowPriorityViewProps> =
           setType('move');
           setIsPopUpOpen(true);
         },
-      },
-      {
-        label: 'Add shortcut',
-        icon: <Icon icon='material-symbols:add-to-drive' />,
-        action: () => {},
       },
       ...(is_starred
         ? [
