@@ -311,8 +311,11 @@ const FileCard: React.FC<FileCardProps> = ({
       resetFilter();
       resetCursor();
       // resetCursorActivity();
-      if (parent === 'shared') id === rootId ? navigate(DRIVE_SHARED) : navigate(`/drive/folder/${id}`);
-      else id === rootId ? navigate(DRIVE_MY_DRIVE) : navigate(`${DRIVE_MY_DRIVE}/dir/${id}`);
+      if (parent === 'shared') {
+        id === rootId ? navigate(DRIVE_SHARED) : navigate(`/drive/folder/${id}`);
+      } else {
+        id === rootId ? navigate(DRIVE_MY_DRIVE) : navigate(`${DRIVE_MY_DRIVE}/dir/${id}`);
+      }
     }
   };
 
@@ -322,7 +325,7 @@ const FileCard: React.FC<FileCardProps> = ({
       setArrSelected([]);
     }
   }, [result, setArrSelected]);
-  console.log('file card', userRoles);
+
   return (
     <>
       {fileViewer && (
@@ -331,7 +334,7 @@ const FileCard: React.FC<FileCardProps> = ({
           closeOutside={() => {
             setFileViewer(false);
           }}
-          canDelete={isPermission(userRoles) >= UserRoleEnum.EDITOR}
+          canDelete={isPermission(userRoles) >= UserRoleEnum.EDITOR || parent === 'shared' ? false : true}
           canShare={isPermission(userRoles) >= UserRoleEnum.EDITOR}
           fileInfo={{
             isDir: false,
