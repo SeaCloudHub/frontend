@@ -170,9 +170,7 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ path, type, l
         label: 'File upload',
         icon: <Icon icon='ic:baseline-upload-file' />,
         action: () => {
-          // if (fileInputRef.current) {
           fileInputRef?.current.click();
-          // }
         },
         isHidden: isPermission(path.userRoles) < UserRoleEnum.EDITOR,
       },
