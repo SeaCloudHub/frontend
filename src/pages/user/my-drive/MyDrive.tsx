@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import DriveLayout from '@/components/layout/DriveLayout';
 import { Path, useEntries, useSelected, useFilter, useViewMode, useCursor } from '@/store/my-drive/myDrive.store';
 import MyDriveHeader from './header/MyDriveHeader';
