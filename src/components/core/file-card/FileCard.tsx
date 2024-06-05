@@ -37,6 +37,7 @@ import { useNavigate } from 'react-router-dom';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { isPermission } from '@/utils/function/permisstion.function';
 import { UserRole } from '@/utils/types/user-role.type';
+import { UserRoleEnum } from '@/utils/enums/user-role.enum';
 
 type FileCardProps = {
   title: string;
@@ -321,7 +322,7 @@ const FileCard: React.FC<FileCardProps> = ({
       setArrSelected([]);
     }
   }, [result, setArrSelected]);
-
+  console.log('file card', userRoles);
   return (
     <>
       {fileViewer && (
@@ -330,8 +331,8 @@ const FileCard: React.FC<FileCardProps> = ({
           closeOutside={() => {
             setFileViewer(false);
           }}
-          canDelete={isPermission(userRoles) >= 1}
-          canShare={isPermission(userRoles) >= 1}
+          canDelete={isPermission(userRoles) >= UserRoleEnum.EDITOR}
+          canShare={isPermission(userRoles) >= UserRoleEnum.EDITOR}
           fileInfo={{
             isDir: false,
             title: title,

@@ -6,6 +6,8 @@ import { Star } from '@mui/icons-material';
 import FileViewerContainer from '@/components/core/file-viewers/file-viewer-container/FileViewerContainer';
 import { useNavigate } from 'react-router-dom';
 import { numToSize } from '@/utils/function/numbertToSize';
+import { isPermission } from '@/utils/function/permisstion.function';
+import { UserRoleEnum } from '@/utils/enums/user-role.enum';
 
 type DataRowProps = LocalEntry & {
   isSelected?: boolean;
@@ -67,6 +69,8 @@ export const DataRow: React.FC<DataRowProps> = ({
           closeOutside={() => {
             setFileViewer(false);
           }}
+          canDelete={isPermission(userRoles) >= UserRoleEnum.EDITOR}
+          canShare={isPermission(userRoles) >= UserRoleEnum.EDITOR}
           fileInfo={{
             isDir: false,
             title: title,
