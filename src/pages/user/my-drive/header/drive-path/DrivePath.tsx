@@ -36,7 +36,7 @@ const DrivePath: React.FC<DrivePathProps> = ({ path, type }) => {
             resetCursorActivity();
             if (isPermission(d.userRoles) <= 2)
               d.id === rootId ? navigate(`${DRIVE_SHARED}`) : navigate(`/drive/folder/${DRIVE_SHARED_DIR}`);
-            d.id === rootId ? navigate(`${DRIVE_MY_DRIVE}`) : navigate(`${DRIVE_MY_DRIVE}/dir/${d.id}`);
+            else d.id === rootId ? navigate(`${DRIVE_MY_DRIVE}`) : navigate(`${DRIVE_MY_DRIVE}/dir/${d.id}`);
           },
           icon: <Icon icon='ic:baseline-folder' />,
         };

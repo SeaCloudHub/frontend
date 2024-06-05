@@ -177,9 +177,8 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onClick, isSel
   const handleDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     setArrSelected([]);
 
-    isPermission(userRoles) >= 1 && isPermission(userRoles) < 3 && navigate(`/drive/folder/${id}`);
-    //my-drive
     isPermission(userRoles) === 3 && navigate(`/drive/my-drive/dir/${id}`);
+    isPermission(userRoles) >= 1 && isPermission(userRoles) < 3 && navigate(`/drive/folder/${id}`);
   };
 
   return (

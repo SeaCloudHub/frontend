@@ -32,7 +32,6 @@ type DrivePathMenuButtonProps = {
 };
 
 const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ path, type, location }) => {
-  console.log('DrivePathMenuButtonProps:', location);
   const fileInputRef = useRef<HTMLInputElement>(null);
   // const folderInputRef = useRef<HTMLInputElement>(null);
   const [openPopUp, setOpenPopUp] = useState<boolean>(false);
@@ -67,31 +66,6 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ path, type, l
     }
   };
 
-  // const handleFolderUpload = (e: React.ChangeEvent<HTMLInputElement>, curDirId: string) => {
-  //   const folderInput = e.target;
-  //   const fileList = folderInput.files;
-  //   if (fileList && fileList.length > 0) {
-  //     const selectedFolder = fileList[0];
-  //     const folderName = selectedFolder.webkitRelativePath.split('/')[0];
-  //     const listFilesAndFolders = (directory: string, files: FileList) => {
-  //       for (let i = 0; i < files.length; i++) {
-  //         const file = files[i];
-  //         const relativePath = file.webkitRelativePath;
-  //         const parts = relativePath.split('/');
-  //         if (parts[0] === directory) {
-  //           if (parts.length === 1) {
-  //             console.log('File inside', directory, ':', parts[1]);
-  //           } else {
-  //             listFilesAndFolders(parts.slice(1).join('/'), files);
-  //           }
-  //         }
-  //       }
-  //     };
-
-  //     listFilesAndFolders(folderName, fileList);
-  //   }
-  // };
-
   const rootMenuItems: MenuItem[][] = [
     [
       {
@@ -121,7 +95,6 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ path, type, l
         label: 'New folder',
         icon: <Icon icon='ic:outline-create-new-folder' />,
         action: () => {
-          console.log('Create new folder');
           setOpenPopUp(true), setTypePopUp('Create');
         },
         isHidden: isPermission(path.userRoles) < UserRoleEnum.EDITOR,

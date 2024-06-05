@@ -37,7 +37,6 @@ export const DriveGridView: React.FC<DriveGridViewProps> = ({
   const { setArrSelected, arrSelected } = useSelected();
   const { nextCursor } = useCursor();
   const { resetCursorActivity } = useCursorActivity();
-  console.log('DriveGridViewProps:', entries);
 
   useEffect(() => {
     const fileCardRefs = document.querySelectorAll('.file-card');

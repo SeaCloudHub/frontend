@@ -17,7 +17,6 @@ function Search() {
   const ref = useRef<HTMLInputElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
-  // const { resetCursor } = useCursor();
   const { resetCursorSearch } = useCursorSearch();
   const { setArrSelected } = useSelected();
 

@@ -79,6 +79,7 @@ const FileFolderResult = ({ data, handlePageChange, handleOnRow, parentPath, han
         return (
           <>
             <Dropdown
+              disabled={record.title==='.trash'}
               key={record.id}
               trigger={['click']}
               overlay={

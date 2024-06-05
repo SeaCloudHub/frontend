@@ -29,7 +29,6 @@ const DrivePathButton: React.FC<DrivePathButtonProps> = ({ type, path }) => {
         setArrSelected && setArrSelected([]);
         setListEntries([]);
         resetCursor();
-        console.log('path', path, rootId);
         if (type === 'Shared') path.id === rootId ? navigate(`${DRIVE_SHARED}`) : navigate(`/drive/folder/${path.id}`);
         else path.id === rootId ? navigate(`${DRIVE_MY_DRIVE}`) : navigate(`${DRIVE_MY_DRIVE}/dir/${path.id}`);
       }}>
