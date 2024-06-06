@@ -37,6 +37,7 @@ import { useNavigate } from 'react-router-dom';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { isPermission } from '@/utils/function/permisstion.function';
 import { UserRole } from '@/utils/types/user-role.type';
+import { UserRoleEnum } from '@/utils/enums/user-role.enum';
 
 type FileCardProps = {
   title: string;
@@ -310,8 +311,11 @@ const FileCard: React.FC<FileCardProps> = ({
       resetFilter();
       resetCursor();
       // resetCursorActivity();
-      if (parent === 'shared') id === rootId ? navigate(DRIVE_SHARED) : navigate(`/drive/folder/${id}`);
-      else id === rootId ? navigate(DRIVE_MY_DRIVE) : navigate(`${DRIVE_MY_DRIVE}/dir/${id}`);
+      if (parent === 'shared') {
+        id === rootId ? navigate(DRIVE_SHARED) : navigate(`/drive/folder/${id}`);
+      } else {
+        id === rootId ? navigate(DRIVE_MY_DRIVE) : navigate(`${DRIVE_MY_DRIVE}/dir/${id}`);
+      }
     }
   };
 
@@ -330,8 +334,8 @@ const FileCard: React.FC<FileCardProps> = ({
           closeOutside={() => {
             setFileViewer(false);
           }}
-          canDelete={isPermission(userRoles) >= 1}
-          canShare={isPermission(userRoles) >= 1}
+          canDelete={isPermission(userRoles) >= UserRoleEnum.EDITOR || parent === 'shared' ? false : true}
+          canShare={isPermission(userRoles) >= UserRoleEnum.EDITOR}
           fileInfo={{
             isDir: false,
             title: title,

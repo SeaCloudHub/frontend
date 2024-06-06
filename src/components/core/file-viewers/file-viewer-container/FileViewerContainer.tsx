@@ -36,6 +36,7 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({
   queryKey,
   canShare,
 }) => {
+  console.log('canDelete', canDelete);
   const [fileViewerActions, setFileViewerActions] = useState<MenuItemCoreProps[]>([]);
   const [deletePopup, setDeletePopUp] = useState(false);
   const [fileIcon, setFileIcon] = useState<React.ReactNode | null>(null);

@@ -37,19 +37,12 @@ const SearchResult: React.FC<SearchResultProps> = ({ data, loading, onSelected, 
                   onClick={(e) => {
                     e.stopPropagation();
                     onSelected && onSelected();
-                    console.log('item', item);
                     const paths = item.parent.path.split('/');
-                    console.log('paths[1] === rootId', paths[1], rootId);
-                    console.log('paths[1] === "" && item.id === rootId', paths[1] === '', item.id , rootId);
                     if(!item.isDir) {
                       navigate(`/drive/file/${item.id}`);
                       return;
                     }
-                    if(paths[1] === rootId || (paths[1] === '' && item.parent.id === rootId)) {
-                      paths.length > 2 ? navigate(`${DRIVE_MY_DRIVE}/dir/${item.id}`) : navigate(DRIVE_MY_DRIVE);
-                    } else {
-                      paths.length > 2 ? navigate(`/drive/folder/${item.id}`) : navigate(DRIVE_SHARED);
-                    }
+                    paths.length >= 1 ? navigate(`${DRIVE_MY_DRIVE}/dir/${item.id}`) : navigate(DRIVE_MY_DRIVE);
                   }}
                   className='flex w-full cursor-pointer items-center space-x-3.5 border-blue-700 px-4 py-2 hover:border-l-2 hover:bg-[#dfe3e7] dark:hover:bg-slate-700'>
                   <span className='h-6 w-6'>{item.isDir ? <AiFillFolder className='text-textC h-full w-full' /> : item.icon}</span>
