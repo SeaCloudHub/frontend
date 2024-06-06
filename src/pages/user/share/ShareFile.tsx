@@ -12,6 +12,7 @@ const ShareFile = () => {
     <>
       {open && (
         <FileViewerContainer
+          canDelete={role == 'owner'}
           canShare={role == 'editor' || role == 'owner'}
           open={true}
           fileInfo={fileInfo}
