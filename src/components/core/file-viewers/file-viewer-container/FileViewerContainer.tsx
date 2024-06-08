@@ -24,7 +24,7 @@ type FileViewerContainerProps = {
   fileInfo: LocalEntry;
   isCloseOutside?: boolean;
   closeOutside?: (data?: any) => void;
-  queryKey?:QueryKey;
+  queryKey?: QueryKey;
 };
 
 const FileViewerContainer: React.FC<FileViewerContainerProps> = ({
@@ -45,7 +45,7 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({
   const [error, setError] = useState<string | null>(null);
   const downloadMutation = useDownloadMutation();
   const deleteFileMutation = useDeleteMutationV2(queryKey);
-  const totalFileViewerActions: Record<string, MenuItemCoreProps> = useMemo(() => {
+  const totalFileViewerActions: Record<string, MenuItemCoreProps & { shouldDisplay: boolean }> = useMemo(() => {
     return {
       delete: {
         icon: 'material-symbols-light:delete-outline',
@@ -53,27 +53,31 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({
           setDeletePopUp(true);
         },
         title: 'Delete',
+        shouldDisplay: canDelete || false,
       },
       copyLink: {
         icon: 'ic:sharp-link',
         onClick: () => {},
         title: 'Copy link',
+        shouldDisplay: true,
       },
       share: {
         icon: 'codicon:share',
         onClick: () => {},
         title: 'Share',
+        shouldDisplay: canShare,
       },
       download: {
         icon: 'material-symbols-light:download',
         onClick: () => {},
         title: 'Download',
+        shouldDisplay: true,
       },
     };
   }, []);
   useEffect(() => {
     function updateActions() {
-      let actions: MenuItemCoreProps[] = [totalFileViewerActions['delete']];
+      let actions: MenuItemCoreProps[] = totalFileViewerActions['delete'].shouldDisplay ? [totalFileViewerActions['delete']] : [];
       if (window.innerWidth < 640) {
         actions.push(totalFileViewerActions['download']);
       } else {
@@ -176,9 +180,11 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({
               <IconifyIcon icon='material-symbols-light:download' fontSize={16} />
               <p className='text-sm'>Download</p>
             </div>
-            <MenuCore menuItems={fileViewerActions}>
-              <ButtonIcon icon='majesticons:more-menu' size={20} />
-            </MenuCore>
+            {fileViewerActions && fileViewerActions.length > 0 && (
+              <MenuCore menuItems={fileViewerActions}>
+                <ButtonIcon icon='majesticons:more-menu' size={20} />
+              </MenuCore>
+            )}
           </div>
           <div className='hidden flex-grow items-center justify-center md:flex'>
             <div className='flex max-h-[20px] items-center space-x-2'>
