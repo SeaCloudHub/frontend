@@ -17,7 +17,8 @@ const DriveLayout: React.FC<DriveLayoutProps> = ({ headerLeft, bodyLeft, sidePan
     const handleScroll = () => {
       if (ref.current) {
         const { scrollTop, clientHeight, scrollHeight } = ref.current;
-        if (Math.ceil(scrollTop + clientHeight) >= scrollHeight) {
+        if (Math.ceil(scrollTop + clientHeight) >= scrollHeight - 50) {
+          console.log('scroll bottom');
           onScrollBottom?.();
         }
       }
