@@ -124,13 +124,13 @@ const DashBoard = () => {
             />
             <PieChartCore
               data={[
-                // { value: userStatisticData ? userStatisticData.file_by_type['archive'] : 0, label: 'Archive' },
+                { value: userStatisticData ? userStatisticData.file_by_type['archive'] : 0, label: 'Archive' },
                 { value: userStatisticData ? userStatisticData.file_by_type['document'] : 0, label: 'Document' },
                 { value: userStatisticData ? userStatisticData.file_by_type['image'] : 0, label: 'Image' },
                 { value: userStatisticData ? userStatisticData.file_by_type['pdf'] : 0, label: 'PDF' },
                 { value: userStatisticData ? userStatisticData.file_by_type['text'] : 0, label: 'Text' },
-                // { value: userStatisticData ? userStatisticData.file_by_type['video'] : 0, label: 'Video' },
-                { value: userStatisticData ? userStatisticData.file_by_type['other'] : 0, label: 'Another' },
+                { value: userStatisticData ? userStatisticData.file_by_type['video'] : 0, label: 'Video' },
+                { value: userStatisticData ? userStatisticData.file_by_type['other'] || 0:0, label: 'Another' },
               ]}
             />
           </div>
