@@ -33,6 +33,6 @@ export const storageLogToDto = (res: UserFileLogRESP) => {
     action: isEnumValue(FileAction, res.action.toString().toUpperCase()),
     date: (res.created_at && dayjs(res.created_at).format('YYYY-MM-DD')) || '',
     fileName: res.file?.name || '',
-    username: res.user.first_name,
+    username: res.user?.first_name||'',
   } as StorageLogDto;
 };
