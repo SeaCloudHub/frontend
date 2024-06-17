@@ -125,9 +125,9 @@ const CustomDropdown: React.FC<DropdownProps> = ({ button, items, minWidth, disa
         }}>
         {items.map((group, ind) => (
           <div key={ind}>
-            {group.map(({ label, icon, action }, index) => (
+            {group.map(({ label, icon, action, isHidden }, index) => (
               <MenuItem
-                disabled={disableAll} // Disable all MenuItems if disableAll is true
+                disabled={disableAll || isHidden} // Disable all MenuItems if disableAll is true
                 key={ind + ' ' + label}
                 onClick={(e) => {
                   e.stopPropagation();

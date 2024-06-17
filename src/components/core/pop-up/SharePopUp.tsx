@@ -1,20 +1,24 @@
+import { getEntryMetadata } from '@/apis/drive/drive.api';
 import { SharedUsersSearchREQ } from '@/apis/user/storage/request/share.request';
 import { shareFileAPi, sharedUserApi } from '@/apis/user/storage/storage.api';
+import { useUpdateGeneralAccessMutation } from '@/hooks/drive.hooks';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useTheme } from '@/providers/theme-provider';
+import { GeneralAccess } from '@/utils/constants/general-access.constant';
+import { CopyToClipboard } from '@/utils/function/copy.function';
 import { toastSuccess } from '@/utils/toast-options/toast-options';
+import { GeneralAccessType } from '@/utils/types/general-access.type';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import {
   Autocomplete,
   Chip,
   DialogActions,
-  ListItem,
   ListItemAvatar,
+  ListItemButton,
   ListItemText,
   MenuItem,
   SelectChangeEvent,
   TextField,
-  TextareaAutosize,
   Tooltip,
   Typography,
 } from '@mui/material';
@@ -27,11 +31,7 @@ import CustomSelect from '../drop-down/CustomSelect';
 import { MenuItem as MenuItemCustom } from '../drop-down/Dropdown';
 import ListPeople from '../list-people/ListPeople';
 import PopUp from './PopUp';
-import { getEntryMetadata } from '@/apis/drive/drive.api';
-import { GeneralAccessType } from '@/utils/types/general-access.type';
-import { GeneralAccess } from '@/utils/constants/general-access.constant';
-import { useUpdateGeneralAccessMutation } from '@/hooks/drive.hooks';
-import { CopyToClipboard } from '@/utils/function/copy.function';
+import { isPermission } from '@/utils/function/permisstion.function';
 
 type SharePopUpProps = {
   open: boolean;
@@ -227,7 +227,8 @@ const SharePopUp: React.FC<SharePopUpProps> = ({ open, handleClose, title, fileI
           </div>
           <div>
             <div className='text-base font-semibold'>General access</div>
-            <ListItem
+            <ListItemButton
+              disabled={isPermission(data?.file?.userRoles)<3}
               alignItems='center'
               className='cursor-pointer hover:bg-gray-100 dark:hover:bg-blue-950'
               sx={{
@@ -245,9 +246,12 @@ const SharePopUp: React.FC<SharePopUpProps> = ({ open, handleClose, title, fileI
                     value={generalAccess}
                     variant='outlined'
                     onChange={(e) => {
-                      updateGeneralAccess.mutateAsync({ id: fileId, general_access: e.target.value as GeneralAccessType}, {
-                        onSuccess: () => setGeneralAccess(e.target.value as GeneralAccessType),
-                      });
+                      updateGeneralAccess.mutateAsync(
+                        { id: fileId, general_access: e.target.value as GeneralAccessType },
+                        {
+                          onSuccess: () => setGeneralAccess(e.target.value as GeneralAccessType),
+                        },
+                      );
                     }}
                     sx={{
                       fontSize: '0.875rem',
@@ -272,7 +276,7 @@ const SharePopUp: React.FC<SharePopUpProps> = ({ open, handleClose, title, fileI
                   </Typography>
                 }
               />
-            </ListItem>
+            </ListItemButton>
           </div>
         </div>
       </div>
@@ -280,9 +284,11 @@ const SharePopUp: React.FC<SharePopUpProps> = ({ open, handleClose, title, fileI
         sx={{
           justifyContent: 'space-between',
         }}>
-        <ButtonSuccess onClick={() => {
-          CopyToClipboard(window.location.origin + `/drive/${ data.file.is_dir?'folder' : 'file'}/${fileId}`);
-        }} type='button'>
+        <ButtonSuccess
+          onClick={() => {
+            CopyToClipboard(window.location.origin + `/drive/${data.file.is_dir ? 'folder' : 'file'}/${fileId}`);
+          }}
+          type='button'>
           <Icon icon='material-symbols:link' className='mr-1 text-xl' />
           <span>Copy link</span>
         </ButtonSuccess>

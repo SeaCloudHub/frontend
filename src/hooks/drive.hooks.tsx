@@ -1200,7 +1200,7 @@ const transformActivityLog = (data: LogItem[]): LocalActivityLog => {
           ...{
             action: item.action,
             timeAction: new Date(item.created_at),
-            actor: { name: item.user.email, avatar: item.user.avatar_url },
+            actor: { name: item.user?.email || null, avatar: item.user?.avatar_url || null },
           },
         },
       ],

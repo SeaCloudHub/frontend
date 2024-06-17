@@ -121,8 +121,8 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
       {
         label: 'Copy link',
         icon: <Icon icon='material-symbols:link' />,
-        action: (text: string) => {
-          CopyToClipboard(text);
+        action: () => {
+          CopyToClipboard(`${window.location.origin}/drive/${isDir?'folder':'file'}/${id}`);
         },
       },
       {
