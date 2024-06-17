@@ -6,6 +6,7 @@ import { useCursorActivity } from '@/store/my-drive/myDrive.store';
 const SidePanelAction = () => {
   const { data, isLoading, error } = useActivityLog();
   const { nextCursorActivity } = useCursorActivity();
+  console.log(data);
 
   return error ? (
     <div className='flex items-center justify-center h-full text-lg font-semibold text-red-500 dark:text-red-400'>

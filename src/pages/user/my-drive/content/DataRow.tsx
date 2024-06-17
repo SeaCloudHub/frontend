@@ -144,7 +144,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
           setType('move');
           setIsPopUpOpen(true);
         },
-        isHidden: isPermission(userRoles) <= 1,
+        isHidden: isPermission(userRoles) <= 2,
       },
       ...(is_starred
         ? [
@@ -239,6 +239,7 @@ export const DataRow: React.FC<LocalEntry & DataRowProps> = ({
           setType('move to trash');
           setIsPopUpOpen(true);
         },
+        isHidden: isPermission(userRoles) <= 2,
       },
     ],
   ].filter((e) => e.length > 0);

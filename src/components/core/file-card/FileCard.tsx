@@ -113,7 +113,7 @@ const FileCard: React.FC<FileCardProps> = ({
           // downloadFile({ id, name: title });
           downloadMutation.mutate({ id, name: title });
         },
-        isHidden: isPermission(userRoles) <= 0,
+        isHidden: isPermission(userRoles) <= 0 || parent === 'priority',
       },
       {
         label: 'Rename',
@@ -130,7 +130,7 @@ const FileCard: React.FC<FileCardProps> = ({
         action: () => {
           copyMutation.mutate({ ids: [id], to: dir.id });
         },
-        isHidden: isPermission(userRoles) <= 1,
+        isHidden: isPermission(userRoles) <= 1 || parent === 'priority',
       },
     ],
     [
@@ -161,7 +161,7 @@ const FileCard: React.FC<FileCardProps> = ({
           setType('move');
           setIsPopUpOpen(true);
         },
-        isHidden: isPermission(userRoles) <= 1,
+        isHidden: isPermission(userRoles) <= 2 || parent === 'priority',
       },
       ...(is_starred
         ? [
@@ -246,7 +246,6 @@ const FileCard: React.FC<FileCardProps> = ({
           openDrawer(id);
         },
       },
-      // { label: 'Lock', icon: <Icon icon='mdi:lock-outline' />, action: () => {} },
     ],
     [
       {
@@ -256,7 +255,7 @@ const FileCard: React.FC<FileCardProps> = ({
           setType('move to trash');
           setIsPopUpOpen(true);
         },
-        isHidden: isPermission(userRoles) <= 1,
+        isHidden: isPermission(userRoles) <= 2 || parent === 'priority',
       },
     ],
   ].filter((item) => item.length > 0);

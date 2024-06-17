@@ -44,11 +44,14 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onClick, isSel
 
   const folderOps: MenuItem[][] = [
     [
-      { label: 'Download', icon: <Icon icon='ic:outline-file-download' />, action: () => {} },
+      { label: 'Download', icon: <Icon icon='ic:outline-file-download' />,
+        action: () => {},
+        isHidden: parent === 'priority',
+      },
       {
         label: 'Rename',
         icon: <Icon icon='ic:round-drive-file-rename-outline' />,
-        action: (body: RenameREQ) => {
+        action: () => {
           setType('rename');
           setIsPopUpOpen(true);
         },
@@ -82,7 +85,7 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onClick, isSel
           setType('move');
           setIsPopUpOpen(true);
         },
-        isHidden: isPermission(userRoles) <= 1,
+        isHidden: isPermission(userRoles) <= 1 || parent === 'priority',
       },
       ...(is_starred
         ? [
@@ -128,7 +131,8 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onClick, isSel
                 );
               },
             },
-          ]),
+          ]
+        ),
     ],
     [
       {
@@ -146,7 +150,7 @@ const FolderCard: React.FC<FolderCardProps> = ({ title, icon, id, onClick, isSel
           setType('move to trash');
           setIsPopUpOpen(true);
         },
-        isHidden: isPermission(userRoles) <= 1,
+        isHidden: isPermission(userRoles) <= 1 || parent === 'priority',
       },
     ],
   ];

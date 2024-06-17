@@ -78,7 +78,7 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
         setType('move');
         setIsOpened(true);
       },
-      isHidden: !isSelectedPermission(arrSelected, UserRoleEnum.EDITOR),
+      isHidden: !isSelectedPermission(arrSelected, UserRoleEnum.OWNER) || parent === 'Priority',
     },
     {
       icon: 'mdi:delete',
@@ -87,6 +87,7 @@ const MultipleDriveHeader: React.FC<MultipleDriveHeaderProps> = ({ dir, parent }
         setType('move to trash');
         setIsOpened(true);
       },
+      isHidden: !isSelectedPermission(arrSelected, UserRoleEnum.EDITOR) || parent === 'Priority',
     },
     {
       label: arrSelected.every((e) => e.isStared) ? 'Unstar' : 'Star',
