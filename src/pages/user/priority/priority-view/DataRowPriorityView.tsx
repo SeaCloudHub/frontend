@@ -76,17 +76,16 @@ const DataRowPriorityView: React.FC<SuggestedEntry & DataRowPriorityViewProps> =
   const { listSuggestedEntries, setListSuggestedEntries } = useEntries();
 
   const entryMenu: MenuItem[][] = [
-    !isDir
-      ? [
-          {
-            label: 'Preview',
-            icon: <Icon icon='material-symbols:visibility' />,
-            action: () => {
-              setFileViewer(true);
-            },
-          },
-        ]
-      : [],
+    [
+      {
+        label: 'Preview',
+        icon: <Icon icon='material-symbols:visibility' />,
+        action: () => {
+          setFileViewer(true);
+        },
+        isHidden: isDir,
+      },
+    ],
     [
       {
         label: 'Download',
@@ -94,6 +93,7 @@ const DataRowPriorityView: React.FC<SuggestedEntry & DataRowPriorityViewProps> =
         action: () => {
           downloadMutation.mutate({ id, name: title });
         },
+        isHidden: true,
       },
       {
         label: 'Rename',
@@ -102,13 +102,15 @@ const DataRowPriorityView: React.FC<SuggestedEntry & DataRowPriorityViewProps> =
           setType('rename');
           setIsPopUpOpen(true);
         },
+        isHidden: isPermission(userRoles) <= 1,
       },
-      !isDir && {
+      {
         label: 'Make a copy',
         icon: <Icon icon='material-symbols:content-copy-outline' />,
         action: () => {
           copyMutation.mutate({ ids: [id], to: dir.id });
         },
+        isHidden: true,
       },
     ],
     [
@@ -137,6 +139,7 @@ const DataRowPriorityView: React.FC<SuggestedEntry & DataRowPriorityViewProps> =
           setType('move');
           setIsPopUpOpen(true);
         },
+        isHidden: true,
       },
       ...(is_starred
         ? [
@@ -201,7 +204,6 @@ const DataRowPriorityView: React.FC<SuggestedEntry & DataRowPriorityViewProps> =
           openDrawer(id);
         },
       },
-      // !isDir && { label: 'Lock', icon: <Icon icon='mdi:lock-outline' />, action: () => {} },
     ],
     [
       {
@@ -211,7 +213,7 @@ const DataRowPriorityView: React.FC<SuggestedEntry & DataRowPriorityViewProps> =
           setType('move to trash');
           setIsPopUpOpen(true);
         },
-        isHidden: isPermission(userRoles) < UserRoleEnum.EDITOR,
+        isHidden: true,
       },
     ],
   ].filter((e) => e.length != 0);
@@ -270,7 +272,7 @@ const DataRowPriorityView: React.FC<SuggestedEntry & DataRowPriorityViewProps> =
         onClick={handleClick}
         onDoubleClick={handleDoubleClick}
         className={classNames(
-          'data-row grid cursor-pointer grid-cols-8 gap-3 truncate border-b border-b-[#dadce0] py-2 max-[1160px]:grid-cols-7 max-[1150px]:grid-cols-6 max-[1000px]:grid-cols-5',
+          'data-row items-center grid cursor-pointer grid-cols-8 gap-3 truncate border-b border-b-[#dadce0] py-1.5 max-[1160px]:grid-cols-7 max-[1150px]:grid-cols-6 max-[1000px]:grid-cols-5',
           isSelected ? 'bg-[#c2e7ff]  dark:bg-blue-900' : 'hover:bg-[#dfe3e7] dark:text-white dark:hover:bg-slate-700',
         )}>
         <div className='col-span-4 flex'>
@@ -291,14 +293,16 @@ const DataRowPriorityView: React.FC<SuggestedEntry & DataRowPriorityViewProps> =
         <div className='truncate max-[1000px]:hidden'>
           <div className='flex items-center gap-x-2'>
             {owner?.avatar_url ? (
-              <Avatar
-                alt={owner.last_name}
-                src={import.meta.env.VITE_BACKEND_API + owner.avatar_url}
-                sx={{
-                  width: 30,
-                  height: 30,
-                }}
-              />
+              <div className='border border-[#c2e7ff] dark:border-blue-900 p-0.5 m-0.5 rounded-full ring-[1.5px]'>
+                <Avatar
+                  alt={owner.last_name}
+                  src={import.meta.env.VITE_BACKEND_API + owner.avatar_url}
+                  sx={{
+                    width: 30,
+                    height: 30,
+                  }}
+                />
+              </div>
             ) : (
               <div
                 className='round flex h-[30px] w-[30px] items-center justify-center rounded-full'
@@ -329,7 +333,7 @@ const DataRowPriorityView: React.FC<SuggestedEntry & DataRowPriorityViewProps> =
               {parent.id === rootId ? 'My Drive' : parent.name}
             </div>
           </div>
-          <div className='text-end'>
+          <div className='text-end' onDoubleClick={(e) => e.stopPropagation()}>
             <CustomDropdown
               button={<Icon icon='ic:baseline-more-vert' className='h-7 w-7 rounded-full p-1 hover:bg-surfaceContainerLow' />}
               items={entryMenu}

@@ -105,6 +105,7 @@ const SidePanel: React.FC<SidePanelProps> = ({ id, title, isHidden }) => {
           <Tab.Panels className='relative h-full w-full overflow-y-auto' ref={scrollRef}>
             <Tab.Panel>
               <SidePanelDetail id={id} title={title} details={details} isLoading={isLoading} />
+              {/* {details.} */}
             </Tab.Panel>
             <Tab.Panel>
               <SidePanelAction />

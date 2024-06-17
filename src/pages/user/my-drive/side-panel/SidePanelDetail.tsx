@@ -11,6 +11,7 @@ import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { DriveLocationButton } from './DriveLocationButton';
 import { DefaultTabPanel } from './SidePanel';
+import { useNavigate } from 'react-router-dom';
 
 type SidePanDetailProps = {
   id: string;
@@ -22,9 +23,10 @@ type SidePanDetailProps = {
 const SidePanelDetail: React.FC<SidePanDetailProps> = ({ id, title, details, isLoading }) => {
   const [imageUrl, setImageUrl] = React.useState<string | null>(null);
   const identity = useSession((state) => state.identity);
-  const { data: access, isLoading: isLoadingAccess, error } = useEntryAccess(id);
-  // const {data, isLoading} = useEntryDetails(id);
+  // const { data: access, isLoading: isLoadingAccess, error } = useEntryAccess(id);
   const { rootId } = useStorageStore();
+  const navigate = useNavigate();
+  console.log(details)
 
   useEffect(() => {
     const getUrl = async () => {
@@ -50,10 +52,7 @@ const SidePanelDetail: React.FC<SidePanDetailProps> = ({ id, title, details, isL
     }
   }, [details, isLoading, id]);
 
-  return error ? (
-    <DefaultTabPanel />
-  ) :
-  isLoading ? (
+  return isLoading ? (
     <LinearProgress className=' translate-y-1' />
   ) : details ? (
     <div className='flex flex-col space-y-6 '>
@@ -64,9 +63,7 @@ const SidePanelDetail: React.FC<SidePanDetailProps> = ({ id, title, details, isL
       <div className='flex flex-col space-y-2 pl-4'>
         <div className='font-medium'>Who has access</div>
         <div className='flex flex-col'>
-          {isLoadingAccess ? 'Loading...' : access ? access.whoHasAccess : 'N/a'}
-          {/* <Avatar alt={details.owner.username} src={details.owner.url} sx={{ width: 32, height: 32 }} />
-          <div className='flex h-8 items-center text-xs'>Private to you</div> */}
+          {details.general_access === 'everyone-can-edit'? 'Everyone can edit' : details.general_access === 'everyone-can-view' ? 'Everyone can view' : 'restricted' }
         </div>
         <div className='flex h-10 w-36 cursor-pointer items-center justify-center rounded-full border border-outline hover:bg-[#f5f8fd]'>
           <div className='text-sm font-medium text-[#1a61d3]'>Manage Access</div>
@@ -93,7 +90,20 @@ const SidePanelDetail: React.FC<SidePanDetailProps> = ({ id, title, details, isL
               <div className='text-sm'>{numToSize(details.size)}</div>
             </div>
           )}
-          <div>
+          <div
+            onClick={()=>{
+              const arr = details.path.split('/');
+              const folderName = arr[arr.length-1];
+              const idFolder = details.parents.find(e => e.name === folderName )?.id;
+              console.log(idFolder);
+              if(folderName === '.trash') {
+                navigate('/drive/trash');
+                return;
+              }
+              if(details.owner_id === identity.id) {
+                idFolder === rootId ? navigate('/drive/my-drive') : navigate(`/drive/my-drive/dir/${idFolder}`);
+              } else navigate(`/drive/folder/${idFolder}`);
+            }}>
             <div className='mb-1 text-xs font-medium'>Location</div>
             <DriveLocationButton label={details.location.id === rootId ? 'My Drive' : details.location.name} icon='drive' />
           </div>
@@ -109,15 +119,13 @@ const SidePanelDetail: React.FC<SidePanDetailProps> = ({ id, title, details, isL
                 month: 'long',
                 day: 'numeric',
                 timeZone: 'Asia/Ho_Chi_Minh',
-              }) +
-                ' by ' +
-                'N/a'}
+              })}
             </div>
           </div>
-          <div>
+          {/* <div>
             <div className='text-xs font-medium'>Opened </div>
             <div className='text-sm'>{details.opened}</div>
-          </div>
+          </div> */}
           <div>
             <div className='text-xs font-medium'>Created </div>
             <div className='text-sm'>
@@ -126,15 +134,13 @@ const SidePanelDetail: React.FC<SidePanDetailProps> = ({ id, title, details, isL
                 month: 'long',
                 day: 'numeric',
                 timeZone: 'Asia/Ho_Chi_Minh',
-              }) +
-                ' by ' +
-                'N/a'}
+              })}
             </div>
           </div>
-          <div>
+          {/* <div>
             <div className='text-xs font-medium'>Download permissions</div>
             <div className='text-sm'>{details.download_perm}</div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
