@@ -17,7 +17,6 @@ type SidePanelProps = {
 const SidePanel: React.FC<SidePanelProps> = ({ id, title, isHidden }) => {
   const tabs = ['Details', 'Activity'];
   const { closeDrawer, tab, setTab } = useDrawer();
-  console.log('SidePanel render', tab);
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const { currentCursorActivity, nextCursorActivity, setCurrentCursorActivity } = useCursorActivity();
   const { data: details, isLoading, isFetching, error } = useEntryMetadata(id || '');

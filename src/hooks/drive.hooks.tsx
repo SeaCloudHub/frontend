@@ -786,7 +786,6 @@ export const useEntryAccess = (id: string) => {
     queryKey: ['access', id],
     queryFn: () => getAccessEntries({ id }).then((res) => res?.data),
     select: (data) => {
-      console.log(data)
       return {
         whoHasAccess: 'N/a',
       };

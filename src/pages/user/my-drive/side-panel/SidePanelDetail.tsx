@@ -95,7 +95,6 @@ const SidePanelDetail: React.FC<SidePanDetailProps> = ({ id, title, details, isL
               const arr = details.path.split('/');
               const folderName = arr[arr.length-1];
               const idFolder = details.parents.find(e => e.name === folderName )?.id;
-              console.log(idFolder);
               if(folderName === '.trash') {
                 navigate('/drive/trash');
                 return;
