@@ -335,7 +335,7 @@ const DataRowPriorityView: React.FC<SuggestedEntry & DataRowPriorityViewProps> =
           </div>
           <div className='text-end' onDoubleClick={(e) => e.stopPropagation()}>
             <CustomDropdown
-              button={<Icon icon='ic:baseline-more-vert' className='h-7 w-7 rounded-full p-1 hover:bg-surfaceContainerLow' />}
+              button={<Icon icon='ic:baseline-more-vert' className='h-7 w-7 rounded-full p-1 hover:bg-slate-300 dark:hover:bg-slate-500' />}
               items={entryMenu}
             />
           </div>
