@@ -189,7 +189,7 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({
           <div className='hidden flex-grow items-center justify-center md:flex'>
             <div className='flex max-h-[20px] items-center space-x-2'>
               <div>{fileIcon}</div>
-              <p className='truncate text-sm font-bold'>{fileInfo && fileInfo.title}</p>
+              <p className='truncate text-sm font-bold max-w-[250px]'>{fileInfo && fileInfo.title}</p>
             </div>
           </div>
           <div className='flex w-1/3 flex-grow flex-nowrap items-center justify-end'>
