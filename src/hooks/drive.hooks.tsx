@@ -1054,9 +1054,14 @@ const transformMetadata = (data: EntryMetadataRES) => {
       location: { id: data.parents[data.parents.length - 1].id, name: data.parents[data.parents.length - 1].name },
       owner: { username: data.file.owner.email, avatar_url: data.file.owner.avatar_url },
       modified: new Date(data.file.updated_at),
-      opened: 'N/a',
       created: new Date(data.file.created_at),
-      download_perm: 'N/a',
+      // download_perm: 'N/a',
+      general_access: data.file.general_access,
+
+      owner_id: data.file.owner_id,
+      parents: data.parents,
+      show_path: data.file.shown_path,
+      path: data.file.path,
     };
   } else if (!data.file.is_dir) {
     const ext = data.file.name.split('.').pop() || 'any';
@@ -1069,11 +1074,15 @@ const transformMetadata = (data: EntryMetadataRES) => {
       location: { id: data.parents[data.parents.length - 1].id, name: data.parents[data.parents.length - 1].name },
       owner: { username: data.file.owner.email, avatar_url: data.file.owner.avatar_url },
       modified: new Date(data.file.updated_at),
-      opened: 'N/a',
       created: new Date(data.file.created_at),
-      download_perm: 'N/a',
       size: data.file.size,
       mime_type: data.file.mime_type,
+      general_access: data.file.general_access,
+
+      owner_id: data.file.owner_id,
+      parents: data.parents,
+      show_path: data.file.shown_path,
+      path: data.file.path,
     };
   }
 };
