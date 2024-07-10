@@ -109,7 +109,7 @@ const FileViewerContainer: React.FC<FileViewerContainerProps> = ({
       setFile(file);
     } catch (error) {
       if (isAxiosError<ApiGenericError>(error)) {
-        setError('You can access this file');
+        setError(error.response?.data.message);
       }
     }
   };

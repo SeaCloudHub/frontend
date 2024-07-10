@@ -1,8 +1,10 @@
+import { UploadChunkRESP } from '@/apis/user/storage/response/create-storage.response';
 import { uploadFilesApi } from '@/apis/user/storage/storage.api';
 import IconifyIcon from '@/components/core/Icon/IConCore';
 import CustomDropdown from '@/components/core/drop-down/CustomDropdown';
 import { MenuItem } from '@/components/core/drop-down/Dropdown';
 import ModalCreateFolder from '@/components/core/modal/ModalCreateFolder';
+import { Uploader } from '@/helpers/upload-chunk/uploader';
 import { useSharedFileInfo } from '@/store/storage/file-share-info.store';
 import { useProgressIndicator } from '@/store/storage/progressIndicator.store';
 import { useStorageStore } from '@/store/storage/storage.store';
@@ -44,7 +46,28 @@ const AddFileMenu = ({ shrinkMode }: AddFileMenuProps) => {
     const fileList = e.currentTarget.files;
     if (fileList) {
       const filesArray = Array.from(fileList);
-      await uploadFilesMutation.mutateAsync({ files: filesArray, id: dirId });
+      const largeFiles = filesArray.filter((file) => file.size > 24000 * 1024);
+      const smallFiles = filesArray.filter((file) => file.size <= 24000 * 1024);
+      if (smallFiles.length > 0) {
+        await uploadFilesMutation.mutateAsync({ files: smallFiles, id: dirId });
+      }
+
+      if (largeFiles.length > 0) {
+        for (const item of largeFiles) {
+          const uploader = new Uploader({ file: item, parent_id: dirId, chunkSize: 24000 * 1024 })
+            .onProgress((progress) => {
+              console.log(progress);
+            })
+            .onComplete((res: UploadChunkRESP) => {
+              setFileNames([res.name]);
+              queryClient.invalidateQueries({ queryKey: ['mydrive-entries'] });
+            })
+            .onError(() => {
+              console.log('error');
+            });
+          await uploader.start();
+        }
+      }
     }
   };
 

@@ -17,3 +17,23 @@ export type CreateFolderRES = {
   updated_at: string;
   md5: number[];
 };
+
+export type UploadChunkRESP = {
+  id: string;
+  name: string;
+  path: string;
+  shown_path: string;
+  size: number;
+  mode: number;
+  mime_type: string;
+  type: string;
+  thumbnail: null;
+  md5: string;
+  is_dir: boolean;
+  general_access: string;
+  owner_id: string;
+  created_at: string;
+  updated_at: string;
+  userRoles: any;
+  is_starred: boolean;
+};

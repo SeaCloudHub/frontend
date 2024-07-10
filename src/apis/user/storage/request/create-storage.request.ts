@@ -8,6 +8,14 @@ export type UploadFileREQ = {
   files: File[];
 };
 
+export type UploadChunkREQ = {
+  file_id: string;
+  id: string;
+  last: boolean;
+  total_size: number;
+  file: File;
+};
+
 export type UpdateGeneralAccessREQ = {
   id: string;
   general_access: string;

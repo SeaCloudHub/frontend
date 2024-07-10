@@ -68,7 +68,7 @@ function UserInfo({ onClose }: UserInfoProps) {
         {identity && identity.avatar_url && (
           <img
             src={import.meta.env.VITE_BACKEND_API + identity.avatar_url}
-            className='h-full w-full rounded-full object-center'
+          className='h-full w-full rounded-full object-cover'
             height={500}
             width={500}
             draggable={false}

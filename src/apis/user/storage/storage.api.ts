@@ -2,8 +2,8 @@ import { api } from '@/helpers/http/config.http';
 import { HTTP_HEADER } from '@/utils/constants/http.constant';
 import { objectToFormData } from '@/utils/parser/http.parser';
 import { BaseResponse } from '@/utils/types/api-base-response.type';
-import { CreateFolderREQ, UpdateGeneralAccessREQ, UploadFileREQ } from './request/create-storage.request';
-import { CreateFolderRES } from './response/create-storage.response';
+import { CreateFolderREQ, UpdateGeneralAccessREQ, UploadChunkREQ, UploadFileREQ } from './request/create-storage.request';
+import { CreateFolderRES, UploadChunkRESP } from './response/create-storage.response';
 import { AccessFileREQ, ShareFileREQ, SharedUsersSearchREQ } from './request/share.request';
 import { SharedUsersSearchRESP } from './response/share.response';
 import { UpdateAccessREQ } from './request/update-access.request';
@@ -19,7 +19,12 @@ export const uploadFilesApi = async (body: UploadFileREQ) => {
   });
   return res.data;
 };
-
+export const uploadChunkApi = async (body: UploadChunkREQ) => {
+  const res = await api.postForm<BaseResponse<UploadChunkRESP>>('files/chunks', objectToFormData(body), {
+    headers: { ...HTTP_HEADER.FORM_DATA },
+  });
+  return res.data.data;
+};
 export const downloadFileApi = async (id: string) => {
   const res = await api.get<Blob>(`/files/${id}/download`, { responseType: 'blob' });
   return res;
