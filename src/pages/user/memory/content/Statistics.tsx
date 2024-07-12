@@ -1,6 +1,7 @@
 import { getStorage } from '@/apis/drive/drive.api';
 import { classNames } from '@/components/core/drop-down/Dropdown';
 import { useMemoryStatistics } from '@/hooks/drive.hooks';
+import { useStorageStore } from '@/store/storage/storage.store';
 import { numToSize } from '@/utils/function/numbertToSize';
 import { LinearProgress, Tooltip } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
@@ -36,14 +37,14 @@ const files: { type: string; color: string; width: number }[] = [
 const Statistics = () => {
   const { data, isLoading } = useMemoryStatistics();
   const total = data?.types.reduce((acc, type) => acc + type.value, 0);
-
+  const { storageUsage, storageCapacity } = useStorageStore();
   return isLoading ? (
     <LinearProgress className='translate-y-1' />
   ) : (
     <div>
       <div className='flex items-center space-x-3'>
-        <p className='h3'>{numToSize(total)}</p>
-        <p className='stat statement-upper-medium text-gray-500'>of {numToSize(data.capacity)} used</p>
+        <p className='h3'>{numToSize(storageUsage)}</p>
+        <p className='stat statement-upper-medium text-gray-500'>of {numToSize(storageCapacity)} used</p>
       </div>
       <div className='mt-2 flex h-2 w-full items-center rounded-full bg-slate-300'>
         {data &&

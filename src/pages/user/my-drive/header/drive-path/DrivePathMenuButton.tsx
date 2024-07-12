@@ -24,6 +24,8 @@ import { CopyToClipboard } from '@/utils/function/copy.function';
 import { useStarEntryMutation, useUnstarEntryMutation } from '@/hooks/drive.hooks';
 import SharePopUp from '@/components/core/pop-up/SharePopUp';
 import MovePopUp from '@/components/core/pop-up/MovePopUp';
+import { Uploader } from '@/helpers/upload-chunk/uploader';
+import { UploadChunkRESP } from '@/apis/user/storage/response/create-storage.response';
 
 type DrivePathMenuButtonProps = {
   path: { id: string; name: string; userRoles: UserRole[]; is_starred: boolean };
@@ -60,9 +62,32 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ path, type, l
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, curDirId: string) => {
     const fileList = e.currentTarget.files;
     if (fileList) {
-      const filesArray = Array.from(fileList);
-      await uploadFilesMutation.mutateAsync({ files: filesArray, id: curDirId });
-      queryClient.invalidateQueries({ queryKey: ['mydrive-entries'] });
+      // const filesArray = Array.from(fileList);
+      // await uploadFilesMutation.mutateAsync({ files: filesArray, id: curDirId });
+      // queryClient.invalidateQueries({ queryKey: ['mydrive-entries'] });
+            const filesArray = Array.from(fileList);
+            const largeFiles = filesArray.filter((file) => file.size > 24000 * 1024);
+            const smallFiles = filesArray.filter((file) => file.size <= 24000 * 1024);
+            if (smallFiles.length > 0) {
+              await uploadFilesMutation.mutateAsync({ files: smallFiles, id: curDirId });
+            }
+
+            if (largeFiles.length > 0) {
+              for (const item of largeFiles) {
+                const uploader = new Uploader({ file: item, parent_id: curDirId, chunkSize: 24000 * 1024 })
+                  .onProgress((progress) => {
+                    console.log(progress);
+                  })
+                  .onComplete((res: UploadChunkRESP) => {
+                    setFileNames([res.name]);
+                    queryClient.invalidateQueries({ queryKey: ['mydrive-entries'] });
+                  })
+                  .onError(() => {
+                    console.log('error');
+                  });
+                await uploader.start();
+              }
+            }
     }
   };
 
