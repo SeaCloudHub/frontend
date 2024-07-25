@@ -28,10 +28,10 @@ import {
 import {
   CopyFileREQ,
   DeleteEntriesREQ,
+  DownloadMultipleEntriesREQ,
   RenameREQ,
   RestoreEntriesREQ,
   StarEntriesREQ,
-  DownloadMultipleEntriesREQ,
   UpdateGeneralAccessREQ,
 } from '@/apis/drive/drive.request';
 import {
@@ -59,7 +59,7 @@ import {
   useIsFileMode,
   useSelected,
 } from '@/store/my-drive/myDrive.store';
-import { useProgressIndicator } from '@/store/storage/progressIndicator.store';
+import { FileUploadState, useProgressIndicator } from '@/store/storage/progressIndicator.store';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { fileTypeIcons } from '@/utils/constants/file-icons.constant';
 import { fileTypes } from '@/utils/constants/file-types.constant';
@@ -73,6 +73,7 @@ import { isAxiosError } from 'axios';
 import React, { useEffect } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { v4 as uuidv4 } from 'uuid';
 
 export const usePathParents = (dir?: string, is_admin?: boolean) => {
   const { dirId } = useParams();
@@ -125,9 +126,11 @@ export const usePathParents = (dir?: string, is_admin?: boolean) => {
 
   return {
     parents: parents || [{ id, name: 'My Drive', userRoles: ['owner'] as UserRole[], is_starred: false }],
-    error: parentsError ? (
-      isAxiosError<ApiGenericError>(parentsError) ? parentsError.response?.data.message : parentsError.message || 'Something went wrong'
-      ) : null,
+    error: parentsError
+      ? isAxiosError<ApiGenericError>(parentsError)
+        ? parentsError.response?.data.message
+        : parentsError.message || 'Something went wrong'
+      : null,
   };
 };
 
@@ -171,9 +174,11 @@ export const useListEntries = (rootUserId?: string) => {
     data: listEntries,
     refetch,
     isLoading,
-    error: error ? (
-      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
-      ) : null,
+    error: error
+      ? isAxiosError<ApiGenericError>(error)
+        ? error.response?.data.message
+        : error.message || 'Something went wrong'
+      : null,
   };
 };
 
@@ -216,10 +221,18 @@ export const useListFolders = (volumn?: 'Priority' | 'My Drive' | 'Starred' | 'S
     }
   }, [currentCursorSearch, data, setFolderEntries, setNextCursorSearch]);
 
-  return { parents: parents || [{ id: dirId, name: 'My Drive' }], data: folderEntries || [], refetch, isLoading,
-    error: error ? (
-      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
-    ) : parentsError ? parentsError : null,
+  return {
+    parents: parents || [{ id: dirId, name: 'My Drive' }],
+    data: folderEntries || [],
+    refetch,
+    isLoading,
+    error: error
+      ? isAxiosError<ApiGenericError>(error)
+        ? error.response?.data.message
+        : error.message || 'Something went wrong'
+      : parentsError
+        ? parentsError
+        : null,
   };
 };
 
@@ -251,9 +264,11 @@ export const useSuggestedEntries = () => {
     data: listSuggestedEntries || [],
     refetch,
     isLoading,
-    error: error ? (
-      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
-    ) : null,
+    error: error
+      ? isAxiosError<ApiGenericError>(error)
+        ? error.response?.data.message
+        : error.message || 'Something went wrong'
+      : null,
   };
 };
 
@@ -273,10 +288,14 @@ export const useSearchEntries = (query: string) => {
   // }
 
   return {
-    data: data || [], refetch, isLoading,
-    error: error ? (
-      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
-    ) : null
+    data: data || [],
+    refetch,
+    isLoading,
+    error: error
+      ? isAxiosError<ApiGenericError>(error)
+        ? error.response?.data.message
+        : error.message || 'Something went wrong'
+      : null,
   };
 };
 
@@ -316,9 +335,11 @@ export const useSearchEntriesPage = () => {
     data: entriesSearchPage,
     refetch,
     isLoading,
-    error: error ? (
-      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
-    ) : null
+    error: error
+      ? isAxiosError<ApiGenericError>(error)
+        ? error.response?.data.message
+        : error.message || 'Something went wrong'
+      : null,
   };
 };
 
@@ -386,12 +407,20 @@ export const useSharedEntry = () => {
     }
   }, [data, setNextCursor]);
 
-  return { parents: parents || [{ id, name: 'Shared' }], data: listEntries || [], refetch, isLoading,
-    error: error ? (
-      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
-    ) : parentsError ? (
-      isAxiosError<ApiGenericError>(parentsError) ? parentsError.response?.data.message : parentsError.message || 'Something went wrong'
-    ) : null
+  return {
+    parents: parents || [{ id, name: 'Shared' }],
+    data: listEntries || [],
+    refetch,
+    isLoading,
+    error: error
+      ? isAxiosError<ApiGenericError>(error)
+        ? error.response?.data.message
+        : error.message || 'Something went wrong'
+      : parentsError
+        ? isAxiosError<ApiGenericError>(parentsError)
+          ? parentsError.response?.data.message
+          : parentsError.message || 'Something went wrong'
+        : null,
   };
 };
 
@@ -406,11 +435,13 @@ export const useTrash = () => {
   const { data, error, refetch, isLoading } = useQuery({
     queryKey: ['Trash-entries', id, currentCursor, modifiedFilter, typeFilter],
     queryFn: async () => {
-      const res = await getListEntriesTrash({ limit: 15, cursor: currentCursor,
+      const res = await getListEntriesTrash({
+        limit: 15,
+        cursor: currentCursor,
         ...(modifiedFilter ? { after: modifiedFilter } : {}),
         ...(typeFilter ? { type: typeFilter } : {}),
       }).then((res) => res?.data);
-      return {entries: transformEntries(res?.entries || []), cursor: res.cursor || ''};
+      return { entries: transformEntries(res?.entries || []), cursor: res.cursor || '' };
     },
     staleTime: 10 * 1000,
   });
@@ -441,10 +472,14 @@ export const useTrash = () => {
   }, [data, setTrashEntries]);
 
   return {
-    data: trashEntries, refetch, isLoading,
-    error: error ? (
-      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
-    ) : null
+    data: trashEntries,
+    refetch,
+    isLoading,
+    error: error
+      ? isAxiosError<ApiGenericError>(error)
+        ? error.response?.data.message
+        : error.message || 'Something went wrong'
+      : null,
   };
 };
 
@@ -660,10 +695,14 @@ export const useStarred = () => {
   }, [data, setListEntries]);
 
   return {
-    data: listEntries || [], refetch, isLoading,
-    error: error ? (
-      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
-    ) : null
+    data: listEntries || [],
+    refetch,
+    isLoading,
+    error: error
+      ? isAxiosError<ApiGenericError>(error)
+        ? error.response?.data.message
+        : error.message || 'Something went wrong'
+      : null,
   };
 };
 
@@ -773,10 +812,15 @@ export const useEntryMetadata = (id: string) => {
   //   toast.error(error.response?.data.message, toastError());
   // }
 
-  return { data, isLoading, isFetching,
-    error: error ? (
-      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
-    ) : null
+  return {
+    data,
+    isLoading,
+    isFetching,
+    error: error
+      ? isAxiosError<ApiGenericError>(error)
+        ? error.response?.data.message
+        : error.message || 'Something went wrong'
+      : null,
   };
 };
 
@@ -798,10 +842,14 @@ export const useEntryAccess = (id: string) => {
   //   toast.error(error.response?.data.message, toastError());
   // }
 
-  return { data, isLoading,
-    error: error ? (
-      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
-    ) : null
+  return {
+    data,
+    isLoading,
+    error: error
+      ? isAxiosError<ApiGenericError>(error)
+        ? error.response?.data.message
+        : error.message || 'Something went wrong'
+      : null,
   };
 };
 
@@ -817,7 +865,17 @@ export const useUploadMutation = () => {
       }
     },
     onSuccess: (data) => {
-      setFileNames(data.data.map((item) => item.name));
+      setFileNames(
+        data.data.map(
+          (item) =>
+            ({
+              filekey: uuidv4(),
+              fileName: item.name,
+              progress: 100,
+              success: true,
+            }) as FileUploadState,
+        ),
+      );
     },
   });
 };
@@ -848,10 +906,13 @@ export const useMemoryStatistics = () => {
   // }
 
   return {
-    data, isLoading,
-    error: error ? (
-      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
-    ) : null
+    data,
+    isLoading,
+    error: error
+      ? isAxiosError<ApiGenericError>(error)
+        ? error.response?.data.message
+        : error.message || 'Something went wrong'
+      : null,
   };
 };
 
@@ -889,10 +950,13 @@ export const useMemory = (asc: boolean) => {
   }, [data, setListEntries]);
 
   return {
-    data: listEntries, isLoading,
-    error: error ? (
-      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
-    ) : null
+    data: listEntries,
+    isLoading,
+    error: error
+      ? isAxiosError<ApiGenericError>(error)
+        ? error.response?.data.message
+        : error.message || 'Something went wrong'
+      : null,
   };
 };
 
@@ -938,10 +1002,13 @@ export const useActivityLog = () => {
   }, [data, setActivityLog]);
 
   return {
-    data: activityLog, isLoading,
-    error: error ? (
-      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
-    ) : null
+    data: activityLog,
+    isLoading,
+    error: error
+      ? isAxiosError<ApiGenericError>(error)
+        ? error.response?.data.message
+        : error.message || 'Something went wrong'
+      : null,
   };
 };
 
@@ -984,10 +1051,14 @@ export const useGetListFilesUser = (page: number, id: string, isRoot: boolean, q
   // }
 
   return {
-    data: data, refetch, isLoading,
-    error: error ? (
-      isAxiosError<ApiGenericError>(error) ? error.response?.data.message : error.message || 'Something went wrong'
-    ) : null
+    data: data,
+    refetch,
+    isLoading,
+    error: error
+      ? isAxiosError<ApiGenericError>(error)
+        ? error.response?.data.message
+        : error.message || 'Something went wrong'
+      : null,
   };
 };
 
@@ -1024,7 +1095,7 @@ export const useUpdateGeneralAccessMutation = () => {
       toast.success('Changed general access');
     },
   });
-}
+};
 
 export const useUpdateAccessMutation = () => {
   return useMutation({
