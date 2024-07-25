@@ -52,6 +52,7 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ path, type, l
       }
     },
     onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['mydrive-entries'] });
       setFileNames(data.data.map((item) => item.name));
     },
   });
