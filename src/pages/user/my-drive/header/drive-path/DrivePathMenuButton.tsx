@@ -1,32 +1,29 @@
+import { downloadMultipleEntries } from '@/apis/drive/drive.api';
+import { uploadFilesApi } from '@/apis/user/storage/storage.api';
 import IconifyIcon from '@/components/core/Icon/IConCore';
-import Dropdown, { MenuItem } from '@/components/core/drop-down/Dropdown';
 import CustomDropdown from '@/components/core/drop-down/CustomDropdown';
+import { MenuItem } from '@/components/core/drop-down/Dropdown';
 import ModalCreateFolder from '@/components/core/modal/ModalCreateFolder';
-import ProgressIndicator from '@/components/core/progress-indicator/ProgressIndicator';
-import { useProgressIndicator } from '@/store/storage/progressIndicator.store';
-import React, { useRef, useState } from 'react';
-import { Icon } from '@iconify/react/dist/iconify.js';
+import MovePopUp from '@/components/core/pop-up/MovePopUp';
+import RenamePopUp from '@/components/core/pop-up/RenamePopUp';
+import SharePopUp from '@/components/core/pop-up/SharePopUp';
+import { Uploader } from '@/helpers/upload-chunk/uploader';
+import { useStarEntryMutation, useUnstarEntryMutation } from '@/hooks/drive.hooks';
+import { useEntries } from '@/store/my-drive/myDrive.store';
+import { FileUploadState, useProgressIndicator } from '@/store/storage/progressIndicator.store';
 import { useStorageStore } from '@/store/storage/storage.store';
-import { downloadMultipleEntries, uploadFiles } from '@/apis/drive/drive.api';
-import { api } from '@/helpers/http/config.http';
+import { UserRoleEnum } from '@/utils/enums/user-role.enum';
+import { CopyToClipboard } from '@/utils/function/copy.function';
+import { isPermission } from '@/utils/function/permisstion.function';
+import { toastError } from '@/utils/toast-options/toast-options';
+import { ApiGenericError } from '@/utils/types/api-generic-error.type';
+import { UserRole } from '@/utils/types/user-role.type';
+import { Icon } from '@iconify/react/dist/iconify.js';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
-import { ApiGenericError } from '@/utils/types/api-generic-error.type';
+import React, { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
-import { toastError } from '@/utils/toast-options/toast-options';
-import { uploadFilesApi } from '@/apis/user/storage/storage.api';
-import { UserRole } from '@/utils/types/user-role.type';
-import { isPermission } from '@/utils/function/permisstion.function';
-import { UserRoleEnum } from '@/utils/enums/user-role.enum';
-import { useEntries, useSelected } from '@/store/my-drive/myDrive.store';
-import RenamePopUp from '@/components/core/pop-up/RenamePopUp';
-import { CopyToClipboard } from '@/utils/function/copy.function';
-import { useStarEntryMutation, useUnstarEntryMutation } from '@/hooks/drive.hooks';
-import SharePopUp from '@/components/core/pop-up/SharePopUp';
-import MovePopUp from '@/components/core/pop-up/MovePopUp';
-import { Uploader } from '@/helpers/upload-chunk/uploader';
-import { UploadChunkRESP } from '@/apis/user/storage/response/create-storage.response';
-
+import { v4 as uuidv4 } from 'uuid';
 type DrivePathMenuButtonProps = {
   path: { id: string; name: string; userRoles: UserRole[]; is_starred: boolean };
   type?: 'MyDrive' | 'Shared' | 'Starred' | 'Trash' | 'Priority';
@@ -38,7 +35,7 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ path, type, l
   // const folderInputRef = useRef<HTMLInputElement>(null);
   const [openPopUp, setOpenPopUp] = useState<boolean>(false);
   const [typePopUp, setTypePopUp] = useState<string>('');
-  const { setFileNames } = useProgressIndicator();
+  const { setFileNames, updateFileProgress, setFileSuccess } = useProgressIndicator();
   const { rootId } = useStorageStore();
   const queryClient = useQueryClient();
   const { listEntries } = useEntries();
@@ -53,7 +50,17 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ path, type, l
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['mydrive-entries'] });
-      setFileNames(data.data.map((item) => item.name));
+      setFileNames(
+        data.data.map(
+          (item) =>
+            ({
+              filekey: uuidv4(),
+              fileName: item.name,
+              progress: 100,
+              success: true,
+            }) as FileUploadState,
+        ),
+      );
     },
   });
 
@@ -66,29 +73,38 @@ const DrivePathMenuButton: React.FC<DrivePathMenuButtonProps> = ({ path, type, l
       // const filesArray = Array.from(fileList);
       // await uploadFilesMutation.mutateAsync({ files: filesArray, id: curDirId });
       // queryClient.invalidateQueries({ queryKey: ['mydrive-entries'] });
-            const filesArray = Array.from(fileList);
-            const largeFiles = filesArray.filter((file) => file.size > 24000 * 1024);
-            const smallFiles = filesArray.filter((file) => file.size <= 24000 * 1024);
-            if (smallFiles.length > 0) {
-              await uploadFilesMutation.mutateAsync({ files: smallFiles, id: curDirId });
-            }
+      const filesArray = Array.from(fileList);
+      const largeFiles = filesArray.filter((file) => file.size > 24000 * 1024);
+      const smallFiles = filesArray.filter((file) => file.size <= 24000 * 1024);
+      if (smallFiles.length > 0) {
+        await uploadFilesMutation.mutateAsync({ files: smallFiles, id: curDirId });
+      }
 
-            if (largeFiles.length > 0) {
-              for (const item of largeFiles) {
-                const uploader = new Uploader({ file: item, parent_id: curDirId, chunkSize: 24000 * 1024 })
-                  .onProgress((progress) => {
-                    console.log(progress);
-                  })
-                  .onComplete((res: UploadChunkRESP) => {
-                    setFileNames([res.name]);
-                    queryClient.invalidateQueries({ queryKey: ['mydrive-entries'] });
-                  })
-                  .onError(() => {
-                    console.log('error');
-                  });
-                await uploader.start();
-              }
-            }
+      if (largeFiles.length > 0) {
+        for (const item of largeFiles) {
+          const fileKey = uuidv4();
+          setFileNames([
+            {
+              filekey: fileKey,
+              fileName: item.name,
+              progress: 0,
+              success: true,
+            },
+          ]);
+          const uploader = new Uploader({ fileKey: fileKey, file: item, parent_id: curDirId, chunkSize: 24000 * 1024 })
+            .onProgress((progress: { fileKey: string; progress: number }) => {
+              updateFileProgress(fileKey, progress.progress);
+            })
+            .onComplete((res) => {
+              setFileSuccess(res.fileKey, true);
+              queryClient.invalidateQueries({ queryKey: ['mydrive-entries'] });
+            })
+            .onError((err: { fileKey: string; message: string }) => {
+              setFileSuccess(fileKey, false);
+            });
+          await uploader.start();
+        }
+      }
     }
   };
 

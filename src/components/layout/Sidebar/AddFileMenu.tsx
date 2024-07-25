@@ -1,4 +1,3 @@
-import { UploadChunkRESP } from '@/apis/user/storage/response/create-storage.response';
 import { uploadFilesApi } from '@/apis/user/storage/storage.api';
 import IconifyIcon from '@/components/core/Icon/IConCore';
 import CustomDropdown from '@/components/core/drop-down/CustomDropdown';
@@ -6,7 +5,7 @@ import { MenuItem } from '@/components/core/drop-down/Dropdown';
 import ModalCreateFolder from '@/components/core/modal/ModalCreateFolder';
 import { Uploader } from '@/helpers/upload-chunk/uploader';
 import { useSharedFileInfo } from '@/store/storage/file-share-info.store';
-import { useProgressIndicator } from '@/store/storage/progressIndicator.store';
+import { FileUploadState, useProgressIndicator } from '@/store/storage/progressIndicator.store';
 import { useStorageStore } from '@/store/storage/storage.store';
 import { toastError } from '@/utils/toast-options/toast-options';
 import { ApiGenericError } from '@/utils/types/api-generic-error.type';
@@ -15,7 +14,7 @@ import { isAxiosError } from 'axios';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
-
+import { v4 as uuidv4 } from 'uuid';
 type AddFileMenuProps = {
   shrinkMode?: boolean;
 };
@@ -24,7 +23,7 @@ const AddFileMenu = ({ shrinkMode }: AddFileMenuProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const folderInputRef = useRef<HTMLInputElement>(null);
   const rootId = useStorageStore((state) => state.rootId);
-  const setFileNames = useProgressIndicator((state) => state.setFileNames);
+  const { setFileNames, setFileSuccess, updateFileProgress } = useProgressIndicator();
   const [canCreate, setCanCreate] = useState(true);
   const location = useLocation();
   const { role } = useSharedFileInfo();
@@ -38,7 +37,17 @@ const AddFileMenu = ({ shrinkMode }: AddFileMenuProps) => {
       }
     },
     onSuccess: (data) => {
-      setFileNames(data.data.map((item) => item.name));
+      setFileNames(
+        data.data.map(
+          (item) =>
+            ({
+              filekey: uuidv4(),
+              fileName: item.name,
+              progress: 100,
+              success: true,
+            }) as FileUploadState,
+        ),
+      );
       queryClient.invalidateQueries({ queryKey: ['mydrive-entries'] });
     },
   });
@@ -46,25 +55,35 @@ const AddFileMenu = ({ shrinkMode }: AddFileMenuProps) => {
     const fileList = e.currentTarget.files;
     if (fileList) {
       const filesArray = Array.from(fileList);
-      const largeFiles = filesArray.filter((file) => file.size > 24000 * 1024);
-      const smallFiles = filesArray.filter((file) => file.size <= 24000 * 1024);
+      const largeFiles = filesArray.filter((file) => file.size > 24 * 1024 * 1024);
+      const smallFiles = filesArray.filter((file) => file.size <= 24 * 1024 * 1024);
       if (smallFiles.length > 0) {
         await uploadFilesMutation.mutateAsync({ files: smallFiles, id: dirId });
       }
 
       if (largeFiles.length > 0) {
         for (const item of largeFiles) {
-          const uploader = new Uploader({ file: item, parent_id: dirId, chunkSize: 24000 * 1024 })
-            .onProgress((progress) => {
-              console.log(progress);
+          const fileKey = uuidv4();
+          setFileNames([
+            {
+              filekey: fileKey,
+              fileName: item.name,
+              progress: 0,
+              success: true,
+            },
+          ]);
+          const uploader = new Uploader({ fileKey: fileKey, file: item, parent_id: dirId, chunkSize: 24 * 1024 * 1024 })
+            .onProgress((progress: { fileKey: string; progress: number }) => {
+              updateFileProgress(fileKey, progress.progress);
             })
-            .onComplete((res: UploadChunkRESP) => {
-              setFileNames([res.name]);
+            .onComplete((res) => {
+              setFileSuccess(res.fileKey, true);
               queryClient.invalidateQueries({ queryKey: ['mydrive-entries'] });
             })
-            .onError(() => {
-              console.log('error');
+            .onError((err: { fileKey: string; message: string }) => {
+              setFileSuccess(fileKey, false);
             });
+
           await uploader.start();
         }
       }

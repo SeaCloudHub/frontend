@@ -4,8 +4,10 @@ interface IOptions {
   chunkSize?: number;
   file: File;
   parent_id: string;
+  fileKey: string;
 }
 export class Uploader {
+  fileKey: string;
   parent_id: string;
   chunkSize: number;
   file: File;
@@ -15,11 +17,12 @@ export class Uploader {
   uploadId: string | null;
   total_size: number;
   isDone: boolean;
-  onProgressFn: (progress) => void;
-  onErrorFn: (err) => void;
-  onCompleteFn: (response) => void;
+  onProgressFn: (progress: { fileKey: string; progress: number }) => void;
+  onErrorFn: (err: { fileKey: string; message: string }) => void;
+  onCompleteFn: (response: { fileKey: string }) => void;
 
   constructor(options: IOptions) {
+    this.fileKey = options.fileKey;
     this.chunkSize = options.chunkSize || 1024 * 1024 * 25;
     this.file = options.file;
     this.uploadedSize = 0;
@@ -58,7 +61,7 @@ export class Uploader {
       const chunk = this.file.slice(sentSize, sentSize + this.chunkSize);
       if (this.parts.length == 0) {
         const res = await this.sendCompleteRequest(new File([chunk], `${this.file.name}_${part.PartNumber}`));
-        this.onCompleteFn(res);
+        this.onCompleteFn({ fileKey: this.fileKey });
       } else {
         try {
           const response = await uploadChunkApi({
@@ -69,6 +72,7 @@ export class Uploader {
             total_size: this.total_size,
           });
           this.uploadId = response.id;
+          this.onProgressFn({ fileKey: this.fileKey, progress: ((part.PartNumber * this.chunkSize) / this.total_size) * 100 });
           this.sendNext();
         } catch (err) {
           this.complete(err);
@@ -77,14 +81,17 @@ export class Uploader {
       }
     }
   }
-  async complete(error: unknown | undefined = null, file: File = null) {
+  async complete(error: unknown | string | undefined = null, file: File = null) {
     if (error && !file) {
-      this.onErrorFn(error);
+      this.onErrorFn({
+        message: error as string,
+        fileKey: this.fileKey,
+      });
       return;
     }
     try {
       const response = await this.sendCompleteRequest(file);
-      this.onCompleteFn(response);
+      this.onCompleteFn({ fileKey: this.fileKey });
     } catch (error) {
       this.onErrorFn(error);
     }
@@ -224,17 +231,17 @@ export class Uploader {
   //   });
   // }
 
-  onProgress(onProgress) {
+  onProgress(onProgress: (progress: { fileKey: string; progress: number }) => void) {
     this.onProgressFn = onProgress;
     return this;
   }
 
-  onComplete(onComplete) {
+  onComplete(onComplete: (response: { fileKey: string }) => void) {
     this.onCompleteFn = onComplete;
     return this;
   }
 
-  onError(onError) {
+  onError(onError: (err: { fileKey: string; message: string }) => void) {
     this.onErrorFn = onError;
     return this;
   }
